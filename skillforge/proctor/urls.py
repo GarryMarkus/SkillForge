@@ -1,4 +1,5 @@
 from django.urls import path
+from .auth_views import RegisterView, LoginView
 from .views import (
     ExamListView,
     StartExamView,
@@ -7,6 +8,7 @@ from .views import (
     EndExamView,
     proctor_test,
 )
+
 urlpatterns = [
     path("list/", ExamListView.as_view()),
     path("start/", StartExamView.as_view()),
@@ -16,3 +18,7 @@ urlpatterns = [
     path("test/", proctor_test),
 ]
 
+urlpatterns += [
+    path("auth/register/", RegisterView.as_view()),
+    path("auth/login/", LoginView.as_view()),
+]
