@@ -10,7 +10,17 @@ const ClientDashboard = () => {
     const { logout, user, tokens } = useAuthStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [jobs, setJobs] = useState([]);
+    const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const fetchProfile = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/api/accounts/profile/', {
+                headers: { 'Authorization': `Bearer ${tokens?.access}` }
+            });
+            if (response.ok) setProfile(await response.json());
+        } catch (e) { console.error(e); }
+    };
 
     const fetchJobs = async () => {
         try {
@@ -33,6 +43,7 @@ const ClientDashboard = () => {
     useEffect(() => {
         if (tokens?.access) {
             fetchJobs();
+            fetchProfile();
         }
     }, [tokens]);
 
@@ -120,6 +131,32 @@ const ClientDashboard = () => {
                     </p>
                 </motion.div>
 
+                {/* Profile Card (New) */}
+                <div className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 h-fit">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-2xl font-black">Company Profile</h3>
+                        <Button onClick={() => window.location.href = '/client/onboarding'} variant="secondary" className="!text-xs !py-1">Edit</Button>
+                    </div>
+                    {profile ? (
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-xs font-bold text-gray-400 uppercase">Company</label>
+                                <p className="font-bold text-lg">{profile.company_name}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-bold text-gray-400 uppercase">Industry</label>
+                                <p className="font-medium">{profile.industry}</p>
+                            </div>
+                            <div>
+                                <label className="text-xs font-bold text-gray-400 uppercase">Location</label>
+                                <p className="font-medium flex items-center gap-1"><MapPin className="w-4 h-4" /> {profile.address || 'Remote'}</p>
+                            </div>
+                        </div>
+                    ) : (
+                        <p className="text-gray-400 italic">Loading profile...</p>
+                    )}
+                </div>
+
                 {/* Main Content Area - Job List */}
                 <div className="md:col-span-2 lg:col-span-3">
                     <h2 className="text-2xl font-black mb-6 flex items-center gap-2">
@@ -203,3 +240,4 @@ const ClientDashboard = () => {
 };
 
 export default ClientDashboard;
+

@@ -7,27 +7,39 @@ import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 
 const ClientOnboarding = () => {
-    const { user } = useAuthStore();
+    const { user, tokens } = useAuthStore();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    // Simulate fetching existing profile data
     const [profile, setProfile] = useState({
-        companyName: '',
+        company_name: '',
         industry: '',
         website: '',
-        location: '',
-        description: ''
+        address: '',
     });
 
     useEffect(() => {
-        // In real implementation, fetch from /api/accounts/onboarding/
-        // For now, prepopulate if we have some data from signup
-        setProfile(prev => ({
-            ...prev,
-            companyName: 'Tech Innovators Inc.', // Dummy default
-        }));
-    }, []);
+        const fetchProfile = async () => {
+            if (!tokens?.access) return;
+            try {
+                const response = await fetch('http://localhost:8000/api/accounts/profile/', {
+                    headers: { 'Authorization': `Bearer ${tokens.access}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    setProfile({
+                        company_name: data.company_name || '',
+                        industry: data.industry || '',
+                        website: data.website || '',
+                        address: data.address || '',
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching profile", error);
+            }
+        };
+        fetchProfile();
+    }, [tokens]);
 
     const handleChange = (e) => {
         setProfile({ ...profile, [e.target.name]: e.target.value });
@@ -36,11 +48,33 @@ const ClientOnboarding = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate API update
-        setTimeout(() => {
+
+        const url = user?.onboarding_stage && user.onboarding_stage >= 2
+            ? 'http://localhost:8000/api/accounts/profile/update/'
+            : 'http://localhost:8000/api/accounts/onboarding/';
+
+        const method = user?.onboarding_stage && user.onboarding_stage >= 2 ? 'PATCH' : 'PUT';
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokens.access}`
+                },
+                body: JSON.stringify(profile)
+            });
+
+            if (response.ok) {
+                navigate('/client/dashboard');
+            } else {
+                console.error("Failed to update profile");
+            }
+        } catch (error) {
+            console.error("Error submitting form", error);
+        } finally {
             setIsLoading(false);
-            navigate('/client/dashboard');
-        }, 1500);
+        }
     };
 
     return (
@@ -55,7 +89,7 @@ const ClientOnboarding = () => {
                         Welcome to the Forge <span className="text-orange-500">⚒️</span>
                     </h1>
                     <p className="font-script text-2xl text-gray-500 dark:text-gray-400 rotate-2">
-                        Let's set up your HQ, {user?.email?.split('@')[0] || 'Partner'}!
+                        Let's set up your HQ, {user?.name || 'Partner'}!
                     </p>
                 </header>
 
@@ -67,11 +101,12 @@ const ClientOnboarding = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <Input
                                 label="Company Name"
-                                name="companyName"
-                                value={profile.companyName}
+                                name="company_name"
+                                value={profile.company_name}
                                 onChange={handleChange}
                                 icon={Building}
                                 placeholder="e.g. Acme Corp"
+                                required
                             />
                             <Input
                                 label="Industry"
@@ -93,24 +128,12 @@ const ClientOnboarding = () => {
                                 placeholder="https://..."
                             />
                             <Input
-                                label="Location"
-                                name="location"
-                                value={profile.location}
+                                label="Location / Address"
+                                name="address"
+                                value={profile.address}
                                 onChange={handleChange}
                                 icon={MapPin}
                                 placeholder="City, Country"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1 ml-1">About the Company</label>
-                            <textarea
-                                name="description"
-                                value={profile.description}
-                                onChange={handleChange}
-                                rows="4"
-                                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-black dark:focus:border-white focus:ring-0 transition-all resize-none font-medium"
-                                placeholder="Tell us about your mission..."
                             />
                         </div>
 
