@@ -5,6 +5,8 @@ import AuthPage from './pages/AuthPage';
 import StudentDashboard from './pages/dashboard/StudentDashboard';
 import ClientDashboard from './pages/dashboard/ClientDashboard';
 import ClientOnboarding from './pages/client/ClientOnboarding';
+import StudentOnboarding from './pages/student/StudentOnboarding';
+import AssessmentPage from './pages/student/AssessmentPage';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
 
         {/* Dashboards */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />
+        <Route path="/student/onboarding" element={<StudentOnboarding />} />
+        <Route path="/student/assessment" element={<AssessmentPage />} />
         <Route path="/client/dashboard" element={<ClientDashboard />} />
         <Route path="/client/onboarding" element={<ClientOnboarding />} />
       </Routes>
