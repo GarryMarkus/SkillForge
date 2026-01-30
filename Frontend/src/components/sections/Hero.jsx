@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';
 import Card from '../ui/Card';
-import { ArrowRight, CheckCircle, BarChart3, Users, Activity, Layers } from 'lucide-react';
+import { ArrowRight, CheckCircle, BarChart3, Users, Activity } from 'lucide-react';
 
 const Hero = () => {
     return (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Sparkles } from 'lucide-react';
 import Button from '../ui/Button';
 import ThemeToggle from './ThemeToggle';
 import { cn } from './Layout';
@@ -59,12 +60,14 @@ const Navbar = () => {
 
                     {/* Desktop Actions */}
                     <div className="hidden md:flex items-center gap-6">
-                        <a href="#" className="font-bold text-lg hover:underline decoration-wavy decoration-orange-500 underline-offset-4">
+                        <Link to="/auth" className="font-bold text-lg hover:underline decoration-wavy decoration-orange-500 underline-offset-4">
                             Sign In
-                        </a>
-                        <Button variant="primary" className="px-8 !bg-blue-500 !text-white !border-black dark:!border-white hover:!bg-blue-600 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none">
-                            Get Started
-                        </Button>
+                        </Link>
+                        <Link to="/auth">
+                            <Button variant="primary" className="px-8 !bg-blue-500 !text-white !border-black dark:!border-white hover:!bg-blue-600 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-none">
+                                Get Started
+                            </Button>
+                        </Link>
                         <ThemeToggle className="ml-2" />
                     </div>
 
@@ -136,10 +139,12 @@ const Navbar = () => {
                                 }}
                                 className="flex flex-col gap-4 mt-8"
                             >
-                                <Button className="bg-white text-black border-black text-2xl py-4 px-12 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
-                                    Get Started
-                                </Button>
-                                <a href="#" className="text-2xl font-bold text-white underline decoration-wavy">Sign In</a>
+                                <Link to="/auth" onClick={() => setIsOpen(false)}>
+                                    <Button className="bg-white text-black border-black text-2xl py-4 px-12 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                                        Get Started
+                                    </Button>
+                                </Link>
+                                <Link to="/auth" onClick={() => setIsOpen(false)} className="text-2xl font-bold text-white underline decoration-wavy">Sign In</Link>
                             </motion.div>
                         </div>
 
