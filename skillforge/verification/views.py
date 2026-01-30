@@ -15,6 +15,7 @@ class GenerateSkillTestAPI(APIView):
 
             return Response({
                 "attempt_id": attempt.id,
+                "session_id": attempt.proctor_session.id if attempt.proctor_session else None,
                 "category": attempt.category.name,
                 "questions": attempt.generated_questions,
                 "total_questions": attempt.total_questions

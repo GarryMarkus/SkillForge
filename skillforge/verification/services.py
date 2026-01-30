@@ -2,7 +2,9 @@ import logging
 from django.contrib.auth import get_user_model
 
 from accounts.models import *
+from accounts.models import *
 from .models import *
+from proctor.models import Exam, ExamSession
 from .utils.pdf_utils import extract_text_from_pdf_fileobj
 from .utils.git_utils import fetch_github_profile
 from .utils.langchain_utils import *
@@ -113,6 +115,16 @@ def generate_skill_test_for_student(student_id: int, category_id: int | None = N
             generated_questions=payload["questions"],
             total_questions=len(payload["questions"]),
         )
+
+        # Create Proctor Session
+        exam, _ = Exam.objects.get_or_create(
+            title=f"{category.name} Assessment", 
+            defaults={"duration_minutes": 30}
+        )
+        session = ExamSession.objects.create(user=user, exam=exam)
+        
+        attempt.proctor_session = session
+        attempt.save()
 
         return attempt
 

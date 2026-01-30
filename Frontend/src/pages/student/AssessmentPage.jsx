@@ -15,6 +15,7 @@ const AssessmentPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState({});
     const [sessionId, setSessionId] = useState(null);
+    const [attemptId, setAttemptId] = useState(null);
     const [timeLeft, setTimeLeft] = useState(1800); // 30 mins
 
     useEffect(() => {
@@ -32,11 +33,11 @@ const AssessmentPage = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    setSessionId(data.attempt_id);
+                    setAttemptId(data.attempt_id);
+                    setSessionId(data.session_id); // Capture session_id for proctoring logs
                     if (data.questions && data.questions.length > 0) {
                         setQuestions(data.questions);
                     } else {
-                        // Fallback handling
                         console.warn("Backend returned 0 questions.");
                     }
                 } else {
@@ -71,15 +72,21 @@ const AssessmentPage = () => {
     };
 
     const startTest = async () => {
+        // Enforce Fullscreen
         const elem = document.documentElement;
         if (elem.requestFullscreen) {
-            await elem.requestFullscreen();
+            try {
+                await elem.requestFullscreen();
+            } catch (err) {
+                console.error("Fullscreen blocked", err);
+                alert("Please allow Fullscreen to continue.");
+                return;
+            }
         }
         setExamStarted(true);
     };
 
     const handleAnswer = (option) => {
-        // Record answer for current question index/ID
         setAnswers(prev => ({ ...prev, [currentQuestion]: option }));
     };
 
@@ -93,8 +100,6 @@ const AssessmentPage = () => {
 
     const submitExam = async () => {
         // Transform answers map to ordered list
-        // answers might be {0: "A", 2: "C"}. Need ["A", null, "C"] or similar based on question count.
-        // Assuming user answers all or we fill gaps.
         const answersList = questions.map((_, idx) => answers[idx] || null);
 
         try {
@@ -105,7 +110,7 @@ const AssessmentPage = () => {
                     'Authorization': `Bearer ${tokens?.access}`
                 },
                 body: JSON.stringify({
-                    attempt_id: sessionId,
+                    attempt_id: attemptId,
                     answers: answersList
                 })
             });
@@ -116,9 +121,34 @@ const AssessmentPage = () => {
         }
     };
 
+    // Log Proctor Events to Backend
+    const logEvent = async (eventType) => {
+        if (!sessionId) return;
+        try {
+            await fetch('http://localhost:8000/api/proctor/events/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${tokens?.access}`
+                },
+                body: JSON.stringify({
+                    session_id: sessionId,
+                    event_type: eventType,
+                    confidence: 1.0
+                })
+            });
+        } catch (e) { console.error("Log failed", e); }
+    };
+
     const handleDisqualify = () => {
-        // Submit what we have and exit
+        logEvent("disqualified");
+        alert("Disqualified due to security violations.");
         navigate('/student/dashboard');
+    };
+
+    const handleWarning = (msg) => {
+        console.warn("Warning:", msg);
+        logEvent("violation_warning"); // Generic warning log
     };
 
     if (loading) return <div className="text-white bg-black h-screen flex items-center justify-center">Loading Assessment...</div>;
@@ -144,9 +174,8 @@ const AssessmentPage = () => {
     }
 
     return (
-        <ProctorWrapper onDisqualify={handleDisqualify} onWarning={(msg) => console.log(msg)}>
+        <ProctorWrapper onDisqualify={handleDisqualify} onWarning={handleWarning}>
             <div className="container mx-auto px-4 py-8 h-screen flex flex-col">
-                {/* Header */}
                 <div className="flex justify-between items-center mb-12">
                     <div className="text-sm font-bold text-gray-500">
                         Question {currentQuestion + 1} / {questions.length}
@@ -156,7 +185,6 @@ const AssessmentPage = () => {
                     </div>
                 </div>
 
-                {/* Question Area */}
                 <div className="flex-1 flex flex-col justify-center max-w-4xl mx-auto w-full">
                     {questions.length > 0 && questions[currentQuestion] && (
                         <>
@@ -170,7 +198,6 @@ const AssessmentPage = () => {
                             </motion.h2>
 
                             <div className="grid grid-cols-1 gap-4">
-                                {/* Handling both 'options' array or dict formats depending on backend */}
                                 {(questions[currentQuestion].options || []).map((option, idx) => (
                                     <button
                                         key={idx}
@@ -187,13 +214,6 @@ const AssessmentPage = () => {
                             </div>
                         </>
                     )}
-
-                    {!questions.length && (
-                        <div className="text-center text-red-500">
-                            Error loading questions. Please contact support.
-                        </div>
-                    )}
-
                     <div className="mt-12 flex justify-end">
                         <Button onClick={nextQuestion} className="px-8 !bg-white !text-black">
                             {currentQuestion === questions.length - 1 ? 'Submit' : 'Next Question'}

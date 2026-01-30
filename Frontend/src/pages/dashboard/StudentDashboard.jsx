@@ -33,6 +33,11 @@ const StudentDashboard = () => {
         fetchProfile();
     }, [tokens]);
 
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
     return (
         <div className="min-h-screen bg-light-canvas dark:bg-dark-canvas transition-colors duration-500 p-6 md:p-12 font-sans text-light-border dark:text-white">
             <header className="flex items-center justify-between mb-12">
@@ -47,7 +52,7 @@ const StudentDashboard = () => {
                 <div className="flex items-center gap-4">
                     <ThemeToggle />
                     <Button
-                        onClick={logout}
+                        onClick={handleLogout}
                         variant="secondary"
                         className="!px-3 !py-2 !text-xs flex items-center gap-2"
                     >
