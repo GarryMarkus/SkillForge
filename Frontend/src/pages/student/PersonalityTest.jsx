@@ -102,7 +102,7 @@ const PersonalityTest = () => {
                             animate={{ opacity: 1, y: 0 }}
                             className="bg-white dark:bg-dark-card border-2 border-black dark:border-gray-700 rounded-[2rem] p-8"
                         >
-                            <h3 className="text-xl font-bold mb-6">{q.text}</h3>
+                            <h3 className="text-xl font-bold mb-6">{q.question}</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 {(q.options ? Object.entries(q.options) : ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree']).map((opt, i) => {
                                     const val = Array.isArray(opt) ? opt[0] : (i + 1);

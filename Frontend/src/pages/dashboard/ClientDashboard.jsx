@@ -2,16 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../store/authStore';
 import ThemeToggle from '../../components/layout/ThemeToggle';
-import { LogOut, Users, Search, Briefcase, Plus, MapPin, DollarSign, Target } from 'lucide-react';
+import { LogOut, Users, Briefcase, Plus, MapPin, DollarSign, Target, X, Mail, Github, Linkedin } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import JobPostModal from '../../components/client/JobPostModal';
+import { useNavigate } from 'react-router-dom';
 
 const ClientDashboard = () => {
     const { logout, user, tokens } = useAuthStore();
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [jobs, setJobs] = useState([]);
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [selectedJob, setSelectedJob] = useState(null);
+    const [applicants, setApplicants] = useState([]);
+    const [isApplicantModalOpen, setIsApplicantModalOpen] = useState(false);
 
     const fetchProfile = async () => {
         try {
@@ -25,9 +30,7 @@ const ClientDashboard = () => {
     const fetchJobs = async () => {
         try {
             const response = await fetch('http://localhost:8000/api/project/my-jobs/', {
-                headers: {
-                    'Authorization': `Bearer ${tokens?.access}`
-                }
+                headers: { 'Authorization': `Bearer ${tokens?.access}` }
             });
             if (response.ok) {
                 const data = await response.json();
@@ -49,6 +52,24 @@ const ClientDashboard = () => {
 
     const handleJobCreated = (newJob) => {
         setJobs([newJob, ...jobs]);
+    };
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
+    const viewApplicants = async (job) => {
+        setSelectedJob(job);
+        try {
+            const response = await fetch(`http://localhost:8000/api/project/applicants/${job.id}/`, {
+                headers: { 'Authorization': `Bearer ${tokens?.access}` }
+            });
+            if (response.ok) {
+                setApplicants(await response.json());
+            }
+        } catch (e) { console.error(e); }
+        setIsApplicantModalOpen(true);
     };
 
     return (
@@ -73,7 +94,7 @@ const ClientDashboard = () => {
                     <div className="h-8 w-px bg-gray-300 dark:bg-gray-700 mx-2" />
                     <ThemeToggle />
                     <Button
-                        onClick={logout}
+                        onClick={handleLogout}
                         variant="secondary"
                         className="!px-3 !py-2 !text-xs flex items-center gap-2"
                     >
@@ -109,7 +130,7 @@ const ClientDashboard = () => {
                 <div className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 h-fit lg:col-span-2">
                     <div className="flex items-center justify-between mb-6">
                         <h3 className="text-2xl font-black">Company Profile</h3>
-                        <Button onClick={() => window.location.href = '/client/onboarding'} variant="secondary" className="!text-xs !py-1">Edit</Button>
+                        <Button onClick={() => navigate('/client/onboarding')} variant="secondary" className="!text-xs !py-1">Edit</Button>
                     </div>
                     {profile ? (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -190,15 +211,15 @@ const ClientDashboard = () => {
                                         </div>
 
                                         <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
-                                            <div className="flex -space-x-2">
-                                                {/* Candidate avatars placeholder */}
-                                                <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white dark:border-dark-card" />
-                                                <div className="w-8 h-8 rounded-full bg-gray-300 border-2 border-white dark:border-dark-card" />
-                                                <div className="w-8 h-8 rounded-full bg-gray-100 border-2 border-white dark:border-dark-card flex items-center justify-center text-[10px] font-bold">
-                                                    0
-                                                </div>
+                                            <div className="flex items-center gap-2">
+                                                <Users className="w-5 h-5 text-gray-400" />
+                                                <span className="font-bold">{job.applicant_count || 0}</span>
+                                                <span className="text-sm text-gray-500">applicants</span>
                                             </div>
-                                            <button className="text-sm font-bold hover:underline decoration-wavy">
+                                            <button
+                                                onClick={() => viewApplicants(job)}
+                                                className="text-sm font-bold text-blue-600 hover:underline decoration-wavy"
+                                            >
                                                 View Applicants
                                             </button>
                                         </div>
@@ -209,6 +230,84 @@ const ClientDashboard = () => {
                     )}
                 </div>
             </div>
+
+            {/* Applicants Modal */}
+            <AnimatePresence>
+                {isApplicantModalOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                        onClick={() => setIsApplicantModalOpen(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, y: 20 }}
+                            className="bg-white dark:bg-dark-card rounded-[2rem] p-8 max-w-3xl w-full max-h-[80vh] overflow-y-auto border-2 border-black dark:border-gray-700"
+                            onClick={e => e.stopPropagation()}
+                        >
+                            <div className="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 className="text-2xl font-black">Applicants</h2>
+                                    <p className="text-gray-500">{selectedJob?.title}</p>
+                                </div>
+                                <button onClick={() => setIsApplicantModalOpen(false)} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full">
+                                    <X className="w-6 h-6" />
+                                </button>
+                            </div>
+
+                            {applicants.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <Users className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                                    <p className="text-gray-500">No applicants yet. Share this job to attract talent!</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {applicants.map((applicant, idx) => (
+                                        <div key={idx} className="border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 hover:border-black dark:hover:border-white transition-colors">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <h3 className="text-lg font-bold">{applicant.name || 'Anonymous'}</h3>
+                                                    <p className="text-sm text-gray-500 flex items-center gap-1">
+                                                        <Mail className="w-4 h-4" /> {applicant.email}
+                                                    </p>
+                                                </div>
+                                                <span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                                    {applicant.experience_level || 'Entry'}
+                                                </span>
+                                            </div>
+                                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                                                <div>
+                                                    <label className="text-xs font-bold text-gray-400 uppercase">Education</label>
+                                                    <p>{applicant.education || 'Not specified'}</p>
+                                                </div>
+                                                <div>
+                                                    <label className="text-xs font-bold text-gray-400 uppercase">Skills</label>
+                                                    <p className="line-clamp-1">{applicant.skills || 'Not specified'}</p>
+                                                </div>
+                                            </div>
+                                            <div className="mt-4 flex gap-3">
+                                                {applicant.github_url && (
+                                                    <a href={applicant.github_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-gray-600 hover:text-black">
+                                                        <Github className="w-4 h-4" /> GitHub
+                                                    </a>
+                                                )}
+                                                {applicant.linkedin_url && (
+                                                    <a href={applicant.linkedin_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800">
+                                                        <Linkedin className="w-4 h-4" /> LinkedIn
+                                                    </a>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
