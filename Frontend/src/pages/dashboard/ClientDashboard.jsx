@@ -90,33 +90,7 @@ const ClientDashboard = () => {
 
             {/* Content Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {/* Stat Card 1 */}
-                <motion.div
-                    whileHover={{ y: -5 }}
-                    className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-none"
-                >
-                    <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center mb-4 text-orange-500">
-                        <Users className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-2xl font-bold mb-2">Candidates</h3>
-                    <p className="text-4xl font-black text-black dark:text-white">124</p>
-                    <p className="text-sm text-gray-400 mt-2 font-mono">15 new matches today</p>
-                </motion.div>
-
-                {/* Stat Card 2 */}
-                <motion.div
-                    whileHover={{ y: -5 }}
-                    className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-none"
-                >
-                    <div className="w-12 h-12 bg-cyan-100 dark:bg-cyan-900/30 rounded-2xl flex items-center justify-center mb-4 text-cyan-500">
-                        <Search className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-2xl font-bold mb-2">Shortlisted</h3>
-                    <p className="text-4xl font-black text-black dark:text-white">{jobs.length > 0 ? '2' : '0'}</p>
-                    <p className="text-sm text-gray-400 mt-2 font-mono">Interviews scheduled</p>
-                </motion.div>
-
-                {/* Stat Card 3 */}
+                {/* Stat Card - Job Posts */}
                 <motion.div
                     whileHover={{ y: -5 }}
                     className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-none"
@@ -131,14 +105,14 @@ const ClientDashboard = () => {
                     </p>
                 </motion.div>
 
-                {/* Profile Card (New) */}
-                <div className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 h-fit">
+                {/* Profile Card */}
+                <div className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 h-fit lg:col-span-2">
                     <div className="flex items-center justify-between mb-6">
                         <h3 className="text-2xl font-black">Company Profile</h3>
                         <Button onClick={() => window.location.href = '/client/onboarding'} variant="secondary" className="!text-xs !py-1">Edit</Button>
                     </div>
                     {profile ? (
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div>
                                 <label className="text-xs font-bold text-gray-400 uppercase">Company</label>
                                 <p className="font-bold text-lg">{profile.company_name}</p>
@@ -240,4 +214,3 @@ const ClientDashboard = () => {
 };
 
 export default ClientDashboard;
-

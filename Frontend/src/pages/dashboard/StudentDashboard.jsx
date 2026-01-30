@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '../../store/authStore';
 import ThemeToggle from '../../components/layout/ThemeToggle';
-import { LogOut, BookOpen, Target, Award, Play, ChevronRight, Briefcase } from 'lucide-react';
+import { LogOut, BookOpen, Target, Award, Play, ChevronRight, Briefcase, User, MapPin } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
 
@@ -46,9 +46,6 @@ const StudentDashboard = () => {
                 </div>
                 <div className="flex items-center gap-4">
                     <ThemeToggle />
-                    <Button onClick={() => window.location.href = '/student/onboarding'} variant="secondary" className="!text-xs">
-                        Update Profile
-                    </Button>
                     <Button
                         onClick={logout}
                         variant="secondary"
@@ -62,26 +59,80 @@ const StudentDashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Main Action Area */}
                 <div className="lg:col-span-2 space-y-8">
-                    {/* Assessment Call to Action */}
-                    <div className="bg-gradient-to-br from-black to-gray-800 dark:from-gray-800 dark:to-black rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
-                        <div className="relative z-10">
-                            <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-4 inline-block">
-                                Recommended
-                            </span>
-                            <h2 className="text-3xl md:text-5xl font-black mb-4">Skill Assessment Phase 1</h2>
-                            <p className="text-gray-300 text-lg mb-8 max-w-md">
-                                Verify your technical prowess. Proctored environment. 30 Minutes.
-                            </p>
-                            <Button
-                                onClick={() => navigate('/student/assessment')}
-                                className="!bg-white !text-black !border-none hover:scale-105 active:scale-95 text-lg px-8 shadow-xl"
-                            >
-                                Start Assessment <Play className="ml-2 w-5 h-5" />
-                            </Button>
+
+                    {/* Profile Card (Requested Feature) */}
+                    <div className="bg-white dark:bg-dark-card border-2 border-black dark:border-gray-700 rounded-[3rem] p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-none relative">
+                        <div className="flex justify-between items-start mb-4">
+                            <h3 className="text-2xl font-black flex items-center gap-2"><User className="fill-current" /> My Identification</h3>
+                            <Button onClick={() => window.location.href = '/student/onboarding'} variant="secondary" className="!text-xs !py-1">Update ID</Button>
                         </div>
-                        {/* Decor */}
-                        <div className="absolute right-0 top-0 w-64 h-64 bg-orange-500 rounded-full blur-[100px] opacity-20" />
+                        {profile ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs font-bold text-gray-400 uppercase">Education</label>
+                                    <p className="font-bold text-lg">{profile.education}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold text-gray-400 uppercase">Role</label>
+                                    <p className="font-bold text-lg">{profile.experience_level || 'Aspirant'}</p>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="text-xs font-bold text-gray-400 uppercase">Bio</label>
+                                    <p className="font-medium text-gray-600 dark:text-gray-300">{profile.bio}</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="italic text-gray-400">Loading profile data...</p>
+                        )}
                     </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Phase 1: Personality Assessment */}
+                        <div className="bg-gradient-to-br from-purple-900 to-black rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl transition-transform hover:scale-[1.01]">
+                            <div className="relative z-10 flex flex-col items-start h-full justify-between">
+                                <div>
+                                    <span className="bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3 inline-block">
+                                        Phase 1
+                                    </span>
+                                    <h2 className="text-3xl font-black mb-2">Personality</h2>
+                                    <p className="text-gray-300 mb-6 text-sm">
+                                        Discover your workplace persona.
+                                    </p>
+                                </div>
+                                <Button
+                                    onClick={() => navigate('/student/personality-test')}
+                                    className="!bg-white !text-black !border-none hover:scale-105 active:scale-95 px-6 shadow-xl flex items-center gap-2 w-full justify-center"
+                                >
+                                    Start Analysis <Play className="w-4 h-4" />
+                                </Button>
+                            </div>
+                            <div className="absolute right-0 top-0 w-48 h-48 bg-purple-500 rounded-full blur-[80px] opacity-20" />
+                        </div>
+
+                        {/* Phase 2: Skill Verification */}
+                        <div className="bg-gradient-to-br from-black to-gray-800 dark:from-gray-800 dark:to-black rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl transition-transform hover:scale-[1.01]">
+                            <div className="relative z-10 flex flex-col items-start h-full justify-between">
+                                <div>
+                                    <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3 inline-block">
+                                        Phase 2
+                                    </span>
+                                    <h2 className="text-3xl font-black mb-2">Skill Check</h2>
+                                    <p className="text-gray-300 mb-6 text-sm">
+                                        Verify your technical prowess. Proctored.
+                                    </p>
+                                </div>
+                                <Button
+                                    onClick={() => navigate('/student/assessment')}
+                                    className="!bg-orange-500 !text-white !border-none hover:scale-105 active:scale-95 px-6 shadow-xl flex items-center gap-2 w-full justify-center"
+                                >
+                                    Start Test <Play className="w-4 h-4" />
+                                </Button>
+                            </div>
+                            {/* Decor */}
+                            <div className="absolute right-0 top-0 w-48 h-48 bg-orange-500 rounded-full blur-[80px] opacity-20" />
+                        </div>
+                    </div>
+
 
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -137,19 +188,24 @@ const StudentDashboard = () => {
                             <div className="relative pl-8">
                                 <div className="absolute left-1 top-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-dark-card" />
                                 <h4 className="font-bold">Profile Created</h4>
-                                <p className="text-xs text-gray-500">{new Date().toLocaleDateString()}</p>
+                                <p className="text-xs text-gray-500">{new Date(user?.date_joined || Date.now()).toLocaleDateString()}</p>
                             </div>
                             {user && user.onboarding_stage >= 2 && (
                                 <div className="relative pl-8">
                                     <div className="absolute left-1 top-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white dark:border-dark-card" />
-                                    <h4 className="font-bold">Resume Analyzed</h4>
-                                    <p className="text-xs text-gray-500 text-green-600 font-bold">Completed</p>
+                                    <h4 className="font-bold">Report Generated</h4>
+                                    <p className="text-xs text-gray-500 text-green-600 font-bold">Analysis Complete</p>
                                 </div>
                             )}
                             <div className="relative pl-8 opacity-50">
                                 <div className="absolute left-1 top-1 w-4 h-4 bg-gray-300 rounded-full border-2 border-white dark:border-dark-card" />
                                 <h4 className="font-bold">Assessment Phase 1</h4>
                                 <p className="text-xs text-gray-500">Pending</p>
+                            </div>
+                            <div className="relative pl-8 opacity-50">
+                                <div className="absolute left-1 top-1 w-4 h-4 bg-gray-300 rounded-full border-2 border-white dark:border-dark-card" />
+                                <h4 className="font-bold">Assessment Phase 2</h4>
+                                <p className="text-xs text-gray-500">Locked</p>
                             </div>
                         </div>
                         <Button variant="outline" className="w-full mt-6 flex items-center justify-center gap-2">
