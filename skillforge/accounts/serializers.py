@@ -69,3 +69,40 @@ class ClientOnboardingSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "company_name": {"required": True},
         }
+
+from rest_framework import serializers
+from .models import StudentProfile, ClientProfile
+
+class StudentProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source="user.email", read_only=True)
+
+    class Meta:
+        model = StudentProfile
+        fields = [
+            "email",
+            "full_name",
+            "location",
+            "bio",
+            "education",
+            "experience_level",
+            "github_url",
+            "portfolio_links",
+            "skills",
+            "resume",
+            "rating",
+        ]
+
+
+class ClientProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source="user.email", read_only=True)
+
+    class Meta:
+        model = ClientProfile
+        fields = [
+            "email",
+            "company_name",
+            "industry",
+            "website",
+            "address",
+        ]
+
