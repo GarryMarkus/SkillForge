@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django
+media/
+staticfiles/
+
+# React / Node
+node_modules/
+build/
+.cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+*.env
+
+
+
+# =========================
+# Node
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Build outputs
+# =========================
+build/
+dist/
+coverage/
+
+# Vite / Webpack / Next chunks
+*.map
+chunk-*.js
+.metadata.json
+
+# =========================
+# Local env
+# =========================
+.env
+.env.local
+.env.*
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# Lock files (ONLY ignore if inside subfolders)
+# =========================
+**/package-lock.json
