@@ -1,26 +1,19 @@
 import React from 'react';
-import Layout from './components/layout/Layout';
-import Navbar from './components/layout/Navbar';
-import Hero from './components/sections/Hero';
-import TrustBar from './components/sections/TrustBar';
-import LearnVerifyEarn from './components/sections/LearnVerifyEarn';
-import SkillCIBIL from './components/sections/SkillCIBIL';
-import Testimonials from './components/sections/Testimonials';
-import CTA from './components/sections/CTA';
-import Footer from './components/sections/Footer';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import AuthPage from './pages/AuthPage';
 
 function App() {
   return (
-    <Layout>
-      <Navbar />
-      <Hero />
-      <TrustBar />
-      <LearnVerifyEarn />
-      <SkillCIBIL />
-      <Testimonials />
-      <CTA />
-      <Footer />
-    </Layout>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/auth" element={<AuthPage />} />
+        {/* Redirect generic login/signup routes to /auth */}
+        <Route path="/login" element={<Navigate to="/auth" replace />} />
+        <Route path="/signup" element={<Navigate to="/auth" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
