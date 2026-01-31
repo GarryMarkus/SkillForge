@@ -1124,16 +1124,6 @@ We welcome contributions from the community! Please read our [Contributing Guide
 
 ---
 
-## 📞 Support & Contact
-
-- **Documentation:** [docs.skillforge.com](https://docs.skillforge.com)
-- **Email:** support@skillforge.com
-- **Discord:** [Join our community](https://discord.gg/skillforge)
-- **Twitter:** [@SkillForge](https://twitter.com/skillforge)
-- **Issue Tracker:** [GitHub Issues](https://github.com/skillforge/issues)
-
----
-
 ## 📜 License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
