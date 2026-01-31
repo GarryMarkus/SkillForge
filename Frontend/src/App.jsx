@@ -8,6 +8,7 @@ import ClientOnboarding from './pages/client/ClientOnboarding';
 import StudentOnboarding from './pages/student/StudentOnboarding';
 import AssessmentPage from './pages/student/AssessmentPage';
 import PersonalityTest from './pages/student/PersonalityTest';
+import UpskillPage from './pages/student/UpskillPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/student/onboarding" element={<StudentOnboarding />} />
         <Route path="/student/assessment" element={<AssessmentPage />} />
         <Route path="/student/personality-test" element={<PersonalityTest />} />
+        <Route path="/student/upskill" element={<UpskillPage />} />
         <Route path="/client/dashboard" element={<ClientDashboard />} />
         <Route path="/client/onboarding" element={<ClientOnboarding />} />
       </Routes>

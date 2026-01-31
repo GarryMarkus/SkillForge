@@ -38,7 +38,33 @@ const StudentDashboard = () => {
                 const res = await fetch('http://localhost:8000/api/verification/recommendation/', {
                     headers: { 'Authorization': `Bearer ${tokens.access}` }
                 });
-                if (res.ok) setRecommendation(await res.json());
+                if (res.ok) {
+                    const data = await res.json();
+                    // Parse the nested recommendation JSON if it exists
+                    if (data.status === 'ready' && data.recommendation) {
+                        try {
+                            // recommendation might be a JSON string or already an object
+                            const recData = typeof data.recommendation === 'string'
+                                ? JSON.parse(data.recommendation)
+                                : data.recommendation;
+                            setRecommendation({
+                                status: 'ready',
+                                star_rating: recData.star_rating,
+                                strengths: recData.strengths,
+                                weaknesses: recData.weaknesses,
+                                recommended_tags: recData.recommended_tags,
+                                personality_score: data.personality_score,
+                                skill_score: data.skill_score,
+                                stage: data.stage
+                            });
+                        } catch (parseErr) {
+                            console.error('Failed to parse recommendation:', parseErr);
+                            setRecommendation(data);
+                        }
+                    } else {
+                        setRecommendation(data);
+                    }
+                }
             } catch (e) { console.error(e); }
 
             // Fetch My Applications
@@ -149,33 +175,47 @@ const StudentDashboard = () => {
                     </div>
 
                     {/* Phase Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="bg-gradient-to-br from-purple-900 to-black rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl transition-transform hover:scale-[1.01]">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="bg-gradient-to-br from-purple-900 to-black rounded-[2.5rem] p-6 text-white relative overflow-hidden shadow-2xl transition-transform hover:scale-[1.01]">
                             <div className="relative z-10 flex flex-col items-start h-full justify-between">
                                 <div>
                                     <span className="bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3 inline-block">Phase 1</span>
-                                    <h2 className="text-3xl font-black mb-2">Personality</h2>
-                                    <p className="text-gray-300 mb-6 text-sm">Discover your workplace persona.</p>
+                                    <h2 className="text-2xl font-black mb-2">Personality</h2>
+                                    <p className="text-gray-300 mb-4 text-sm">Discover your persona.</p>
                                 </div>
-                                <Button onClick={() => navigate('/student/personality-test')} className="!bg-white !text-black !border-none hover:scale-105 active:scale-95 px-6 shadow-xl flex items-center gap-2 w-full justify-center">
-                                    Start Analysis <Play className="w-4 h-4" />
+                                <Button onClick={() => navigate('/student/personality-test')} className="!bg-white !text-black !border-none hover:scale-105 active:scale-95 px-4 shadow-xl flex items-center gap-2 w-full justify-center text-sm">
+                                    Start <Play className="w-4 h-4" />
                                 </Button>
                             </div>
-                            <div className="absolute right-0 top-0 w-48 h-48 bg-purple-500 rounded-full blur-[80px] opacity-20" />
+                            <div className="absolute right-0 top-0 w-32 h-32 bg-purple-500 rounded-full blur-[60px] opacity-20" />
                         </div>
 
-                        <div className="bg-gradient-to-br from-black to-gray-800 dark:from-gray-800 dark:to-black rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl transition-transform hover:scale-[1.01]">
+                        <div className="bg-gradient-to-br from-black to-gray-800 dark:from-gray-800 dark:to-black rounded-[2.5rem] p-6 text-white relative overflow-hidden shadow-2xl transition-transform hover:scale-[1.01]">
                             <div className="relative z-10 flex flex-col items-start h-full justify-between">
                                 <div>
                                     <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3 inline-block">Phase 2</span>
-                                    <h2 className="text-3xl font-black mb-2">Skill Check</h2>
-                                    <p className="text-gray-300 mb-6 text-sm">Verify your technical prowess. Proctored.</p>
+                                    <h2 className="text-2xl font-black mb-2">Skill Check</h2>
+                                    <p className="text-gray-300 mb-4 text-sm">Verify your prowess.</p>
                                 </div>
-                                <Button onClick={() => navigate('/student/assessment')} className="!bg-orange-500 !text-white !border-none hover:scale-105 active:scale-95 px-6 shadow-xl flex items-center gap-2 w-full justify-center">
-                                    Start Test <Play className="w-4 h-4" />
+                                <Button onClick={() => navigate('/student/assessment')} className="!bg-orange-500 !text-white !border-none hover:scale-105 active:scale-95 px-4 shadow-xl flex items-center gap-2 w-full justify-center text-sm">
+                                    Start <Play className="w-4 h-4" />
                                 </Button>
                             </div>
-                            <div className="absolute right-0 top-0 w-48 h-48 bg-orange-500 rounded-full blur-[80px] opacity-20" />
+                            <div className="absolute right-0 top-0 w-32 h-32 bg-orange-500 rounded-full blur-[60px] opacity-20" />
+                        </div>
+
+                        <div className="bg-gradient-to-br from-pink-600 to-purple-700 rounded-[2.5rem] p-6 text-white relative overflow-hidden shadow-2xl transition-transform hover:scale-[1.01]">
+                            <div className="relative z-10 flex flex-col items-start h-full justify-between">
+                                <div>
+                                    <span className="bg-pink-400 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mb-3 inline-block">Phase 3</span>
+                                    <h2 className="text-2xl font-black mb-2">Upskill</h2>
+                                    <p className="text-gray-300 mb-4 text-sm">AI-powered learning.</p>
+                                </div>
+                                <Button onClick={() => navigate('/student/upskill')} className="!bg-white !text-pink-600 !border-none hover:scale-105 active:scale-95 px-4 shadow-xl flex items-center gap-2 w-full justify-center text-sm">
+                                    Learn <ChevronRight className="w-4 h-4" />
+                                </Button>
+                            </div>
+                            <div className="absolute right-0 top-0 w-32 h-32 bg-pink-400 rounded-full blur-[60px] opacity-20" />
                         </div>
                     </div>
 
@@ -210,18 +250,59 @@ const StudentDashboard = () => {
                         </h3>
                         {recommendation?.status === 'ready' ? (
                             <div className="space-y-4">
+                                {/* Star Rating */}
                                 <div className="flex items-center gap-2">
                                     {[...Array(5)].map((_, i) => (
-                                        <Star key={i} className={`w-5 h-5 ${i < (recommendation.star_rating || 0) ? 'fill-yellow-400 text-yellow-400' : 'text-white/30'}`} />
+                                        <Star key={i} className={`w-5 h-5 ${i < Math.round(recommendation.star_rating || 0) ? 'fill-yellow-400 text-yellow-400' : 'text-white/30'}`} />
                                     ))}
+                                    <span className="text-sm ml-2">{recommendation.star_rating?.toFixed(1) || '0.0'}/5</span>
                                 </div>
-                                {recommendation.strengths && (
+
+                                {/* Stage Badge */}
+                                <div className="flex items-center gap-2">
+                                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${recommendation.stage === 'verified' ? 'bg-green-500' : 'bg-orange-400'}`}>
+                                        {recommendation.stage === 'verified' ? '✓ Verified' : 'Needs Improvement'}
+                                    </span>
+                                </div>
+
+                                {/* Scores */}
+                                <div className="grid grid-cols-2 gap-3 text-center">
+                                    <div className="bg-white/10 rounded-xl p-3">
+                                        <p className="text-2xl font-black">{recommendation.personality_score || 0}</p>
+                                        <p className="text-xs text-white/70">Personality</p>
+                                    </div>
+                                    <div className="bg-white/10 rounded-xl p-3">
+                                        <p className="text-2xl font-black">{recommendation.skill_score?.toFixed(1) || '0.0'}%</p>
+                                        <p className="text-xs text-white/70">Skill Test</p>
+                                    </div>
+                                </div>
+
+                                {/* Strengths */}
+                                {recommendation.strengths && recommendation.strengths.length > 0 && (
                                     <div>
-                                        <p className="text-xs font-bold uppercase text-white/70">Strengths</p>
-                                        <p className="text-sm">{Array.isArray(recommendation.strengths) ? recommendation.strengths.join(', ') : recommendation.strengths}</p>
+                                        <p className="text-xs font-bold uppercase text-white/70 mb-1">Strengths</p>
+                                        <ul className="text-xs space-y-1 max-h-20 overflow-y-auto">
+                                            {(Array.isArray(recommendation.strengths) ? recommendation.strengths.slice(0, 3) : [recommendation.strengths]).map((s, i) => (
+                                                <li key={i} className="flex items-start gap-1"><span className="text-green-300">✓</span> {s}</li>
+                                            ))}
+                                        </ul>
                                     </div>
                                 )}
-                                {recommendation.recommended_tags && (
+
+                                {/* Weaknesses */}
+                                {recommendation.weaknesses && recommendation.weaknesses.length > 0 && (
+                                    <div>
+                                        <p className="text-xs font-bold uppercase text-white/70 mb-1">Areas to Improve</p>
+                                        <ul className="text-xs space-y-1 max-h-20 overflow-y-auto">
+                                            {(Array.isArray(recommendation.weaknesses) ? recommendation.weaknesses.slice(0, 2) : [recommendation.weaknesses]).map((w, i) => (
+                                                <li key={i} className="flex items-start gap-1"><span className="text-orange-300">!</span> {w}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                {/* Recommended Tags */}
+                                {recommendation.recommended_tags && recommendation.recommended_tags.length > 0 && (
                                     <div className="flex flex-wrap gap-2 mt-2">
                                         {(Array.isArray(recommendation.recommended_tags) ? recommendation.recommended_tags : []).map((tag, i) => (
                                             <span key={i} className="bg-white/20 px-2 py-1 rounded-full text-xs font-bold">{tag}</span>
@@ -230,7 +311,7 @@ const StudentDashboard = () => {
                                 )}
                             </div>
                         ) : (
-                            <p className="text-sm text-white/80">Complete Phase 2 Skill Test to unlock your personalized AI recommendation.</p>
+                            <p className="text-sm text-white/80">{recommendation?.message || 'Complete Phase 2 Skill Test to unlock your personalized AI recommendation.'}</p>
                         )}
                         <div className="absolute right-0 bottom-0 w-32 h-32 bg-white rounded-full blur-[60px] opacity-10" />
                     </div>
