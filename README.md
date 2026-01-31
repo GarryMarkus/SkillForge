@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![SkillForge Logo](https://img.shields.io/badge/SkillForge-Transform%20Into%20Top%201%25-3B82F6?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMkw0IDZWMTJDNCA0LjkgNi45IDIgMTIgMlpNMTIgMjJDMTcuMSAyMiAyMCAxOS4xIDIwIDEyVjZMMTIgMloiIGZpbGw9IndoaXRlIi8+PC9zdmc+)
+![SkillForge Logo](./assets/logosvg.svg)
 
 **Bridging the Gap Between Learning and Earning**
 
@@ -19,26 +19,49 @@
 
 ## 📑 Table of Contents
 
-- [Overview](#overview)
-- [System Architecture](#system-architecture)
-- [Key Features](#key-features)
-- [Technology Stack](#technology-stack)
-- [User Flows](#user-flows)
-- [Installation & Setup](#installation--setup)
-- [Project Structure](#project-structure)
-- [API Integration](#api-integration)
-- [Security Features](#security-features)
-- [Proctoring System](#proctoring-system)
-- [Dashboard & Portfolio](#dashboard--portfolio)
-- [Job Matching System](#job-matching-system)
-- [Configuration](#configuration)
-- [Development Guide](#development-guide)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
+- Overview
+- Screenshots
+- System Architecture
+- Key Features
+- Technology Stack
+- User Flows
+- Installation & Setup
+- Project Structure
+- API Integration
+- Security Features
+- Proctoring System
+- Dashboard & Portfolio
+- Job Matching System
+- Configuration
+- Development Guide
+- Deployment
+- Contributing
+- License
 
 ---
 
+## 📸 Screenshots
+
+### Loader Page:
+![Loader](./assets/loader.png)
+
+### Home Page:
+![Home Page](./assets/homepage.png)
+
+### User Selection Page:
+![User Page](./assets/userpage.png)
+
+### User Profile Page:
+![User Profile](./assets/userprofile.png)
+
+### Browse Job Section:
+![Browser Job Section](./assets/browsejobsection.png)
+
+### Learning Page:
+![Learning Page](./assets/learningpage.png)
+
+
+---
 ## 🌟 Overview
 
 **SkillForge** is a comprehensive platform that transforms learners into verified, job-ready professionals through AI-powered skill verification, adaptive learning paths, and intelligent job matching. Our platform serves both students/learners and clients/recruiters, providing a seamless bridge between education and employment.
@@ -60,9 +83,10 @@ Transform learners into the **top 1%** of verified talent through:
 
 ## 🏗️ System Architecture
 
+### Website Flowchart:
 ![SkillForge Architecture](./assets/skillforge-flow.png)
 
-### Application Flow Overview
+### Website Flow Overview:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
