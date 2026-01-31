@@ -1,8 +1,16 @@
-# 🎓 SkillForge - Professional Skill Verification & Job Matching Platform
+<h1 align="center">
+  <img 
+    src="./assets/logosvg.svg" 
+    alt="SkillForge Logo" 
+    width="36"
+    style="vertical-align: middle; margin-right: 10px;"
+  />
+  SkillForge
+</h1>
 
-<div align="center">
-
-![SkillForge Logo](./assets/logosvg.svg)
+<p align="center">
+  <strong>Professional Skill Verification & Job Matching Platform</strong>
+</p>
 
 **Bridging the Gap Between Learning and Earning**
 
