@@ -72,18 +72,41 @@ const AssessmentPage = () => {
     };
 
     const startTest = async () => {
-        // Enforce Fullscreen
+        // Check if already in fullscreen
+        if (document.fullscreenElement) {
+            setExamStarted(true);
+            return;
+        }
+
+        // Enforce Fullscreen with retry
         const elem = document.documentElement;
-        if (elem.requestFullscreen) {
+        const requestFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
+
+        if (requestFS) {
             try {
-                await elem.requestFullscreen();
+                await requestFS.call(elem);
+                // Wait briefly to confirm fullscreen is active
+                await new Promise(resolve => setTimeout(resolve, 100));
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    setExamStarted(true);
+                } else {
+                    // Retry once
+                    await requestFS.call(elem);
+                    setExamStarted(true);
+                }
             } catch (err) {
                 console.error("Fullscreen blocked", err);
-                alert("Please allow Fullscreen to continue.");
-                return;
+                // Show confirmation to proceed without fullscreen (proctoring still works)
+                const proceed = window.confirm("Fullscreen mode is recommended but couldn't be enabled. Do you want to continue anyway? Note: Proctoring will still be active.");
+                if (proceed) {
+                    setExamStarted(true);
+                }
             }
+        } else {
+            // Browser doesn't support fullscreen API - proceed anyway with warning
+            alert("Your browser doesn't support fullscreen mode. Proctoring will still be active.");
+            setExamStarted(true);
         }
-        setExamStarted(true);
     };
 
     const handleAnswer = (option) => {
@@ -203,8 +226,8 @@ const AssessmentPage = () => {
                                         key={idx}
                                         onClick={() => handleAnswer(option)}
                                         className={`p-6 text-left rounded-2xl border-2 transition-all text-xl font-medium ${answers[currentQuestion] === option
-                                                ? 'bg-orange-500 border-orange-500 text-black'
-                                                : 'border-gray-700 hover:border-white hover:bg-gray-800'
+                                            ? 'bg-orange-500 border-orange-500 text-black'
+                                            : 'border-gray-700 hover:border-white hover:bg-gray-800'
                                             }`}
                                     >
                                         <span className="mr-4 opacity-50">{String.fromCharCode(65 + idx)}.</span>

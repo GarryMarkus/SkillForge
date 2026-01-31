@@ -6,6 +6,7 @@ import ThemeToggle from '../../components/layout/ThemeToggle';
 import Button from '../../components/ui/Button';
 import { ArrowLeft, Sparkles, BookOpen, Clock, Tag, Loader2, ChevronRight, GraduationCap, Zap } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const UpskillPage = () => {
     const { user, tokens } = useAuthStore();
@@ -267,8 +268,74 @@ const UpskillPage = () => {
                                     )}
 
                                     {/* Markdown Content */}
-                                    <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-black prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-white">
-                                        <ReactMarkdown>
+                                    <div className="module-content prose prose-lg dark:prose-invert max-w-none">
+                                        <ReactMarkdown
+                                            remarkPlugins={[remarkGfm]}
+                                            components={{
+                                                h1: ({ node, ...props }) => (
+                                                    <h1 className="text-2xl font-black mt-8 mb-4 pb-3 border-b-2 border-purple-200 dark:border-purple-800 text-gray-900 dark:text-white" {...props} />
+                                                ),
+                                                h2: ({ node, ...props }) => (
+                                                    <h2 className="text-xl font-bold mt-6 mb-3 text-purple-700 dark:text-purple-400 flex items-center gap-2" {...props}>
+                                                        <span className="w-1 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></span>
+                                                        {props.children}
+                                                    </h2>
+                                                ),
+                                                h3: ({ node, ...props }) => (
+                                                    <h3 className="text-lg font-bold mt-5 mb-2 text-gray-800 dark:text-gray-200" {...props} />
+                                                ),
+                                                p: ({ node, ...props }) => (
+                                                    <p className="my-3 leading-relaxed text-gray-700 dark:text-gray-300" {...props} />
+                                                ),
+                                                ul: ({ node, ...props }) => (
+                                                    <ul className="my-4 space-y-2 list-none" {...props} />
+                                                ),
+                                                ol: ({ node, ...props }) => (
+                                                    <ol className="my-4 space-y-2 list-decimal list-inside" {...props} />
+                                                ),
+                                                li: ({ node, children, ...props }) => (
+                                                    <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300" {...props}>
+                                                        <span className="mt-2 w-1.5 h-1.5 rounded-full bg-purple-500 flex-shrink-0"></span>
+                                                        <span>{children}</span>
+                                                    </li>
+                                                ),
+                                                code: ({ node, inline, className, children, ...props }) => {
+                                                    if (inline) {
+                                                        return (
+                                                            <code className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
+                                                                {children}
+                                                            </code>
+                                                        );
+                                                    }
+                                                    return (
+                                                        <code className={className} {...props}>{children}</code>
+                                                    );
+                                                },
+                                                pre: ({ node, ...props }) => (
+                                                    <pre className="my-4 p-4 bg-gray-900 dark:bg-black rounded-xl overflow-x-auto text-sm text-gray-100 border border-gray-800" {...props} />
+                                                ),
+                                                blockquote: ({ node, ...props }) => (
+                                                    <blockquote className="my-4 pl-4 py-2 border-l-4 border-purple-500 bg-purple-50 dark:bg-purple-900/20 rounded-r-lg italic text-gray-600 dark:text-gray-400" {...props} />
+                                                ),
+                                                strong: ({ node, ...props }) => (
+                                                    <strong className="font-bold text-gray-900 dark:text-white" {...props} />
+                                                ),
+                                                a: ({ node, ...props }) => (
+                                                    <a className="text-purple-600 dark:text-purple-400 underline hover:text-purple-800 dark:hover:text-purple-300 transition-colors" target="_blank" rel="noopener noreferrer" {...props} />
+                                                ),
+                                                table: ({ node, ...props }) => (
+                                                    <div className="my-4 overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
+                                                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700" {...props} />
+                                                    </div>
+                                                ),
+                                                th: ({ node, ...props }) => (
+                                                    <th className="px-4 py-3 bg-purple-50 dark:bg-purple-900/30 text-left text-sm font-bold text-gray-900 dark:text-white" {...props} />
+                                                ),
+                                                td: ({ node, ...props }) => (
+                                                    <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-800" {...props} />
+                                                ),
+                                            }}
+                                        >
                                             {parseContent(currentModule.content).markdown}
                                         </ReactMarkdown>
                                     </div>

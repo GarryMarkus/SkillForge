@@ -1,29 +1,114 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
-import { AlertTriangle, Eye, AlertOctagon } from 'lucide-react';
+import { AlertTriangle, Eye, AlertOctagon, UserX } from 'lucide-react';
 
 const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
     const [warnings, setWarnings] = useState(0);
     const [isFullScreen, setIsFullScreen] = useState(true);
-    const [isArmed, setIsArmed] = useState(false); // Grace period
+    const [isArmed, setIsArmed] = useState(false);
+    const [noFaceWarning, setNoFaceWarning] = useState(false);
+    const webcamRef = useRef(null);
+    const canvasRef = useRef(null);
+    const noFaceCountRef = useRef(0);
+    const lastFaceCheckRef = useRef(Date.now());
 
-    // Arm the system after 3 seconds to allow initial render/popup handling
+    // Arm the system after 3 seconds
     useEffect(() => {
         const timer = setTimeout(() => setIsArmed(true), 3000);
         return () => clearTimeout(timer);
     }, []);
 
+    // Face detection using simple brightness/motion detection
+    const checkForFace = useCallback(() => {
+        if (!webcamRef.current || !isArmed) return;
+
+        const video = webcamRef.current.video;
+        if (!video || video.readyState !== 4) return;
+
+        // Create canvas if not exists
+        if (!canvasRef.current) {
+            canvasRef.current = document.createElement('canvas');
+        }
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+        canvas.width = 64;  // Low resolution for performance
+        canvas.height = 48;
+
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        // Calculate average brightness and variance in center region
+        let totalBrightness = 0;
+        let pixelCount = 0;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const regionSize = 20;
+
+        for (let y = Math.max(0, centerY - regionSize); y < Math.min(canvas.height, centerY + regionSize); y++) {
+            for (let x = Math.max(0, centerX - regionSize); x < Math.min(canvas.width, centerX + regionSize); x++) {
+                const idx = (y * canvas.width + x) * 4;
+                const brightness = (data[idx] + data[idx + 1] + data[idx + 2]) / 3;
+                totalBrightness += brightness;
+                pixelCount++;
+            }
+        }
+
+        const avgBrightness = totalBrightness / pixelCount;
+
+        // Check for skin-tone-like colors in center (very simplified)
+        let skinTonePixels = 0;
+        for (let y = Math.max(0, centerY - regionSize); y < Math.min(canvas.height, centerY + regionSize); y++) {
+            for (let x = Math.max(0, centerX - regionSize); x < Math.min(canvas.width, centerX + regionSize); x++) {
+                const idx = (y * canvas.width + x) * 4;
+                const r = data[idx], g = data[idx + 1], b = data[idx + 2];
+                // Simple skin tone detection (works for various skin tones)
+                if (r > 60 && g > 40 && b > 20 && r > g && r > b && Math.abs(r - g) > 15) {
+                    skinTonePixels++;
+                }
+            }
+        }
+
+        const skinToneRatio = skinTonePixels / pixelCount;
+
+        // If too dark or no skin-tone detected, might be no face
+        const isFaceDetected = avgBrightness > 30 && skinToneRatio > 0.05;
+
+        if (!isFaceDetected) {
+            noFaceCountRef.current++;
+            if (noFaceCountRef.current >= 5) { // 5 consecutive checks (~5 seconds)
+                setNoFaceWarning(true);
+                if (noFaceCountRef.current === 5) {
+                    onWarning?.("No face detected - please stay visible to camera");
+                }
+            }
+        } else {
+            noFaceCountRef.current = 0;
+            setNoFaceWarning(false);
+        }
+    }, [isArmed, onWarning]);
+
+    // Run face detection every second
+    useEffect(() => {
+        if (!isArmed) return;
+        const interval = setInterval(checkForFace, 1000);
+        return () => clearInterval(interval);
+    }, [isArmed, checkForFace]);
+
     // 1. Enforce Fullscreen
     const enterFullScreen = () => {
         const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen().catch((err) => console.log(err));
+        const requestFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
+        if (requestFS) {
+            requestFS.call(elem).catch((err) => console.log(err));
         }
     };
 
     useEffect(() => {
         const handleFullScreenChange = () => {
-            if (!document.fullscreenElement && isArmed) {
+            const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+            if (!isFS && isArmed) {
                 setIsFullScreen(false);
                 triggerWarning("Exited Fullscreen");
             } else {
@@ -32,11 +117,19 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
         };
 
         document.addEventListener('fullscreenchange', handleFullScreenChange);
-        return () => document.removeEventListener('fullscreenchange', handleFullScreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullScreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullScreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullScreenChange);
+
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullScreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullScreenChange);
+            document.removeEventListener('mozfullscreenchange', handleFullScreenChange);
+            document.removeEventListener('MSFullscreenChange', handleFullScreenChange);
+        };
     }, [isArmed]);
 
     // 2. Tab Switching & Focus Loss Detection
-    // Using both visibilitychange (tabs) and blur (minimize/alt-tab)
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden && isArmed) {
@@ -46,9 +139,6 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
 
         const handleBlur = () => {
             if (isArmed && document.activeElement !== document.body) {
-                // Focus lost to another app or browser chrome
-                // slightly less strict on blur to allow for legit browser interactions if needed, 
-                // but for strict test:
                 triggerWarning("Window focus lost (Alt-Tab/Minimize)!");
             }
         };
@@ -103,20 +193,35 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
     return (
         <div className="relative min-h-screen bg-gray-900 text-white select-none">
             {/* Webcam Overlay */}
-            <div className="fixed bottom-4 right-4 w-48 h-36 bg-black rounded-xl overflow-hidden shadow-2xl z-50 border-2 border-red-500 pointer-events-none">
+            <div className={`fixed bottom-4 right-4 w-48 h-36 bg-black rounded-xl overflow-hidden shadow-2xl z-50 border-2 ${noFaceWarning ? 'border-yellow-500 animate-pulse' : 'border-red-500'} pointer-events-none`}>
                 <Webcam
+                    ref={webcamRef}
                     audio={false}
                     className="w-full h-full object-cover"
+                    screenshotFormat="image/jpeg"
                 />
                 <div className="absolute top-2 left-2 flex items-center gap-1 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
                     <Eye className="w-3 h-3" /> REC
                 </div>
+                {/* No Face Warning Badge */}
+                {noFaceWarning && (
+                    <div className="absolute bottom-2 left-2 right-2 flex items-center justify-center gap-1 bg-yellow-500 text-black text-[10px] font-bold px-2 py-1 rounded-full">
+                        <UserX className="w-3 h-3" /> NO FACE DETECTED
+                    </div>
+                )}
             </div>
 
             {/* Warning Banner */}
             {warnings > 0 && (
                 <div className="fixed top-0 left-0 right-0 bg-red-600 p-2 text-center font-bold text-sm animate-pulse z-50">
                     WARNING: Security protocols breached! ({warnings}/3)
+                </div>
+            )}
+
+            {/* No Face Warning Banner */}
+            {noFaceWarning && warnings < 3 && (
+                <div className="fixed top-10 left-0 right-0 bg-yellow-500 text-black p-2 text-center font-bold text-sm z-50">
+                    ⚠️ No face detected! Please stay visible to the camera.
                 </div>
             )}
 
