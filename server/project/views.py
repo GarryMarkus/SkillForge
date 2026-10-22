@@ -124,6 +124,16 @@ class ApplyJobAPI(APIView):
         if JobApplication.objects.filter(job=job, student=student_profile).exists():
             return Response({"error": "Already applied to this job"}, status=status.HTTP_400_BAD_REQUEST)
 
+        if job.min_skill_score and job.min_skill_score > 0:
+            report = getattr(student_profile, "report", None)
+            score = float(report.skill_test_score) if (report and report.skill_test_score) else 0.0
+            effective_score = score * 10 if job.min_skill_score > 100 and score <= 100 else score
+            if effective_score < job.min_skill_score:
+                return Response(
+                    {"error": f"Minimum skill score of {job.min_skill_score} required to apply. Your current verified score is {round(score, 1)}."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
         application = JobApplication.objects.create(job=job, student=student_profile)
         return Response({
             "message": "Application submitted successfully",
