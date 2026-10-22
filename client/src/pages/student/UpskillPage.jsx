@@ -232,7 +232,7 @@ const UpskillPage = () => {
                                                     <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    {getLevelBadge(m.learner_level)}
+                                                    {getLevelBadge(m.level || m.learner_level)}
                                                     <span className="text-[10px] text-gray-400">
                                                         {new Date(m.created_at).toLocaleDateString()}
                                                     </span>
@@ -275,7 +275,7 @@ const UpskillPage = () => {
                                             <span className="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-purple-600 text-white">
                                                 {currentModule.topic}
                                             </span>
-                                            {getLevelBadge(currentModule.learner_level)}
+                                            {getLevelBadge(currentModule.level || currentModule.learner_level)}
                                             <span className="text-xs text-gray-400 flex items-center gap-1">
                                                 <Clock className="w-3.5 h-3.5" />
                                                 Generated {new Date(currentModule.created_at).toLocaleDateString()}
