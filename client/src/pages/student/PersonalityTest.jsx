@@ -5,6 +5,7 @@ import { useAuthStore } from '../../store/authStore';
 import Button from '../../components/ui/Button';
 import { Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
 import ProctorWrapper from '../../components/assessment/ProctorWrapper';
+import api from '../../lib/api';
 
 const PersonalityTest = () => {
     const { tokens } = useAuthStore();
@@ -22,14 +23,12 @@ const PersonalityTest = () => {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/verification/personality/questions/', {
-                    headers: { 'Authorization': `Bearer ${tokens?.access}` }
-                });
+                const response = await api.get('/verification/personality/questions/');
                 if (response.ok) {
                     const data = await response.json();
                     setQuestions(data);
                 }
-            } catch (error) { console.error("Failed", error); }
+            } catch (error) { console.error("Failed to load questions", error); }
             finally { setLoading(false); }
         };
         fetchQuestions();
@@ -38,7 +37,7 @@ const PersonalityTest = () => {
     const startTest = async () => {
         const elem = document.documentElement;
         if (elem.requestFullscreen) {
-            try { await elem.requestFullscreen(); } catch (e) { }
+            try { await elem.requestFullscreen(); } catch { /* ignore */ }
         }
         setStarted(true);
     };
@@ -49,17 +48,10 @@ const PersonalityTest = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/verification/personality/submit/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokens?.access}`
-                },
-                body: JSON.stringify({ answers })
-            });
+            const response = await api.post('/verification/personality/submit/', { answers });
             if (response.ok) navigate('/student/dashboard');
             else alert("Submission failed.");
-        } catch (error) { console.error(error); }
+        } catch (error) { console.error("Submission error", error); }
     };
 
     if (loading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
@@ -118,7 +110,7 @@ const PersonalityTest = () => {
                                         >
                                             {label}
                                         </button>
-                                    )
+                                    );
                                 })}
                             </div>
                         </motion.div>

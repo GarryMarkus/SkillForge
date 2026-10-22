@@ -2,7 +2,7 @@ import React from 'react';
 import { useThemeStore } from '../../store/themeStore';
 import { Sun, Moon } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { cn } from './Layout';
+import { cn } from '../../lib/cn';
 
 const ThemeToggle = ({ className }) => {
     const { theme, toggleTheme } = useThemeStore();

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, EyeOff, Check, X } from 'lucide-react';
-import { cn } from '../layout/Layout';
+import { cn } from '../../lib/cn';
 
 const Input = ({
     label,

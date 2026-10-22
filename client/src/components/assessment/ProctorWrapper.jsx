@@ -10,13 +10,23 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
     const noFaceCountRef = useRef(0);
-    const lastFaceCheckRef = useRef(Date.now());
 
     // Arm the system after 3 seconds
     useEffect(() => {
         const timer = setTimeout(() => setIsArmed(true), 3000);
         return () => clearTimeout(timer);
     }, []);
+
+    const triggerWarning = useCallback((reason) => {
+        setWarnings(prev => {
+            const newCount = prev + 1;
+            onWarning?.(`${reason} (${newCount}/3)`);
+            if (newCount >= 3) {
+                onDisqualify?.("Security violation limit reached.");
+            }
+            return newCount;
+        });
+    }, [onWarning, onDisqualify]);
 
     // Face detection using simple brightness/motion detection
     const checkForFace = useCallback(() => {
@@ -127,7 +137,7 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
             document.removeEventListener('mozfullscreenchange', handleFullScreenChange);
             document.removeEventListener('MSFullscreenChange', handleFullScreenChange);
         };
-    }, [isArmed]);
+    }, [isArmed, triggerWarning]);
 
     // 2. Tab Switching & Focus Loss Detection
     useEffect(() => {
@@ -150,18 +160,7 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
             window.removeEventListener("blur", handleBlur);
         };
-    }, [isArmed]);
-
-    const triggerWarning = (reason) => {
-        setWarnings(prev => {
-            const newCount = prev + 1;
-            onWarning?.(`${reason} (${newCount}/3)`);
-            if (newCount >= 3) {
-                onDisqualify?.("Security violation limit reached.");
-            }
-            return newCount;
-        });
-    };
+    }, [isArmed, triggerWarning]);
 
     // 3. Disable Copy/Paste
     useEffect(() => {

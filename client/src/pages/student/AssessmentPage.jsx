@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import ProctorWrapper from '../../components/assessment/ProctorWrapper';
 import Button from '../../components/ui/Button';
 import { CheckCircle, Clock } from 'lucide-react';
+import api from '../../lib/api';
 
 const AssessmentPage = () => {
     const { tokens } = useAuthStore();
@@ -22,14 +23,7 @@ const AssessmentPage = () => {
         const initExam = async () => {
             if (!tokens?.access) return;
             try {
-                const response = await fetch('http://localhost:8000/api/verification/generate-test/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${tokens.access}`
-                    },
-                    body: JSON.stringify({ category_id: 1 })
-                });
+                const response = await api.post('/verification/generate-test/', { category_id: 1 });
 
                 if (response.ok) {
                     const data = await response.json();
@@ -49,21 +43,42 @@ const AssessmentPage = () => {
         initExam();
     }, [tokens]);
 
+    const submitExam = useCallback(async () => {
+        // Transform answers map to ordered list
+        const answersList = questions.map((_, idx) => answers[idx] || null);
+
+        try {
+            await api.post('/verification/submit-test/', {
+                attempt_id: attemptId,
+                answers: answersList
+            });
+            navigate('/student/dashboard');
+        } catch (e) {
+            console.error("Submit failed", e);
+            navigate('/student/dashboard');
+        }
+    }, [questions, answers, attemptId, navigate]);
+
+    const submitExamRef = useRef(submitExam);
+    useEffect(() => {
+        submitExamRef.current = submitExam;
+    }, [submitExam]);
+
     // Timer Logic
     useEffect(() => {
-        if (!examStarted || timeLeft <= 0) return;
+        if (!examStarted) return;
         const timer = setInterval(() => {
             setTimeLeft(prev => {
                 if (prev <= 1) {
                     clearInterval(timer);
-                    submitExam();
+                    submitExamRef.current();
                     return 0;
                 }
                 return prev - 1;
             });
         }, 1000);
         return () => clearInterval(timer);
-    }, [examStarted, timeLeft]);
+    }, [examStarted]);
 
     const formatTime = (secs) => {
         const m = Math.floor(secs / 60);
@@ -131,44 +146,14 @@ const AssessmentPage = () => {
         }
     };
 
-    const submitExam = async () => {
-        // Transform answers map to ordered list
-        const answersList = questions.map((_, idx) => answers[idx] || null);
-
-        try {
-            await fetch('http://localhost:8000/api/verification/submit-test/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokens?.access}`
-                },
-                body: JSON.stringify({
-                    attempt_id: attemptId,
-                    answers: answersList
-                })
-            });
-            navigate('/student/dashboard');
-        } catch (e) {
-            console.error("Submit failed", e);
-            navigate('/student/dashboard');
-        }
-    };
-
     // Log Proctor Events to Backend
     const logEvent = async (eventType) => {
         if (!sessionId) return;
         try {
-            await fetch('http://localhost:8000/api/proctor/events/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokens?.access}`
-                },
-                body: JSON.stringify({
-                    session_id: sessionId,
-                    event_type: eventType,
-                    confidence: 1.0
-                })
+            await api.post('/proctor/events/', {
+                session_id: sessionId,
+                event_type: eventType,
+                confidence: 1.0
             });
         } catch (e) { console.error("Log failed", e); }
     };

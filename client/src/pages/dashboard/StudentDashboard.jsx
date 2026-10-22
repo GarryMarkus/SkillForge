@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../store/authStore';
 import ThemeToggle from '../../components/layout/ThemeToggle';
-import { LogOut, BookOpen, Target, Award, Play, ChevronRight, Briefcase, User, Star, X, MapPin, DollarSign, Send, CheckCircle } from 'lucide-react';
+import { LogOut, BookOpen, Target, Award, Play, ChevronRight, Briefcase, User, Star, X, DollarSign, Send, CheckCircle } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
+import api from '../../lib/api';
 
 const StudentDashboard = () => {
-    const { logout, user, tokens } = useAuthStore();
+    const { logout, user } = useAuthStore();
     const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
     const [recommendation, setRecommendation] = useState(null);
@@ -23,27 +24,24 @@ const StudentDashboard = () => {
     }, [user, navigate]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (!tokens?.access) return;
+        let isMounted = true;
+        const loadDashboard = async () => {
             // Fetch Profile
             try {
-                const res = await fetch('http://localhost:8000/api/accounts/profile/', {
-                    headers: { 'Authorization': `Bearer ${tokens.access}` }
-                });
-                if (res.ok) setProfile(await res.json());
-            } catch (e) { console.error(e); }
+                const res = await api.get('/accounts/profile/');
+                if (res.ok && isMounted) {
+                    const data = await res.json();
+                    setProfile(data);
+                }
+            } catch (e) { console.error('Error fetching profile:', e); }
 
             // Fetch Recommendation
             try {
-                const res = await fetch('http://localhost:8000/api/verification/recommendation/', {
-                    headers: { 'Authorization': `Bearer ${tokens.access}` }
-                });
-                if (res.ok) {
+                const res = await api.get('/verification/recommendation/');
+                if (res.ok && isMounted) {
                     const data = await res.json();
-                    // Parse the nested recommendation JSON if it exists
                     if (data.status === 'ready' && data.recommendation) {
                         try {
-                            // recommendation might be a JSON string or already an object
                             const recData = typeof data.recommendation === 'string'
                                 ? JSON.parse(data.recommendation)
                                 : data.recommendation;
@@ -65,26 +63,29 @@ const StudentDashboard = () => {
                         setRecommendation(data);
                     }
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error('Error fetching recommendation:', e); }
 
             // Fetch My Applications
             try {
-                const res = await fetch('http://localhost:8000/api/project/my-applications/', {
-                    headers: { 'Authorization': `Bearer ${tokens.access}` }
-                });
-                if (res.ok) setMyApplications(await res.json());
-            } catch (e) { console.error(e); }
+                const res = await api.get('/project/my-applications/');
+                if (res.ok && isMounted) {
+                    const data = await res.json();
+                    setMyApplications(data);
+                }
+            } catch (e) { console.error('Error fetching applications:', e); }
         };
-        fetchData();
-    }, [tokens]);
+
+        loadDashboard();
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const fetchJobs = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/project/jobs/', {
-                headers: { 'Authorization': `Bearer ${tokens.access}` }
-            });
+            const res = await api.get('/project/jobs/');
             if (res.ok) setJobs(await res.json());
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error('Error fetching jobs:', e); }
     };
 
     const openBrowseJobs = () => {
@@ -95,23 +96,16 @@ const StudentDashboard = () => {
     const handleApply = async (jobId) => {
         setApplyingTo(jobId);
         try {
-            const res = await fetch('http://localhost:8000/api/project/apply/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokens.access}`
-                },
-                body: JSON.stringify({ job_id: jobId })
-            });
+            const res = await api.post('/project/apply/', { job_id: jobId });
             if (res.ok) {
                 alert('Application submitted!');
                 setMyApplications(prev => [...prev, { job: jobId, status: 'pending' }]);
-                fetchJobs(); // Refresh to update counts
+                fetchJobs();
             } else {
-                const err = await res.json();
+                const err = await res.json().catch(() => ({}));
                 alert(err.error || 'Failed to apply');
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error('Application failed:', e); }
         setApplyingTo(null);
     };
 
@@ -127,7 +121,7 @@ const StudentDashboard = () => {
             <header className="flex items-center justify-between mb-12">
                 <div>
                     <h1 className="text-4xl md:text-5xl font-black mb-2 tracking-tighter">
-                        Hello, {user?.name?.split(" ")[0]}! 👋
+                        Hello, {user?.email?.split("@")[0]}! 👋
                     </h1>
                     <p className="font-script text-xl text-gray-500 dark:text-gray-400">
                         Ready to forge your path today?
@@ -158,7 +152,7 @@ const StudentDashboard = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-xs font-bold text-gray-400 uppercase">Education</label>
-                                    <p className="font-bold text-lg">{profile.education}</p>
+                                    <p className="font-bold text-lg">{profile.education || 'Not specified'}</p>
                                 </div>
                                 <div>
                                     <label className="text-xs font-bold text-gray-400 uppercase">Role</label>
@@ -166,7 +160,7 @@ const StudentDashboard = () => {
                                 </div>
                                 <div className="md:col-span-2">
                                     <label className="text-xs font-bold text-gray-400 uppercase">Bio</label>
-                                    <p className="font-medium text-gray-600 dark:text-gray-300">{profile.bio}</p>
+                                    <p className="font-medium text-gray-600 dark:text-gray-300">{profile.bio || 'No bio yet.'}</p>
                                 </div>
                             </div>
                         ) : (
@@ -226,7 +220,7 @@ const StudentDashboard = () => {
                                 <div className="p-2 bg-blue-100 rounded-lg text-blue-600"><Target className="w-5 h-5" /></div>
                                 <h3 className="font-bold">Skill Score</h3>
                             </div>
-                            <p className="text-4xl font-black">{recommendation?.skill_score || profile?.skill_score || 0}</p>
+                            <p className="text-4xl font-black">{recommendation?.skill_score || profile?.rating || 0}</p>
                             <p className="text-sm text-gray-500 mt-1">Your verified score</p>
                         </motion.div>
 
@@ -305,7 +299,7 @@ const StudentDashboard = () => {
                                 {recommendation.recommended_tags && recommendation.recommended_tags.length > 0 && (
                                     <div className="flex flex-wrap gap-2 mt-2">
                                         {(Array.isArray(recommendation.recommended_tags) ? recommendation.recommended_tags : []).map((tag, i) => (
-                                            <span key={i} className="bg-white/20 px-2 py-1 rounded-full text-xs font-bold">{tag}</span>
+                                             <span key={i} className="bg-white/20 px-2 py-1 rounded-full text-xs font-bold">{tag}</span>
                                         ))}
                                     </div>
                                 )}
@@ -382,6 +376,11 @@ const StudentDashboard = () => {
                                             <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400 mb-4">
                                                 <span className="flex items-center gap-1"><DollarSign className="w-4 h-4" /> ${job.budget_amount}</span>
                                                 <span className="flex items-center gap-1"><Target className="w-4 h-4 text-orange-500" /> {job.min_skill_score}+ Score</span>
+                                                {job.match !== undefined && (
+                                                    <span className="text-xs font-bold text-green-600 dark:text-green-400 ml-auto">
+                                                        {job.match}% match
+                                                    </span>
+                                                )}
                                             </div>
                                             {hasApplied(job.id) ? (
                                                 <Button disabled className="w-full !bg-green-100 !text-green-700 !border-green-300 flex items-center justify-center gap-2">

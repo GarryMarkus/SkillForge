@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../layout/Layout';
+import { cn } from '../../lib/cn';
 
 const Card = ({ children, className, delay = 0 }) => {
     return (

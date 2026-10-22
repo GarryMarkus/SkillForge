@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react';
 import Lenis from 'lenis';
 import { useThemeStore } from '../../store/themeStore';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-export function cn(...inputs) {
-    return twMerge(clsx(inputs));
-}
+import { cn } from '../../lib/cn';
 
 const Layout = ({ children }) => {
     const { theme } = useThemeStore();

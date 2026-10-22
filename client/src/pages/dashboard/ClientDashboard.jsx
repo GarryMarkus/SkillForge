@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../store/authStore';
 import ThemeToggle from '../../components/layout/ThemeToggle';
-import { LogOut, Users, Briefcase, Plus, MapPin, DollarSign, Target, X, Mail, Github, Linkedin } from 'lucide-react';
+import { LogOut, Users, Briefcase, Plus, DollarSign, Target, X, Mail, Github, Linkedin } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import JobPostModal from '../../components/client/JobPostModal';
 import { useNavigate } from 'react-router-dom';
+import api from '../../lib/api';
 
 const ClientDashboard = () => {
-    const { logout, user, tokens } = useAuthStore();
+    const { logout, user } = useAuthStore();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [jobs, setJobs] = useState([]);
@@ -18,20 +19,16 @@ const ClientDashboard = () => {
     const [applicants, setApplicants] = useState([]);
     const [isApplicantModalOpen, setIsApplicantModalOpen] = useState(false);
 
-    const fetchProfile = async () => {
+    const fetchProfile = useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/accounts/profile/', {
-                headers: { 'Authorization': `Bearer ${tokens?.access}` }
-            });
+            const response = await api.get('/accounts/profile/');
             if (response.ok) setProfile(await response.json());
-        } catch (e) { console.error(e); }
-    };
+        } catch (e) { console.error('Failed to fetch client profile', e); }
+    }, []);
 
-    const fetchJobs = async () => {
+    const fetchJobs = useCallback(async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/project/my-jobs/', {
-                headers: { 'Authorization': `Bearer ${tokens?.access}` }
-            });
+            const response = await api.get('/project/my-jobs/');
             if (response.ok) {
                 const data = await response.json();
                 setJobs(data);
@@ -41,14 +38,12 @@ const ClientDashboard = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     useEffect(() => {
-        if (tokens?.access) {
-            fetchJobs();
-            fetchProfile();
-        }
-    }, [tokens]);
+        fetchJobs();
+        fetchProfile();
+    }, [fetchJobs, fetchProfile]);
 
     const handleJobCreated = (newJob) => {
         setJobs([newJob, ...jobs]);
@@ -62,13 +57,11 @@ const ClientDashboard = () => {
     const viewApplicants = async (job) => {
         setSelectedJob(job);
         try {
-            const response = await fetch(`http://localhost:8000/api/project/applicants/${job.id}/`, {
-                headers: { 'Authorization': `Bearer ${tokens?.access}` }
-            });
+            const response = await api.get(`/project/applicants/${job.id}/`);
             if (response.ok) {
                 setApplicants(await response.json());
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error('Failed to fetch applicants', e); }
         setIsApplicantModalOpen(true);
     };
 
@@ -78,7 +71,7 @@ const ClientDashboard = () => {
             <header className="flex items-center justify-between mb-12">
                 <div>
                     <h1 className="text-4xl md:text-5xl font-black mb-2 tracking-tighter">
-                        Welcome, {user?.name || 'Recruiter'}! 🚀
+                        Welcome, {profile?.company_name || user?.email?.split('@')[0] || 'Recruiter'}! 🚀
                     </h1>
                     <p className="font-script text-xl text-gray-500 dark:text-gray-400">
                         Find your next unicorn employee today.
@@ -119,83 +112,77 @@ const ClientDashboard = () => {
                     <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-2xl flex items-center justify-center mb-4 text-pink-500">
                         <Briefcase className="w-6 h-6" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">Job Posts</h3>
-                    <p className="text-4xl font-black text-black dark:text-white">{jobs.length}</p>
-                    <p className="text-sm text-gray-400 mt-2 font-mono">
-                        {jobs.filter(j => j.status === 'open').length} active campaigns
-                    </p>
+                    <p className="text-gray-500 text-sm font-bold uppercase tracking-wider">Active Projects</p>
+                    <h3 className="text-4xl font-black mt-1">{jobs.length}</h3>
                 </motion.div>
 
-                {/* Profile Card */}
-                <div className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 h-fit lg:col-span-2">
-                    <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-2xl font-black">Company Profile</h3>
+                {/* Stat Card - Total Applicants */}
+                <motion.div
+                    whileHover={{ y: -5 }}
+                    className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-none"
+                >
+                    <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mb-4 text-purple-500">
+                        <Users className="w-6 h-6" />
+                    </div>
+                    <p className="text-gray-500 text-sm font-bold uppercase tracking-wider">Total Candidates</p>
+                    <h3 className="text-4xl font-black mt-1">
+                        {jobs.reduce((acc, job) => acc + (job.applicant_count || 0), 0)}
+                    </h3>
+                </motion.div>
+
+                {/* Company Profile Card */}
+                <motion.div
+                    whileHover={{ y: -5 }}
+                    className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-none"
+                >
+                    <div className="flex justify-between items-start mb-4">
+                        <p className="text-gray-500 text-sm font-bold uppercase tracking-wider">Company Profile</p>
                         <Button onClick={() => navigate('/client/onboarding')} variant="secondary" className="!text-xs !py-1">Edit</Button>
                     </div>
-                    {profile ? (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <label className="text-xs font-bold text-gray-400 uppercase">Company</label>
-                                <p className="font-bold text-lg">{profile.company_name}</p>
-                            </div>
-                            <div>
-                                <label className="text-xs font-bold text-gray-400 uppercase">Industry</label>
-                                <p className="font-medium">{profile.industry}</p>
-                            </div>
-                            <div>
-                                <label className="text-xs font-bold text-gray-400 uppercase">Location</label>
-                                <p className="font-medium flex items-center gap-1"><MapPin className="w-4 h-4" /> {profile.address || 'Remote'}</p>
-                            </div>
-                        </div>
-                    ) : (
-                        <p className="text-gray-400 italic">Loading profile...</p>
+                    <h3 className="text-2xl font-black mb-1">{profile?.company_name || 'Loading...'}</h3>
+                    <p className="text-sm text-gray-500 mb-2">{profile?.industry || 'Industry not specified'}</p>
+                    {profile?.website && (
+                        <a href={profile.website} target="_blank" rel="noopener noreferrer" className="text-xs text-orange-500 hover:underline">
+                            {profile.website}
+                        </a>
                     )}
-                </div>
+                </motion.div>
 
-                {/* Main Content Area - Job List */}
-                <div className="md:col-span-2 lg:col-span-3">
-                    <h2 className="text-2xl font-black mb-6 flex items-center gap-2">
-                        Active Postings <span className="text-sm font-normal bg-black text-white px-2 py-1 rounded-full">{jobs.length}</span>
-                    </h2>
+                {/* Job Listings Section */}
+                <div className="md:col-span-2 lg:col-span-3 mt-8">
+                    <h2 className="text-2xl font-black mb-6">Your Posted Projects</h2>
 
-                    {jobs.length === 0 ? (
-                        <div className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[3rem] p-12 flex flex-col items-center justify-center text-center border-dashed min-h-[300px]">
-                            <Briefcase className="w-16 h-16 text-gray-300 mb-4" />
-                            <p className="font-bold text-xl mb-2 text-black dark:text-white">The Forge is cold.</p>
-                            <p className="font-script text-gray-500 text-lg">Post your first project to start hiring!</p>
-                            <Button
-                                onClick={() => setIsModalOpen(true)}
-                                variant="outline"
-                                className="mt-6"
-                            >
-                                Ignite the Forge
+                    {loading ? (
+                        <div className="text-center py-12 text-gray-500">Loading your jobs...</div>
+                    ) : jobs.length === 0 ? (
+                        <div className="text-center py-16 bg-white dark:bg-dark-card rounded-[3rem] border-2 border-dashed border-gray-300 dark:border-gray-700">
+                            <Briefcase className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                            <h3 className="text-xl font-bold mb-2">No projects posted yet</h3>
+                            <p className="text-gray-500 mb-6">Create your first project requirement to match with verified candidates.</p>
+                            <Button onClick={() => setIsModalOpen(true)} className="!bg-orange-500 !text-white !border-black">
+                                Post Your First Project
                             </Button>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <AnimatePresence>
-                                {jobs.map((job) => (
+                                {jobs.map(job => (
                                     <motion.div
                                         key={job.id}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="bg-white dark:bg-dark-card border-2 border-black dark:border-gray-700 rounded-[2rem] p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-none relative group hover:-translate-y-1 transition-transform"
+                                        layout
+                                        className="bg-white dark:bg-dark-card border-2 border-light-border dark:border-gray-700 rounded-[2.5rem] p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-none"
                                     >
-                                        <div className="absolute top-4 right-4 rotate-12 bg-yellow-300 text-black text-xs font-bold px-2 py-1 shadow-sm font-script">
-                                            Job Authenticity Verified
-                                        </div>
-
-                                        <div className="flex justify-between items-start mb-4 mt-2">
-                                            <span className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                                        <div className="flex justify-between items-start mb-4">
+                                            <span className="text-xs font-bold bg-orange-100 text-orange-700 px-3 py-1 rounded-full uppercase">
                                                 {job.category}
                                             </span>
-                                            <span className="text-sm font-bold text-gray-400">
-                                                {new Date(job.created_at).toLocaleDateString()}
+                                            <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${job.status === 'open' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+                                                {job.status}
                                             </span>
                                         </div>
 
-                                        <h3 className="text-xl font-bold mb-2 line-clamp-1">{job.title}</h3>
-                                        <p className="text-gray-500 text-sm line-clamp-2 mb-4 h-10">
+                                        <h3 className="text-xl font-black mb-2">{job.title}</h3>
+                                        <p className="text-gray-500 text-sm line-clamp-2 mb-4">
                                             {job.description}
                                         </p>
 
@@ -274,9 +261,16 @@ const ClientDashboard = () => {
                                                         <Mail className="w-4 h-4" /> {applicant.email}
                                                     </p>
                                                 </div>
-                                                <span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                                                    {applicant.experience_level || 'Entry'}
-                                                </span>
+                                                <div className="flex items-center gap-2">
+                                                    {applicant.match !== undefined && (
+                                                        <span className="text-xs font-bold bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
+                                                            {applicant.match}% Match
+                                                        </span>
+                                                    )}
+                                                    <span className="text-xs font-bold bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                                        {applicant.experience_level || 'Entry'}
+                                                    </span>
+                                                </div>
                                             </div>
                                             <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                                                 <div>

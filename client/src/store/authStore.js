@@ -1,15 +1,30 @@
 import { create } from 'zustand';
+import api from '../lib/api';
 
-const API_URL = 'http://localhost:8000/api/accounts';
-
+/**
+ * Global authentication and registration state store.
+ * Manages user session, JWT tokens in localStorage, and wizard registration data.
+ */
 export const useAuthStore = create((set, get) => ({
     authMode: 'login', // 'login' or 'register'
     setAuthMode: (mode) => set({ authMode: mode }),
 
     // User State
-    user: JSON.parse(localStorage.getItem('user')) || null,
-    tokens: JSON.parse(localStorage.getItem('tokens')) || null,
-    isAuthenticated: !!localStorage.getItem('tokens'),
+    user: (() => {
+        try {
+            return JSON.parse(localStorage.getItem('user')) || null;
+        } catch {
+            return null;
+        }
+    })(),
+    tokens: (() => {
+        try {
+            return JSON.parse(localStorage.getItem('tokens')) || null;
+        } catch {
+            return null;
+        }
+    })(),
+    isAuthenticated: Boolean(localStorage.getItem('tokens')),
 
     // Registration Wizard State
     step: 1,
@@ -25,7 +40,6 @@ export const useAuthStore = create((set, get) => ({
         email: '',
         password: '',
         confirmPassword: '',
-        // Client specific
         phoneNumber: '',
         companyName: '',
         designation: '',
@@ -33,7 +47,6 @@ export const useAuthStore = create((set, get) => ({
         industry: '',
         trainCount: '',
         trainingGoals: [],
-        // Student specific
         learningGoal: '',
         experienceLevel: '',
         interests: []
@@ -43,28 +56,38 @@ export const useAuthStore = create((set, get) => ({
         formData: { ...state.formData, ...data }
     })),
 
+    updateUser: (partialUser) => set((state) => {
+        const updated = { ...(state.user || {}), ...partialUser };
+        localStorage.setItem('user', JSON.stringify(updated));
+        return { user: updated };
+    }),
+
     // API Actions
     login: async (email, password) => {
         try {
-            const response = await fetch(`${API_URL}/login/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
+            const response = await api.post('/accounts/login/', { email, password });
 
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.detail || 'Login failed');
+                const error = await response.json().catch(() => ({}));
+                throw new Error(error.detail || error.error || 'Login failed');
             }
 
             const data = await response.json();
+            const user = {
+                email,
+                role: data.role,
+                onboarding_stage: data.onboarding_stage ?? 0,
+            };
 
-            // Store data
-            const user = { email, role: data.role };
             localStorage.setItem('tokens', JSON.stringify(data.tokens));
             localStorage.setItem('user', JSON.stringify(user));
 
-            set({ isAuthenticated: true, user, tokens: data.tokens, role: data.role });
+            set({
+                isAuthenticated: true,
+                user,
+                tokens: data.tokens,
+                role: data.role,
+            });
             return user;
         } catch (error) {
             console.error('Login error:', error);
@@ -74,36 +97,36 @@ export const useAuthStore = create((set, get) => ({
 
     signup: async () => {
         const { formData, role } = get();
-
-        // Prepare payload based on role
         const payload = {
             email: formData.email,
             password: formData.password,
             role: role,
-            // Add other fields as needed by backend or separate onboarding call
-            // specific fields handled by Profile models in backend, might need separate flow or updated serializer
         };
 
         try {
-            const response = await fetch(`${API_URL}/register/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
-            });
+            const response = await api.post('/accounts/register/', payload);
 
             if (!response.ok) {
-                const error = await response.json();
+                const error = await response.json().catch(() => ({}));
                 throw new Error(JSON.stringify(error));
             }
 
             const data = await response.json();
-            const user = { email: formData.email, role: role };
+            const user = {
+                email: formData.email,
+                role: role,
+                onboarding_stage: 0,
+            };
 
-            // Auto login after signup
             localStorage.setItem('tokens', JSON.stringify(data.tokens));
             localStorage.setItem('user', JSON.stringify(user));
 
-            set({ isAuthenticated: true, user, tokens: data.tokens });
+            set({
+                isAuthenticated: true,
+                user,
+                tokens: data.tokens,
+                role: role,
+            });
             return user;
         } catch (error) {
             console.error('Signup error:', error);
@@ -115,12 +138,10 @@ export const useAuthStore = create((set, get) => ({
         const { tokens } = get();
         if (tokens?.refresh) {
             try {
-                await fetch(`${API_URL}/logout/`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${tokens.access}` },
-                    body: JSON.stringify({ refresh: tokens.refresh }),
-                });
-            } catch (e) { console.error('Logout failed', e); }
+                await api.post('/accounts/logout/', { refresh: tokens.refresh });
+            } catch (e) {
+                console.error('Logout failed:', e);
+            }
         }
         localStorage.removeItem('tokens');
         localStorage.removeItem('user');
@@ -148,3 +169,5 @@ export const useAuthStore = create((set, get) => ({
         }
     })
 }));
+
+export default useAuthStore;

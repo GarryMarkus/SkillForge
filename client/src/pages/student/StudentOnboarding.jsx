@@ -5,6 +5,7 @@ import { useAuthStore } from '../../store/authStore';
 import { User, FileText, Code, Link as LinkIcon, UploadCloud, ArrowRight } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
+import api from '../../lib/api';
 
 const StudentOnboarding = () => {
     const { user, tokens } = useAuthStore();
@@ -27,9 +28,7 @@ const StudentOnboarding = () => {
         const fetchProfile = async () => {
             if (!tokens?.access) return;
             try {
-                const response = await fetch('http://localhost:8000/api/accounts/profile/', {
-                    headers: { 'Authorization': `Bearer ${tokens.access}` }
-                });
+                const response = await api.get('/accounts/profile/');
                 if (response.ok) {
                     const data = await response.json();
                     setFormData({
@@ -68,19 +67,14 @@ const StudentOnboarding = () => {
         }
 
         const isUpdate = user?.onboarding_stage && user.onboarding_stage >= 2;
-        const url = isUpdate
-            ? 'http://localhost:8000/api/accounts/profile/update/'
-            : 'http://localhost:8000/api/accounts/onboarding/';
-        const method = isUpdate ? 'PATCH' : 'PUT';
+        const path = isUpdate
+            ? '/accounts/profile/update/'
+            : '/accounts/onboarding/';
 
         try {
-            const response = await fetch(url, {
-                method: method,
-                headers: {
-                    'Authorization': `Bearer ${tokens.access}`
-                },
-                body: data
-            });
+            const response = isUpdate
+                ? await api.patch(path, data)
+                : await api.put(path, data);
 
             if (response.ok) {
                 // Immediate redirect

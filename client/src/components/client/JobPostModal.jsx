@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Briefcase, DollarSign, Target, Sparkles, Check } from 'lucide-react';
+import { X, Target, Sparkles } from 'lucide-react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
-import { useAuthStore } from '../../store/authStore';
+import api from '../../lib/api';
 
 const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
-    const { tokens } = useAuthStore();
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
@@ -26,14 +25,7 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8000/api/project/create/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokens.access}`
-                },
-                body: JSON.stringify(formData)
-            });
+            const response = await api.post('/project/create/', formData);
 
             if (response.ok) {
                 const newJob = await response.json();

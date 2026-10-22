@@ -5,6 +5,7 @@ import { useAuthStore } from '../../store/authStore';
 import { Building, MapPin, Globe, Briefcase, ArrowRight } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
+import api from '../../lib/api';
 
 const ClientOnboarding = () => {
     const { user, tokens } = useAuthStore();
@@ -23,9 +24,7 @@ const ClientOnboarding = () => {
         const fetchProfile = async () => {
             if (!tokens?.access) return;
             try {
-                const response = await fetch('http://localhost:8000/api/accounts/profile/', {
-                    headers: { 'Authorization': `Bearer ${tokens.access}` }
-                });
+                const response = await api.get('/accounts/profile/');
                 if (response.ok) {
                     const data = await response.json();
                     setProfile({
@@ -52,28 +51,16 @@ const ClientOnboarding = () => {
 
         // Determine Mode: Onboarding (PUT) or Update (PATCH)
         const isUpdate = user?.onboarding_stage && user.onboarding_stage >= 2;
-
-        const url = isUpdate
-            ? 'http://localhost:8000/api/accounts/profile/update/'
-            : 'http://localhost:8000/api/accounts/onboarding/';
-
-        const method = isUpdate ? 'PATCH' : 'PUT';
-
-        console.log(`Submitting as ${method} to ${url}`, profile);
+        const path = isUpdate
+            ? '/accounts/profile/update/'
+            : '/accounts/onboarding/';
 
         try {
-            const response = await fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokens.access}`
-                },
-                body: JSON.stringify(profile)
-            });
+            const response = isUpdate
+                ? await api.patch(path, profile)
+                : await api.put(path, profile);
 
             if (response.ok) {
-                // If onboarding, maybe update local user state or re-fetch profile?
-                // For now, redirect to dashboard
                 navigate('/client/dashboard');
             } else {
                 const err = await response.json();

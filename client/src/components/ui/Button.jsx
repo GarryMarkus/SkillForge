@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { cn } from '../layout/Layout';
+import { cn } from '../../lib/cn';
 
 const Button = ({ children, className, variant = 'primary', onClick, ...props }) => {
     const baseStyles = "relative inline-flex items-center justify-center px-8 py-3 font-black text-lg rounded-full transition-transform active:translate-y-[2px] active:shadow-none border-light-border dark:border-black border-2 border-b-4";

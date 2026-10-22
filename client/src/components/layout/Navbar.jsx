@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 import Button from '../ui/Button';
 import ThemeToggle from './ThemeToggle';
-import { cn } from './Layout';
+import { cn } from '../../lib/cn';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);

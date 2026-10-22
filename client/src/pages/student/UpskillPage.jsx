@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuthStore } from '../../store/authStore';
 import { useNavigate } from 'react-router-dom';
 import ThemeToggle from '../../components/layout/ThemeToggle';
 import Button from '../../components/ui/Button';
 import { ArrowLeft, Sparkles, BookOpen, Clock, Tag, Loader2, ChevronRight, GraduationCap, Zap } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import api from '../../lib/api';
 
 const UpskillPage = () => {
-    const { user, tokens } = useAuthStore();
     const navigate = useNavigate();
     const [topic, setTopic] = useState('');
     const [isGenerating, setIsGenerating] = useState(false);
@@ -18,14 +17,22 @@ const UpskillPage = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        fetchModules();
+        let isMounted = true;
+        const loadModules = async () => {
+            try {
+                const res = await api.get('/modules/upskill/modules/');
+                if (res.ok && isMounted) {
+                    setModules(await res.json());
+                }
+            } catch (e) { console.error(e); }
+        };
+        loadModules();
+        return () => { isMounted = false; };
     }, []);
 
-    const fetchModules = async () => {
+    const refreshModules = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/modules/upskill/modules/', {
-                headers: { 'Authorization': `Bearer ${tokens?.access}` }
-            });
+            const res = await api.get('/modules/upskill/modules/');
             if (res.ok) {
                 setModules(await res.json());
             }
@@ -42,25 +49,16 @@ const UpskillPage = () => {
         setCurrentModule(null);
 
         try {
-            const res = await fetch('http://localhost:8000/api/modules/upskill/generate/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${tokens?.access}`
-                },
-                body: JSON.stringify({ topic: topic.trim() })
-            });
+            const res = await api.post('/modules/upskill/generate/', { topic: topic.trim() });
 
             if (res.ok) {
                 const data = await res.json();
                 // Fetch the full module content
-                const moduleRes = await fetch(`http://localhost:8000/api/modules/upskill/${data.module_id}/`, {
-                    headers: { 'Authorization': `Bearer ${tokens?.access}` }
-                });
+                const moduleRes = await api.get(`/modules/upskill/${data.module_id}/`);
                 if (moduleRes.ok) {
                     const moduleData = await moduleRes.json();
                     setCurrentModule(moduleData);
-                    fetchModules(); // Refresh list
+                    refreshModules(); // Refresh list
                     setTopic('');
                 }
             } else {
@@ -76,9 +74,7 @@ const UpskillPage = () => {
 
     const viewModule = async (moduleId) => {
         try {
-            const res = await fetch(`http://localhost:8000/api/modules/upskill/${moduleId}/`, {
-                headers: { 'Authorization': `Bearer ${tokens?.access}` }
-            });
+            const res = await api.get(`/modules/upskill/${moduleId}/`);
             if (res.ok) {
                 setCurrentModule(await res.json());
             }
@@ -150,30 +146,29 @@ const UpskillPage = () => {
                         </p>
                     </motion.div>
 
-                    {/* Input Section */}
+                    {/* Topic Input Card */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="bg-white dark:bg-dark-card border-2 border-black dark:border-gray-700 rounded-[2.5rem] p-8 mb-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-none"
+                        className="bg-white dark:bg-dark-card border-4 border-black dark:border-gray-700 rounded-[2.5rem] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-none mb-12"
                     >
                         <div className="flex flex-col md:flex-row gap-4">
                             <div className="flex-1 relative">
-                                <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" />
                                 <input
                                     type="text"
                                     value={topic}
                                     onChange={(e) => setTopic(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && !isGenerating && handleGenerate()}
-                                    placeholder="What do you want to learn? (e.g., React Hooks, Machine Learning, Docker)"
-                                    className="w-full pl-14 pr-4 py-4 text-lg border-2 border-gray-200 dark:border-gray-700 rounded-2xl bg-transparent focus:border-purple-500 focus:outline-none transition-colors"
+                                    placeholder="What do you want to learn? (e.g., Docker, Redux Toolkit, WebSockets...)"
+                                    className="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-purple-500 dark:focus:border-purple-400 focus:ring-0 transition-all font-medium text-lg placeholder:text-gray-400"
                                     disabled={isGenerating}
                                 />
                             </div>
                             <Button
                                 onClick={handleGenerate}
                                 disabled={isGenerating}
-                                className="!bg-gradient-to-r !from-purple-600 !to-pink-600 !text-white !border-none px-8 py-4 flex items-center gap-2 text-lg hover:opacity-90 disabled:opacity-50"
+                                className="px-8 py-4 text-lg font-bold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-2xl shadow-lg flex items-center justify-center gap-2 whitespace-nowrap"
                             >
                                 {isGenerating ? (
                                     <>
@@ -189,73 +184,130 @@ const UpskillPage = () => {
                             </Button>
                         </div>
                         {error && (
-                            <p className="text-red-500 mt-4 text-center">{error}</p>
+                            <p className="mt-3 text-red-500 text-sm font-semibold">{error}</p>
                         )}
+
+                        {/* Quick Suggestions */}
+                        <div className="mt-4 flex flex-wrap items-center gap-2">
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Try:</span>
+                            {['Docker Basics', 'React Query', 'PostgreSQL Indexing', 'System Design', 'Git Workflow'].map((s) => (
+                                <button
+                                    key={s}
+                                    onClick={() => setTopic(s)}
+                                    className="text-xs px-3 py-1.5 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-purple-100 dark:hover:bg-purple-900/30 text-gray-600 dark:text-gray-300 hover:text-purple-600 transition-colors font-medium"
+                                >
+                                    {s}
+                                </button>
+                            ))}
+                        </div>
                     </motion.div>
 
-                    {/* Loading Animation */}
-                    <AnimatePresence>
-                        {isGenerating && (
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                className="bg-gradient-to-br from-purple-900 to-pink-900 rounded-[2.5rem] p-12 text-white text-center mb-8"
-                            >
-                                <div className="w-20 h-20 mx-auto mb-6 relative">
-                                    <div className="absolute inset-0 rounded-full border-4 border-white/20" />
-                                    <div className="absolute inset-0 rounded-full border-4 border-white border-t-transparent animate-spin" />
-                                    <Sparkles className="absolute inset-0 m-auto w-8 h-8" />
-                                </div>
-                                <h3 className="text-2xl font-bold mb-2">AI is crafting your module...</h3>
-                                <p className="text-white/70">Analyzing your skill level and creating personalized content</p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    {/* Content Area - Two Column Layout */}
+                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                        {/* Sidebar - Module History */}
+                        <div className="lg:col-span-1 order-2 lg:order-1">
+                            <div className="bg-white dark:bg-dark-card border-2 border-black dark:border-gray-700 rounded-[2rem] p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-none">
+                                <h3 className="font-black text-lg mb-4 flex items-center gap-2">
+                                    <BookOpen className="w-5 h-5 text-purple-500" />
+                                    Your Modules ({modules.length})
+                                </h3>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Module Content Display */}
-                        <div className="lg:col-span-2">
-                            {currentModule ? (
+                                {modules.length === 0 ? (
+                                    <p className="text-gray-400 text-sm py-4 text-center">
+                                        No modules generated yet. Start learning above!
+                                    </p>
+                                ) : (
+                                    <div className="space-y-3 max-h-[600px] overflow-y-auto pr-1">
+                                        {modules.map((m) => (
+                                            <button
+                                                key={m.id}
+                                                onClick={() => viewModule(m.id)}
+                                                className={`w-full text-left p-4 rounded-xl border-2 transition-all flex flex-col gap-2 ${currentModule?.id === m.id
+                                                    ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
+                                                    : 'border-gray-150 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                                                    }`}
+                                            >
+                                                <div className="flex items-start justify-between gap-2">
+                                                    <span className="font-bold text-sm line-clamp-1">{m.topic}</span>
+                                                    <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    {getLevelBadge(m.learner_level)}
+                                                    <span className="text-[10px] text-gray-400">
+                                                        {new Date(m.created_at).toLocaleDateString()}
+                                                    </span>
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Main Content Area - Active Module */}
+                        <div className="lg:col-span-3 order-1 lg:order-2">
+                            {isGenerating ? (
+                                <div className="bg-white dark:bg-dark-card border-4 border-black dark:border-gray-700 rounded-[2.5rem] p-12 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-none text-center">
+                                    <div className="max-w-md mx-auto py-12">
+                                        <div className="w-20 h-20 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                                            <Loader2 className="w-10 h-10 text-purple-600 animate-spin" />
+                                        </div>
+                                        <h3 className="text-2xl font-black mb-2">Generating Your Module...</h3>
+                                        <p className="text-gray-500 dark:text-gray-400 mb-6">
+                                            Our AI is crafting a structured learning path with concepts, code examples, and practice exercises.
+                                        </p>
+                                        <div className="space-y-2 text-sm text-gray-400">
+                                            <p className="animate-pulse">Analyzing topic: "{topic}"</p>
+                                            <p className="animate-pulse delay-100">Structuring core concepts...</p>
+                                            <p className="animate-pulse delay-200">Writing practical examples...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : currentModule ? (
                                 <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="bg-white dark:bg-dark-card border-2 border-black dark:border-gray-700 rounded-[2.5rem] p-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] dark:shadow-none"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="bg-white dark:bg-dark-card border-4 border-black dark:border-gray-700 rounded-[2.5rem] p-8 md:p-12 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-none"
                                 >
                                     {/* Module Header */}
-                                    <div className="flex items-start justify-between mb-6 pb-6 border-b-2 border-gray-100 dark:border-gray-800">
-                                        <div>
-                                            <h2 className="text-2xl md:text-3xl font-black mb-2">{currentModule.topic}</h2>
-                                            <div className="flex items-center gap-3">
-                                                {getLevelBadge(currentModule.level)}
-                                                {parseContent(currentModule.content).metadata?.estimated_hours && (
-                                                    <span className="flex items-center gap-1 text-sm text-gray-500">
-                                                        <Clock className="w-4 h-4" />
-                                                        {parseContent(currentModule.content).metadata.estimated_hours} hours
-                                                    </span>
-                                                )}
-                                            </div>
+                                    <div className="border-b-2 border-gray-100 dark:border-gray-800 pb-6 mb-8">
+                                        <div className="flex flex-wrap items-center gap-3 mb-4">
+                                            <span className="px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider bg-purple-600 text-white">
+                                                {currentModule.topic}
+                                            </span>
+                                            {getLevelBadge(currentModule.learner_level)}
+                                            <span className="text-xs text-gray-400 flex items-center gap-1">
+                                                <Clock className="w-3.5 h-3.5" />
+                                                Generated {new Date(currentModule.created_at).toLocaleDateString()}
+                                            </span>
                                         </div>
-                                        <BookOpen className="w-10 h-10 text-purple-500" />
                                     </div>
 
-                                    {/* Metadata */}
+                                    {/* Metadata Cards if present */}
                                     {parseContent(currentModule.content).metadata && (
-                                        <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-2xl">
-                                            {parseContent(currentModule.content).metadata.prerequisites?.length > 0 && (
-                                                <div className="mb-3">
-                                                    <p className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase mb-1">Prerequisites</p>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {parseContent(currentModule.content).metadata.prerequisites.map((p, i) => (
-                                                            <span key={i} className="text-xs bg-white dark:bg-gray-800 px-2 py-1 rounded-lg">{p}</span>
-                                                        ))}
+                                        <div className="mb-8 p-6 bg-purple-50 dark:bg-purple-950/20 border-2 border-purple-200 dark:border-purple-800 rounded-2xl">
+                                            <h4 className="font-bold text-sm text-purple-700 dark:text-purple-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                                <GraduationCap className="w-4 h-4" />
+                                                Module Overview
+                                            </h4>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                                {parseContent(currentModule.content).metadata.estimated_time && (
+                                                    <div>
+                                                        <span className="text-gray-500">Est. Time: </span>
+                                                        <span className="font-bold">{parseContent(currentModule.content).metadata.estimated_time}</span>
                                                     </div>
-                                                </div>
-                                            )}
-                                            {parseContent(currentModule.content).metadata.tags?.length > 0 && (
-                                                <div>
-                                                    <p className="text-xs font-bold text-purple-600 dark:text-purple-400 uppercase mb-1">Tags</p>
-                                                    <div className="flex flex-wrap gap-2">
+                                                )}
+                                                {parseContent(currentModule.content).metadata.prerequisites && (
+                                                    <div>
+                                                        <span className="text-gray-500">Prerequisites: </span>
+                                                        <span className="font-bold">{parseContent(currentModule.content).metadata.prerequisites.join(', ')}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {parseContent(currentModule.content).metadata.tags && (
+                                                <div className="mt-3 flex items-center gap-2">
+                                                    <span className="text-gray-500 text-xs">Tags:</span>
+                                                    <div className="flex flex-wrap gap-1">
                                                         {parseContent(currentModule.content).metadata.tags.map((t, i) => (
                                                             <span key={i} className="flex items-center gap-1 text-xs bg-white dark:bg-gray-800 px-2 py-1 rounded-lg">
                                                                 <Tag className="w-3 h-3" /> {t}
@@ -272,34 +324,34 @@ const UpskillPage = () => {
                                         <ReactMarkdown
                                             remarkPlugins={[remarkGfm]}
                                             components={{
-                                                h1: ({ node, ...props }) => (
+                                                h1: ({ ...props }) => (
                                                     <h1 className="text-2xl font-black mt-8 mb-4 pb-3 border-b-2 border-purple-200 dark:border-purple-800 text-gray-900 dark:text-white" {...props} />
                                                 ),
-                                                h2: ({ node, ...props }) => (
+                                                h2: ({ ...props }) => (
                                                     <h2 className="text-xl font-bold mt-6 mb-3 text-purple-700 dark:text-purple-400 flex items-center gap-2" {...props}>
                                                         <span className="w-1 h-6 bg-gradient-to-b from-purple-500 to-pink-500 rounded-full"></span>
                                                         {props.children}
                                                     </h2>
                                                 ),
-                                                h3: ({ node, ...props }) => (
+                                                h3: ({ ...props }) => (
                                                     <h3 className="text-lg font-bold mt-5 mb-2 text-gray-800 dark:text-gray-200" {...props} />
                                                 ),
-                                                p: ({ node, ...props }) => (
+                                                p: ({ ...props }) => (
                                                     <p className="my-3 leading-relaxed text-gray-700 dark:text-gray-300" {...props} />
                                                 ),
-                                                ul: ({ node, ...props }) => (
+                                                ul: ({ ...props }) => (
                                                     <ul className="my-4 space-y-2 list-none" {...props} />
                                                 ),
-                                                ol: ({ node, ...props }) => (
+                                                ol: ({ ...props }) => (
                                                     <ol className="my-4 space-y-2 list-decimal list-inside" {...props} />
                                                 ),
-                                                li: ({ node, children, ...props }) => (
+                                                li: ({ children, ...props }) => (
                                                     <li className="flex items-start gap-2 text-gray-700 dark:text-gray-300" {...props}>
                                                         <span className="mt-2 w-1.5 h-1.5 rounded-full bg-purple-500 flex-shrink-0"></span>
                                                         <span>{children}</span>
                                                     </li>
                                                 ),
-                                                code: ({ node, inline, className, children, ...props }) => {
+                                                code: ({ inline, className, children, ...props }) => {
                                                     if (inline) {
                                                         return (
                                                             <code className="bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 px-1.5 py-0.5 rounded text-sm font-mono" {...props}>
@@ -311,27 +363,27 @@ const UpskillPage = () => {
                                                         <code className={className} {...props}>{children}</code>
                                                     );
                                                 },
-                                                pre: ({ node, ...props }) => (
+                                                pre: ({ ...props }) => (
                                                     <pre className="my-4 p-4 bg-gray-900 dark:bg-black rounded-xl overflow-x-auto text-sm text-gray-100 border border-gray-800" {...props} />
                                                 ),
-                                                blockquote: ({ node, ...props }) => (
+                                                blockquote: ({ ...props }) => (
                                                     <blockquote className="my-4 pl-4 py-2 border-l-4 border-purple-500 bg-purple-50 dark:bg-purple-900/20 rounded-r-lg italic text-gray-600 dark:text-gray-400" {...props} />
                                                 ),
-                                                strong: ({ node, ...props }) => (
+                                                strong: ({ ...props }) => (
                                                     <strong className="font-bold text-gray-900 dark:text-white" {...props} />
                                                 ),
-                                                a: ({ node, ...props }) => (
+                                                a: ({ ...props }) => (
                                                     <a className="text-purple-600 dark:text-purple-400 underline hover:text-purple-800 dark:hover:text-purple-300 transition-colors" target="_blank" rel="noopener noreferrer" {...props} />
                                                 ),
-                                                table: ({ node, ...props }) => (
+                                                table: ({ ...props }) => (
                                                     <div className="my-4 overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700">
                                                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700" {...props} />
                                                     </div>
                                                 ),
-                                                th: ({ node, ...props }) => (
+                                                th: ({ ...props }) => (
                                                     <th className="px-4 py-3 bg-purple-50 dark:bg-purple-900/30 text-left text-sm font-bold text-gray-900 dark:text-white" {...props} />
                                                 ),
-                                                td: ({ node, ...props }) => (
+                                                td: ({ ...props }) => (
                                                     <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 border-t border-gray-100 dark:border-gray-800" {...props} />
                                                 ),
                                             }}
@@ -345,44 +397,6 @@ const UpskillPage = () => {
                                     <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                                     <h3 className="text-xl font-bold text-gray-400 mb-2">No module selected</h3>
                                     <p className="text-gray-400">Enter a topic above to generate a new learning module, or select from your history.</p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Module History Sidebar */}
-                        <div className="space-y-4">
-                            <h3 className="text-xl font-black flex items-center gap-2">
-                                <BookOpen className="w-5 h-5" /> My Learning Modules
-                            </h3>
-                            {modules.length === 0 ? (
-                                <div className="bg-white dark:bg-dark-card border-2 border-gray-200 dark:border-gray-700 rounded-2xl p-6 text-center">
-                                    <p className="text-gray-500">No modules yet. Generate your first one!</p>
-                                </div>
-                            ) : (
-                                <div className="space-y-3 max-h-[600px] overflow-y-auto">
-                                    {modules.map((mod) => (
-                                        <motion.button
-                                            key={mod.id}
-                                            whileHover={{ x: 4 }}
-                                            onClick={() => viewModule(mod.id)}
-                                            className={`w-full text-left p-4 rounded-2xl border-2 transition-colors ${currentModule?.id === mod.id
-                                                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                                                : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-dark-card hover:border-gray-300'}`}
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="font-bold truncate">{mod.topic}</p>
-                                                    <div className="flex items-center gap-2 mt-1">
-                                                        {getLevelBadge(mod.level)}
-                                                        <span className="text-xs text-gray-400">
-                                                            {new Date(mod.created_at).toLocaleDateString()}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                                            </div>
-                                        </motion.button>
-                                    ))}
                                 </div>
                             )}
                         </div>

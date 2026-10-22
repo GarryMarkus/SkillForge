@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '../layout/Layout';
+import { cn } from '../../lib/cn';
 import { motion } from 'framer-motion';
 
 const Badge = ({ children, className, color = "bg-blue-300", rotate = "-rotate-2" }) => {
