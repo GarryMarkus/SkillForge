@@ -41,7 +41,9 @@ class RegisterAPI(APIView):
 
         return Response({
             "message": "Registered successfully",
-            "tokens": get_tokens(user)
+            "tokens": get_tokens(user),
+            "role": user.role,
+            "onboarding_stage": user.onboarding_stage,
         }, status=status.HTTP_201_CREATED)
 
 
@@ -81,13 +83,15 @@ class OnboardingAPI(APIView):
             )
 
         if user.role == "student":
+            profile, _ = StudentProfile.objects.get_or_create(user=user)
             serializer = StudentOnboardingSerializer(
-                user.student_profile,
+                profile,
                 data=request.data
             )
         elif user.role == "client":
+            profile, _ = ClientProfile.objects.get_or_create(user=user)
             serializer = ClientOnboardingSerializer(
-                user.client_profile,
+                profile,
                 data=request.data
             )
         else:
@@ -121,9 +125,11 @@ class ProfileAPI(APIView):
     def get(self, request):
         user = request.user
         if user.role == "student":
-            serializer = StudentProfileSerializer(user.student_profile)
+            profile, _ = StudentProfile.objects.get_or_create(user=user)
+            serializer = StudentProfileSerializer(profile)
         elif user.role == "client":
-            serializer = ClientProfileSerializer(user.client_profile)
+            profile, _ = ClientProfile.objects.get_or_create(user=user)
+            serializer = ClientProfileSerializer(profile)
         else:
             return Response({"error": "Invalid role"}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -138,14 +144,16 @@ class ProfileUpdateAPI(APIView):
     def patch(self, request):
         user = request.user
         if user.role == "student":
+            profile, _ = StudentProfile.objects.get_or_create(user=user)
             serializer = StudentProfileSerializer(
-                user.student_profile,
+                profile,
                 data=request.data,
                 partial=True
             )
         elif user.role == "client":
+            profile, _ = ClientProfile.objects.get_or_create(user=user)
             serializer = ClientProfileSerializer(
-                user.client_profile,
+                profile,
                 data=request.data,
                 partial=True
             )
