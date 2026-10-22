@@ -1,10 +1,10 @@
-from rest_framework import serializers
 from django.contrib.auth import authenticate
+from rest_framework import serializers
 from .models import User, StudentProfile, ClientProfile
 
 
-
 class RegisterSerializer(serializers.ModelSerializer):
+    """Serializer for new user registration with email, password, and role."""
     password = serializers.CharField(write_only=True)
 
     class Meta:
@@ -19,10 +19,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-
 class LoginSerializer(serializers.Serializer):
+    """Serializer for authenticating users via email and password."""
     email = serializers.EmailField()
-    password = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
     def validate(self, data):
         user = authenticate(email=data["email"], password=data["password"])
@@ -32,8 +32,8 @@ class LoginSerializer(serializers.Serializer):
         return data
 
 
-
 class StudentOnboardingSerializer(serializers.ModelSerializer):
+    """Serializer for initial student onboarding information."""
     class Meta:
         model = StudentProfile
         fields = [
@@ -47,7 +47,6 @@ class StudentOnboardingSerializer(serializers.ModelSerializer):
             "skills",
             "resume",
         ]
-
         extra_kwargs = {
             "full_name": {"required": True},
             "skills": {"required": True},
@@ -55,8 +54,8 @@ class StudentOnboardingSerializer(serializers.ModelSerializer):
         }
 
 
-
 class ClientOnboardingSerializer(serializers.ModelSerializer):
+    """Serializer for initial recruiter/client onboarding information."""
     class Meta:
         model = ClientProfile
         fields = [
@@ -65,15 +64,13 @@ class ClientOnboardingSerializer(serializers.ModelSerializer):
             "website",
             "address",
         ]
-
         extra_kwargs = {
             "company_name": {"required": True},
         }
 
-from rest_framework import serializers
-from .models import StudentProfile, ClientProfile
 
 class StudentProfileSerializer(serializers.ModelSerializer):
+    """Serializer for reading and updating student profile data."""
     email = serializers.EmailField(source="user.email", read_only=True)
 
     class Meta:
@@ -94,6 +91,7 @@ class StudentProfileSerializer(serializers.ModelSerializer):
 
 
 class ClientProfileSerializer(serializers.ModelSerializer):
+    """Serializer for reading and updating recruiter/client profile data."""
     email = serializers.EmailField(source="user.email", read_only=True)
 
     class Meta:
@@ -105,4 +103,3 @@ class ClientProfileSerializer(serializers.ModelSerializer):
             "website",
             "address",
         ]
-

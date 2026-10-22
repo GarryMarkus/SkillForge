@@ -1,23 +1,28 @@
-from rest_framework.views import APIView
+from django.utils import timezone
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status
-from django.utils import timezone
-from .models import Exam, Question, ExamSession, ProctorEvent
-from .serializers import ExamSerializer, QuestionSerializer
-from .risk import update_risk
-from django.shortcuts import render
+from rest_framework.views import APIView
 
-def proctor_test(request):
-    return render(request, "proctor.html")
+from .models import Exam, Question, ExamSession, ProctorEvent
+from .risk import update_risk
+from .serializers import ExamSerializer, QuestionSerializer
+
+
 class ExamListView(APIView):
+    """List all available active exams."""
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         exams = Exam.objects.filter(is_active=True)
         serializer = ExamSerializer(exams, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class StartExamView(APIView):
+    """Start an active proctoring session for a candidate taking a specific exam."""
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         exam_id = request.data.get("exam_id")
         if not exam_id:
@@ -41,45 +46,55 @@ class StartExamView(APIView):
             status=status.HTTP_201_CREATED
         )
 
-class ExamQuestionView(APIView): 
+
+class ExamQuestionView(APIView):
+    """Retrieve all questions for an exam with correct answers excluded."""
     permission_classes = [IsAuthenticated]
+
     def get(self, request, exam_id):
-        try:
-            questions = Question.objects.filter(exam_id=exam_id)
-        except Question.DoesNotExist:
+        questions = Question.objects.filter(exam_id=exam_id)
+        if not questions.exists():
             return Response(
-                {"error": "No questions found"},
+                {"error": "No questions found for this exam"},
                 status=status.HTTP_404_NOT_FOUND
             )
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class ProctorEventView(APIView):
+    """
+    Log a real-time anti-cheat violation event from client webcam/focus sensors,
+    compute cumulative penalty risk, and evaluate if session should be flagged.
+    """
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         session_id = request.data.get("session_id")
         event = request.data.get("event_type")
-        confidence = request.data.get("confidence", 1)
+        confidence = float(request.data.get("confidence", 1.0))
+
         if not session_id or not event:
             return Response(
                 {"error": "session_id and event_type are required"},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
         try:
-            session = ExamSession.objects.get(
-                id=session_id,
-                is_active=True
-            )
+            session = ExamSession.objects.get(id=session_id, is_active=True)
         except ExamSession.DoesNotExist:
             return Response(
                 {"error": "Active exam session not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
+
         ProctorEvent.objects.create(
             session=session,
             event_type=event,
             confidence=confidence
         )
         update_risk(session, event, confidence)
+
         return Response(
             {
                 "risk": session.risk_score,
@@ -87,8 +102,12 @@ class ProctorEventView(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+
 class EndExamView(APIView):
+    """Conclude an exam session, record completion timestamp, and return final risk rating."""
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         session_id = request.data.get("session_id")
         if not session_id:
@@ -96,6 +115,7 @@ class EndExamView(APIView):
                 {"error": "session_id is required"},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
         try:
             session = ExamSession.objects.get(id=session_id)
         except ExamSession.DoesNotExist:
@@ -107,6 +127,7 @@ class EndExamView(APIView):
         session.is_active = False
         session.ended_at = timezone.now()
         session.save()
+
         return Response(
             {
                 "final_risk": session.risk_score,

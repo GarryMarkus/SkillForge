@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
+
+
 class Exam(models.Model):
+    """Represents an examination with a defined duration."""
     title = models.CharField(max_length=200)
     duration_minutes = models.PositiveIntegerField()
     is_active = models.BooleanField(default=True)
@@ -10,6 +13,7 @@ class Exam(models.Model):
 
 
 class Question(models.Model):
+    """Multiple-choice exam question with 4 options and a correct key."""
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     text = models.TextField()
     option_a = models.CharField(max_length=200)
@@ -23,12 +27,12 @@ class Question(models.Model):
 
 
 class ExamSession(models.Model):
+    """Tracks a user taking an exam, including risk scoring and flag status."""
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="exam_sessions"
     )
-
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(null=True, blank=True)
@@ -36,9 +40,16 @@ class ExamSession(models.Model):
     is_flagged = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
+    def __str__(self):
+        return f"{self.user.email} - {self.exam.title} (Risk: {self.risk_score})"
+
 
 class ProctorEvent(models.Model):
+    """Records an individual suspicious activity event detected during an exam session."""
     session = models.ForeignKey(ExamSession, on_delete=models.CASCADE)
     event_type = models.CharField(max_length=50)
     confidence = models.FloatField(default=1.0)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.session_id} - {self.event_type} ({self.confidence})"
