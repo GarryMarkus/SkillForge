@@ -62,6 +62,12 @@ export const useAuthStore = create((set, get) => ({
         return { user: updated };
     }),
 
+    updateOnboardingStage: (stage) => set((state) => {
+        const updated = { ...(state.user || {}), onboarding_stage: stage };
+        localStorage.setItem('user', JSON.stringify(updated));
+        return { user: updated };
+    }),
+
     // API Actions
     login: async (email, password) => {
         try {

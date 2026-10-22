@@ -9,25 +9,95 @@ import StudentOnboarding from './pages/student/StudentOnboarding';
 import AssessmentPage from './pages/student/AssessmentPage';
 import PersonalityTest from './pages/student/PersonalityTest';
 import UpskillPage from './pages/student/UpskillPage';
+import ProtectedRoute from './components/guards/ProtectedRoute';
+import RoleGuard from './components/guards/RoleGuard';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/auth" element={<AuthPage />} />
-        {/* Redirect generic login/signup routes to /auth */}
         <Route path="/login" element={<Navigate to="/auth" replace />} />
         <Route path="/signup" element={<Navigate to="/auth" replace />} />
 
-        {/* Dashboards */}
-        <Route path="/student/dashboard" element={<StudentDashboard />} />
-        <Route path="/student/onboarding" element={<StudentOnboarding />} />
-        <Route path="/student/assessment" element={<AssessmentPage />} />
-        <Route path="/student/personality-test" element={<PersonalityTest />} />
-        <Route path="/student/upskill" element={<UpskillPage />} />
-        <Route path="/client/dashboard" element={<ClientDashboard />} />
-        <Route path="/client/onboarding" element={<ClientOnboarding />} />
+        {/* Student Protected Routes */}
+        <Route
+          path="/student/dashboard"
+          element={
+            <ProtectedRoute>
+              <RoleGuard requiredRole="student">
+                <StudentDashboard />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/onboarding"
+          element={
+            <ProtectedRoute>
+              <RoleGuard requiredRole="student">
+                <StudentOnboarding />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/assessment"
+          element={
+            <ProtectedRoute>
+              <RoleGuard requiredRole="student">
+                <AssessmentPage />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/personality-test"
+          element={
+            <ProtectedRoute>
+              <RoleGuard requiredRole="student">
+                <PersonalityTest />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/upskill"
+          element={
+            <ProtectedRoute>
+              <RoleGuard requiredRole="student">
+                <UpskillPage />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Client Protected Routes */}
+        <Route
+          path="/client/dashboard"
+          element={
+            <ProtectedRoute>
+              <RoleGuard requiredRole="client">
+                <ClientDashboard />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/client/onboarding"
+          element={
+            <ProtectedRoute>
+              <RoleGuard requiredRole="client">
+                <ClientOnboarding />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Catch-all fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
