@@ -81,11 +81,13 @@ def generate_skill_test_for_student(student_id: int, category_id: int | None = N
     """
     try:
         user = User.objects.get(id=student_id)
-        report = StudentReport.objects.get(student=user.student_profile)
+        report, _ = StudentReport.objects.get_or_create(student=user.student_profile)
         summary = report.report_summary or {}
 
         if category_id:
-            category = SkillCategory.objects.get(id=category_id)
+            category = SkillCategory.objects.filter(id=category_id).first()
+            if not category:
+                category, _ = SkillCategory.objects.get_or_create(name="General Programming")
         else:
             resume_data = summary.get("resume_analysis", {})
             github_data = summary.get("github_analysis", {})
@@ -146,7 +148,7 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
             id=attempt_id,
             user=user
         )
-        report = StudentReport.objects.get(
+        report, _ = StudentReport.objects.get_or_create(
             student=user.student_profile
         )
 
@@ -203,9 +205,11 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
 
 def get_final_analysis(student_id: int):
     """Retrieve full audit breakdown and assessment scores for a student."""
-    report = StudentReport.objects.get(
+    report = StudentReport.objects.filter(
         student__user_id=student_id
-    )
+    ).first()
+    if not report:
+        return {"stage": "temporary"}
     summary = report.report_summary or {}
 
     return {
@@ -244,7 +248,7 @@ def submit_personality_assessment(user, answers):
         learning_level=level
     )
 
-    report = StudentReport.objects.get(student=user.student_profile)
+    report, _ = StudentReport.objects.get_or_create(student=user.student_profile)
     report.personality_score = total
     report.save()
 
@@ -256,9 +260,12 @@ def submit_personality_assessment(user, answers):
 
 def get_recommendation(student_id: int):
     """Retrieve candidate recommendation card data parsed from final report JSON."""
-    report = StudentReport.objects.get(
+    report = StudentReport.objects.filter(
         student__user_id=student_id
-    )
+    ).first()
+    if not report or not report.report_summary:
+        return {"status": "not_ready"}
+
     summary = report.report_summary or {}
     final_data = summary.get("final")
 
