@@ -1,17 +1,32 @@
-from langchain_google_genai import GoogleGenerativeAI, ChatGoogleGenerativeAI
+import os
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
-from dotenv import load_dotenv
-import os
+
 load_dotenv()
-API_KEY = os.getenv("GEMINI_API_KEY")
-if not API_KEY:
-    raise ValueError("GEMINI_API_KEY or GOOGLE_API_KEY is missing. Set it in your .env file.")
-model = ChatGoogleGenerativeAI(
-    model="gemini-2.5-flash",   
-    api_key=API_KEY
-)
+
+_model = None
+
+def get_model():
+    """
+    Lazily initialize and return the Gemini ChatGoogleGenerativeAI client.
+    Prevents runtime startup crashes when GEMINI_API_KEY is not configured.
+    """
+    global _model
+    if _model is None:
+        api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY or GOOGLE_API_KEY is missing. Set it in your .env file.")
+        _model = ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash",
+            api_key=api_key
+        )
+    return _model
+
+
 def analyze_resume(resume_text: str) -> str:
+    """Analyze extracted resume text for key strengths, weaknesses, and suggestions."""
     template = PromptTemplate(
         input_variables=["resume_text"],
         template="""
@@ -24,9 +39,12 @@ def analyze_resume(resume_text: str) -> str:
         {resume_text}
         """
     )
-    chain = template | model | StrOutputParser()
+    chain = template | get_model() | StrOutputParser()
     return chain.invoke({"resume_text": resume_text})
+
+
 def analyze_github_profile(github_profile: str) -> str:
+    """Analyze GitHub repositories and stats for developer strengths and areas for improvement."""
     template = PromptTemplate(
         input_variables=["github_profile"],
         template="""
@@ -39,9 +57,12 @@ def analyze_github_profile(github_profile: str) -> str:
         {github_profile}
         """
     )
-    chain = template | model | StrOutputParser()
+    chain = template | get_model() | StrOutputParser()
     return chain.invoke({"github_profile": github_profile})
+
+
 def generate_final_report(resume_analysis: str, github_analysis: str) -> str:
+    """Synthesize multi-modal resume and GitHub analysis into a cohesive candidate summary."""
     template = PromptTemplate(
         input_variables=["resume_analysis", "github_analysis"],
         template="""
@@ -54,9 +75,12 @@ def generate_final_report(resume_analysis: str, github_analysis: str) -> str:
         Final Report:
         """
     )
-    chain = template | model | StrOutputParser()
+    chain = template | get_model() | StrOutputParser()
     return chain.invoke({"resume_analysis": resume_analysis, "github_analysis": github_analysis})
-def generate_test(resume_analysis: str, github_analysis: str, skills=None, recommendation=None, num_questions=5, role_hint="Developer") -> str:
+
+
+def generate_test(resume_analysis: str, github_analysis: str, skills=None, recommendation=None, num_questions=5, role_hint="Developer") -> dict:
+    """Generate adaptive multiple-choice technical interview questions tailored to candidate skills."""
     parser = JsonOutputParser()
     template = PromptTemplate(
         input_variables=["resume_analysis", "github_analysis", "skills", "recommendation", "num_questions", "role_hint"],
@@ -91,8 +115,8 @@ def generate_test(resume_analysis: str, github_analysis: str, skills=None, recom
         }}
         """
     )
-    chain = template | model | parser
-    r=chain.invoke({
+    chain = template | get_model() | parser
+    return chain.invoke({
         "resume_analysis": resume_analysis,
         "github_analysis": github_analysis,
         "skills": skills,
@@ -100,13 +124,12 @@ def generate_test(resume_analysis: str, github_analysis: str, skills=None, recom
         "num_questions": num_questions,
         "role_hint": role_hint
     })
-    return r
 
-from langchain.prompts import PromptTemplate
-import json,re
-def final_analysis(resume_analysis:str,github_analysis:str,previous_recommendation:str,test_score:float,test_result:str):
-    prompt=PromptTemplate(
-        input_variables=["resume_analysis","github_analysis","previous_recommendation","test_score","test_result"],
+
+def final_analysis(resume_analysis: str, github_analysis: str, previous_recommendation: str, test_score: float, test_result: str) -> str:
+    """Generate final structured performance analysis and star rating following an assessment attempt."""
+    prompt = PromptTemplate(
+        input_variables=["resume_analysis", "github_analysis", "previous_recommendation", "test_score", "test_result"],
         template="""
         You are an expert technical evaluator.
         Based on the following details, provide a final structured analysis of the candidate.
@@ -129,7 +152,12 @@ def final_analysis(resume_analysis:str,github_analysis:str,previous_recommendati
         Do not include any explanations or extra text.
         """
     )
-    parser=StrOutputParser()
-    chain=prompt|model|parser
-    response=chain.invoke({"resume_analysis":resume_analysis,"github_analysis":github_analysis,"previous_recommendation":previous_recommendation,"test_score":test_score,"test_result":test_result})
-    return response
+    parser = StrOutputParser()
+    chain = prompt | get_model() | parser
+    return chain.invoke({
+        "resume_analysis": resume_analysis,
+        "github_analysis": github_analysis,
+        "previous_recommendation": previous_recommendation,
+        "test_score": test_score,
+        "test_result": test_result
+    })

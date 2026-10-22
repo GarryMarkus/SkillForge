@@ -1,101 +1,104 @@
+import json
 import logging
+import re
 from django.contrib.auth import get_user_model
-
-from accounts.models import *
-from .models import *
-from proctor.models import Exam, ExamSession
-from .utils.pdf_utils import extract_text_from_pdf_fileobj
-from .utils.git_utils import fetch_github_profile
-from .utils.langchain_utils import *
 from django.utils import timezone
+
+from accounts.models import StudentProfile, StudentReport
+from proctor.models import Exam, ExamSession
+from .models import SkillCategory, SkillTestAttempt, PersonalityAttempt
+from .personality_data import PERSONALITY_QUESTIONS
+from .utils.git_utils import fetch_github_profile
+from .utils.langchain_utils import (
+    analyze_resume,
+    analyze_github_profile,
+    generate_final_report,
+    generate_test,
+    final_analysis,
+)
+from .utils.pdf_utils import extract_text_from_pdf_fileobj
+
 User = get_user_model()
 logger = logging.getLogger(__name__)
 
-def generate_partial_report(student_id: int):
-  
 
+def generate_partial_report(student_id: int):
+    """
+    Ingest a student's resume PDF and GitHub profile to create an initial AI evaluation report.
+    Saved to StudentReport.report_summary.
+    """
     try:
         user = User.objects.get(id=student_id)
         profile: StudentProfile = user.student_profile
-
         report, _ = StudentReport.objects.get_or_create(student=profile)
 
-   
         resume_analysis = {}
-
         if profile.resume:
             text = extract_text_from_pdf_fileobj(profile.resume)
             resume_analysis = analyze_resume(text)
 
         github_analysis = {}
-
         if profile.github_url:
             username = profile.github_url.rstrip("/").split("/")[-1]
             github_data = fetch_github_profile(username)
             github_analysis = analyze_github_profile(str(github_data))
 
         summary = generate_final_report(
-            resume_analysis,
-            github_analysis
+            str(resume_analysis),
+            str(github_analysis)
         )
 
-      
         report.report_summary = {
             "stage": "temporary",
             "resume_analysis": resume_analysis,
             "github_analysis": github_analysis,
             "summary": summary,
         }
-
         report.save()
-
         return report
 
     except Exception:
         logger.exception("Partial report generation failed")
-
-        StudentReport.objects.update_or_create(
-            student_id=student_id,
-            defaults={
-                "report_summary": {
-                    "error": "AI analysis failed. Please retry."
+        try:
+            profile = StudentProfile.objects.get(user_id=student_id)
+            StudentReport.objects.update_or_create(
+                student=profile,
+                defaults={
+                    "report_summary": {
+                        "error": "AI analysis failed. Please retry."
+                    }
                 }
-            }
-        )
-
+            )
+        except Exception:
+            logger.exception("Failed to write fallback error report")
         return None
 
 
-
 def generate_skill_test_for_student(student_id: int, category_id: int | None = None):
-
+    """
+    Generate dynamic assessment questions tailored to candidate strengths using Gemini LLM.
+    Provisions a proctored ExamSession and associates it with the SkillTestAttempt.
+    """
     try:
         user = User.objects.get(id=student_id)
-
         report = StudentReport.objects.get(student=user.student_profile)
-
         summary = report.report_summary or {}
 
         if category_id:
             category = SkillCategory.objects.get(id=category_id)
-
         else:
             resume_data = summary.get("resume_analysis", {})
             github_data = summary.get("github_analysis", {})
 
             skills = []
-
             if isinstance(resume_data, dict):
                 skills += resume_data.get("skills", [])
-
             if isinstance(github_data, dict):
                 skills += github_data.get("skills", [])
-
             if not skills:
                 skills = ["Python"]
 
             primary_skill = skills[0]
-
             category, _ = SkillCategory.objects.get_or_create(
                 name=primary_skill.title()
             )
@@ -111,13 +114,13 @@ def generate_skill_test_for_student(student_id: int, category_id: int | None = N
         attempt = SkillTestAttempt.objects.create(
             user=user,
             category=category,
-            generated_questions=payload["questions"],
-            total_questions=len(payload["questions"]),
+            generated_questions=payload.get("questions", []),
+            total_questions=len(payload.get("questions", [])),
         )
 
         # Create Proctor Session
         exam, _ = Exam.objects.get_or_create(
-            title=f"{category.name} Assessment", 
+            title=f"{category.name} Assessment",
             defaults={"duration_minutes": 30}
         )
         session = ExamSession.objects.create(user=user, exam=exam)
@@ -131,23 +134,23 @@ def generate_skill_test_for_student(student_id: int, category_id: int | None = N
         logger.exception("Skill test generation failed")
         raise
 
+
 def submit_skill_test(student_id: int, attempt_id: int, answers: list):
-
-
+    """
+    Evaluate candidate assessment answers, verify proctoring integrity, compute score percentage,
+    and update candidate standing in StudentReport.
+    """
     try:
         user = User.objects.get(id=student_id)
-
         attempt = SkillTestAttempt.objects.get(
             id=attempt_id,
             user=user
         )
-
         report = StudentReport.objects.get(
             student=user.student_profile
         )
 
         session = attempt.proctor_session
-
         if session and session.is_flagged:
             return {
                 "status": "flagged",
@@ -156,9 +159,8 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
             }
 
         correct = 0
-
         for i, question in enumerate(attempt.generated_questions):
-            if i < len(answers) and answers[i] == question["correct_answer"]:
+            if i < len(answers) and answers[i] == question.get("correct_answer"):
                 correct += 1
 
         total = attempt.total_questions
@@ -172,6 +174,7 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
         attempt.completed_at = timezone.now()
         attempt.is_evaluated = True
         attempt.save()
+
         final_report = final_analysis(
             str(report.report_summary.get("resume_analysis", "")),
             str(report.report_summary.get("github_analysis", "")),
@@ -181,10 +184,8 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
         )
 
         report.skill_test_score = percentage
-
         report.report_summary["final"] = final_report
         report.report_summary["stage"] = "verified" if passed else "needs_improvement"
-
         report.save()
 
         return {
@@ -200,40 +201,30 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
         raise
 
 
-
-
-
 def get_final_analysis(student_id: int):
-  
+    """Retrieve full audit breakdown and assessment scores for a student."""
     report = StudentReport.objects.get(
         student__user_id=student_id
     )
-
     summary = report.report_summary or {}
 
     return {
         "stage": summary.get("stage", "temporary"),
-
         "personality_score": report.personality_score,
         "skill_test_score": report.skill_test_score,
-
         "resume_analysis": summary.get("resume_analysis"),
         "github_analysis": summary.get("github_analysis"),
-
         "partial_summary": summary.get("summary"),
         "final_analysis": summary.get("final"),
     }
 
 
-
-
-from .personality_data import PERSONALITY_QUESTIONS
-
-
-
 def submit_personality_assessment(user, answers):
+    """
+    Score psychometric personality questions and assign learning level pace.
+    Max points = 28. >=24: fast, >=16: average, <16: slow.
+    """
     total = 0
-
     for q in PERSONALITY_QUESTIONS:
         choice = answers.get(str(q["id"]))
         if choice:
@@ -261,16 +252,13 @@ def submit_personality_assessment(user, answers):
         "score": total,
         "learning_level": level
     }
-import json
-import re
 
 
 def get_recommendation(student_id: int):
-
+    """Retrieve candidate recommendation card data parsed from final report JSON."""
     report = StudentReport.objects.get(
         student__user_id=student_id
     )
-
     summary = report.report_summary or {}
     final_data = summary.get("final")
 
@@ -279,7 +267,10 @@ def get_recommendation(student_id: int):
 
     if isinstance(final_data, str):
         cleaned = re.sub(r"```json|```", "", final_data).strip()
-        final_data = json.loads(cleaned)
+        try:
+            final_data = json.loads(cleaned)
+        except Exception:
+            final_data = {"raw": final_data}
 
     return {
         "status": "ready",

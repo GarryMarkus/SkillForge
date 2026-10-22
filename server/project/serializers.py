@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from .models import JobPost, JobApplication
-from accounts.models import ClientProfile, StudentProfile
+from accounts.models import StudentProfile
 
 
 class JobPostSerializer(serializers.ModelSerializer):
+    """Serializer for creating and viewing job opportunities."""
     company_name = serializers.CharField(source='client.company_name', read_only=True)
     applicant_count = serializers.SerializerMethodField()
 
@@ -24,6 +25,7 @@ class JobPostSerializer(serializers.ModelSerializer):
 
 
 class JobApplicationSerializer(serializers.ModelSerializer):
+    """Serializer for submitting and reviewing student job applications."""
     job_title = serializers.CharField(source='job.title', read_only=True)
     company_name = serializers.CharField(source='job.client.company_name', read_only=True)
 
@@ -34,8 +36,8 @@ class JobApplicationSerializer(serializers.ModelSerializer):
 
 
 class ApplicantSerializer(serializers.ModelSerializer):
-    """Serializer for client to view applicant details"""
-    name = serializers.CharField(source='user.name', read_only=True)
+    """Serializer for recruiters to view applicant qualifications and contact details."""
+    name = serializers.CharField(source='full_name', read_only=True)
     email = serializers.EmailField(source='user.email', read_only=True)
     
     class Meta:
