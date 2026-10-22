@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "proctor",
     "project",
     "verification",
-    "analysis",
     "modules",
     "rest_framework",  
     'rest_framework_simplejwt.token_blacklist',
@@ -76,7 +75,7 @@ ROOT_URLCONF = 'skillforge.urls'
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
