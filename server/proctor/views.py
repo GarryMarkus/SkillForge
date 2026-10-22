@@ -72,7 +72,10 @@ class ProctorEventView(APIView):
     def post(self, request):
         session_id = request.data.get("session_id")
         event = request.data.get("event_type")
-        confidence = float(request.data.get("confidence", 1.0))
+        try:
+            confidence = float(request.data.get("confidence", 1.0))
+        except (ValueError, TypeError):
+            confidence = 1.0
 
         if not session_id or not event:
             return Response(
@@ -81,7 +84,7 @@ class ProctorEventView(APIView):
             )
 
         try:
-            session = ExamSession.objects.get(id=session_id, is_active=True)
+            session = ExamSession.objects.get(id=session_id, user=request.user, is_active=True)
         except ExamSession.DoesNotExist:
             return Response(
                 {"error": "Active exam session not found"},
@@ -117,7 +120,7 @@ class EndExamView(APIView):
             )
 
         try:
-            session = ExamSession.objects.get(id=session_id)
+            session = ExamSession.objects.get(id=session_id, user=request.user)
         except ExamSession.DoesNotExist:
             return Response(
                 {"error": "Session not found"},
