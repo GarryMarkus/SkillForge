@@ -51,9 +51,9 @@ SkillForge addresses this by introducing:
 
 ```
 SkillForge/
+├── .github/workflows/ci.yml             # GitHub Actions CI pipeline for client & server
 ├── .gitignore                           # Git ignore rules for Python, Node, OS, and env artifacts
-├── README.md                            # High-level product and marketing overview
-├── requirements.txt                     # Backend Python dependencies
+├── README.md                            # Monorepo developer guide and architecture summary
 ├── assets/                              # UI screenshots, architecture diagrams, and platform logos
 │   ├── browsejobsection.png
 │   ├── homepage.png
@@ -63,23 +63,23 @@ SkillForge/
 │   ├── skillforge-flow.png
 │   └── userprofile.png
 │
-├── Frontend/                            # React 19 Single Page Application
-│   ├── .gitignore                       # Frontend-specific node_modules / dist ignores
-│   ├── eslint.config.js                 # Flat ESLint configuration rules (React hooks & refresh)
-│   ├── index.html                       # HTML5 entry template with viewport and font link definitions
+├── client/                              # React 19 + Vite 7 Single Page Application
+│   ├── .env.example                     # Client environment template (VITE_API_BASE_URL)
+│   ├── .gitignore                       # Client-specific node_modules / dist ignores
+│   ├── eslint.config.js                 # Flat ESLint 9 configuration with React hooks & purity rules
+│   ├── index.html                       # HTML5 entry template
 │   ├── package.json                     # NPM manifest declaring scripts and dependencies
 │   ├── package-lock.json                # Deterministic dependency lockfile
 │   ├── postcss.config.js                # PostCSS configuration with Tailwind and Autoprefixer
+│   ├── README.md                        # Frontend developer and component architecture guide
 │   ├── tailwind.config.js               # Tailwind custom color palettes, fonts, and typography plugins
 │   ├── vite.config.js                   # Vite configuration with React plugin
 │   ├── public/                          # Static public assets (e.g., vite.svg)
 │   └── src/                             # Source code root
 │       ├── App.css                      # Global component styles
-│       ├── App.jsx                      # Client router root defining public and dashboard routes
+│       ├── App.jsx                      # Client router root with ProtectedRoute and RoleGuard
 │       ├── index.css                    # Tailwind CSS direct imports and root design rules
 │       ├── main.jsx                     # ReactDOM root rendering <App /> in StrictMode
-│       ├── api/
-│       │   └── apiClient.js             # Legacy Axios instance with request/response interceptors
 │       ├── assets/                      # Bundled frontend SVGs and icons
 │       ├── components/
 │       │   ├── assessment/
@@ -93,6 +93,9 @@ SkillForge/
 │       │   │   └── steps/               # Role selection, basic info, credentials, and confirmation
 │       │   ├── client/
 │       │   │   └── JobPostModal.jsx     # Recruiter modal dialog for creating job postings
+│       │   ├── guards/                  # Navigation security wrappers
+│       │   │   ├── ProtectedRoute.jsx   # Authentication barrier redirecting unauthenticated users to /auth
+│       │   │   └── RoleGuard.jsx        # Role-based barrier preventing cross-role access
 │       │   ├── layout/
 │       │   │   ├── Layout.jsx           # Global wrapper with Lenis smooth scroll and dark-mode setup
 │       │   │   ├── Navbar.jsx           # Top navigation bar with theme switch and dynamic scroll styling
@@ -111,13 +114,12 @@ SkillForge/
 │       │       ├── Card.jsx
 │       │       ├── Input.jsx
 │       │       └── Loader.jsx
+│       ├── lib/                         # Core shared frontend libraries
+│       │   ├── api.js                   # Centralized JWT-injecting fetch client (VITE_API_BASE_URL)
+│       │   └── cn.js                    # ClassName utility (clsx + tailwind-merge)
 │       ├── pages/                       # Route destination views
 │       │   ├── AuthPage.jsx             # Combined authentication view toggling login / signup wizard
-│       │   ├── Dashboard.jsx            # Legacy standalone dashboard (unrouted)
-│       │   ├── ExamView.jsx             # Legacy standalone exam view (unrouted)
 │       │   ├── LandingPage.jsx          # Public product landing page with animated sections
-│       │   ├── Login.jsx                # Legacy unrouted login form
-│       │   ├── Register.jsx             # Legacy unrouted registration form
 │       │   ├── client/
 │       │   │   └── ClientOnboarding.jsx # Recruiter company and profile registration form
 │       │   ├── dashboard/
@@ -132,96 +134,92 @@ SkillForge/
 │           ├── authStore.js             # Zustand store for authentication state, tokens, and wizard steps
 │           └── themeStore.js            # Zustand store persisting light/dark mode selection
 │
-└── skillforge/                          # Django Backend Application Root
-    ├── manage.py                        # Django CLI management entry point
-    ├── resumes/                         # Sample and uploaded candidate resume PDFs
-    ├── templates/
-    │   └── proctor.html                 # Legacy HTML/JS test harness for proctoring endpoints
-    ├── accounts/                        # Custom authentication, user profiles, and onboarding
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── models.py                    # User, StudentProfile, ClientProfile, StudentReport
-    │   ├── serializers.py               # Register, Login, and Profile serializers
-    │   ├── tests.py                     # App tests (stub)
-    │   ├── urls.py                      # /api/accounts/* routes
-    │   ├── views.py                     # Register, Login, Onboarding, Profile, and Logout APIViews
-    │   └── migrations/
-    │       └── 0001_initial.py
-    ├── analysis/                        # Stub application (empty models, orphaned url_patterns)
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── models.py
-    │   ├── tests.py
-    │   ├── urls.py
-    │   ├── views.py
-    │   └── migrations/
-    ├── modules/                         # AI-generated educational learning modules
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── langchain_utils.py           # Gemini prompt chain for module generation
-    │   ├── models.py                    # UpskillModule, ModuleProgress
-    │   ├── serializers.py               # UpskillModuleSerializer
-    │   ├── services.py                  # Module generation orchestration
-    │   ├── tests.py                     # App tests (stub)
-    │   ├── urls.py                      # /api/modules/* routes
-    │   ├── views.py                     # Generate, List, and Detail module APIViews
-    │   └── migrations/
-    │       └── 0001_initial.py
-    ├── proctor/                         # Exam proctoring, risk scoring, and hardware event logging
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── auth_views.py                # Legacy conflicting auth views (imports standard Django User)
-    │   ├── models.py                    # Exam, Question, ExamSession, ProctorEvent
-    │   ├── risk.py                      # Risk scoring heuristic engine (Threshold = 50)
-    │   ├── serializers.py               # ExamSerializer, QuestionSerializer
-    │   ├── tests.py                     # App tests (stub)
-    │   ├── urls.py                      # /api/proctor/* routes
-    │   ├── views.py                     # Exam list, start, question, event, and end APIViews
-    │   └── migrations/
-    │       └── 0001_initial.py
-    ├── project/                         # Job posts, student applications, and TF-IDF matching
-    │   ├── admin.py
-    │   ├── apps.py
-    │   ├── models.py                    # JobPost, JobApplication
-    │   ├── serializers.py               # JobPostSerializer, JobApplicationSerializer, ApplicantSerializer
-    │   ├── tests.py                     # App tests (stub)
-    │   ├── urls.py                      # /api/project/* routes
-    │   ├── views.py                     # Job CRUD, application handling, and scikit-learn match ranking
-    │   └── migrations/
-    │       ├── 0001_initial.py
-    │       └── 0002_jobapplication.py
-    ├── skillforge/                      # Django project configuration package
-    │   ├── __init__.py
-    │   ├── asgi.py                      # Standard ASGI entry point
-    │   ├── settings.py                  # Django core settings (installed apps, middleware, DB, JWT)
-    │   ├── urls.py                      # Root URL dispatcher routing all /api/* namespaces
-    │   └── wsgi.py                      # WSGI entry point for synchronous web servers
-    └── verification/                    # Multi-modal verification, LangChain AI, and personality testing
-        ├── admin.py
-        ├── apps.py
-        ├── models.py                    # SkillVerification, PersonalityAttempt, SkillCategory, SkillTestAttempt
-        ├── personality_data.py          # Static bank of 7 psychometric diagnostic questions
-        ├── services.py                  # Orchestrates resume/git parsing, test generation, and evaluation
-        ├── tests.py                     # App tests (stub)
-        ├── urls.py                      # /api/verification/* routes
-        ├── views.py                     # Generate test, submit test, personality questions, recommendation
-        ├── migrations/
-        │   ├── 0001_initial.py
-        │   └── 0002_remove_personalityquestion_test_and_more.py
-        └── utils/
-            ├── git_utils.py             # GitHub user profile and repository scraper
-            ├── langchain_utils.py       # LangChain Gemini chains for resume/git audit and test generation
-            └── pdf_utils.py             # PyPDF2 text extraction from Django FileField
+├── server/                              # Django Backend Application Root
+│   ├── .env.example                     # Backend environment template (SECRET_KEY, DEBUG, GEMINI_API_KEY)
+│   ├── manage.py                        # Django CLI management entry point
+│   ├── README.md                        # Backend architecture, setup, and endpoints guide
+│   ├── requirements.txt                 # Backend Python dependencies
+│   ├── resumes/                         # Uploaded candidate resume PDFs
+│   ├── accounts/                        # Custom authentication, user profiles, and onboarding
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py                    # User, StudentProfile, ClientProfile, StudentReport
+│   │   ├── serializers.py               # Register, Login, and Profile serializers
+│   │   ├── tests.py                     # App tests (stub)
+│   │   ├── urls.py                      # /api/accounts/* routes
+│   │   ├── views.py                     # Register, Login, Onboarding, Profile, and Logout APIViews
+│   │   └── migrations/
+│   │       └── 0001_initial.py
+│   ├── modules/                         # AI-generated educational learning modules
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── langchain_utils.py           # Lazy-loaded Gemini prompt chain for module generation
+│   │   ├── models.py                    # UpskillModule, ModuleProgress
+│   │   ├── serializers.py               # UpskillModuleSerializer
+│   │   ├── services.py                  # Module generation orchestration
+│   │   ├── tests.py                     # App tests (stub)
+│   │   ├── urls.py                      # /api/modules/* routes
+│   │   ├── views.py                     # Generate, List, and Detail module APIViews
+│   │   └── migrations/
+│   │       └── 0001_initial.py
+│   ├── proctor/                         # Exam proctoring, risk scoring, and hardware event logging
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py                    # Exam, Question, ExamSession, ProctorEvent
+│   │   ├── risk.py                      # Risk scoring heuristic engine (Threshold = 50)
+│   │   ├── serializers.py               # ExamSerializer, QuestionSerializer
+│   │   ├── tests.py                     # App tests (stub)
+│   │   ├── urls.py                      # /api/proctor/* routes
+│   │   ├── views.py                     # Exam list, start, question, event, and end APIViews
+│   │   └── migrations/
+│   │       └── 0001_initial.py
+│   ├── project/                         # Job posts, student applications, and TF-IDF matching
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py                    # JobPost, JobApplication
+│   │   ├── serializers.py               # JobPostSerializer, JobApplicationSerializer, ApplicantSerializer
+│   │   ├── tests.py                     # App tests (stub)
+│   │   ├── urls.py                      # /api/project/* routes
+│   │   ├── views.py                     # Job CRUD, application handling, and scikit-learn match ranking
+│   │   └── migrations/
+│   │       ├── 0001_initial.py
+│   │       └── 0002_jobapplication.py
+│   ├── skillforge/                      # Django project configuration package
+│   │   ├── __init__.py
+│   │   ├── asgi.py                      # Standard ASGI entry point
+│   │   ├── exceptions.py                # Uniform REST error handling envelope
+│   │   ├── permissions.py               # Role-based permissions (IsStudent, IsClient)
+│   │   ├── settings.py                  # Django core settings (isolated env, logging, media)
+│   │   ├── urls.py                      # Root URL dispatcher routing all /api/* namespaces
+│   │   └── wsgi.py                      # WSGI entry point for synchronous web servers
+│   └── verification/                    # Multi-modal verification, LangChain AI, and personality testing
+│       ├── admin.py
+│       ├── apps.py
+│       ├── models.py                    # SkillVerification, PersonalityAttempt, SkillCategory, SkillTestAttempt
+│       ├── personality_data.py          # Static bank of 7 psychometric diagnostic questions
+│       ├── services.py                  # Orchestrates resume/git parsing, test generation, and evaluation
+│       ├── tests.py                     # App tests (stub)
+│       ├── urls.py                      # /api/verification/* routes
+│       ├── views.py                     # Generate test, submit test, personality questions, recommendation
+│       ├── migrations/
+│       │   ├── 0001_initial.py
+│       │   └── 0002_remove_personalityquestion_test_and_more.py
+│       └── utils/
+│           ├── git_utils.py             # GitHub user profile and repository scraper
+│           ├── langchain_utils.py       # Lazy-loaded LangChain Gemini chains for audit and test generation
+│           └── pdf_utils.py             # PyPDF2 text extraction from Django FileField
 ```
 
 ---
 
 ## 4. Setup, Build, Test, and Execution Lifecycle
 
-### Backend Lifecycle (`skillforge/`)
+### Backend Lifecycle (`server/`)
 
 #### 1. Environment Preparation
 ```bash
+cd server
+
 # Create and activate a Python 3.11+ virtual environment
 python -m venv venv
 
@@ -235,9 +233,14 @@ pip install -r requirements.txt
 ```
 
 #### 2. Environment Variables Configuration
-A `.env` file must be created inside `skillforge/` (or root) with the mandatory Google Gemini API key:
+Copy `.env.example` to `.env` inside `server/`:
 ```env
+SECRET_KEY=your-django-secret-key-change-in-production
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
 GEMINI_API_KEY=your_gemini_api_key_here
+GITHUB_TOKEN=optional_github_token
+```
 ```
 *(Note: At present, `skillforge/modules/langchain_utils.py:9` and `skillforge/verification/utils/langchain_utils.py:9` raise an immediate `ValueError` on startup if `GEMINI_API_KEY` is undefined).*
 

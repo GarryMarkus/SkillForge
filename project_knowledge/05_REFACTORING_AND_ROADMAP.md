@@ -179,3 +179,34 @@ Prioritize modifications to these files first before touching secondary presenta
 | **5** | `skillforge/project/serializers.py` & `skillforge/project/views.py` | Resolves `ApplicantSerializer` crash and hardens TF-IDF vectorization against zero-job / empty profile edge cases. |
 | **6** | `skillforge/proctor/urls.py` & `Frontend/src/pages/student/AssessmentPage.jsx` | Fixes the live proctoring event 404 error and eliminates broken duplicate authentication views in `proctor`. |
 | **7** | `Frontend/src/components/layout/Layout.jsx` & `src/utils/cn.js` | Fixes Vite Fast Refresh violations and resolves ESLint errors. |
+
+---
+
+## 5. Executed Monorepo Architectural Refactoring Record
+
+The 6-layer architectural refactoring has been successfully executed, verified, and committed across the repository:
+
+### Layer 1: Repository Restructure & Dead Code Purge
+- **Changes**: Renamed `Frontend/` to `client/` and `skillforge/` to `server/` via `git mv`. Purged 12 orphaned and dead files (`Dashboard.jsx`, `ExamView.jsx`, `Login.jsx`, `Register.jsx`, `apiClient.js`, `server/analysis/`, `server/proctor/auth_views.py`, `server/templates/proctor.html`, build logs).
+- **Commit**: `7d2f651 restructure repository into client and server folders and purge dead pages`
+
+### Layer 2: Environment Isolation & Backend Stabilization
+- **Changes**: Created `client/.env.example` and `server/.env.example`. Isolated secrets in `server/skillforge/settings.py` via `os.environ.get()` with fallbacks. Added `MEDIA_ROOT` and dev media routes. Converted `langchain_utils.py` in both `verification/` and `modules/` to lazy `get_model()` factory functions, eliminating startup crashes without `GEMINI_API_KEY`. Fixed `ApplicantSerializer` `source='full_name'` bug, added `events/` route to `proctor/urls.py`, and eliminated wildcard imports.
+- **Commit**: `46ba92e isolate environment configs and fix startup crash in server/modules/langchain_utils.py`
+
+### Layer 3: Backend API Architecture & Error Handling
+- **Changes**: Created custom uniform exception handler (`server/skillforge/exceptions.py`) returning `{error, detail, status_code}` envelope and registered in DRF `EXCEPTION_HANDLER`. Created role permission classes `IsStudent` and `IsClient` in `server/skillforge/permissions.py`. Hardened `server/project/views.py` with empty queryset guards for TF-IDF vectorizer. Added GitHub API timeout and token support to `git_utils.py`. Normalized proctor risk scoring penalty dictionary.
+- **Commit**: `76e273b add custom DRF exception handler, role permissions, and error handling across views`
+
+### Layer 4: Frontend API Layer, Utilities & Lint Cleanup
+- **Changes**: Extracted `cn()` utility to `client/src/lib/cn.js`. Created centralized API client in `client/src/lib/api.js` automatically attaching JWT tokens and resolving `VITE_API_BASE_URL`. Migrated all frontend direct fetch calls (`StudentOnboarding`, `AssessmentPage`, `PersonalityTest`, `UpskillPage`, `ClientOnboarding`, `JobPostModal`, `StudentDashboard`, `ClientDashboard`). Replaced all relative `cn` imports and resolved all 56 ESLint errors down to zero.
+- **Commit**: `902e943 add centralized API client, extract cn() utility, and fix all ESLint errors`
+
+### Layer 5: Route Guards & State Architecture
+- **Changes**: Created `ProtectedRoute.jsx` (authentication guard) and `RoleGuard.jsx` (role authorization barrier). Wrapped all `/student/*` and `/client/*` routes in `client/src/App.jsx`. Enhanced `useAuthStore` with persistent `onboarding_stage` and dedicated update helpers.
+- **Commit**: `6c5da2a add ProtectedRoute and RoleGuard wrappers and persist onboarding_stage in Zustand store`
+
+### Layer 6: Documentation, CI Readiness & Project Knowledge Update
+- **Changes**: Created comprehensive `server/README.md` and `client/README.md`. Rewrote root `README.md` into monorepo developer setup guide. Added GitHub Actions CI pipeline `.github/workflows/ci.yml`. Updated `project_knowledge/00_SYSTEM_OVERVIEW.md` directory trees and setup guides.
+- **Commit**: `git commit -m "add developer documentation, update project_knowledge, and create GitHub Actions CI skeleton"`
+
