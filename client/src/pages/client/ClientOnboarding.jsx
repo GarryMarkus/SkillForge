@@ -8,7 +8,7 @@ import Input from '../../components/ui/Input';
 import api from '../../lib/api';
 
 const ClientOnboarding = () => {
-    const { user, tokens } = useAuthStore();
+    const { user, tokens, updateOnboardingStage } = useAuthStore();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -61,6 +61,8 @@ const ClientOnboarding = () => {
                 : await api.put(path, profile);
 
             if (response.ok) {
+                const resData = await response.json().catch(() => ({}));
+                updateOnboardingStage(resData.onboarding_stage || 2);
                 navigate('/client/dashboard');
             } else {
                 const err = await response.json();

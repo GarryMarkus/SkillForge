@@ -8,7 +8,7 @@ import Input from '../../components/ui/Input';
 import api from '../../lib/api';
 
 const StudentOnboarding = () => {
-    const { user, tokens } = useAuthStore();
+    const { user, tokens, updateOnboardingStage } = useAuthStore();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -77,7 +77,8 @@ const StudentOnboarding = () => {
                 : await api.put(path, data);
 
             if (response.ok) {
-                // Immediate redirect
+                const resData = await response.json().catch(() => ({}));
+                updateOnboardingStage(resData.onboarding_stage || 2);
                 navigate('/student/dashboard');
             } else {
                 const err = await response.json();
