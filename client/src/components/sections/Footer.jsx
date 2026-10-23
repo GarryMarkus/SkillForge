@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-surface-container-low border-t border-outline-variant/30 select-none">
+        <footer className="w-full bg-surface-container-low border-t border-cad font-mono select-none">
             <div className="h-auto md:h-12 max-w-7xl mx-auto px-margin py-3 md:py-0 flex flex-col md:flex-row items-center justify-between gap-space-xs font-label-sm text-label-sm text-on-surface-variant uppercase">
                 <div className="flex flex-wrap items-center gap-x-space-md gap-y-1">
                     <span>SPEC_ID: SF-2024-V4</span>
