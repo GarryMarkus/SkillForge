@@ -1,4 +1,5 @@
 import React from 'react';
+import { MagneticButton } from '../ui/animations';
 
 const OptionsMatrix = ({
     options = [],
@@ -70,13 +71,15 @@ const OptionsMatrix = ({
                     >
                         [ CLEAR ]
                     </button>
-                    <button
-                        onClick={onNextQuestion}
-                        className="px-6 py-3 bg-canvas-blueprint text-white border-2 border-canvas-blueprint text-xs sm:text-sm hover:bg-black shadow-[3px_3px_0px_#0A0A0A] transition-none font-bold uppercase tracking-wider cursor-pointer"
-                        type="button"
-                    >
-                        {isLastQuestion ? '[ SUBMIT EVALUATION → ]' : '[ COMMIT & NEXT → ]'}
-                    </button>
+                    <MagneticButton strength={0.2} maxDisplacement={6}>
+                        <button
+                            onClick={onNextQuestion}
+                            className="px-6 py-3 bg-canvas-blueprint text-white border-2 border-canvas-blueprint text-xs sm:text-sm hover:bg-black shadow-[3px_3px_0px_#0A0A0A] transition-none font-bold uppercase tracking-wider cursor-pointer"
+                            type="button"
+                        >
+                            {isLastQuestion ? '[ SUBMIT EVALUATION → ]' : '[ COMMIT & NEXT → ]'}
+                        </button>
+                    </MagneticButton>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { CounterTicker } from '../ui/animations';
 
 const ActiveJobsTableBlock = ({
     jobs = [],
@@ -18,7 +19,7 @@ const ActiveJobsTableBlock = ({
                 </div>
                 <div className="flex items-center gap-3 text-xs text-on-surface-variant font-bold">
                     <span className="border border-black/15 px-2 py-0.5 bg-surface text-ink-primary">
-                        REQUISITIONS: {String(jobs.length || 0).padStart(2, '0')}
+                        REQUISITIONS: <CounterTicker value={jobs.length || 0} duration={0.8} />
                     </span>
                 </div>
             </div>
@@ -92,7 +93,7 @@ const ActiveJobsTableBlock = ({
                                         </td>
                                         <td className="py-4 px-4 border-r border-black/15 font-mono">
                                             <span className="bg-surface-container px-2.5 py-1 border border-black/15 font-bold text-ink-primary text-xs">
-                                                [ {applicantCount} VETTED ]
+                                                [ <CounterTicker value={applicantCount} duration={0.8} /> VETTED ]
                                             </span>
                                         </td>
                                         <td className="py-4 px-4 border-r border-black/15 font-mono">

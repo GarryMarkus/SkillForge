@@ -1,4 +1,5 @@
 import React from 'react';
+import { DecryptedText } from '../ui/animations';
 
 const QuestionWorkspace = ({ question, questionIndex = 0 }) => {
     if (!question) return null;
@@ -15,7 +16,12 @@ const QuestionWorkspace = ({ question, questionIndex = 0 }) => {
             {/* Question Header Coordinates */}
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/15 pb-4 mb-4">
                 <span className="text-xs text-canvas-blueprint font-bold tracking-wider uppercase">
-                    [ SECTION {String(questionIndex + 1).padStart(2, '0')} // {sectionTitle} ]
+                    <DecryptedText 
+                        key={`sec-${questionIndex}`}
+                        text={`[ SECTION ${String(questionIndex + 1).padStart(2, '0')} // ${sectionTitle} ]`} 
+                        animateOn="mount" 
+                        speed={20} 
+                    />
                 </span>
                 <div className="flex items-center gap-3 text-xs text-on-surface-variant font-bold">
                     <span className="bg-surface-container px-2 py-0.5 border border-black/15 text-ink-primary">
@@ -29,7 +35,13 @@ const QuestionWorkspace = ({ question, questionIndex = 0 }) => {
             {/* Problem Statement */}
             <div className="space-y-3 mb-6">
                 <h1 className="text-xl sm:text-2xl text-ink-primary uppercase font-bold tracking-tight leading-snug">
-                    {title}
+                    <DecryptedText 
+                        key={`title-${questionIndex}`}
+                        text={title} 
+                        animateOn="mount" 
+                        speed={15} 
+                        maxIterations={5} 
+                    />
                 </h1>
                 <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
                     {description}

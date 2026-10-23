@@ -1,4 +1,5 @@
 import React from 'react';
+import { BorderBeam, CounterTicker } from '../ui/animations';
 
 const ProctorTelemetryPanel = ({
     faceDetected = true,
@@ -30,6 +31,7 @@ const ProctorTelemetryPanel = ({
 
                 {/* Live Camera Viewport / HUD */}
                 <div className="relative w-full aspect-video bg-[#0E2C66] border border-on-primary/40 overflow-hidden flex items-center justify-center" id="proctor-optical-viewport">
+                    <BorderBeam size={25} duration={4} color="#69db7c" secondaryColor="rgba(105, 219, 124, 0)" borderWidth={1.5} />
                     {/* Embedded live camera video feed */}
                     {webcamNode && (
                         <div className="absolute inset-0 w-full h-full opacity-60">
@@ -72,7 +74,7 @@ const ProctorTelemetryPanel = ({
                             </svg>
                         </div>
                         <div className="text-[9px] font-mono text-right text-on-primary font-bold">
-                            CONF: {faceDetected ? '98.2%' : '14.0%'}
+                            CONF: <CounterTicker value={faceDetected ? 98.2 : 14.0} suffix="%" duration={0.8} />
                         </div>
                     </div>
                 </div>
@@ -109,7 +111,7 @@ const ProctorTelemetryPanel = ({
                     <div className="flex justify-between items-baseline text-xs mb-1.5">
                         <span className="text-on-surface-variant font-bold">ACCUMULATED RISK:</span>
                         <span className={`text-base font-bold ${riskScore > 30 ? 'text-red-600' : 'text-ink-primary'}`}>
-                            [ {String(riskScore).padStart(2, '0')} / 50 ]
+                            [ <CounterTicker value={riskScore} duration={0.6} /> / 50 ]
                         </span>
                     </div>
 

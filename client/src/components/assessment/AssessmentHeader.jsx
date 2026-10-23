@@ -1,4 +1,5 @@
 import React from 'react';
+import { DecryptedText, MagneticButton } from '../ui/animations';
 
 const AssessmentHeader = ({
     examId = 'SF-2026-DISTRIBUTED-09',
@@ -13,7 +14,7 @@ const AssessmentHeader = ({
                 <div className="flex items-center gap-3">
                     <span className="text-canvas-blueprint font-bold text-base">+</span>
                     <span className="text-sm font-bold text-ink-primary uppercase tracking-tight truncate">
-                        SKILLFORGE // PROCTOR RUNNER
+                        <DecryptedText text="SKILLFORGE // PROCTOR RUNNER" animateOn="mount" speed={25} />
                     </span>
                     <span className="border border-black/15 bg-surface-container-low px-2 py-0.5 text-xs text-outline font-bold hidden md:inline-block">
                         EXAM: {examId}
@@ -40,16 +41,20 @@ const AssessmentHeader = ({
                 <div className="flex items-center gap-3 text-xs">
                     <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 border border-green-600/30 bg-green-50 text-green-800 font-bold">
                         <span className="w-1.5 h-1.5 bg-green-600 inline-block"></span>
-                        <span>[ HARDWARE LOCK: ENGAGED ]</span>
+                        <span>
+                            <DecryptedText text="[ HARDWARE LOCK: ENGAGED ]" animateOn="mount" speed={30} />
+                        </span>
                     </div>
 
-                    <button
-                        onClick={onAbort}
-                        className="px-3 py-1.5 border border-red-300 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white uppercase transition-none font-bold cursor-pointer"
-                        type="button"
-                    >
-                        [ ABORT EXAM ]
-                    </button>
+                    <MagneticButton strength={0.15} maxDisplacement={5}>
+                        <button
+                            onClick={onAbort}
+                            className="px-3 py-1.5 border border-red-300 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white uppercase transition-none font-bold cursor-pointer"
+                            type="button"
+                        >
+                            [ ABORT EXAM ]
+                        </button>
+                    </MagneticButton>
                 </div>
             </div>
         </header>

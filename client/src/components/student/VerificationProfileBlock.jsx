@@ -1,4 +1,5 @@
 import React from 'react';
+import { CounterTicker } from '../ui/animations';
 
 const VerificationProfileBlock = ({ profile, recommendation, candidateName }) => {
     const roleArchetype = profile?.experience_level 
@@ -56,7 +57,9 @@ const VerificationProfileBlock = ({ profile, recommendation, candidateName }) =>
                         <div>
                             <div className="text-xs uppercase text-outline font-bold tracking-wider mb-1">PROCTOR INTEGRITY SCORE</div>
                             <div className="flex items-center gap-3">
-                                <span className="text-2xl font-bold text-canvas-blueprint">{Math.round(skillScore)} / 100</span>
+                                <span className="text-2xl font-bold text-canvas-blueprint">
+                                    <CounterTicker value={Math.round(skillScore)} duration={1.2} /> / 100
+                                </span>
                                 <span className="text-xs bg-surface-container px-2 py-0.5 text-on-surface-variant border border-black/15 font-bold">
                                     [ANTI-CHEAT: ZERO FLAGS]
                                 </span>
@@ -94,7 +97,7 @@ const VerificationProfileBlock = ({ profile, recommendation, candidateName }) =>
                             TALENT ACCREDITATION LEVEL:
                         </div>
                         <div className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                            ★★★★★ ({Number(starRating).toFixed(1)} / 5.0)
+                            ★★★★★ (<CounterTicker value={Number(starRating)} decimals={1} duration={1} /> / 5.0)
                         </div>
                     </div>
 
