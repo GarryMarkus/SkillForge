@@ -2,6 +2,7 @@ import json
 import logging
 import re
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from django.utils import timezone
 
 from accounts.models import StudentProfile, StudentReport
@@ -31,7 +32,6 @@ def generate_partial_report(student_id: int):
     try:
         user = User.objects.get(id=student_id)
         profile: StudentProfile = user.student_profile
-        report, _ = StudentReport.objects.get_or_create(student=profile)
 
         resume_analysis = {}
         if profile.resume:
@@ -49,27 +49,33 @@ def generate_partial_report(student_id: int):
             str(github_analysis)
         )
 
-        report.report_summary = {
-            "stage": "temporary",
-            "resume_analysis": resume_analysis,
-            "github_analysis": github_analysis,
-            "summary": summary,
-        }
-        report.save()
+        with transaction.atomic():
+            report, _ = StudentReport.objects.get_or_create(student=profile)
+            report.report_summary = {
+                "stage": "temporary",
+                "resume_analysis": resume_analysis,
+                "github_analysis": github_analysis,
+                "summary": summary,
+            }
+            report.save()
         return report
 
-    except Exception:
-        logger.exception("Partial report generation failed")
+    except Exception as exc:
+        logger.exception("Partial report generation failed: %s", exc)
         try:
-            profile = StudentProfile.objects.get(user_id=student_id)
-            StudentReport.objects.update_or_create(
-                student=profile,
-                defaults={
-                    "report_summary": {
-                        "error": "AI analysis failed. Please retry."
-                    }
-                }
-            )
+            profile = StudentProfile.objects.filter(user_id=student_id).first()
+            if profile:
+                with transaction.atomic():
+                    StudentReport.objects.update_or_create(
+                        student=profile,
+                        defaults={
+                            "report_summary": {
+                                "stage": "error",
+                                "error": f"AI analysis failed: {str(exc)}",
+                                "timestamp": timezone.now().isoformat()
+                            }
+                        }
+                    )
         except Exception:
             logger.exception("Failed to write fallback error report")
         return None
@@ -78,7 +84,7 @@ def generate_partial_report(student_id: int):
 def generate_skill_test_for_student(student_id: int, category_id: int | None = None):
     """
     Generate dynamic assessment questions tailored to candidate strengths using Gemini LLM.
-    Provisions a proctored ExamSession and associates it with the SkillTestAttempt.
+    Provisions a proctored ExamSession and associates it with the SkillTestAttempt atomically.
     """
     try:
         user = User.objects.get(id=student_id)
@@ -98,6 +104,7 @@ def generate_skill_test_for_student(student_id: int, category_id: int | None = N
                 skills += resume_data.get("skills", [])
             if isinstance(github_data, dict):
                 skills += github_data.get("skills", [])
+
             if not skills:
                 skills = ["Python"]
 
@@ -117,22 +124,23 @@ def generate_skill_test_for_student(student_id: int, category_id: int | None = N
         validated_payload = GeneratedTestPayloadSchema.validate_or_fallback(payload, fallback_role=category.name)
         questions_list = [q.to_dict() for q in validated_payload.questions]
 
-        attempt = SkillTestAttempt.objects.create(
-            user=user,
-            category=category,
-            generated_questions=questions_list,
-            total_questions=len(questions_list),
-        )
+        # Multi-table atomic creation: Attempt, Exam, ExamSession
+        with transaction.atomic():
+            attempt = SkillTestAttempt.objects.create(
+                user=user,
+                category=category,
+                generated_questions=questions_list,
+                total_questions=len(questions_list),
+            )
 
-        # Create Proctor Session
-        exam, _ = Exam.objects.get_or_create(
-            title=f"{category.name} Assessment",
-            defaults={"duration_minutes": 30}
-        )
-        session = ExamSession.objects.create(user=user, exam=exam)
-        
-        attempt.proctor_session = session
-        attempt.save()
+            exam, _ = Exam.objects.get_or_create(
+                title=f"{category.name} Assessment",
+                defaults={"duration_minutes": 30}
+            )
+            session = ExamSession.objects.create(user=user, exam=exam)
+
+            attempt.proctor_session = session
+            attempt.save()
 
         return attempt
 
@@ -144,16 +152,13 @@ def generate_skill_test_for_student(student_id: int, category_id: int | None = N
 def submit_skill_test(student_id: int, attempt_id: int, answers: list):
     """
     Evaluate candidate assessment answers, verify proctoring integrity, compute score percentage,
-    and update candidate standing in StudentReport.
+    and update candidate standing in StudentReport within a database transaction.
     """
     try:
         user = User.objects.get(id=student_id)
-        attempt = SkillTestAttempt.objects.get(
+        attempt = SkillTestAttempt.objects.select_related("proctor_session").get(
             id=attempt_id,
             user=user
-        )
-        report, _ = StudentReport.objects.get_or_create(
-            student=user.student_profile
         )
 
         session = attempt.proctor_session
@@ -173,29 +178,46 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
         percentage = (correct / total) * 100 if total else 0
         passed = percentage >= 60
 
-        attempt.submitted_answers = answers
-        attempt.score = correct
-        attempt.percentage = percentage
-        attempt.passed = passed
-        attempt.completed_at = timezone.now()
-        attempt.is_evaluated = True
-        attempt.save()
-
-        final_report = final_analysis(
-            str(report.report_summary.get("resume_analysis", "")),
-            str(report.report_summary.get("github_analysis", "")),
-            str(report.report_summary.get("summary", "")),
-            percentage,
-            "PASS" if passed else "FAIL"
+        report, _ = StudentReport.objects.get_or_create(
+            student=user.student_profile
         )
 
-        validated_summary = FinalReportSummarySchema.validate_or_fallback(final_report)
-        final_dict = validated_summary.to_dict()
+        # Generate LLM analysis with fallback handling
+        try:
+            final_report = final_analysis(
+                str(report.report_summary.get("resume_analysis", "")),
+                str(report.report_summary.get("github_analysis", "")),
+                str(report.report_summary.get("summary", "")),
+                percentage,
+                "PASS" if passed else "FAIL"
+            )
+            validated_summary = FinalReportSummarySchema.validate_or_fallback(final_report)
+            final_dict = validated_summary.to_dict()
+        except Exception as llm_err:
+            logger.warning("LLM final_analysis failed: %s. Using default rating summary.", llm_err)
+            final_dict = {
+                "star_rating": 4.0 if passed else 3.0,
+                "strengths": ["Completed empirical skill assessment questions"],
+                "weaknesses": ["Continue practicing advanced domain problem patterns"],
+                "recommended_tags": ["Intermediate" if passed else "Beginner"]
+            }
 
-        report.skill_test_score = percentage
-        report.report_summary["final"] = final_dict
-        report.report_summary["stage"] = "verified" if passed else "needs_improvement"
-        report.save()
+        # Multi-table atomic commit: Attempt + Report
+        with transaction.atomic():
+            attempt.submitted_answers = answers
+            attempt.score = correct
+            attempt.percentage = percentage
+            attempt.passed = passed
+            attempt.completed_at = timezone.now()
+            attempt.is_evaluated = True
+            attempt.save()
+
+            report.skill_test_score = percentage
+            if not isinstance(report.report_summary, dict):
+                report.report_summary = {}
+            report.report_summary["final"] = final_dict
+            report.report_summary["stage"] = "verified" if passed else "needs_improvement"
+            report.save()
 
         return {
             "status": "completed",
@@ -232,7 +254,7 @@ def get_final_analysis(student_id: int):
 
 def submit_personality_assessment(user, answers):
     """
-    Score psychometric personality questions and assign learning level pace.
+    Score psychometric personality questions and assign learning level pace atomically.
     Max points = 28. >=24: fast, >=16: average, <16: slow.
     """
     total = 0
@@ -248,16 +270,17 @@ def submit_personality_assessment(user, answers):
     else:
         level = "slow"
 
-    attempt = PersonalityAttempt.objects.create(
-        user=user,
-        answers=answers,
-        total_score=total,
-        learning_level=level
-    )
+    with transaction.atomic():
+        PersonalityAttempt.objects.create(
+            user=user,
+            answers=answers,
+            total_score=total,
+            learning_level=level
+        )
 
-    report, _ = StudentReport.objects.get_or_create(student=user.student_profile)
-    report.personality_score = total
-    report.save()
+        report, _ = StudentReport.objects.get_or_create(student=user.student_profile)
+        report.personality_score = total
+        report.save()
 
     return {
         "score": total,
