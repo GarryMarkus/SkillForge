@@ -51,7 +51,7 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                     </div>
                     <button
                         onClick={onClose}
-                        className="px-2 py-0.5 border border-black/20 hover:bg-black hover:text-white text-label-sm font-label-sm uppercase transition-none cursor-pointer"
+                        className="px-2 py-0.5 border border-black/20 hover:bg-black hover:text-white text-label-sm font-label-sm uppercase transition-none cursor-pointer font-bold"
                     >
                         [ESC]
                     </button>
@@ -82,7 +82,7 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md uppercase"
+                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md uppercase font-bold"
                             >
                                 <option value="Web Development">Web Development</option>
                                 <option value="Backend Systems">Backend Systems</option>
@@ -134,7 +134,7 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                                 name="budget_type"
                                 value={formData.budget_type}
                                 onChange={handleChange}
-                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md uppercase"
+                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md uppercase font-bold"
                             >
                                 <option value="fixed">Fixed Salary Specification</option>
                                 <option value="hourly">Hourly Contract Rate</option>
@@ -179,7 +179,7 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-space-md py-2 border border-black/30 font-label-md text-label-md uppercase hover:bg-black hover:text-white transition-none cursor-pointer"
+                            className="px-space-md py-2 border border-black/30 font-label-md text-label-md uppercase hover:bg-black hover:text-white transition-none cursor-pointer font-bold"
                         >
                             [ CANCEL ]
                         </button>
