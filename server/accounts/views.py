@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from verification.services import generate_partial_report
+from .models import StudentProfile, ClientProfile
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
