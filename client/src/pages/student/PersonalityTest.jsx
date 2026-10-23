@@ -47,6 +47,10 @@ const PersonalityTest = () => {
     };
 
     const handleSubmit = async () => {
+        if (questions.length > 0 && Object.keys(answers).length < questions.length) {
+            const proceed = window.confirm(`You have answered ${Object.keys(answers).length} of ${questions.length} questions. Submit anyway?`);
+            if (!proceed) return;
+        }
         try {
             const response = await api.post('/verification/personality/submit/', { answers });
             if (response.ok) navigate('/student/dashboard');

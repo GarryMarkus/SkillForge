@@ -171,6 +171,20 @@ const AssessmentPage = () => {
 
     if (loading) return <div className="text-white bg-black h-screen flex items-center justify-center">Loading Assessment...</div>;
 
+    if (!questions || questions.length === 0) {
+        return (
+            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8 text-center">
+                <h2 className="text-3xl font-black mb-4">No Questions Available</h2>
+                <p className="text-gray-400 mb-8 max-w-md">
+                    We were unable to load test questions right now. Please ensure the backend AI services are configured or try again later.
+                </p>
+                <Button onClick={() => navigate('/student/dashboard')} className="!bg-white !text-black px-8 py-3">
+                    Return to Dashboard
+                </Button>
+            </div>
+        );
+    }
+
     if (!examStarted) {
         return (
             <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8 text-center bg-[url('https://grainy-gradients.vercel.app/noise.svg')]">
