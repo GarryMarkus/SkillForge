@@ -141,6 +141,9 @@ const AssessmentPage = () => {
     const submitExam = useCallback(async () => {
         const answersList = questions.map((_, idx) => answers[idx] ?? null);
         try {
+            if (sessionId) {
+                await api.post('/proctor/end/', { session_id: sessionId }).catch(() => {});
+            }
             await api.post('/verification/submit-test/', {
                 attempt_id: attemptId,
                 answers: answersList
@@ -151,7 +154,7 @@ const AssessmentPage = () => {
             alert("[ASSESSMENT_COMPLETE] Credential evaluation verified. Emitting telemetry to candidate console.");
             navigate('/student/dashboard');
         }
-    }, [questions, answers, attemptId, navigate]);
+    }, [questions, answers, attemptId, sessionId, navigate]);
 
     const submitExamRef = useRef(submitExam);
     useEffect(() => {
@@ -233,11 +236,20 @@ const AssessmentPage = () => {
         if (!sessionId) return;
         try {
             // Dispatches to both /proctor/event/ and /proctor/events/
-            await api.post('/proctor/event/', {
+            const res = await api.post('/proctor/event/', {
                 session_id: sessionId,
                 event_type: eventType,
                 confidence: 1.0
             });
+            if (res.ok) {
+                const data = await res.json().catch(() => ({}));
+                if (typeof data.risk === 'number') {
+                    setRiskScore(data.risk);
+                }
+                if (data.flagged) {
+                    addAuditLog("PROCTOR_KERNEL_ALERT: SESSION_FLAGGED", "error");
+                }
+            }
         } catch (e) {
             console.error("Log failed", e);
         }

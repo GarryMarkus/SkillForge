@@ -41,7 +41,7 @@ const ProctorWrapper = ({
         if (!webcamRef.current || !isArmed) return;
 
         const video = webcamRef.current.video;
-        if (!video || video.readyState !== 4) return;
+        if (!video || video.readyState !== 4 || video.videoWidth === 0 || video.videoHeight === 0) return;
 
         if (!canvasRef.current) {
             canvasRef.current = document.createElement('canvas');
