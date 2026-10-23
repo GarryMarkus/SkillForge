@@ -23,6 +23,33 @@ const ProctorWrapper = ({
         return () => clearTimeout(timer);
     }, []);
 
+    // Explicitly release webcam hardware and media tracks on component unmount
+    useEffect(() => {
+        const webcamNodeCurrent = webcamRef.current;
+        return () => {
+            try {
+                const videoEl = webcamNodeCurrent?.video;
+                const stream = videoEl?.srcObject;
+                if (stream && typeof stream.getTracks === 'function') {
+                    stream.getTracks().forEach(track => {
+                        try {
+                            track.stop();
+                        } catch {
+                            // ignore track stop error
+                        }
+                    });
+                }
+            } catch (err) {
+                console.warn('[ProctorWrapper] Error stopping media tracks:', err);
+            }
+            if (canvasRef.current) {
+                canvasRef.current.width = 0;
+                canvasRef.current.height = 0;
+                canvasRef.current = null;
+            }
+        };
+    }, []);
+
     const triggerWarning = useCallback((reason) => {
         setWarnings(prev => {
             const newCount = prev + 1;
@@ -194,22 +221,22 @@ const ProctorWrapper = ({
 
     if (warnings >= 3) {
         return (
-            <div className="fixed inset-0 bg-[#BA1A1A] text-white flex flex-col items-center justify-center z-[100] font-mono p-6 text-center select-none">
-                <div className="border-4 border-white p-space-xl max-w-lg bg-black text-white shadow-[8px_8px_0px_#FFFFFF]">
-                    <div className="font-label-sm text-label-sm text-[#FFDAD6] uppercase tracking-widest mb-2 font-bold">
-                        [ CRITICAL_HARDWARE_EXCEPTION ]
+            <div className="fixed inset-0 bg-gray-900/90 text-gray-900 flex flex-col items-center justify-center z-[100] font-sans p-6 text-center select-none backdrop-blur-sm">
+                <div className="bg-white border border-gray-200 rounded-2xl p-8 max-w-lg shadow-xl text-center space-y-4">
+                    <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 mx-auto flex items-center justify-center">
+                        <span className="material-symbols-outlined text-[28px]">warning</span>
                     </div>
-                    <h1 className="font-headline-xl text-headline-xl uppercase font-bold mb-4">
-                        SESSION_DISQUALIFIED
+                    <h1 className="text-xl font-bold text-gray-900">
+                        Assessment Session Concluded
                     </h1>
-                    <p className="font-body-md text-body-md text-[#FFDAD6] mb-6">
-                        Exceeded maximum permitted proctor risk threshold (3 security breach events logged to tamper-evident ledger).
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                        This session has ended because the maximum allowed security warnings (3 events) were reached. Your progress up to this point has been saved.
                     </p>
                     <button 
                         onClick={() => window.location.href = '/student/dashboard'} 
-                        className="bg-white text-black px-space-xl py-3 font-label-md text-label-md uppercase font-bold hover:bg-[#FFDAD6] transition-none cursor-pointer"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-3 px-6 rounded-xl transition cursor-pointer"
                     >
-                        [ RETURN_TO_CANDIDATE_CONSOLE ]
+                        Return to Dashboard
                     </button>
                 </div>
             </div>
@@ -227,22 +254,22 @@ const ProctorWrapper = ({
 
             {/* Fullscreen Re-entry blocker */}
             {!isFullScreen && isArmed && (
-                <div className="fixed inset-0 bg-black/95 z-[60] flex flex-col items-center justify-center p-8 text-center text-white font-mono backdrop-blur-sm">
-                    <div className="border border-white/40 bg-surface-container-lowest text-on-surface p-space-xl max-w-md shadow-[6px_6px_0px_#1D52B8]">
-                        <span className="font-label-sm text-label-sm text-error uppercase font-bold tracking-widest block mb-2">
-                            [ VIOLATION_FLAG: WINDOW_ESCAPED ]
-                        </span>
-                        <h2 className="font-headline-sm text-headline-sm uppercase font-bold mb-3">
-                            FULLSCREEN KERNEL LOCK REQUIRED
+                <div className="fixed inset-0 bg-gray-900/80 z-[60] flex flex-col items-center justify-center p-6 text-center font-sans backdrop-blur-sm">
+                    <div className="bg-white border border-gray-200 rounded-2xl p-8 max-w-md shadow-xl text-center space-y-4">
+                        <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 mx-auto flex items-center justify-center">
+                            <span className="material-symbols-outlined text-[28px]">fullscreen</span>
+                        </div>
+                        <h2 className="text-lg font-bold text-gray-900">
+                            Full-Screen Mode Required
                         </h2>
-                        <p className="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
-                            Exiting fullscreen registers a multi-sensor telemetry penalty. Re-engage window lock immediately to prevent session termination.
+                        <p className="text-sm text-gray-600 leading-relaxed">
+                            To ensure test integrity and prevent accidental interruptions, this assessment runs in full-screen mode. Please click below to resume.
                         </p>
                         <button
                             onClick={enterFullScreen}
-                            className="bg-primary text-on-primary px-space-xl py-3 font-label-md text-label-md uppercase font-bold border border-primary hover:bg-on-primary hover:text-primary transition-none cursor-pointer"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-3 px-6 rounded-xl transition cursor-pointer"
                         >
-                            [ RE-ENGAGE_FULLSCREEN_LOCK ]
+                            Resume Full-Screen Mode
                         </button>
                     </div>
                 </div>

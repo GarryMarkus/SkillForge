@@ -138,6 +138,15 @@ const AssessmentPage = () => {
         initExam();
     }, [tokens]);
 
+    // Cleanly exit fullscreen on component unmount
+    useEffect(() => {
+        return () => {
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+        };
+    }, []);
+
     const submitExam = useCallback(async () => {
         const answersList = questions.map((_, idx) => answers[idx] ?? null);
         try {
@@ -151,7 +160,7 @@ const AssessmentPage = () => {
         } catch (e) {
             console.error("Submit failed", e);
         } finally {
-            alert("[ASSESSMENT COMPLETE] Credential evaluation verified. Emitting telemetry to candidate console.");
+            alert("Assessment submitted successfully. Your verified results and skill report are now being processed.");
             navigate('/student/dashboard');
         }
     }, [questions, answers, attemptId, sessionId, navigate]);
@@ -180,7 +189,7 @@ const AssessmentPage = () => {
     const formatTime = (secs) => {
         const m = Math.floor(secs / 60);
         const s = secs % 60;
-        return `[ ${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')} ]`;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
     };
 
     const startTest = async () => {
@@ -256,7 +265,7 @@ const AssessmentPage = () => {
 
     const handleDisqualify = () => {
         logEvent("disqualified");
-        alert("[SECURITY VIOLATION] Hardware locked threshold reached. Terminating session.");
+        alert("Assessment session ended. The maximum allowed security warnings threshold was reached.");
         navigate('/student/dashboard');
     };
 
