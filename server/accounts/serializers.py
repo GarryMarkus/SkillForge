@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from .models import User, StudentProfile, ClientProfile
+from .validators import validate_pdf_resume
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -34,6 +35,8 @@ class LoginSerializer(serializers.Serializer):
 
 class StudentOnboardingSerializer(serializers.ModelSerializer):
     """Serializer for initial student onboarding information."""
+    resume = serializers.FileField(validators=[validate_pdf_resume], required=False, allow_null=True)
+
     class Meta:
         model = StudentProfile
         fields = [
@@ -72,6 +75,7 @@ class ClientOnboardingSerializer(serializers.ModelSerializer):
 class StudentProfileSerializer(serializers.ModelSerializer):
     """Serializer for reading and updating student profile data."""
     email = serializers.EmailField(source="user.email", read_only=True)
+    resume = serializers.FileField(validators=[validate_pdf_resume], required=False, allow_null=True)
 
     class Meta:
         model = StudentProfile

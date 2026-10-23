@@ -1,5 +1,22 @@
+import os
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .validators import validate_pdf_resume
+
+
+def resume_upload_path(instance, filename):
+    """
+    Sanitize uploaded filename and store under a scoped, non-traversable path.
+    Prevents path traversal hazards and filename collisions.
+    """
+    clean_name = os.path.basename(filename)
+    clean_name = "".join(c for c in clean_name if c.isalnum() or c in (".", "_", "-"))
+    unique_prefix = uuid.uuid4().hex[:12]
+    user_id = getattr(instance, "user_id", "unassigned")
+    return f"resumes/user_{user_id}_{unique_prefix}_{clean_name}"
 
 
 class UserManager(BaseUserManager):
@@ -48,7 +65,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-
 class StudentProfile(models.Model):
     user = models.OneToOneField(
         User,
@@ -67,7 +83,12 @@ class StudentProfile(models.Model):
     github_url = models.URLField(blank=True, null=True)
     portfolio_links = models.TextField(blank=True)
 
-    resume = models.FileField(upload_to="resumes/", blank=True, null=True)
+    resume = models.FileField(
+        upload_to=resume_upload_path,
+        validators=[validate_pdf_resume],
+        blank=True,
+        null=True
+    )
 
     skills = models.TextField(blank=True)
 
@@ -77,7 +98,6 @@ class StudentProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - Student"
-
 
 
 class StudentContentAnalysis(models.Model):
@@ -123,7 +143,6 @@ class StudentReport(models.Model):
         return f"{self.student.user.email} Report"
 
 
-
 class ClientProfile(models.Model):
     user = models.OneToOneField(
         User,
@@ -147,11 +166,6 @@ class ClientProfile(models.Model):
 
     def __str__(self):
         return self.company_name
-
-
-
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
 @receiver(post_save, sender=User)

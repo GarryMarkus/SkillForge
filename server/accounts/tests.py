@@ -1,8 +1,12 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.exceptions import ValidationError
 from rest_framework.test import APIClient
 from rest_framework import status
 from accounts.models import StudentProfile, ClientProfile
+from accounts.validators import validate_pdf_resume
+from verification.utils.pdf_utils import extract_text_from_pdf_fileobj
 
 User = get_user_model()
 
@@ -36,7 +40,7 @@ class AccountsAPITests(TestCase):
 
     def test_jwt_token_generation_and_login(self):
         """Test login endpoint authenticates user and returns valid SimpleJWT tokens."""
-        user = User.objects.create_user(
+        User.objects.create_user(
             email=self.student_email,
             password=self.password,
             role="student"
@@ -129,3 +133,41 @@ class AccountsAPITests(TestCase):
         self.assertTrue(HasCompletedOnboarding().has_permission(req_student, None))
         self.assertFalse(HasCompletedOnboarding().has_permission(req_client, None))
 
+
+class ResumeUploadSecurityTests(TestCase):
+    def test_valid_pdf_magic_bytes_passes(self):
+        """Test genuine PDF bytes starting with %PDF- pass validation."""
+        valid_pdf = SimpleUploadedFile("resume.pdf", b"%PDF-1.4\n1 0 obj\n<<>>\nendobj", content_type="application/pdf")
+        # Should not raise
+        validate_pdf_resume(valid_pdf)
+
+    def test_invalid_magic_bytes_raises_validation_error(self):
+        """Test non-PDF binary payload renamed to .pdf fails validation."""
+        fake_pdf = SimpleUploadedFile("malicious.pdf", b"NOT_A_REAL_PDF_STREAM", content_type="application/pdf")
+        with self.assertRaises(ValidationError) as ctx:
+            validate_pdf_resume(fake_pdf)
+        self.assertIn("Invalid PDF file header", str(ctx.exception))
+
+    def test_invalid_extension_raises_validation_error(self):
+        """Test disallowed file extensions fail validation."""
+        bad_ext = SimpleUploadedFile("script.sh", b"%PDF-1.4\nvalid header bad ext", content_type="application/pdf")
+        with self.assertRaises(ValidationError) as ctx:
+            validate_pdf_resume(bad_ext)
+        self.assertIn("Invalid file extension", str(ctx.exception))
+
+    def test_oversized_file_raises_validation_error(self):
+        """Test files exceeding 5MB are rejected."""
+        oversized = SimpleUploadedFile(
+            "large.pdf",
+            b"%PDF-" + (b"A" * (6 * 1024 * 1024)),
+            content_type="application/pdf"
+        )
+        with self.assertRaises(ValidationError) as ctx:
+            validate_pdf_resume(oversized)
+        self.assertIn("exceeds maximum allowed threshold", str(ctx.exception))
+
+    def test_safe_pdf_extraction_guards_corrupted_file(self):
+        """Test extract_text_from_pdf_fileobj returns empty string for non-PDF without crashing."""
+        corrupt_file = SimpleUploadedFile("corrupt.pdf", b"corrupted bytes", content_type="application/pdf")
+        result = extract_text_from_pdf_fileobj(corrupt_file)
+        self.assertEqual(result, "")
