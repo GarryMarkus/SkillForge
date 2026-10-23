@@ -126,7 +126,6 @@ const StudentDashboard = () => {
     };
 
     const candidateName = profile?.full_name || user?.full_name || user?.email?.split('@')[0] || 'ENGINEER_01';
-    const verifiedBadge = recommendation?.stage === 'verified' ? 'EMITTED' : 'PENDING';
 
     return (
         <div className="bg-canvas-light font-mono text-ink-primary antialiased select-none min-h-screen">
@@ -141,49 +140,27 @@ const StudentDashboard = () => {
                     onLogout={handleLogout}
                     sidebarCollapsed={sidebarCollapsed}
                     setSidebarCollapsed={setSidebarCollapsed}
-                    verifiedBadge={verifiedBadge}
                 />
 
                 {/* PRIMARY TELEMETRY CONSOLE BODY */}
-                <main className="w-full pt-28 min-h-[calc(100vh-2rem)] bg-canvas-light px-space-md py-space-md font-mono">
-                    <div className="flex flex-col gap-space-lg w-full max-w-[1600px] mx-auto">
+                <main className="w-full pt-20 sm:pt-24 min-h-[calc(100vh-2rem)] bg-canvas-light px-4 sm:px-6 lg:px-8 py-6 sm:py-8 font-mono">
+                    <div className="flex flex-col gap-8 sm:gap-10 w-full max-w-[1600px] mx-auto">
 
-                        {/* SUB-NAV / CAD METADATA BAR (Secondary System Strip) */}
-                        <div className="border border-cad bg-surface-container-low px-space-md py-2 flex flex-wrap items-center justify-between font-label-sm text-label-sm text-ink-primary gap-y-2">
-                            <div className="flex flex-wrap items-center gap-x-space-md gap-y-1">
-                                <span className="flex items-center gap-1">
-                                    <span className="inline-block w-2 h-2 bg-canvas-blueprint"></span>
-                                    TOKEN: <strong className="text-canvas-blueprint font-bold">SF-88219-X</strong>
-                                </span>
-                                <span className="text-outline">|</span>
-                                <span>TRUST_INDEX: <strong className="text-ink-primary font-bold">98.4%</strong></span>
-                                <span className="text-outline">|</span>
-                                <span>VERIFIED_BADGE: <strong className="text-canvas-blueprint font-bold">{verifiedBadge}</strong></span>
-                                <span className="text-outline">|</span>
-                                <span>ENCRYPT: <strong className="text-ink-primary font-bold">HARDENED_BLAKE3</strong></span>
-                            </div>
-                            <div className="flex items-center gap-space-md text-on-surface-variant font-label-sm">
-                                <span>SESSION_ELAPSED: 01:14:22</span>
-                                <span className="text-outline">|</span>
-                                <span className="text-canvas-blueprint font-bold">NODE_VERIFIED: ACTIVE</span>
-                            </div>
-                        </div>
-
-                        {/* 02. CANDIDATE PROFILE & VERIFICATION SPEC PANEL */}
+                        {/* 01. CANDIDATE PROFILE & VERIFICATION SPEC PANEL */}
                         <VerificationProfileBlock 
                             profile={profile}
                             recommendation={recommendation}
                             candidateName={candidateName}
                         />
 
-                        {/* 03. PRIMARY ACTION & DIAGNOSTIC LAUNCHER BAR */}
+                        {/* 02. PRIMARY ACTION & DIAGNOSTIC LAUNCHER BAR */}
                         <ActionControlStrip 
                             onStartAssessment={() => navigate('/student/assessment')}
                             onReingestResume={() => navigate('/student/onboarding')}
                             onAccessLearning={() => navigate('/student/upskill')}
                         />
 
-                        {/* 04. ALGORITHMICALLY MATCHED REQUISITIONS TABLE */}
+                        {/* 03. ALGORITHMICALLY MATCHED REQUISITIONS TABLE */}
                         <MatchedPositionsGrid 
                             jobs={jobs}
                             myApplications={myApplications}
@@ -193,39 +170,22 @@ const StudentDashboard = () => {
                             applyingTo={applyingTo}
                         />
 
-                        {/* 05. ACTIVE UPSKILLING MODULES TERMINAL */}
+                        {/* 04. ACTIVE UPSKILLING MODULES TERMINAL */}
                         <UpskillTerminalCard 
                             onResumeCurriculum={() => navigate('/student/upskill')}
                         />
 
-                        {/* CONTENT SYSTEM SPEC FOOTER STRIP */}
-                        <div className="border border-cad bg-surface-container-low px-space-md py-2 flex flex-wrap items-center justify-between font-label-sm text-label-sm text-outline gap-y-2">
-                            <div>
-                                <span>TELEMETRY_REF: </span><span className="text-ink-primary font-bold">SF-NODE-092.41A</span>
-                                <span className="mx-2">|</span>
-                                <span>SPEC_COORDS: [X: +108.92 // Y: -44.18]</span>
-                            </div>
-                            <div>
-                                <span>SKILLFORGE AUTONOMOUS TALENT VERIFICATION © 2026 // MIL-SPEC DRAFTING SYSTEM</span>
-                            </div>
-                        </div>
-
                     </div>
                 </main>
 
-                <footer className="w-full border-t border-cad bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant">
-                    <div className="px-space-md h-8 flex flex-wrap items-center justify-between">
-                        <div className="flex items-center gap-space-md">
-                            <span>SPEC_REV: 04.912</span>
-                            <span className="text-outline">|</span>
-                            <span>BUILD_ID: CI-2024-X99</span>
-                            <span className="text-outline">|</span>
-                            <span>TIMESTAMP: 2026-10-23T00:00:00Z</span>
-                        </div>
-                        <div className="hidden sm:flex items-center gap-space-md">
-                            <span>X-COORD: +42.109</span>
-                            <span>Y-COORD: -11.002</span>
-                            <span>GRID: 1px_ORTHO</span>
+                {/* Clean Simplified Footer */}
+                <footer className="w-full border-t border-black/15 bg-surface-container-low text-xs text-on-surface-variant font-mono">
+                    <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+                        <div>SKILLFORGE // CANDIDATE CONSOLE © {new Date().getFullYear()}</div>
+                        <div className="flex items-center gap-3">
+                            <span className="text-canvas-blueprint font-bold">NODE: VERIFIED ACTIVE</span>
+                            <span className="text-black/30">|</span>
+                            <span>AES-256 ENCRYPTED</span>
                         </div>
                     </div>
                 </footer>
