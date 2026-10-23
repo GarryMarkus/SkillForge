@@ -1,8 +1,12 @@
+import logging
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from celery.result import AsyncResult
 from accounts.permissions import IsStudentUser
+
+logger = logging.getLogger(__name__)
 
 from .personality_data import PERSONALITY_QUESTIONS
 from .services import (
@@ -99,3 +103,38 @@ class RecommendationAPI(APIView):
     def get(self, request):
         data = get_recommendation(request.user.id)
         return Response(data, status=status.HTTP_200_OK)
+
+
+class TaskStatusAPI(APIView):
+    """
+    Check the status and result of an asynchronous Celery task.
+    Returns: { "status": "PENDING" | "SUCCESS" | "FAILURE", "result": ... }
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, task_id):
+        try:
+            res = AsyncResult(task_id)
+            task_status = res.status  # 'PENDING', 'STARTED', 'SUCCESS', 'FAILURE', 'RETRY', 'REVOKED'
+        except Exception as exc:
+            logger.warning("Could not query Celery result backend for task %s: %s", task_id, exc)
+            return Response({
+                "status": "PENDING",
+                "result": None
+            }, status=status.HTTP_200_OK)
+
+        if task_status == "SUCCESS":
+            return Response({
+                "status": "SUCCESS",
+                "result": res.result
+            }, status=status.HTTP_200_OK)
+        elif task_status == "FAILURE":
+            return Response({
+                "status": "FAILURE",
+                "error": str(res.result) if res.result else "Task execution failed"
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                "status": "PENDING",
+                "result": None
+            }, status=status.HTTP_200_OK)

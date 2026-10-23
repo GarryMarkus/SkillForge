@@ -12,3 +12,5 @@ langchain>=0.1
 langchain-google-genai>=0.0.9
 langchain-core>=0.1
 PyYAML>=6.0
+celery>=5.3
+redis>=5.0
