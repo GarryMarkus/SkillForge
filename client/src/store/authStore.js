@@ -176,4 +176,17 @@ export const useAuthStore = create((set, get) => ({
     })
 }));
 
+// Listen for global session eviction triggered by 401 unauthorized responses
+if (typeof window !== 'undefined') {
+    window.addEventListener('skillforge:unauthorized', () => {
+        useAuthStore.setState({
+            isAuthenticated: false,
+            user: null,
+            tokens: null,
+            role: null,
+            step: 1
+        });
+    });
+}
+
 export default useAuthStore;

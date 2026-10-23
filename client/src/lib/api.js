@@ -1,7 +1,8 @@
 /**
  * SkillForge Centralized API Client
  * Automatically attaches JWT Bearer credentials from localStorage,
- * resolves base URLs from environment variables, and manages token refresh.
+ * resolves base URLs from environment variables, manages token refresh,
+ * and handles global session eviction on unauthorized (401) responses.
  */
 
 const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api').replace(/\/+$/, '');
@@ -17,6 +18,22 @@ function getStoredTokens() {
         return raw ? JSON.parse(raw) : null;
     } catch {
         return null;
+    }
+}
+
+function evictSession() {
+    try {
+        localStorage.removeItem('tokens');
+        localStorage.removeItem('user');
+    } catch {
+        // ignore
+    }
+
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('skillforge:unauthorized'));
+        if (window.location.pathname !== '/auth' && window.location.pathname !== '/login') {
+            window.location.href = '/auth';
+        }
     }
 }
 
@@ -48,10 +65,10 @@ async function request(method, path, options = {}) {
         ...rest,
     });
 
-    // 401 handling - attempt refresh if refresh token is available
+    // 401 handling - attempt silent token refresh if refresh token is available
     if (response.status === 401 && tokens?.refresh) {
         try {
-            const refreshRes = await fetch(formatUrl('/accounts/login/'), { // or refresh endpoint if configured
+            const refreshRes = await fetch(formatUrl('/accounts/token/refresh/'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ refresh: tokens.refresh }),
@@ -70,10 +87,17 @@ async function request(method, path, options = {}) {
                         ...rest,
                     });
                 }
+            } else {
+                // Refresh token invalid or expired
+                evictSession();
             }
         } catch (e) {
-            console.warn('Silent token refresh failed:', e);
+            console.warn('[API] Silent token refresh failed:', e);
+            evictSession();
         }
+    } else if (response.status === 401 && !path.includes('/accounts/login/')) {
+        // Unauthenticated and not a login attempt
+        evictSession();
     }
 
     return response;
@@ -85,6 +109,7 @@ export const api = {
     put: (path, body, options = {}) => request('PUT', path, { ...options, body }),
     patch: (path, body, options = {}) => request('PATCH', path, { ...options, body }),
     delete: (path, options) => request('DELETE', path, options),
+    evictSession,
     request,
 };
 
