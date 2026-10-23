@@ -121,3 +121,40 @@ class ProjectAPITests(TestCase):
         res2 = self.client.post("/api/project/apply/", {"job_id": job.id}, format="json")
         self.assertEqual(res2.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("Already applied", res2.data["error"])
+
+    def test_job_listings_and_applications_use_annotations_and_relations(self):
+        """Test AllJobsAPI, ClientJobsAPI, and MyApplicationsAPI work seamlessly with annotations."""
+        job = JobPost.objects.create(
+            client=self.client_profile,
+            title="Full-Stack Python Engineer",
+            category="Web Development",
+            description="Django + React work",
+            budget_type="fixed",
+            budget_amount=4000.00,
+            skills_required="Python, React",
+            min_skill_score=80,
+            status="open"
+        )
+        JobApplication.objects.create(job=job, student=self.student_profile)
+
+        # 1. Test recruiter ClientJobsAPI returns annotated applicant_count
+        self.client.force_authenticate(user=self.recruiter)
+        res_recruiter = self.client.get("/api/project/my-jobs/")
+        self.assertEqual(res_recruiter.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res_recruiter.data), 1)
+        self.assertEqual(res_recruiter.data[0]["applicant_count"], 1)
+
+        # 2. Test student AllJobsAPI returns annotated applicant_count and match
+        self.client.force_authenticate(user=self.student)
+        res_student_jobs = self.client.get("/api/project/jobs/")
+        self.assertEqual(res_student_jobs.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res_student_jobs.data), 1)
+        self.assertEqual(res_student_jobs.data[0]["applicant_count"], 1)
+        self.assertIn("match", res_student_jobs.data[0])
+
+        # 3. Test student MyApplicationsAPI returns job_title and company_name with select_related
+        res_apps = self.client.get("/api/project/my-applications/")
+        self.assertEqual(res_apps.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res_apps.data), 1)
+        self.assertEqual(res_apps.data[0]["job_title"], "Full-Stack Python Engineer")
+        self.assertEqual(res_apps.data[0]["company_name"], "CloudScale Systems")

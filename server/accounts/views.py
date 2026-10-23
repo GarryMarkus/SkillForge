@@ -126,10 +126,10 @@ class ProfileAPI(APIView):
     def get(self, request):
         user = request.user
         if user.role == "student":
-            profile, _ = StudentProfile.objects.get_or_create(user=user)
+            profile, _ = StudentProfile.objects.select_related("user").get_or_create(user=user)
             serializer = StudentProfileSerializer(profile)
         elif user.role == "client":
-            profile, _ = ClientProfile.objects.get_or_create(user=user)
+            profile, _ = ClientProfile.objects.select_related("user").get_or_create(user=user)
             serializer = ClientProfileSerializer(profile)
         else:
             return Response({"error": "Invalid role"}, status=status.HTTP_400_BAD_REQUEST)
@@ -145,14 +145,14 @@ class ProfileUpdateAPI(APIView):
     def patch(self, request):
         user = request.user
         if user.role == "student":
-            profile, _ = StudentProfile.objects.get_or_create(user=user)
+            profile, _ = StudentProfile.objects.select_related("user").get_or_create(user=user)
             serializer = StudentProfileSerializer(
                 profile,
                 data=request.data,
                 partial=True
             )
         elif user.role == "client":
-            profile, _ = ClientProfile.objects.get_or_create(user=user)
+            profile, _ = ClientProfile.objects.select_related("user").get_or_create(user=user)
             serializer = ClientProfileSerializer(
                 profile,
                 data=request.data,

@@ -18,6 +18,8 @@ class JobPostSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'created_at', 'company_name', 'applicant_count']
 
     def get_applicant_count(self, obj):
+        if hasattr(obj, 'applicant_count') and obj.applicant_count is not None:
+            return obj.applicant_count
         return obj.applications.count()
 
     def create(self, validated_data):

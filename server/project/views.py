@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -35,7 +36,12 @@ class ClientJobsAPI(APIView):
     def get(self, request):
         try:
             client_profile = request.user.client_profile
-            jobs = JobPost.objects.filter(client=client_profile).order_by('-created_at')
+            jobs = (
+                JobPost.objects.filter(client=client_profile)
+                .select_related("client")
+                .annotate(applicant_count=Count("applications"))
+                .order_by("-created_at")
+            )
             serializer = JobPostSerializer(jobs, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except ClientProfile.DoesNotExist:
@@ -68,7 +74,7 @@ class AllJobsAPI(APIView):
     def get(self, request):
         jobs = list(
             JobPost.objects.select_related("client")
-            .prefetch_related("applications")
+            .annotate(applicant_count=Count("applications"))
             .filter(status="open")
             .order_by("-created_at")
         )
@@ -111,7 +117,7 @@ class AllJobsAPI(APIView):
                 "status": job.status,
                 "created_at": job.created_at,
                 "company_name": job.client.company_name if job.client else "",
-                "applicant_count": job.applications.count(),
+                "applicant_count": getattr(job, "applicant_count", 0),
                 "match": round(float(score) * 100, 2)
             })
 
@@ -130,7 +136,7 @@ class ApplyJobAPI(APIView):
 
         try:
             job = JobPost.objects.get(id=job_id, status='open')
-            student_profile = request.user.student_profile
+            student_profile = StudentProfile.objects.select_related("report").get(user=request.user)
         except JobPost.DoesNotExist:
             return Response({"error": "Job not found or closed"}, status=status.HTTP_404_NOT_FOUND)
         except StudentProfile.DoesNotExist:
@@ -163,7 +169,11 @@ class MyApplicationsAPI(APIView):
     def get(self, request):
         try:
             student_profile = request.user.student_profile
-            applications = JobApplication.objects.filter(student=student_profile).order_by('-applied_at')
+            applications = (
+                JobApplication.objects.filter(student=student_profile)
+                .select_related("job__client")
+                .order_by("-applied_at")
+            )
             serializer = JobApplicationSerializer(applications, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except StudentProfile.DoesNotExist:
