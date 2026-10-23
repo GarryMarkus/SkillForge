@@ -1,132 +1,217 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import Button from '../../components/ui/Button';
-import { Sparkles, ArrowRight, CheckCircle } from 'lucide-react';
-import ProctorWrapper from '../../components/assessment/ProctorWrapper';
-import api from '../../lib/api';
+import client from '../../api/client';
+import PersonalityHeader from '../../components/personality/PersonalityHeader';
+import PersonalityIntroCard from '../../components/personality/PersonalityIntroCard';
+import PersonalityQuestionCard from '../../components/personality/PersonalityQuestionCard';
+import PersonalityTelemetrySidebar from '../../components/personality/PersonalityTelemetrySidebar';
+import PersonalityResultCard from '../../components/personality/PersonalityResultCard';
 
 const PersonalityTest = () => {
     const { tokens } = useAuthStore();
     const navigate = useNavigate();
+
     const [loading, setLoading] = useState(true);
     const [started, setStarted] = useState(false);
     const [questions, setQuestions] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [answers, setAnswers] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [result, setResult] = useState(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [error, setError] = useState(null);
 
-    // Fix for mismatched API keys
-    // Backend sends 'question' but frontend used 'text'. 
-    // Backend also sends options as Dict {"Option Text": Value}.
-    // We need to render the key ("Option Text") and send it back as the answer.
+    // Track fullscreen status
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(Boolean(document.fullscreenElement));
+        };
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    }, []);
 
+    // Fetch psychometric questions bank
     useEffect(() => {
         const fetchQuestions = async () => {
+            if (!tokens?.access) return;
             try {
-                const response = await api.get('/verification/personality/questions/');
+                const response = await client.get('/verification/personality/questions/');
                 if (response.ok) {
                     const data = await response.json();
-                    setQuestions(data);
+                    setQuestions(Array.isArray(data) ? data : []);
+                } else {
+                    setError('Failed to retrieve psychometric questions from server.');
                 }
-            } catch (error) { console.error("Failed to load questions", error); }
-            finally { setLoading(false); }
+            } catch (err) {
+                console.error('Error fetching questions:', err);
+                setError('Network fault occurred while retrieving diagnostic telemetry.');
+            } finally {
+                setLoading(false);
+            }
         };
         fetchQuestions();
     }, [tokens]);
 
-    const startTest = async () => {
-        const elem = document.documentElement;
-        if (elem.requestFullscreen) {
-            try { await elem.requestFullscreen(); } catch { /* ignore */ }
+    const handleStart = async () => {
+        try {
+            if (document.documentElement.requestFullscreen) {
+                await document.documentElement.requestFullscreen();
+            }
+        } catch (err) {
+            console.warn('Fullscreen request bypassed:', err);
         }
         setStarted(true);
     };
 
-    const handleOptionSelect = (qId, value) => {
-        setAnswers(prev => ({ ...prev, [qId]: value }));
+    const handleAbort = () => {
+        const confirmed = window.confirm(
+            '[SYSTEM_WARNING] Aborting psychometric diagnostic will discard unsaved responses. Return to dashboard?'
+        );
+        if (confirmed) {
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+            navigate('/student/dashboard');
+        }
+    };
+
+    const handleOptionSelect = (qId, optionText) => {
+        setAnswers(prev => ({
+            ...prev,
+            [String(qId)]: optionText
+        }));
+    };
+
+    const handlePrev = () => {
+        setCurrentIndex(prev => Math.max(0, prev - 1));
+    };
+
+    const handleNext = () => {
+        setCurrentIndex(prev => Math.min(questions.length - 1, prev + 1));
+    };
+
+    const handleJump = (index) => {
+        if (index >= 0 && index < questions.length) {
+            setCurrentIndex(index);
+        }
     };
 
     const handleSubmit = async () => {
-        if (questions.length > 0 && Object.keys(answers).length < questions.length) {
-            const proceed = window.confirm(`You have answered ${Object.keys(answers).length} of ${questions.length} questions. Submit anyway?`);
-            if (!proceed) return;
+        const answeredCount = Object.keys(answers).length;
+        if (questions.length > 0 && answeredCount < questions.length) {
+            const confirmed = window.confirm(
+                `[PARTIAL_EVALUATION] You have answered ${answeredCount} of ${questions.length} questions. Submit anyway?`
+            );
+            if (!confirmed) return;
         }
+
+        setIsSubmitting(true);
         try {
-            const response = await api.post('/verification/personality/submit/', { answers });
-            if (response.ok) navigate('/student/dashboard');
-            else alert("Submission failed.");
-        } catch (error) { console.error("Submission error", error); }
+            const response = await client.post('/verification/personality/submit/', { answers });
+            if (response.ok) {
+                const data = await response.json();
+                setResult(data);
+                if (document.fullscreenElement && document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                }
+            } else {
+                alert('[SUBMISSION_ERROR] Failed to record personality test telemetry.');
+            }
+        } catch (err) {
+            console.error('Submission error:', err);
+            alert('[NETWORK_FAULT] Failed to transmit psychometric answers.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
-    if (loading) return <div className="h-screen flex items-center justify-center">Loading...</div>;
-
-    if (!started) {
+    if (loading) {
         return (
-            <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-8 text-center bg-[url('https://grainy-gradients.vercel.app/noise.svg')]">
-                <h1 className="text-6xl font-black mb-6 tracking-tighter">PHASE 1: <span className="text-purple-500">ARCHETYPE</span></h1>
-                <div className="max-w-2xl bg-gray-900/50 p-8 rounded-3xl border border-gray-800 backdrop-blur-xl mb-12 text-left space-y-4">
-                    <h3 className="text-xl font-bold flex items-center gap-2"><CheckCircle className="text-green-500" /> Environment Check</h3>
-                    <p className="text-gray-400">
-                        This test analyzes your personality traits. To ensure focus:
-                    </p>
-                    <ul className="list-disc pl-5 space-y-2 text-gray-400">
-                        <li>Fullscreen mode will be active.</li>
-                        <li>Please complete in one sitting.</li>
-                    </ul>
+            <div className="min-h-screen bg-surface font-mono flex items-center justify-center p-4">
+                <div className="border border-black/20 bg-surface-container-lowest p-6 shadow-[4px_4px_0px_#191C1D] text-center max-w-md w-full">
+                    <div className="text-primary-container font-bold text-label-sm uppercase mb-2">
+                        [ SYSTEM_LOADING // INITIALIZING_DIAGNOSTIC_NODE ]
+                    </div>
+                    <div className="text-body-sm text-on-surface-variant">
+                        Retrieving psychometric question bank...
+                    </div>
                 </div>
-                <Button onClick={startTest} className="px-12 py-5 text-2xl !bg-white !text-black hover:scale-105 transition-transform">
-                    Start Analysis
-                </Button>
             </div>
         );
     }
 
-    return (
-        <ProctorWrapper onDisqualify={() => { }} onWarning={() => { }}>
-            <div className="min-h-screen bg-light-canvas dark:bg-dark-canvas p-6 md:p-12">
-                <header className="mb-12 max-w-4xl mx-auto">
-                    <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tighter">
-                        Personality Archetype <Sparkles className="w-8 h-8 inline text-purple-500" />
-                    </h1>
-                </header>
-
-                <div className="max-w-4xl mx-auto space-y-8">
-                    {questions.map((q, idx) => (
-                        <motion.div
-                            key={q.id || idx}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-white dark:bg-dark-card border-2 border-black dark:border-gray-700 rounded-[2rem] p-8"
-                        >
-                            <h3 className="text-xl font-bold mb-6">{q.question}</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {(q.options ? Object.entries(q.options) : ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree']).map((opt, i) => {
-                                    const val = Array.isArray(opt) ? opt[0] : (i + 1);
-                                    const label = Array.isArray(opt) ? opt[0] : opt;
-                                    return (
-                                        <button
-                                            key={i}
-                                            onClick={() => handleOptionSelect(q.id || idx + 1, val)}
-                                            className={`p-4 rounded-xl border-2 font-bold transition-all text-left ${(answers[q.id || idx + 1] === val)
-                                                ? 'bg-purple-100 border-purple-500 text-purple-700'
-                                                : 'border-gray-200 hover:border-black'
-                                                }`}
-                                        >
-                                            {label}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </motion.div>
-                    ))}
-                    <div className="flex justify-end pt-8 pb-24">
-                        <Button onClick={handleSubmit} className="px-12 py-4 text-xl shadow-xl">
-                            Submit Analysis <ArrowRight className="ml-2" />
-                        </Button>
-                    </div>
-                </div>
+    if (result) {
+        return (
+            <div className="min-h-screen bg-surface font-mono text-on-surface p-4 md:p-8 flex items-center justify-center">
+                <PersonalityResultCard
+                    result={result}
+                    onProceed={() => navigate('/student/dashboard')}
+                />
             </div>
-        </ProctorWrapper>
+        );
+    }
+
+    if (!started) {
+        return (
+            <div className="min-h-screen bg-surface font-mono text-on-surface p-4 md:p-8 flex items-center justify-center">
+                <PersonalityIntroCard
+                    onStart={handleStart}
+                    onReturn={() => navigate('/student/dashboard')}
+                />
+            </div>
+        );
+    }
+
+    const currentQuestion = questions[currentIndex];
+    const isLastQuestion = currentIndex === questions.length - 1;
+    const canSubmit = Object.keys(answers).length > 0;
+
+    return (
+        <div className="min-h-screen bg-surface font-mono text-on-surface flex flex-col">
+            <PersonalityHeader
+                currentIndex={currentIndex}
+                totalQuestions={questions.length}
+                isFullscreen={isFullscreen}
+                onAbort={handleAbort}
+            />
+
+            <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-8">
+                {error && (
+                    <div className="mb-space-md border border-red-500 bg-red-50 p-space-md text-red-700 text-body-sm">
+                        <span className="font-bold">[TELEMETRY_ERROR]:</span> {error}
+                    </div>
+                )}
+
+                <div className="flex flex-col lg:flex-row gap-space-lg items-start">
+                    <div className="flex-1 w-full">
+                        <PersonalityQuestionCard
+                            question={currentQuestion}
+                            questionIndex={currentIndex}
+                            totalQuestions={questions.length}
+                            selectedAnswer={currentQuestion ? answers[String(currentQuestion.id)] : ''}
+                            onSelectOption={handleOptionSelect}
+                            onPrev={handlePrev}
+                            onNext={handleNext}
+                            onSubmit={handleSubmit}
+                            isLastQuestion={isLastQuestion}
+                            canSubmit={canSubmit}
+                            isSubmitting={isSubmitting}
+                        />
+                    </div>
+
+                    <PersonalityTelemetrySidebar
+                        questions={questions}
+                        currentIndex={currentIndex}
+                        answers={answers}
+                        onJump={handleJump}
+                        onSubmit={handleSubmit}
+                        canSubmit={canSubmit}
+                        isSubmitting={isSubmitting}
+                    />
+                </div>
+            </main>
+        </div>
     );
 };
 
