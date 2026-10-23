@@ -9,7 +9,7 @@
 </h1>
 
 <p align="center">
-  <strong>Industry-Standard AI Skill Verification & Talent Matching Monorepo</strong>
+  <strong>Industry-Standard AI Skill Verification & Empirical Talent Matching Platform</strong>
 </p>
 
 <p align="center">
@@ -34,11 +34,13 @@
   - [Docker Deployment (`docker compose`)](#3-docker-deployment-docker-compose)
 - [Environment Configuration](#-environment-configuration)
 - [Architecture & Key Subsystems](#-architecture--key-subsystems)
-  - [Centralized API Client](#centralized-api-client)
-  - [Route Protection & RBAC](#route-protection--rbac)
-  - [Proctoring & Risk Engine](#proctoring--risk-engine)
-  - [Lazy AI Model Loading](#lazy-ai-model-loading)
-- [Continuous Integration](#-continuous-integration)
+  - [Centralized API Client & Network Drop Resilience](#centralized-api-client--network-drop-resilience)
+  - [Global React Error Boundary](#global-react-error-boundary)
+  - [Security & File Upload Hardening](#security--file-upload-hardening)
+  - [Prompt Injection Defense & Fault-Tolerant AI](#prompt-injection-defense--fault-tolerant-ai)
+  - [Database Performance & N+1 Elimination](#database-performance--n1-elimination)
+  - [Proctoring & Resource Management](#proctoring--resource-management)
+- [Continuous Integration & Testing](#-continuous-integration--testing)
 - [Documentation Index](#-documentation-index)
 - [License](#-license)
 
@@ -46,40 +48,55 @@
 
 ## 🌟 Overview
 
-**SkillForge** is an enterprise-grade skill verification and talent discovery platform that bridges the gap between learning and verified hiring:
-- 🎓 **Students / Learners**: Undergo proctored AI skill assessments, analyze personality archetypes, receive tailored AI upskilling modules, and generate a dynamic **Skill CIBIL Score**.
-- 🏢 **Clients / Recruiters**: Publish project requirements, set minimum verified skill thresholds, and evaluate matched applicants using schematic similarity scoring.
+**SkillForge** is an enterprise-grade skill verification and talent discovery platform designed to eliminate resume inflation and credential opacity:
+- 🎓 **Candidates / Students**: Complete practical, proctored AI technical assessments, analyze personality archetypes, receive personalized learning modules, and showcase a verified skill dossier with real percentile rankings.
+- 🏢 **Employers / Recruiters**: Publish engineering requisitions with required skill benchmarks, review pre-vetted applicant portfolios ranked by TF-IDF profile matching, and hire with confidence backed by tamper-evident proctor audits.
 
 ---
 
 ## 📁 Monorepo Directory Structure
 
-The repository is organized into a clean monorepo architecture:
-
 ```
 SkillForge/
 ├── client/                     # Frontend SPA (React 19, Vite 7, Tailwind, Zustand)
+│   ├── public/                 # Static assets, CAD blueprint favicon.svg, and icons
 │   ├── src/
-│   │   ├── components/         # UI primitives, layout, guards, modals, proctoring
-│   │   ├── lib/                # Centralized api.js client and cn.js utility
-│   │   ├── pages/              # Role-separated dashboards and test views
-│   │   └── store/              # Zustand global authentication and theme stores
+│   │   ├── api/                # API client facade and Celery task status hook
+│   │   ├── components/         # Modular UI architecture:
+│   │   │   ├── assessment/     # ProctorWrapper, AssessmentHeader, OptionsMatrix, Telemetry
+│   │   │   ├── auth/           # LoginForm, RegisterWizard, AuthLayout
+│   │   │   ├── client/         # ActiveJobsTable, ApplicantRankings, DossierModal
+│   │   │   ├── common/         # ErrorBoundary.jsx (global runtime exception boundary)
+│   │   │   ├── guards/         # ProtectedRoute and RoleGuard RBAC navigation shields
+│   │   │   ├── layout/         # Responsive Navbar (multi-tab navigation) & Footer
+│   │   │   ├── modals/         # JobPostModal, CandidateDossierModal
+│   │   │   ├── sections/       # HeroSection, CapabilitiesGrid, BlueprintSpec, PersonaSplit
+│   │   │   ├── student/        # StudentHeader, MatchedPositionsGrid, ProfileBlock
+│   │   │   ├── ui/             # Core UI components & mechanical animation primitives
+│   │   │   └── upskill/        # MarkdownContentReader, ModuleCompletionActions
+│   │   ├── hooks/              # useTaskStatus.js (resilient Celery polling)
+│   │   ├── lib/                # api.js (JWT refresh, offline recovery) and cn.js
+│   │   ├── pages/              # LandingPage, HowItWorksPage, AuthPage, Dashboards, Assessments
+│   │   └── store/              # Zustand stores: authStore (tokens, role) & themeStore
 │   ├── .env.example            # Frontend environment variable template
+│   ├── Dockerfile              # Multi-stage production container (Node 20 + Nginx)
+│   ├── nginx.conf              # Nginx SPA fallback routing configuration
 │   ├── eslint.config.js        # ESLint 9 configuration with React 19 rules
-│   └── package.json            # Frontend package manifest
+│   └── package.json            # Node.js dependencies & scripts
 │
-├── server/                     # Backend REST API (Django, DRF, LangChain, Gemini)
-│   ├── accounts/               # Custom user model, JWT auth, and profile endpoints
+├── server/                     # Backend REST API (Django, DRF, Celery, LangChain, Gemini)
+│   ├── accounts/               # Custom user model, JWT auth, PDF validators, profiles
 │   ├── proctor/                # Event recording, webcam monitors, and risk scoring
-│   ├── project/                # Client job postings and applicant matching
-│   ├── verification/           # AI test generation, grading, PDF and GitHub parsing
+│   ├── project/                # Client job requisitions and TF-IDF applicant matching
+│   ├── verification/           # AI test generation, grading, PDF extraction, Celery tasks
 │   ├── modules/                # Adaptive AI-generated learning modules
-│   ├── skillforge/             # Settings, unified exception handler, permissions
+│   ├── skillforge/             # Settings, unified exception handler, permissions, Celery app
 │   ├── .env.example            # Backend environment variable template
+│   ├── Dockerfile              # Multi-stage production container with Gunicorn WSGI
 │   ├── manage.py               # Django management CLI
 │   └── requirements.txt        # Backend Python dependencies
 │
-├── project_knowledge/          # Persistent architectural memory & audit documentation
+├── project_knowledge/          # Architectural memory & audit documentation
 │   ├── 00_SYSTEM_OVERVIEW.md
 │   ├── 01_ARCHITECTURE_AND_DATAFLOW.md
 │   ├── 02_BACKEND_DEEP_DIVE.md
@@ -90,7 +107,8 @@ SkillForge/
 ├── .github/workflows/          # GitHub Actions CI pipelines
 │   └── ci.yml
 │
-├── assets/                     # Platform logos and diagram assets
+├── docker-compose.yml          # Full-stack orchestration (Redis, Backend, Worker, Frontend)
+├── assets/                     # Platform logos, branding, and diagram assets
 └── README.md                   # Repository master documentation
 ```
 
@@ -102,7 +120,9 @@ SkillForge/
 - **Python**: 3.10+ (Python 3.11 recommended)
 - **Node.js**: 20.x or higher
 - **npm**: 10.x or higher
-- **Git**
+- **Redis**: 7.x (or run via Docker)
+
+---
 
 ### 1. Backend Setup (`server/`)
 
@@ -127,7 +147,15 @@ cp .env.example .env
 python manage.py migrate
 python manage.py runserver 8000
 ```
-Backend will be live at `http://localhost:8000/api/`.
+Backend API will be live at `http://localhost:8000/api/`.
+
+Start the Celery worker in a separate terminal:
+```bash
+cd server
+celery -A skillforge worker -l info
+```
+
+---
 
 ### 2. Frontend Setup (`client/`)
 
@@ -146,9 +174,11 @@ npm run dev
 ```
 Frontend will be live at `http://localhost:5173`.
 
+---
+
 ### 3. Docker Deployment (`docker compose`)
 
-Run the complete production-grade containerized environment (Redis, Django backend, Celery worker, and Nginx frontend) with a single command:
+Run the complete multi-service environment (Redis, Django backend, Celery worker, and Nginx frontend) with a single command:
 
 ```bash
 docker compose up --build
@@ -161,7 +191,7 @@ docker compose up --build
 
 ## 🔧 Environment Configuration
 
-Both environments strictly use isolated `.env` files that are untracked by Git:
+Both workspaces strictly consume isolated `.env` files that are ignored by Git:
 
 ### Frontend (`client/.env.example`)
 ```env
@@ -176,54 +206,68 @@ DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
 CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 REDIS_URL=redis://localhost:6379/0
 GEMINI_API_KEY=your_gemini_api_key_here
-GITHUB_TOKEN=optional-github-token-to-avoid-rate-limits
+GITHUB_TOKEN=optional_github_token_here
 ```
 
 ---
 
 ## 🛡️ Architecture & Key Subsystems
 
-### Centralized API Client
-All frontend requests flow through [`client/src/lib/api.js`](client/src/lib/api.js):
-- Injects JWT `Authorization: Bearer <token>` from persistent local storage.
-- Dynamically resolves `VITE_API_BASE_URL`.
-- Automatically configures multipart boundaries for `FormData` resume uploads.
+### Centralized API Client & Network Drop Resilience
+All frontend network calls flow through [`client/src/lib/api.js`](client/src/lib/api.js):
+- Automatically attaches JWT Bearer credentials from `localStorage`.
+- Performs silent access token refresh (`/api/accounts/token/refresh/`) and dispatches token rotation to `useAuthStore`.
+- Intercepts connection drops and offline states, returning structured `NetworkErrorResponse` objects with human-readable messaging instead of unhandled promise exceptions.
 
-### Route Protection & RBAC
-Frontend routes in [`client/src/App.jsx`](client/src/App.jsx) are defended by two concentric guard layers:
-1. `<ProtectedRoute>`: Blocks unauthenticated visitors and redirects to `/auth` with return state.
-2. `<RoleGuard requiredRole="student"|"client">`: Blocks cross-role access (e.g., student accessing client dashboard).
+### Global React Error Boundary
+[`client/src/components/common/ErrorBoundary.jsx`](client/src/components/common/ErrorBoundary.jsx) wraps the entire root application. When an unhandled runtime error occurs, it catches the exception and renders a calm, user-friendly recovery interface ("Reload page", "Try again", "Return to Home") alongside collapsible diagnostic stack traces in development mode.
 
-Backend endpoints in `server/` enforce role permissions via custom DRF permission classes in [`server/skillforge/permissions.py`](server/skillforge/permissions.py):
-- `IsStudent`: Allows access only to users with `role='student'`.
-- `IsClient`: Allows access only to users with `role='client'`.
+### Security & File Upload Hardening
+- Resume uploads undergo strict 4-point validation in [`server/accounts/validators.py`](server/accounts/validators.py): 5MB ceiling, `.pdf` extension check, MIME validation, and `%PDF-` magic byte inspection.
+- Upload filenames are replaced with random UUIDs to eliminate path traversal vulnerabilities.
+- Production safety is guaranteed by an immediate `ImproperlyConfigured` guard in [`settings.py`](server/skillforge/settings.py) if `DEBUG=False` without a valid `DJANGO_SECRET_KEY`.
 
-### Proctoring & Risk Engine
-During student assessments, [`ProctorWrapper.jsx`](client/src/components/assessment/ProctorWrapper.jsx) continuously checks:
-- Tab switching and browser blur events.
-- Fullscreen enforcement.
-- Clipboard copy/paste prevention.
-- Real-time webcam brightness/skin-tone presence detection.
+### Prompt Injection Defense & Fault-Tolerant AI
+- Candidate inputs (resumes, GitHub commit logs) are quarantined in XML tags (`<candidate_resume_data>`, `<candidate_github_data>`) with system prompts instructing the LLM to process candidate text strictly as passive data.
+- LLM calls in [`server/verification/utils/langchain_utils.py`](server/verification/utils/langchain_utils.py) enforce explicit 30s timeouts and structured fallback evaluations on external outages.
+- GitHub REST calls utilize an `HTTPAdapter` configured with `urllib3.util.Retry` for exponential backoff on HTTP 429/500/502/503/504 errors.
 
-Events are logged via `/api/proctor/events/` and processed by [`server/proctor/risk.py`](server/proctor/risk.py) with weighted penalty formulas to determine candidate disqualification.
+### Database Performance & N+1 Elimination
+- Database queries across [`project/views.py`](server/project/views.py) and [`accounts/views.py`](server/accounts/views.py) utilize `select_related` and `Count("applications")` annotations, ensuring zero redundant `COUNT(*)` queries when rendering job feeds or applicant rosters.
+- Multi-table operations are wrapped in `with transaction.atomic():` to prevent partial database writes on failure.
 
-### Lazy AI Model Loading
-Google Gemini AI models in `server/modules/langchain_utils.py` and `server/verification/utils/langchain_utils.py` use lazy singleton getters (`get_model()`). This guarantees that missing or unconfigured API keys will never crash the server at startup or during migrations.
+### Proctoring & Resource Management
+- During assessments, [`ProctorWrapper.jsx`](client/src/components/assessment/ProctorWrapper.jsx) monitors tab switching, fullscreen escapes, copy/cut/paste attempts, and face presence.
+- Upon component unmount, all active `MediaStream` webcam tracks are explicitly terminated (`track.stop()`) and canvas memory is released, ensuring the hardware camera light turns off immediately.
+- Fullscreen lock is cleanly exited upon test conclusion in [`AssessmentPage.jsx`](client/src/pages/student/AssessmentPage.jsx).
 
 ---
 
-## 🧪 Continuous Integration
+## 🧪 Continuous Integration & Testing
 
-The monorepo includes automated GitHub Actions CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) validating every pull request:
-- **Backend Validation**: Python syntax compilation across all files, dependency checks, and `python manage.py check`.
-- **Frontend Validation**: ESLint 9 checks across all JSX/JS files and a clean production `vite build`.
+### Running Tests
+```bash
+# Backend Test Suite (26 integration & unit tests)
+python server/manage.py test server/
+
+# Django Configuration Check
+python server/manage.py check
+
+# Frontend Code Quality (ESLint)
+npm run lint --prefix client
+
+# Frontend Production Build
+npm run build --prefix client
+```
+
+Automated GitHub Actions CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) validates all pull requests against linting, compilation, configuration checks, and production asset bundling.
 
 ---
 
 ## 📚 Documentation Index
 
-- [Backend Guide (`server/README.md`)](server/README.md)
-- [Frontend Guide (`client/README.md`)](client/README.md)
+- [Backend Documentation (`server/README.md`)](server/README.md)
+- [Frontend Documentation (`client/README.md`)](client/README.md)
 - [System Overview (`project_knowledge/00_SYSTEM_OVERVIEW.md`)](project_knowledge/00_SYSTEM_OVERVIEW.md)
 - [Architecture & Dataflow (`project_knowledge/01_ARCHITECTURE_AND_DATAFLOW.md`)](project_knowledge/01_ARCHITECTURE_AND_DATAFLOW.md)
 - [Backend Deep Dive (`project_knowledge/02_BACKEND_DEEP_DIVE.md`)](project_knowledge/02_BACKEND_DEEP_DIVE.md)
@@ -235,4 +279,4 @@ The monorepo includes automated GitHub Actions CI in [`.github/workflows/ci.yml`
 
 ## 📄 License
 
-This project is open-source under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
