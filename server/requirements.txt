@@ -14,3 +14,5 @@ langchain-core>=0.1
 PyYAML>=6.0
 celery>=5.3
 redis>=5.0
+dj-database-url>=2.1.0
+gunicorn>=21.2.0
