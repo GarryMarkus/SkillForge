@@ -78,7 +78,21 @@ async function request(method, path, options = {}) {
                 const refreshed = await refreshRes.json();
                 if (refreshed.access) {
                     tokens.access = refreshed.access;
+                    if (refreshed.refresh) {
+                        tokens.refresh = refreshed.refresh;
+                    }
                     localStorage.setItem('tokens', JSON.stringify(tokens));
+
+                    // Synchronize in-memory authStore state
+                    try {
+                        const { useAuthStore } = await import('../store/authStore');
+                        if (useAuthStore?.getState()?.updateTokens) {
+                            useAuthStore.getState().updateTokens(tokens);
+                        }
+                    } catch (storeErr) {
+                        console.warn('[API] Could not sync authStore on token refresh:', storeErr);
+                    }
+
                     requestHeaders.Authorization = `Bearer ${tokens.access}`;
                     response = await fetch(url, {
                         method,

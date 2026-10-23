@@ -62,6 +62,15 @@ export const useAuthStore = create((set, get) => ({
         return { user: updated };
     }),
 
+    updateTokens: (tokens) => set(() => {
+        try {
+            localStorage.setItem('tokens', JSON.stringify(tokens));
+        } catch (e) {
+            console.error('Failed to save tokens in localStorage:', e);
+        }
+        return { tokens, isAuthenticated: true };
+    }),
+
     updateOnboardingStage: (stage) => set((state) => {
         const updated = { ...(state.user || {}), onboarding_stage: stage };
         localStorage.setItem('user', JSON.stringify(updated));
