@@ -1,9 +1,19 @@
 import React from 'react';
+import { CadGridBackground, DecryptedText, BorderBeam } from '../ui/animations';
 
 const BlueprintSpecSection = () => {
     return (
-        <section className="w-full bg-canvas-blueprint text-on-primary font-mono py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border border-white/20 mb-12 sm:mb-16 shadow-[6px_6px_0px_#0A0A0A]" id="BlueprintSection">
-            <div className="flex flex-col gap-6">
+        <section className="w-full bg-canvas-blueprint text-on-primary font-mono py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border border-white/20 mb-12 sm:mb-16 shadow-[6px_6px_0px_#0A0A0A] relative overflow-hidden" id="BlueprintSection">
+            <CadGridBackground 
+                gridSize={40} 
+                crosshairSize={5} 
+                gridColor="rgba(255, 255, 255, 0.08)" 
+                crosshairColor="rgba(255, 255, 255, 0.25)" 
+                proximityColor="rgba(255, 255, 255, 0.15)" 
+                proximityCrosshairColor="#FFFFFF" 
+                interactive={true} 
+            />
+            <div className="flex flex-col gap-6 relative z-10">
                 {/* Blueprint Header Strip */}
                 <div className="border border-white/20 bg-primary/80 p-3 sm:p-4 flex flex-wrap items-center justify-between gap-2 text-xs">
                     <div className="flex items-center gap-2">
@@ -13,15 +23,16 @@ const BlueprintSpecSection = () => {
                         </span>
                     </div>
                     <span className="bg-white/20 text-white px-2 py-0.5 font-bold uppercase border border-white/30">
-                        [ STATUS: ACTIVE SPECIFICATION ]
+                        <DecryptedText text="[ STATUS: ACTIVE SPECIFICATION ]" animateOn="view" speed={25} />
                     </span>
                 </div>
 
                 {/* Main Blueprint Split Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 border border-white/20 divide-y lg:divide-y-0 lg:divide-x divide-white/20 bg-primary/40">
                     {/* Left Panel: CAD Flow Pipeline Graphic */}
-                    <div className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between gap-6">
-                        <div className="flex items-center justify-between border-b border-white/20 pb-2 text-xs">
+                    <div className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between gap-6 relative overflow-hidden">
+                        <BorderBeam size={28} duration={8} color="#FFFFFF" secondaryColor="rgba(255, 255, 255, 0)" borderWidth={1.5} />
+                        <div className="flex items-center justify-between border-b border-white/20 pb-2 text-xs relative z-10">
                             <span className="font-bold tracking-wider text-white">[ PIPELINE STAGES: 01 THROUGH 04 ]</span>
                             <span className="text-white/70">END-TO-END VERIFICATION</span>
                         </div>

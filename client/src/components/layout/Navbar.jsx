@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
+import { DecryptedText, MagneticButton } from '../ui/animations';
 
 const Navbar = () => {
     const { isAuthenticated, user, logout } = useAuthStore();
@@ -24,7 +25,7 @@ const Navbar = () => {
                         <span>SKILLFORGE</span>
                     </Link>
                     <span className="text-xs border border-primary-container/30 bg-primary-fixed/30 px-2 py-0.5 text-primary-container font-bold hidden sm:inline-block">
-                        [ SYSTEM STATUS: ACTIVE ]
+                        <DecryptedText text="[ SYSTEM STATUS: ACTIVE ]" animateOn="mount" speed={25} />
                     </span>
                 </div>
 
@@ -73,12 +74,14 @@ const Navbar = () => {
                         )}
                     </nav>
 
-                    <Link
-                        to={isAuthenticated ? "/student/assessment" : "/auth"}
-                        className="inline-flex items-center justify-center text-xs sm:text-sm bg-primary-container text-white border border-primary-container px-4 py-2 uppercase hover:bg-black shadow-[2px_2px_0px_#0A0A0A] transition-none font-bold"
-                    >
-                        [ START ASSESSMENT ]
-                    </Link>
+                    <MagneticButton strength={0.2} maxDisplacement={5}>
+                        <Link
+                            to={isAuthenticated ? "/student/assessment" : "/auth"}
+                            className="inline-flex items-center justify-center text-xs sm:text-sm bg-primary-container text-white border border-primary-container px-4 py-2 uppercase hover:bg-black shadow-[2px_2px_0px_#0A0A0A] transition-none font-bold"
+                        >
+                            [ START ASSESSMENT ]
+                        </Link>
+                    </MagneticButton>
 
                     {isAuthenticated ? (
                         <Link 
