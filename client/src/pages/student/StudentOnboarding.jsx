@@ -64,7 +64,6 @@ const StudentOnboarding = () => {
         setTimeout(() => setParseStep(3), 1000);
         setTimeout(() => {
             setIsParsingResume(false);
-            // If skills are currently blank or default, auto-populate recommended tags from parsed resume
             if (!formData.skills || formData.skills === 'Python, React, Django') {
                 setFormData(prev => ({
                     ...prev,
@@ -119,30 +118,33 @@ const StudentOnboarding = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background font-mono text-on-surface flex flex-col selection:bg-primary-container selection:text-on-primary">
+        <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex flex-col select-none">
             {/* Top Minimalist Console Rail */}
             <StudentOnboardingHeader candidateEmail={user?.email || 'candidate@skillforge.io'} />
 
             {/* Main Form Workplane */}
-            <main className="w-full max-w-5xl mx-auto p-4 sm:p-8 flex-1 flex flex-col gap-space-lg">
-                <div className="bg-surface-container-lowest border border-black/25 p-space-lg md:p-space-xl shadow-[4px_4px_0px_#1D52B8]">
+            <main className="w-full max-w-5xl mx-auto p-4 sm:p-8 flex-1 flex flex-col gap-6">
+                <div className="bg-surface-container-lowest border border-black/20 p-6 sm:p-10 shadow-[6px_6px_0px_#0A0A0A]">
                     {/* Section Header */}
-                    <div className="border-b border-black/15 pb-space-md mb-space-lg">
-                        <div className="flex items-center gap-2 font-bold text-headline-sm uppercase text-on-surface">
-                            <span className="text-primary-container font-bold">+</span>
-                            <span>[ CANDIDATE_TELEMETRY_INGESTION // SPEC_ONBOARD_01 ]</span>
+                    <div className="border-b border-black/15 pb-4 mb-6">
+                        <div className="flex items-center gap-2 font-bold text-xs uppercase text-canvas-blueprint tracking-wider mb-2">
+                            <span>[+]</span>
+                            <span>[ CANDIDATE INTAKE PROFILE // SPECIFICATION ]</span>
                         </div>
-                        <p className="text-body-sm text-secondary mt-1">
-                            Establish your empirical engineering record. Documents are parsed through deterministic AST and PyPDF2 pipelines to prime your TF-IDF vector fit score.
+                        <h1 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-ink-primary mb-2">
+                            ESTABLISH EMPIRICAL ENGINEERING PROFILE
+                        </h1>
+                        <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                            Provide your verified qualifications. Uploaded resume PDFs undergo automated deterministic text extraction to prime your talent match vectors.
                         </p>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-space-lg">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Identity & Academic Credential */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                                    FULL_LEGAL_NAME *
+                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
+                                    FULL LEGAL NAME *
                                 </label>
                                 <input
                                     name="full_name"
@@ -150,36 +152,36 @@ const StudentOnboarding = () => {
                                     onChange={handleChange}
                                     placeholder="e.g. Alex Vance"
                                     required
-                                    className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                                    ACADEMIC_CREDENTIAL / DEGREE *
+                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
+                                    ACADEMIC CREDENTIAL / DEGREE *
                                 </label>
                                 <input
                                     name="education"
                                     value={formData.education}
                                     onChange={handleChange}
-                                    placeholder="e.g. B.S. Computer Engineering"
+                                    placeholder="e.g. B.S. Computer Science"
                                     required
-                                    className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
                                 />
                             </div>
                         </div>
 
                         {/* Experience Archetype & GitHub URL */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                                    EXPERIENCE_ARCHETYPE
+                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
+                                    EXPERIENCE LEVEL
                                 </label>
                                 <select
                                     name="experience_level"
                                     value={formData.experience_level}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono uppercase font-bold"
+                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono uppercase font-bold"
                                 >
                                     <option value="Beginner">BEGINNER (0-1 YRS)</option>
                                     <option value="Intermediate">INTERMEDIATE (2-4 YRS)</option>
@@ -188,23 +190,23 @@ const StudentOnboarding = () => {
                             </div>
 
                             <div>
-                                <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                                    GITHUB_OR_PORTFOLIO_URL
+                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
+                                    GITHUB OR PORTFOLIO URL
                                 </label>
                                 <input
                                     name="github_url"
                                     value={formData.github_url}
                                     onChange={handleChange}
                                     placeholder="https://github.com/alexvance"
-                                    className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
                                 />
                             </div>
                         </div>
 
                         {/* Biography / Capabilities */}
                         <div>
-                            <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                                ENGINEERING_BIOGRAPHY / CAPABILITIES_STATEMENT
+                            <label className="block text-xs uppercase font-bold text-outline mb-1.5">
+                                ENGINEERING BIOGRAPHY / CAPABILITIES STATEMENT
                             </label>
                             <textarea
                                 name="bio"
@@ -212,7 +214,7 @@ const StudentOnboarding = () => {
                                 onChange={handleChange}
                                 rows="3"
                                 placeholder="Summary of engineering competencies, distributed systems experience, and algorithmic strengths..."
-                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono resize-none"
+                                className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono resize-none"
                             />
                         </div>
 
@@ -236,27 +238,27 @@ const StudentOnboarding = () => {
                         />
 
                         {error && (
-                            <div className="border border-error bg-error-container/20 p-space-sm text-error text-label-sm font-bold uppercase">
-                                [VALIDATION_FAULT] {error}
+                            <div className="border border-red-500 bg-red-50 p-4 text-red-700 text-xs font-bold uppercase">
+                                [VALIDATION FAULT] {error}
                             </div>
                         )}
 
                         {/* Action CTA Bar */}
-                        <div className="pt-space-md border-t border-black/15 flex flex-wrap items-center justify-between gap-space-md">
+                        <div className="pt-6 border-t border-black/15 flex flex-wrap items-center justify-between gap-4">
                             <button
                                 type="button"
                                 onClick={() => navigate('/student/dashboard')}
-                                className="px-space-md py-2 border border-black/30 font-bold uppercase text-label-md hover:bg-black hover:text-white transition-none cursor-pointer"
+                                className="px-6 py-3.5 border border-black/25 font-bold uppercase text-xs sm:text-sm hover:bg-black/5 transition-none cursor-pointer"
                             >
-                                [ CANCEL_RETURN_TO_DASHBOARD ]
+                                [ CANCEL // RETURN TO DASHBOARD ]
                             </button>
 
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="bg-primary-container text-on-primary px-space-xl py-2.5 font-bold uppercase text-label-md border border-primary-container hover:bg-primary transition-none cursor-pointer shadow-[2px_2px_0px_#191C1D] disabled:opacity-50"
+                                className="bg-canvas-blueprint text-white px-8 py-3.5 font-bold uppercase text-xs sm:text-sm border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer shadow-[3px_3px_0px_#0A0A0A] disabled:opacity-50"
                             >
-                                {isLoading ? '[ TRANSMITTING_TELEMETRY... ]' : '[ SUBMIT_CANDIDATE_RECORD -> ]'}
+                                {isLoading ? '[ TRANSMITTING RECORD... ]' : '[ CONFIRM & INITIALIZE PROFILE → ]'}
                             </button>
                         </div>
                     </form>

@@ -128,13 +128,14 @@ const PersonalityTest = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-surface font-mono flex items-center justify-center p-4">
-                <div className="border border-black/20 bg-surface-container-lowest p-6 shadow-[4px_4px_0px_#191C1D] text-center max-w-md w-full">
-                    <div className="text-primary-container font-bold text-label-sm uppercase mb-2">
-                        [ SYSTEM_LOADING // INITIALIZING_DIAGNOSTIC_NODE ]
+            <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex items-center justify-center p-4">
+                <div className="border border-black/20 bg-surface-container-lowest p-8 shadow-[4px_4px_0px_#1D52B8] text-center max-w-md w-full">
+                    <div className="w-3 h-3 bg-canvas-blueprint inline-block animate-pulse mb-3"></div>
+                    <div className="text-canvas-blueprint font-bold text-xs uppercase mb-1">
+                        [ INITIALIZING PSYCHOMETRIC NODE ]
                     </div>
-                    <div className="text-body-sm text-on-surface-variant">
-                        Retrieving psychometric question bank...
+                    <div className="text-xs text-on-surface-variant">
+                        Retrieving behavioral question bank...
                     </div>
                 </div>
             </div>
@@ -143,7 +144,7 @@ const PersonalityTest = () => {
 
     if (result) {
         return (
-            <div className="min-h-screen bg-surface font-mono text-on-surface p-4 md:p-8 flex items-center justify-center">
+            <div className="min-h-screen bg-canvas-light font-mono text-ink-primary p-4 sm:p-8 flex items-center justify-center">
                 <PersonalityResultCard
                     result={result}
                     onProceed={() => navigate('/student/dashboard')}
@@ -154,7 +155,7 @@ const PersonalityTest = () => {
 
     if (!started) {
         return (
-            <div className="min-h-screen bg-surface font-mono text-on-surface p-4 md:p-8 flex items-center justify-center">
+            <div className="min-h-screen bg-canvas-light font-mono text-ink-primary p-4 sm:p-8 flex items-center justify-center">
                 <PersonalityIntroCard
                     onStart={handleStart}
                     onReturn={() => navigate('/student/dashboard')}
@@ -168,7 +169,7 @@ const PersonalityTest = () => {
     const canSubmit = Object.keys(answers).length > 0;
 
     return (
-        <div className="min-h-screen bg-surface font-mono text-on-surface flex flex-col">
+        <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex flex-col select-none">
             <PersonalityHeader
                 currentIndex={currentIndex}
                 totalQuestions={questions.length}
@@ -176,14 +177,14 @@ const PersonalityTest = () => {
                 onAbort={handleAbort}
             />
 
-            <main className="flex-1 w-full max-w-7xl mx-auto p-4 md:p-8">
+            <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
                 {error && (
-                    <div className="mb-space-md border border-red-500 bg-red-50 p-space-md text-red-700 text-body-sm">
-                        <span className="font-bold">[TELEMETRY_ERROR]:</span> {error}
+                    <div className="mb-6 border border-red-500 bg-red-50 p-4 text-red-700 text-xs font-bold uppercase">
+                        <span>[TELEMETRY ERROR]:</span> {error}
                     </div>
                 )}
 
-                <div className="flex flex-col lg:flex-row gap-space-lg items-start">
+                <div className="flex flex-col lg:flex-row gap-6 items-start">
                     <div className="flex-1 w-full">
                         <PersonalityQuestionCard
                             question={currentQuestion}

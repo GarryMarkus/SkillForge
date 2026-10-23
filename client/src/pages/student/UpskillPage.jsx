@@ -46,13 +46,11 @@ const UpskillPage = () => {
                 setModules(list);
 
                 if (list.length > 0) {
-                    // If route has specific id, find it; otherwise pick first
                     const target = queryModuleId
                         ? list.find(m => String(m.id) === String(queryModuleId)) || list[0]
                         : list[0];
                     setCurrentModule(target);
                 } else {
-                    // Show generator if no modules yet
                     setShowGenerator(true);
                 }
             }
@@ -88,7 +86,6 @@ const UpskillPage = () => {
             const res = await client.post('/modules/upskill/generate/', { topic: trimmed });
             if (res.ok) {
                 const data = await res.json();
-                // Fetch full module details
                 const modRes = await client.get(`/modules/upskill/${data.module_id}/`);
                 if (modRes.ok) {
                     const fullMod = await modRes.json();
@@ -109,7 +106,6 @@ const UpskillPage = () => {
         }
     };
 
-    // Parse metadata from module content if present
     const parseMetadata = (mod) => {
         if (!mod || !mod.content) return {};
         try {
@@ -128,7 +124,7 @@ const UpskillPage = () => {
     const moduleRef = currentModule ? `CURR-${String(currentModule.id).padStart(2, '0')}` : 'CURR-01';
 
     return (
-        <div className="bg-background text-on-surface font-mono antialiased selection:bg-primary-container selection:text-on-primary min-h-screen flex flex-col">
+        <div className="bg-canvas-light text-ink-primary font-mono antialiased selection:bg-canvas-blueprint selection:text-white min-h-screen flex flex-col">
             {/* Top Minimalist Console Bar */}
             <UpskillHeader
                 moduleRef={moduleRef}
@@ -137,57 +133,57 @@ const UpskillPage = () => {
             />
 
             {/* Main Content Workspace */}
-            <main className="w-full pt-28 pb-16 px-margin flex-1 flex flex-col gap-space-lg">
+            <main className="w-full pt-20 sm:pt-24 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 flex-1 flex flex-col gap-6">
                 {/* Generation Drawer / Control Strip */}
                 {showGenerator && (
-                    <section className="w-full border border-black/20 bg-surface-container-lowest p-space-md shadow-[4px_4px_0px_#1D52B8]">
-                        <div className="flex items-center justify-between border-b border-black/15 pb-space-xs mb-space-md">
-                            <div className="flex items-center gap-2 font-bold uppercase text-label-md text-on-surface">
-                                <span className="text-primary-container font-bold">+</span>
-                                <span>[ AI_CURRICULUM_SYNTHESIS_ENGINE // TOPIC_INPUT ]</span>
+                    <section className="w-full border border-black/20 bg-surface-container-lowest p-5 sm:p-6 shadow-[4px_4px_0px_#1D52B8]">
+                        <div className="flex items-center justify-between border-b border-black/15 pb-3 mb-4">
+                            <div className="flex items-center gap-2 font-bold uppercase text-xs text-ink-primary">
+                                <span className="text-canvas-blueprint font-bold">+</span>
+                                <span>[ AI CURRICULUM SYNTHESIS ENGINE // TOPIC INPUT ]</span>
                             </div>
                             {modules.length > 0 && (
                                 <button
                                     onClick={() => setShowGenerator(false)}
-                                    className="px-2 py-0.5 border border-black/20 hover:bg-black hover:text-white text-label-sm uppercase font-bold"
+                                    className="px-2.5 py-1 border border-black/20 hover:bg-black hover:text-white text-xs uppercase font-bold"
                                 >
                                     [ESC]
                                 </button>
                             )}
                         </div>
 
-                        <form onSubmit={handleGenerateNewModule} className="flex flex-col md:flex-row gap-space-sm items-stretch">
+                        <form onSubmit={handleGenerateNewModule} className="flex flex-col md:flex-row gap-3 items-stretch">
                             <input
                                 type="text"
                                 value={topicInput}
                                 onChange={(e) => setTopicInput(e.target.value)}
                                 placeholder="Enter engineering topic: e.g. Docker Containerization, PostgreSQL Indexing, Concurrency..."
                                 disabled={isGenerating}
-                                className="flex-1 px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                                className="flex-1 px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
                             />
                             <button
                                 type="submit"
                                 disabled={isGenerating}
-                                className="bg-primary-container text-on-primary px-space-lg py-2 font-bold uppercase text-label-md border border-primary-container hover:bg-primary transition-none cursor-pointer whitespace-nowrap shadow-[2px_2px_0px_#191C1D] disabled:opacity-50"
+                                className="bg-canvas-blueprint text-white px-6 py-2.5 font-bold uppercase text-xs sm:text-sm border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer whitespace-nowrap shadow-[2px_2px_0px_#0A0A0A] disabled:opacity-50"
                             >
-                                {isGenerating ? '[ SYNTHESIZING_CURRICULUM... ]' : '[ + GENERATE_CURRICULUM_SPEC -> ]'}
+                                {isGenerating ? '[ SYNTHESIZING... ]' : '[ + GENERATE CURRICULUM SPEC → ]'}
                             </button>
                         </form>
 
                         {errorMessage && (
-                            <p className="mt-2 text-error text-label-sm font-bold uppercase">
+                            <p className="mt-2 text-red-600 text-xs font-bold uppercase">
                                 [FAULT] {errorMessage}
                             </p>
                         )}
 
-                        <div className="mt-3 flex flex-wrap items-center gap-1.5 text-label-sm text-secondary">
-                            <span className="font-bold">RECOMMENDED_DEFICIT_TOPICS:</span>
+                        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-on-surface-variant font-mono">
+                            <span className="font-bold">RECOMMENDED DEFICIT TOPICS:</span>
                             {['Docker & Containers', 'PostgreSQL Query Optimization', 'FastAPI Concurrency', 'Redis In-Memory Caching'].map((s) => (
                                 <button
                                     key={s}
                                     type="button"
                                     onClick={() => setTopicInput(s)}
-                                    className="px-2 py-0.5 bg-surface border border-black/15 hover:border-black text-on-surface uppercase text-label-sm"
+                                    className="px-2.5 py-1 bg-surface border border-black/15 hover:border-black text-ink-primary uppercase text-xs"
                                 >
                                     {s}
                                 </button>
@@ -196,18 +192,18 @@ const UpskillPage = () => {
                     </section>
                 )}
 
-                {/* Two-Column Asymmetrical CAD Workspace */}
-                <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+                {/* Two-Column Engineering Layout */}
+                <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     {/* Left Rail: Curriculum History Index (3 Cols) */}
-                    <aside className="lg:col-span-3 border border-black/20 bg-surface-container-lowest flex flex-col select-none">
-                        <div className="w-full bg-surface-container px-space-md py-space-xs border-b border-black/20 flex items-center justify-between">
-                            <div className="flex items-center gap-1.5 font-bold uppercase text-label-sm text-on-surface">
-                                <span className="text-primary-container">+</span>
-                                <span>MODULE_INDEX ({modules.length})</span>
+                    <aside className="lg:col-span-3 border border-black/20 bg-surface-container-lowest shadow-[4px_4px_0px_#0A0A0A] flex flex-col select-none">
+                        <div className="w-full bg-surface-container px-4 py-3 border-b border-black/20 flex items-center justify-between">
+                            <div className="flex items-center gap-1.5 font-bold uppercase text-xs text-ink-primary">
+                                <span className="text-canvas-blueprint">+</span>
+                                <span>MODULE INDEX ({modules.length})</span>
                             </div>
                             <button
                                 onClick={() => setShowGenerator(prev => !prev)}
-                                className="text-primary-container text-label-sm font-bold hover:underline uppercase"
+                                className="text-canvas-blueprint text-xs font-bold hover:underline uppercase"
                             >
                                 [+ NEW]
                             </button>
@@ -215,7 +211,7 @@ const UpskillPage = () => {
 
                         <div className="divide-y divide-black/10 max-h-[600px] overflow-y-auto">
                             {modules.length === 0 ? (
-                                <div className="p-space-md text-center text-outline text-label-sm italic">
+                                <div className="p-4 text-center text-outline text-xs italic">
                                     NO GENERATED MODULES IN LOG.
                                 </div>
                             ) : (
@@ -227,25 +223,25 @@ const UpskillPage = () => {
                                         <button
                                             key={mod.id}
                                             onClick={() => handleSelectModule(mod)}
-                                            className={`w-full text-left p-space-sm transition-none cursor-pointer flex flex-col gap-1 ${
+                                            className={`w-full text-left p-3.5 transition-none cursor-pointer flex flex-col gap-1 ${
                                                 isSelected
-                                                    ? 'bg-primary-fixed/25 border-l-4 border-l-primary-container'
+                                                    ? 'bg-blue-50/70 border-l-4 border-l-canvas-blueprint'
                                                     : 'hover:bg-surface-container-low'
                                             }`}
                                         >
-                                            <div className="flex items-center justify-between gap-1 text-label-sm font-bold text-on-surface">
+                                            <div className="flex items-center justify-between gap-1 text-xs font-bold text-ink-primary">
                                                 <span className="truncate">
                                                     #{String(idx + 1).padStart(2, '0')} {mod.topic?.toUpperCase()}
                                                 </span>
-                                                <span className={`text-[9px] px-1 py-0.2 border uppercase ${
+                                                <span className={`text-[10px] px-1.5 py-0.5 border uppercase font-mono ${
                                                     isModCompleted
-                                                        ? 'bg-primary-fixed/50 text-primary-container border-primary-container/40'
-                                                        : 'bg-surface text-secondary border-black/15'
+                                                        ? 'bg-blue-50 text-canvas-blueprint border-canvas-blueprint/40'
+                                                        : 'bg-surface text-outline border-black/15'
                                                 }`}>
                                                     {isModCompleted ? 'DONE' : 'ACTIVE'}
                                                 </span>
                                             </div>
-                                            <div className="flex items-center justify-between text-[10px] text-secondary">
+                                            <div className="flex items-center justify-between text-[11px] text-on-surface-variant font-mono">
                                                 <span>LVL: {mod.level?.toUpperCase() || 'MID'}</span>
                                                 <span>{new Date(mod.created_at).toLocaleDateString()}</span>
                                             </div>
@@ -257,27 +253,26 @@ const UpskillPage = () => {
                     </aside>
 
                     {/* Right Column: Active Module Specification View (9 Cols) */}
-                    <div className="lg:col-span-9 flex flex-col gap-space-lg">
+                    <div className="lg:col-span-9 flex flex-col gap-6">
                         {isGenerating ? (
                             /* Loading Skeleton Wireframe */
-                            <div className="w-full border-2 border-dashed border-primary-container bg-surface-container-lowest p-space-xl flex flex-col items-center justify-center text-center gap-space-md">
-                                <div className="w-12 h-12 border-2 border-primary-container border-t-transparent animate-spin"></div>
+                            <div className="w-full border-2 border-dashed border-canvas-blueprint bg-surface-container-lowest p-10 flex flex-col items-center justify-center text-center gap-4">
+                                <div className="w-10 h-10 border-2 border-canvas-blueprint border-t-transparent animate-spin"></div>
                                 <div className="flex flex-col gap-1">
-                                    <span className="font-bold text-headline-sm uppercase text-primary-container">
-                                        [ + SYNTHESIZING_ADAPTIVE_ENGINEERING_CURRICULUM ]
+                                    <span className="font-bold text-base uppercase text-canvas-blueprint">
+                                        [ + SYNTHESIZING ADAPTIVE ENGINEERING CURRICULUM ]
                                     </span>
-                                    <span className="text-body-sm text-secondary">
-                                        CALIBRATING TAXONOMY // EXTRACTING IEEE SPECIFICATIONS // GENERATING CODE EXAMPLES
+                                    <span className="text-xs text-on-surface-variant">
+                                        CALIBRATING TAXONOMY // EXTRACTING SPECIFICATIONS // GENERATING CODE EXAMPLES
                                     </span>
                                 </div>
-                                <div className="border border-black/15 bg-surface px-space-md py-space-xs text-label-sm font-bold text-on-surface">
-                                    TOPIC_VECTOR: {topicInput.toUpperCase() || 'TECHNICAL_SPEC'}
+                                <div className="border border-black/15 bg-surface px-4 py-1 text-xs font-bold text-ink-primary">
+                                    TOPIC VECTOR: {topicInput.toUpperCase() || 'TECHNICAL SPEC'}
                                 </div>
                             </div>
                         ) : loading ? (
-                            /* Wireframe Loading State */
-                            <div className="w-full border border-black/20 bg-surface-container-lowest p-space-xl text-center text-secondary">
-                                <span className="font-bold">[ BUFFER_READ: RETRIEVING_MODULE_STATE... ]</span>
+                            <div className="w-full border border-black/20 bg-surface-container-lowest p-10 text-center text-outline text-xs">
+                                <span className="font-bold">[ RETRIEVING MODULE STATE... ]</span>
                             </div>
                         ) : currentModule ? (
                             <>
@@ -286,7 +281,7 @@ const UpskillPage = () => {
                                     topic={currentModule.topic}
                                     level={currentModule.level}
                                     isCompleted={isCompleted}
-                                    estimatedTime={metadata.estimated_time || '15_MINUTES'}
+                                    estimatedTime={metadata.estimated_time || '15 MINUTES'}
                                     prerequisites={metadata.prerequisites || []}
                                     scoreBoost="+15%"
                                 />
@@ -303,19 +298,18 @@ const UpskillPage = () => {
                                 />
                             </>
                         ) : (
-                            /* Empty State Wireframe */
-                            <div className="w-full border border-dashed border-black/25 bg-surface-container-lowest p-space-xl text-center flex flex-col items-center justify-center gap-space-sm">
-                                <span className="font-bold text-headline-sm uppercase text-on-surface">
-                                    [ NO_CURRICULUM_MODULE_SELECTED ]
+                            <div className="w-full border border-dashed border-black/25 bg-surface-container-lowest p-10 text-center flex flex-col items-center justify-center gap-3">
+                                <span className="font-bold text-base uppercase text-ink-primary">
+                                    [ NO CURRICULUM MODULE SELECTED ]
                                 </span>
-                                <p className="text-body-sm text-secondary max-w-md">
+                                <p className="text-xs text-on-surface-variant max-w-md">
                                     Generate an adaptive learning module tailored to eliminate verification score deficits, or select a previous module from the index.
                                 </p>
                                 <button
                                     onClick={() => setShowGenerator(true)}
-                                    className="mt-2 bg-primary-container text-on-primary px-space-lg py-2 font-bold uppercase text-label-md border border-primary-container hover:bg-primary shadow-[2px_2px_0px_#191C1D] cursor-pointer"
+                                    className="mt-2 bg-canvas-blueprint text-white px-6 py-3 font-bold uppercase text-xs border border-canvas-blueprint hover:bg-primary-hover shadow-[2px_2px_0px_#0A0A0A] cursor-pointer"
                                 >
-                                    [ + LAUNCH_AI_CURRICULUM_SYNTHESIS ]
+                                    [ + LAUNCH AI CURRICULUM SYNTHESIS ]
                                 </button>
                             </div>
                         )}

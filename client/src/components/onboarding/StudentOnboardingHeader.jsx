@@ -5,58 +5,33 @@ const StudentOnboardingHeader = ({ candidateEmail = 'candidate@skillforge.io' })
     const navigate = useNavigate();
 
     return (
-        <header className="w-full bg-surface-container-lowest border-b border-black/15 select-none font-mono">
-            {/* Top Minimalist Console Rail */}
-            <div className="h-16 w-full px-margin flex items-center justify-between border-b border-black/10">
-                <div className="flex items-center gap-space-md">
-                    <div className="flex items-center gap-space-xs font-headline-sm text-headline-sm text-on-surface uppercase tracking-tight">
-                        <span className="text-primary-container font-bold">+</span>
-                        <span className="font-bold">SKILLFORGE // CANDIDATE_INTAKE_CONSOLE</span>
-                    </div>
-                    <span className="border border-black/15 bg-surface-container-low px-space-xs py-0.5 text-label-sm font-label-sm text-primary-container uppercase hidden md:inline-block font-bold">
-                        [INTAKE_NODE: ACTIVE // 256-BIT_ENCRYPTION]
+        <header className="w-full bg-surface-container-lowest border-b border-black/15 select-none font-mono" id="StudentOnboardingHeader">
+            <div className="h-16 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <span className="text-canvas-blueprint font-bold text-base">+</span>
+                    <span className="text-sm sm:text-base font-bold text-ink-primary uppercase tracking-tight truncate">
+                        SKILLFORGE // CANDIDATE INTAKE CONSOLE
+                    </span>
+                    <span className="border border-black/15 bg-surface-container-low px-2 py-0.5 text-xs font-bold text-canvas-blueprint uppercase hidden md:inline-block">
+                        [ SYSTEM STATUS: ACTIVE ]
                     </span>
                 </div>
 
-                <div className="hidden xl:flex items-center gap-space-xs border border-black/15 bg-surface-container-lowest px-space-md py-space-xs text-label-md font-label-md text-on-surface-variant">
-                    <span className="text-primary-container font-bold">LOC:</span>
-                    <span>ROOT &gt; CANDIDATE_ENVIRONMENT &gt; INTAKE_PIPELINE</span>
-                </div>
-
-                <div className="flex items-center gap-space-md">
-                    <div className="hidden md:flex items-center gap-space-xs border-r border-black/15 pr-space-md text-label-sm font-label-sm text-on-surface-variant">
-                        <span>[{candidateEmail.toUpperCase()}]</span>
+                <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="hidden md:flex items-center gap-2 border-r border-black/15 pr-4 text-xs text-on-surface-variant font-bold">
+                        <span className="text-ink-primary">[{candidateEmail.toUpperCase()}]</span>
                         <span className="text-black/30">|</span>
-                        <span>STAGE: INTAKE_01</span>
+                        <span className="text-outline uppercase">STAGE: INTAKE</span>
                     </div>
+
                     <button
                         onClick={() => navigate('/student/dashboard')}
-                        className="border border-black/25 bg-surface-container-lowest px-space-sm py-space-xs text-label-sm font-label-sm text-on-surface uppercase hover:bg-black hover:text-white transition-none cursor-pointer font-bold"
+                        className="border border-black/25 bg-surface-container-lowest px-3 py-1.5 text-xs text-ink-primary uppercase hover:bg-black hover:text-white transition-none cursor-pointer font-bold"
                     >
-                        [ &lt;- RETURN_TO_DASHBOARD ]
+                        [ ← RETURN TO DASHBOARD ]
                     </button>
-                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-on-primary">
-                        <span className="material-symbols-outlined text-[18px]">badge</span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Sub-Header Intake Coordinates Ribbon */}
-            <div className="h-10 w-full px-margin bg-surface-container flex items-center justify-between overflow-x-auto">
-                <div className="flex items-center gap-space-sm text-label-sm font-label-sm text-on-surface-variant shrink-0">
-                    <span className="text-primary-container font-bold">[COORD: X01-Y01]</span>
-                    <span className="text-on-surface font-bold">
-                        PIPELINE: MULTI_MODAL_RESUME_&amp;_TELEMETRY_INGESTION
-                    </span>
-                </div>
-
-                <div className="flex items-center gap-space-md text-label-sm font-label-sm">
-                    <span className="bg-primary-fixed/40 border border-primary-container/30 px-space-xs py-0.5 text-primary-container font-bold uppercase">
-                        ● STATUS: PIPELINE_READY
-                    </span>
-                    <div className="hidden lg:flex items-center gap-space-xs text-secondary">
-                        <span className="inline-block w-1.5 h-1.5 bg-primary-container"></span>
-                        <span>GRID_SYNCHRONIZED</span>
+                    <div className="w-8 h-8 bg-canvas-blueprint flex items-center justify-center shrink-0 text-white font-bold text-xs">
+                        C
                     </div>
                 </div>
             </div>

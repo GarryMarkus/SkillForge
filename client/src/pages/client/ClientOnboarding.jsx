@@ -77,10 +77,10 @@ const ClientOnboarding = () => {
     };
 
     return (
-        <div className="min-h-screen bg-surface font-mono text-on-surface flex flex-col">
+        <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex flex-col select-none">
             <ClientOnboardingHeader clientEmail={user?.email || 'recruiter@enterprise.io'} />
 
-            <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-8">
+            <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <CompanySpecForm
                     profile={profile}
                     onChange={handleChange}

@@ -18,33 +18,33 @@ const PersonalityQuestionCard = ({
     const optionsList = question.options ? Object.keys(question.options) : [];
 
     return (
-        <div className="bg-surface-container-lowest border border-black/25 p-space-lg md:p-space-xl shadow-[4px_4px_0px_#191C1D] font-mono flex flex-col justify-between">
+        <div className="bg-surface-container-lowest border border-black/20 p-6 sm:p-10 shadow-[6px_6px_0px_#0A0A0A] font-mono select-none flex flex-col justify-between">
             <div>
                 {/* Question Coordinate Bar */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/15 pb-space-sm mb-space-lg">
-                    <div className="flex items-center gap-space-xs text-label-sm font-label-sm font-bold text-primary-container uppercase">
-                        <span>[ QUESTION_REF: PSY-0{question.id || questionIndex + 1} / 0{totalQuestions} ]</span>
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/15 pb-4 mb-6">
+                    <div className="flex items-center gap-2 text-xs font-bold text-canvas-blueprint uppercase">
+                        <span>[ QUESTION {String(questionIndex + 1).padStart(2, '0')} / {String(totalQuestions).padStart(2, '0')} ]</span>
                         <span className="text-black/30">|</span>
-                        <span>BEHAVIORAL_METRIC_AXIS</span>
+                        <span>BEHAVIORAL AXIS</span>
                     </div>
 
-                    <div className="border border-black/15 bg-surface-container-low px-space-xs py-0.5 text-label-sm font-label-sm text-outline uppercase font-bold">
-                        WEIGHT: STANDARD_SCALAR
+                    <div className="border border-black/15 bg-surface-container-low px-2 py-0.5 text-xs text-outline uppercase font-bold">
+                        WEIGHT: STANDARD
                     </div>
                 </div>
 
                 {/* Problem / Diagnostic Statement */}
-                <div className="mb-space-xl">
-                    <h2 className="font-headline-md text-headline-md text-on-surface uppercase font-bold tracking-tight leading-snug">
+                <div className="mb-8">
+                    <h2 className="text-xl sm:text-2xl text-ink-primary uppercase font-bold tracking-tight leading-snug">
                         {question.question || question.text}
                     </h2>
-                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
-                        Select the operational behavior that most accurately describes your standard execution pattern.
+                    <p className="text-sm text-on-surface-variant mt-2 leading-relaxed font-mono">
+                        Select the operational behavior that most accurately describes your standard engineering execution pattern.
                     </p>
                 </div>
 
                 {/* Likert / Multi-Choice Matrix */}
-                <div className="space-y-space-sm mb-space-xl">
+                <div className="space-y-3 mb-8">
                     {optionsList.map((optText, idx) => {
                         const isSelected = selectedAnswer === optText;
                         const optionNum = String(idx + 1).padStart(2, '0');
@@ -54,29 +54,29 @@ const PersonalityQuestionCard = ({
                                 type="button"
                                 key={idx}
                                 onClick={() => onSelectOption(question.id, optText)}
-                                className={`w-full p-space-md text-left border flex items-center justify-between gap-space-md cursor-pointer transition-none ${
+                                className={`w-full p-4 sm:p-5 text-left border flex items-center justify-between gap-4 cursor-pointer transition-none ${
                                     isSelected
-                                        ? 'bg-primary-container text-white border-primary-container shadow-[2px_2px_0px_#191C1D] font-bold'
-                                        : 'bg-surface border-black/20 hover:border-black/50 hover:bg-black/5 text-on-surface'
+                                        ? 'bg-blue-50/70 text-ink-primary border-canvas-blueprint shadow-[3px_3px_0px_#1D52B8] font-bold'
+                                        : 'bg-surface border-black/20 hover:border-black/50 hover:bg-black/5 text-ink-primary'
                                 }`}
                             >
-                                <div className="flex items-center gap-space-md">
+                                <div className="flex items-center gap-4">
                                     <span
-                                        className={`px-2 py-0.5 text-label-sm font-label-sm border uppercase ${
+                                        className={`px-2.5 py-1 text-xs border uppercase font-mono font-bold ${
                                             isSelected
-                                                ? 'bg-white text-primary-container border-white font-bold'
-                                                : 'bg-surface-container-low border-black/20 text-outline'
+                                                ? 'bg-canvas-blueprint text-white border-canvas-blueprint'
+                                                : 'bg-surface-container border-black/20 text-outline'
                                         }`}
                                     >
                                         [ {optionNum} ]
                                     </span>
-                                    <span className="font-body-md text-body-md">
+                                    <span className="text-xs sm:text-sm font-mono leading-relaxed">
                                         {optText}
                                     </span>
                                 </div>
 
-                                <div className="shrink-0 text-label-sm font-label-sm uppercase">
-                                    {isSelected ? '[ SELECTED ]' : '[ SELECT ]'}
+                                <div className={`shrink-0 text-xs uppercase font-bold font-mono ${isSelected ? 'text-canvas-blueprint' : 'text-outline'}`}>
+                                    {isSelected ? '[ SELECTED ✓ ]' : '[ SELECT ]'}
                                 </div>
                             </button>
                         );
@@ -85,33 +85,33 @@ const PersonalityQuestionCard = ({
             </div>
 
             {/* Stepper Navigation Action Rail */}
-            <div className="pt-space-md border-t border-black/15 flex flex-wrap items-center justify-between gap-space-md">
+            <div className="pt-6 border-t border-black/15 flex flex-wrap items-center justify-between gap-4">
                 <button
                     type="button"
                     onClick={onPrev}
                     disabled={questionIndex === 0}
-                    className="px-space-md py-2 border border-black/30 font-label-md text-label-md uppercase hover:bg-black hover:text-white transition-none cursor-pointer disabled:opacity-30 disabled:pointer-events-none font-bold"
+                    className="px-6 py-3.5 border border-black/25 text-xs sm:text-sm uppercase hover:bg-black/5 transition-none cursor-pointer disabled:opacity-30 disabled:pointer-events-none font-bold"
                 >
-                    [ &lt;- PREV_QUESTION ]
+                    [ ← PREVIOUS QUESTION ]
                 </button>
 
-                <div className="flex items-center gap-space-md">
+                <div className="flex items-center gap-4">
                     {!isLastQuestion ? (
                         <button
                             type="button"
                             onClick={onNext}
-                            className="bg-primary-container text-white px-space-xl py-2 font-label-md text-label-md uppercase tracking-wider font-bold border border-primary-container hover:bg-black transition-none cursor-pointer"
+                            className="bg-canvas-blueprint text-white px-8 py-3.5 text-xs sm:text-sm uppercase tracking-wider font-bold border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer shadow-[3px_3px_0px_#0A0A0A]"
                         >
-                            [ NEXT_QUESTION -&gt; ]
+                            [ NEXT QUESTION → ]
                         </button>
                     ) : (
                         <button
                             type="button"
                             onClick={onSubmit}
                             disabled={!canSubmit || isSubmitting}
-                            className="bg-primary-container text-white px-space-xl py-2 font-label-md text-label-md uppercase tracking-wider font-bold border border-primary-container hover:bg-black transition-none cursor-pointer disabled:opacity-50"
+                            className="bg-canvas-blueprint text-white px-8 py-3.5 text-xs sm:text-sm uppercase tracking-wider font-bold border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer shadow-[3px_3px_0px_#0A0A0A] disabled:opacity-50"
                         >
-                            {isSubmitting ? '[ TRANSMITTING_TELEMETRY... ]' : '[ SUBMIT_PSYCHOMETRIC_EVALUATION -> ]'}
+                            {isSubmitting ? '[ TRANSMITTING ANSWERS... ]' : '[ SUBMIT PSYCHOMETRIC EVALUATION → ]'}
                         </button>
                     )}
                 </div>

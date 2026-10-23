@@ -20,9 +20,8 @@ const ModuleCompletionActions = ({
                 if (onProgressUpdated) {
                     onProgressUpdated();
                 }
-                // Prompt user to launch verification re-test
                 const launchRetest = window.confirm(
-                    '[CURRICULUM_COMPLETED] Module marked as finished!\n\nDo you want to proceed to the Proctored Hardware Assessment Console to re-test and update your telemetry score?'
+                    '[CURRICULUM COMPLETED] Module marked as finished!\n\nDo you want to proceed to the Proctored Hardware Assessment Console to re-test and update your telemetry score?'
                 );
                 if (launchRetest) {
                     navigate('/student/assessment');
@@ -41,46 +40,46 @@ const ModuleCompletionActions = ({
 
     return (
         <section
-            className="w-full bg-surface-container-low px-margin py-space-md border border-black/20 flex flex-wrap items-center justify-between gap-space-md font-mono select-none"
+            className="w-full bg-surface-container-low px-4 sm:px-6 py-4 border border-black/20 flex flex-wrap items-center justify-between gap-4 font-mono select-none"
             id="ModuleCompletionActions"
         >
             <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2 text-label-md font-label-md">
-                    <span className="text-primary-container font-bold">+ DISPATCH_STATUS:</span>
-                    <span className={`px-space-xs py-0.5 border font-bold uppercase text-label-sm font-label-sm ${
+                <div className="flex items-center gap-2 text-xs font-bold">
+                    <span className="text-canvas-blueprint font-bold">+ DISPATCH STATUS:</span>
+                    <span className={`px-2 py-0.5 border font-bold uppercase text-[11px] ${
                         isCompleted
-                            ? 'bg-primary-fixed/40 border-primary-container text-primary-container'
-                            : 'bg-surface border-black/15 text-secondary'
+                            ? 'bg-blue-50 border-canvas-blueprint text-canvas-blueprint'
+                            : 'bg-surface border-black/15 text-outline'
                     }`}>
-                        {isCompleted ? 'CURRICULUM_COMPLETED' : 'AWAITING_STUDENT_SIGN-OFF'}
+                        {isCompleted ? 'CURRICULUM COMPLETED' : 'IN PROGRESS // PENDING COMPLETION'}
                     </span>
                 </div>
-                <div className="text-label-sm font-label-sm text-secondary">
-                    UPON_COMPLETION: VALIDATES SKILL DEFICIT RESOLUTION &amp; ENABLES ASSESSMENT RE-TEST
+                <div className="text-xs text-on-surface-variant font-mono">
+                    COMPLETION RESOLVES SKILL GAP AND UNLOCKS HARDWARE ASSESSMENT RE-TEST
                 </div>
             </div>
 
-            <div className="flex items-center gap-space-sm flex-wrap">
+            <div className="flex items-center gap-3 flex-wrap">
                 <button
                     onClick={onGenerateNewClick}
-                    className="bg-surface-container-lowest text-on-surface font-label-md text-label-md px-space-md py-space-xs border border-black/20 hover:bg-surface-container hover:border-black/40 uppercase transition-none cursor-pointer flex items-center gap-1 font-bold"
+                    className="bg-surface-container-lowest text-ink-primary text-xs sm:text-sm font-bold px-5 py-3.5 border border-black/25 hover:bg-surface-container hover:border-black/40 uppercase transition-none cursor-pointer flex items-center gap-1.5"
                     type="button"
                 >
-                    <span>[ + GENERATE_NEW_CURRICULUM ]</span>
+                    <span>[ + GENERATE NEW CURRICULUM ]</span>
                 </button>
 
                 <button
                     onClick={handleMarkCompleteAndRetest}
                     disabled={submitting}
-                    className="bg-primary-container text-on-primary font-label-md text-label-md px-space-md py-space-xs border border-primary-container hover:bg-primary uppercase transition-none cursor-pointer flex items-center gap-2 font-bold shadow-[2px_2px_0px_#191C1D] disabled:opacity-50"
+                    className="bg-canvas-blueprint text-white text-xs sm:text-sm font-bold px-6 py-3.5 border border-canvas-blueprint hover:bg-primary-hover uppercase transition-none cursor-pointer flex items-center gap-2 shadow-[3px_3px_0px_#0A0A0A] disabled:opacity-50"
                     type="button"
                 >
                     <span>
                         {submitting
-                            ? '[ RECORDING_PROGRESS... ]'
+                            ? '[ RECORDING PROGRESS... ]'
                             : isCompleted
-                            ? '[ RE-TEST_ASSESSMENT_CONSOLE -> ]'
-                            : '[ MARK_MODULE_COMPLETED_&_RE-TEST -> ]'}
+                            ? '[ RE-TEST ASSESSMENT CONSOLE → ]'
+                            : '[ MARK COMPLETED & RE-TEST → ]'}
                     </span>
                 </button>
             </div>

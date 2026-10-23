@@ -14,54 +14,54 @@ const CompanySpecForm = ({
     const [strictCosineCutoff, setStrictCosineCutoff] = useState(true);
 
     return (
-        <div className="space-y-space-lg font-mono">
+        <div className="space-y-6 font-mono select-none" id="CompanySpecForm">
             {/* Top Specification Tracker Banner */}
-            <div className="border border-black/20 bg-surface-container-lowest p-space-md flex flex-wrap items-center justify-between gap-2 shadow-[2px_2px_0px_#1D52B8]">
-                <div className="flex items-center gap-space-xs font-label-md text-label-md font-bold uppercase text-primary-container">
+            <div className="border border-black/20 bg-surface-container-lowest p-4 sm:p-5 flex flex-wrap items-center justify-between gap-2 shadow-[2px_2px_0px_#1D52B8]">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase text-canvas-blueprint">
                     <span>[+]</span>
-                    <span>[ ENTERPRISE_ENTITY_REGISTRATION // CAD_SPEC_CLIENT_01 ]</span>
+                    <span>[ ENTERPRISE ENTITY REGISTRATION // RECRUITER SPECIFICATION ]</span>
                 </div>
-                <div className="font-label-sm text-label-sm text-outline">
-                    PIPELINE_MODE: {isUpdate ? 'RECONFIGURATION' : 'INITIAL_PROVISIONING'}
+                <div className="text-xs text-outline font-bold">
+                    MODE: {isUpdate ? 'RECONFIGURATION' : 'INITIAL PROVISIONING'}
                 </div>
             </div>
 
             {/* Cobalt Blue System Spec Highlight Card */}
-            <div className="bg-canvas-blueprint text-white border border-white/20 p-space-lg shadow-[4px_4px_0px_#191C1D]">
-                <div className="flex items-center justify-between border-b border-white/20 pb-space-sm mb-space-md">
-                    <span className="font-label-sm text-label-sm uppercase tracking-wider text-white/80 font-bold">
-                        [ SYSTEM_SPEC // ENTERPRISE_TALENT_ACQUISITION_CAPABILITIES ]
+            <div className="bg-canvas-blueprint text-white border border-primary p-6 sm:p-8 shadow-[4px_4px_0px_#0A0A0A]">
+                <div className="flex items-center justify-between border-b border-white/20 pb-3 mb-5">
+                    <span className="text-xs uppercase tracking-wider text-white font-bold">
+                        [ SYSTEM SPECIFICATION // ENTERPRISE TALENT ACQUISITION CAPABILITIES ]
                     </span>
-                    <span className="bg-white/10 px-space-xs py-0.5 text-label-sm font-label-sm border border-white/30 uppercase">
-                        NODE_INDEX: PROV-ENT-04
+                    <span className="bg-white/10 px-2 py-0.5 text-[11px] border border-white/30 uppercase font-bold">
+                        ENCLAVE ACTIVE
                     </span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-space-md">
-                    <div className="border border-white/20 bg-white/5 p-space-sm">
-                        <div className="font-bold text-label-sm text-white/90 uppercase mb-1">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="border border-white/20 bg-white/5 p-4">
+                        <div className="font-bold text-xs text-white uppercase mb-1">
                             [01] TF-IDF MATCH ENGINE
                         </div>
-                        <p className="text-body-sm text-white/70 leading-relaxed">
-                            Algorithmic candidate ranking calculates cosine vector similarity between job specs and candidate resume ASTs.
+                        <p className="text-xs text-white/80 leading-relaxed font-mono">
+                            Calculates cosine similarity vectors between job requirements and candidate resume ASTs.
                         </p>
                     </div>
 
-                    <div className="border border-white/20 bg-white/5 p-space-sm">
-                        <div className="font-bold text-label-sm text-white/90 uppercase mb-1">
-                            [02] HARDWARE ANTI-CHEAT
+                    <div className="border border-white/20 bg-white/5 p-4">
+                        <div className="font-bold text-xs text-white uppercase mb-1">
+                            [02] HARDWARE PROCTOR ENCLAVE
                         </div>
-                        <p className="text-body-sm text-white/70 leading-relaxed">
-                            Access cryptographic proctor audit trails with real-time face count analysis, tab focus swaps, and integrity scores.
+                        <p className="text-xs text-white/80 leading-relaxed font-mono">
+                            Full audit trails with optical face tracking, window blur detection, and strict risk caps.
                         </p>
                     </div>
 
-                    <div className="border border-white/20 bg-white/5 p-space-sm">
-                        <div className="font-bold text-label-sm text-white/90 uppercase mb-1">
-                            [03] STREAMLINED SHORTLIST
+                    <div className="border border-white/20 bg-white/5 p-4">
+                        <div className="font-bold text-xs text-white uppercase mb-1">
+                            [03] AUTONOMOUS SHORTLIST
                         </div>
-                        <p className="text-body-sm text-white/70 leading-relaxed">
-                            Direct requisition dispatch with automated candidate invites and synchronized status updates across stages.
+                        <p className="text-xs text-white/80 leading-relaxed font-mono">
+                            Direct requisition dispatch with instant offer generation and verified talent rank indexes.
                         </p>
                     </div>
                 </div>
@@ -69,35 +69,35 @@ const CompanySpecForm = ({
 
             {/* Error Banner */}
             {error && (
-                <div className="border border-red-500 bg-red-50 p-space-md text-red-700 text-body-sm flex items-start gap-space-sm">
-                    <span className="font-bold shrink-0">[TELEMETRY_ERROR]:</span>
+                <div className="border border-red-500 bg-red-50 p-4 text-red-700 text-xs flex items-start gap-2">
+                    <span className="font-bold shrink-0">[TELEMETRY ERROR]:</span>
                     <span>{typeof error === 'string' ? error : JSON.stringify(error)}</span>
                 </div>
             )}
 
             {/* Main Spec Form Container */}
-            <div className="bg-surface-container-lowest border border-black/25 p-space-lg md:p-space-xl shadow-[4px_4px_0px_#191C1D]">
-                <div className="border-b border-black/15 pb-space-md mb-space-lg">
-                    <h1 className="font-headline-lg text-headline-lg uppercase tracking-tight text-on-surface font-bold">
+            <div className="bg-surface-container-lowest border border-black/20 p-6 sm:p-10 shadow-[6px_6px_0px_#0A0A0A]">
+                <div className="border-b border-black/15 pb-4 mb-6">
+                    <h1 className="text-2xl sm:text-3xl uppercase tracking-tight text-ink-primary font-bold mb-2">
                         ENTERPRISE ENTITY SPECIFICATION
                     </h1>
-                    <p className="font-body-md text-body-md text-on-surface-variant mt-1">
-                        Configure corporate credentials to deploy high-concurrency technical requisitions and inspect verified engineering talent.
+                    <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                        Configure corporate credentials to deploy high-concurrency technical requisitions and inspect verified engineering talent dossiers.
                     </p>
                 </div>
 
-                <form onSubmit={onSubmit} className="space-y-space-xl">
+                <form onSubmit={onSubmit} className="space-y-6">
                     {/* Section 01: Entity Coordinates */}
-                    <div className="space-y-space-md">
-                        <div className="flex items-center gap-space-xs text-label-sm font-label-sm font-bold text-primary-container uppercase border-b border-black/10 pb-1">
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-2 text-xs font-bold text-canvas-blueprint uppercase border-b border-black/10 pb-1.5">
                             <span>// SECTION 01:</span>
-                            <span>CORPORATE_LEGAL_&amp;_DOMAIN_COORDINATES</span>
+                            <span>CORPORATE LEGAL IDENTITY</span>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
-                                    ENTERPRISE_LEGAL_ENTITY_NAME <span className="text-red-600">*</span>
+                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
+                                    ENTERPRISE LEGAL ENTITY NAME <span className="text-red-600">*</span>
                                 </label>
                                 <input
                                     name="company_name"
@@ -105,29 +105,29 @@ const CompanySpecForm = ({
                                     onChange={onChange}
                                     placeholder="e.g. Nexus Infrastructure Systems Corp."
                                     required
-                                    className="w-full px-3 py-2 bg-surface border border-black/20 focus:border-primary-container focus:outline-none font-body-md text-body-md rounded-none"
+                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
                                 />
                             </div>
 
                             <div>
-                                <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
-                                    PRIMARY_INDUSTRY_VERTICAL <span className="text-red-600">*</span>
+                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
+                                    PRIMARY INDUSTRY VERTICAL <span className="text-red-600">*</span>
                                 </label>
                                 <input
                                     name="industry"
                                     value={profile.industry}
                                     onChange={onChange}
-                                    placeholder="e.g. Distributed Systems / FinTech"
+                                    placeholder="e.g. Distributed Systems / Cloud Infrastructure"
                                     required
-                                    className="w-full px-3 py-2 bg-surface border border-black/20 focus:border-primary-container focus:outline-none font-body-md text-body-md rounded-none"
+                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
                                 />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
-                                    CORPORATE_WEBSITE_DOMAIN <span className="text-red-600">*</span>
+                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
+                                    CORPORATE WEBSITE DOMAIN <span className="text-red-600">*</span>
                                 </label>
                                 <input
                                     name="website"
@@ -135,13 +135,13 @@ const CompanySpecForm = ({
                                     onChange={onChange}
                                     placeholder="https://nexusinfra.io"
                                     required
-                                    className="w-full px-3 py-2 bg-surface border border-black/20 focus:border-primary-container focus:outline-none font-body-md text-body-md rounded-none"
+                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
                                 />
                             </div>
 
                             <div>
-                                <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
-                                    HEADQUARTERS_LOCATION / TIMEZONE <span className="text-red-600">*</span>
+                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
+                                    HEADQUARTERS LOCATION / TIMEZONE <span className="text-red-600">*</span>
                                 </label>
                                 <input
                                     name="address"
@@ -149,24 +149,24 @@ const CompanySpecForm = ({
                                     onChange={onChange}
                                     placeholder="San Francisco, CA (UTC-7)"
                                     required
-                                    className="w-full px-3 py-2 bg-surface border border-black/20 focus:border-primary-container focus:outline-none font-body-md text-body-md rounded-none"
+                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
                                 />
                             </div>
                         </div>
                     </div>
 
                     {/* Section 02: Requisition Preferences & Anti-Cheat Protocols */}
-                    <div className="space-y-space-md pt-space-md border-t border-black/10">
-                        <div className="flex items-center gap-space-xs text-label-sm font-label-sm font-bold text-primary-container uppercase border-b border-black/10 pb-1">
+                    <div className="space-y-4 pt-4 border-t border-black/10">
+                        <div className="flex items-center gap-2 text-xs font-bold text-canvas-blueprint uppercase border-b border-black/10 pb-1.5">
                             <span>// SECTION 02:</span>
-                            <span>HIRING_CAPACITY_&amp;_SECURITY_POLICIES</span>
+                            <span>HIRING CAPACITY &amp; SECURITY POLICIES</span>
                         </div>
 
                         <div>
-                            <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-2">
-                                REQUISITION_PIPELINE_SCALE_TIER
+                            <label className="block text-xs uppercase font-bold text-outline mb-2">
+                                REQUISITION PIPELINE SCALE TIER
                             </label>
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-space-sm">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 {[
                                     { id: 'TIER_01', label: 'TIER 01: 1-10 ROLES', desc: 'Boutique / Early-stage team' },
                                     { id: 'TIER_02', label: 'TIER 02: 10-50 ROLES', desc: 'Growth stage engineering' },
@@ -176,14 +176,14 @@ const CompanySpecForm = ({
                                         type="button"
                                         key={tier.id}
                                         onClick={() => setHiringCapacity(tier.id)}
-                                        className={`p-space-sm text-left border cursor-pointer transition-none ${
+                                        className={`p-3 text-left border cursor-pointer transition-none ${
                                             hiringCapacity === tier.id
-                                                ? 'bg-primary-container text-white border-primary-container'
-                                                : 'bg-surface border-black/20 hover:border-black/50 text-on-surface'
+                                                ? 'bg-canvas-blueprint text-white border-canvas-blueprint'
+                                                : 'bg-surface border-black/20 hover:border-black/50 text-ink-primary'
                                         }`}
                                     >
-                                        <div className="font-bold text-label-sm uppercase">{tier.label}</div>
-                                        <div className={`text-label-xs mt-0.5 ${hiringCapacity === tier.id ? 'text-white/80' : 'text-on-surface-variant'}`}>
+                                        <div className="font-bold text-xs uppercase">{tier.label}</div>
+                                        <div className={`text-[11px] mt-1 ${hiringCapacity === tier.id ? 'text-white/80' : 'text-on-surface-variant'}`}>
                                             {tier.desc}
                                         </div>
                                     </button>
@@ -191,56 +191,56 @@ const CompanySpecForm = ({
                             </div>
                         </div>
 
-                        <div className="space-y-space-xs pt-space-xs">
-                            <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
-                                TELEMETRY_DISPATCH_PREFERENCES
+                        <div className="space-y-2 pt-2">
+                            <label className="block text-xs uppercase font-bold text-outline mb-1">
+                                TELEMETRY DISPATCH PREFERENCES
                             </label>
-                            <label className="flex items-center gap-space-sm p-space-xs border border-black/10 bg-surface cursor-pointer select-none">
+                            <label className="flex items-center gap-3 p-3 border border-black/15 bg-surface cursor-pointer select-none">
                                 <input
                                     type="checkbox"
                                     checked={realtimeWebhooks}
                                     onChange={(e) => setRealtimeWebhooks(e.target.checked)}
-                                    className="accent-primary-container"
+                                    className="accent-canvas-blueprint"
                                 />
-                                <span className="text-body-sm text-on-surface">
-                                    [x] REAL_TIME_PROCTOR_EVENT_WEBHOOKS (Flagged incidents immediately dispatched to console)
+                                <span className="text-xs text-ink-primary font-mono">
+                                    [x] REAL-TIME PROCTOR EVENT DISPATCH (Flagged incidents immediately notify console)
                                 </span>
                             </label>
 
-                            <label className="flex items-center gap-space-sm p-space-xs border border-black/10 bg-surface cursor-pointer select-none">
+                            <label className="flex items-center gap-3 p-3 border border-black/15 bg-surface cursor-pointer select-none">
                                 <input
                                     type="checkbox"
                                     checked={strictCosineCutoff}
                                     onChange={(e) => setStrictCosineCutoff(e.target.checked)}
-                                    className="accent-primary-container"
+                                    className="accent-canvas-blueprint"
                                 />
-                                <span className="text-body-sm text-on-surface">
-                                    [x] STRICT_TF_IDF_MATCHING_CUTOFF (Require minimum 65% cosine similarity for auto-shortlist)
+                                <span className="text-xs text-ink-primary font-mono">
+                                    [x] STRICT TF-IDF MATCHING THRESHOLD (Require minimum 65% cosine similarity for auto-shortlist)
                                 </span>
                             </label>
                         </div>
                     </div>
 
                     {/* CTA Action Rail */}
-                    <div className="pt-space-md border-t border-black/15 flex flex-wrap items-center justify-between gap-space-md">
+                    <div className="pt-6 border-t border-black/15 flex flex-wrap items-center justify-between gap-4">
                         <button
                             type="button"
                             onClick={onBypass}
-                            className="px-space-md py-2 border border-black/30 font-label-md text-label-md uppercase hover:bg-black hover:text-white transition-none cursor-pointer font-bold"
+                            className="px-6 py-3.5 border border-black/25 text-xs sm:text-sm font-bold uppercase hover:bg-black/5 transition-none cursor-pointer"
                         >
-                            [ &lt;- BYPASS_RETURN_TO_DASHBOARD ]
+                            [ CANCEL // RETURN TO DASHBOARD ]
                         </button>
 
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="bg-primary-container text-white px-space-xl py-2.5 font-label-md text-label-md uppercase tracking-wider font-bold border border-primary-container hover:bg-black transition-none cursor-pointer disabled:opacity-50"
+                            className="bg-canvas-blueprint text-white px-8 py-3.5 text-xs sm:text-sm uppercase tracking-wider font-bold border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer shadow-[3px_3px_0px_#0A0A0A] disabled:opacity-50"
                         >
                             {isLoading
-                                ? '[ PROVISIONING_ENTITY... ]'
+                                ? '[ PROVISIONING ENTITY... ]'
                                 : isUpdate
-                                    ? '[ UPDATE_ENTERPRISE_ENTITY_SPEC -> ]'
-                                    : '[ INITIALIZE_ENTERPRISE_PIPELINE -> ]'}
+                                    ? '[ UPDATE ENTERPRISE SPECIFICATION → ]'
+                                    : '[ INITIALIZE ENTERPRISE PROFILE → ]'}
                         </button>
                     </div>
                 </form>
