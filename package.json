@@ -1,0 +1,14 @@
+{
+  "name": "skillforge-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SkillForge - AI-driven talent verification and matching platform",
+  "scripts": {
+    "dev": "python run_dev.py",
+    "dev:server": "python server/manage.py runserver 127.0.0.1:8000",
+    "dev:client": "npm run dev --prefix client",
+    "test:server": "powershell -Command \"cd server; python manage.py test\"",
+    "lint:client": "npm run lint --prefix client",
+    "build:client": "npm run build --prefix client"
+  }
+}
