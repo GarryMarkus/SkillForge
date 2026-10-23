@@ -6,20 +6,30 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    borderRadius: {
+      'none': '0',
+      'sm': '2px',
+      DEFAULT: '2px',
+      'md': '4px',
+      'lg': '6px',
+      'full': '9999px',
+    },
     extend: {
       colors: {
+        'canvas-light': '#F8F9FA',
+        'canvas-blueprint': '#1D52B8',
+        'ink-primary': '#0A0A0A',
+        'border-cad': 'rgba(0, 0, 0, 0.15)',
+        'border-cad-blue': 'rgba(255, 255, 255, 0.35)',
         'light-canvas': '#FDF8F1',
         'light-card': '#FFFFFF',
         'light-border': '#2D1B14',
         'dark-canvas': '#0D0D0D',
         'dark-card': '#1A1A1A',
       },
-      borderRadius: {
-        '4xl': '3rem', // 48px
-      },
       fontFamily: {
-        sans: ['"Bricolage Grotesque"', 'sans-serif'],
-        script: ['"Patrick Hand"', 'cursive'],
+        mono: ['"Courier Prime"', 'Consolas', '"Courier New"', 'monospace'],
+        sans: ['"Courier Prime"', 'Consolas', 'monospace'], // Default all text to monospace
       },
       typography: (theme) => ({
         DEFAULT: {
@@ -27,19 +37,18 @@ export default {
             maxWidth: 'none',
             color: theme('colors.gray.700'),
             h1: {
-              fontWeight: '900',
+              fontWeight: '700',
               fontSize: '1.75rem',
               marginTop: '1.5rem',
               marginBottom: '1rem',
-              borderBottom: `2px solid ${theme('colors.purple.200')}`,
+              borderBottom: `1px solid rgba(0, 0, 0, 0.15)`,
               paddingBottom: '0.5rem',
             },
             h2: {
-              fontWeight: '800',
+              fontWeight: '700',
               fontSize: '1.4rem',
               marginTop: '1.5rem',
               marginBottom: '0.75rem',
-              color: theme('colors.purple.700'),
             },
             h3: {
               fontWeight: '700',
@@ -52,20 +61,11 @@ export default {
               marginBottom: '0.75rem',
               lineHeight: '1.7',
             },
-            li: {
-              marginTop: '0.25rem',
-              marginBottom: '0.25rem',
-            },
-            'ul > li': {
-              paddingLeft: '0.5rem',
-            },
-            'ol > li': {
-              paddingLeft: '0.5rem',
-            },
             code: {
-              backgroundColor: theme('colors.gray.100'),
+              backgroundColor: '#F8F9FA',
               padding: '0.2rem 0.4rem',
-              borderRadius: '0.375rem',
+              borderRadius: '2px',
+              border: '1px solid rgba(0, 0, 0, 0.15)',
               fontWeight: '500',
               fontSize: '0.875em',
             },
@@ -76,42 +76,11 @@ export default {
               content: '""',
             },
             pre: {
-              backgroundColor: theme('colors.gray.900'),
-              color: theme('colors.gray.100'),
+              backgroundColor: '#0A0A0A',
+              color: '#F8F9FA',
               padding: '1rem',
-              borderRadius: '0.75rem',
+              borderRadius: '2px',
               overflow: 'auto',
-            },
-            strong: {
-              fontWeight: '700',
-              color: theme('colors.gray.900'),
-            },
-            blockquote: {
-              borderLeftColor: theme('colors.purple.500'),
-              backgroundColor: theme('colors.purple.50'),
-              padding: '1rem',
-              borderRadius: '0 0.5rem 0.5rem 0',
-              fontStyle: 'normal',
-            },
-          },
-        },
-        invert: {
-          css: {
-            color: theme('colors.gray.200'),
-            h1: {
-              borderBottomColor: theme('colors.purple.800'),
-            },
-            h2: {
-              color: theme('colors.purple.400'),
-            },
-            code: {
-              backgroundColor: theme('colors.gray.800'),
-            },
-            strong: {
-              color: theme('colors.white'),
-            },
-            blockquote: {
-              backgroundColor: 'rgba(139, 92, 246, 0.1)',
             },
           },
         },

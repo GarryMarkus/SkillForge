@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Patrick+Hand&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +6,9 @@
 
 @layer base {
   body {
-    @apply font-sans antialiased text-light-border dark:text-gray-100;
+    background-color: #F8F9FA;
+    color: #0A0A0A;
+    font-family: 'Courier Prime', monospace;
+    @apply antialiased;
   }
 }
