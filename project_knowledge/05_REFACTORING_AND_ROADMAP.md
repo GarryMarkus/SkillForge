@@ -208,5 +208,46 @@ The 6-layer architectural refactoring has been successfully executed, verified, 
 
 ### Layer 6: Documentation, CI Readiness & Project Knowledge Update
 - **Changes**: Created comprehensive `server/README.md` and `client/README.md`. Rewrote root `README.md` into monorepo developer setup guide. Added GitHub Actions CI pipeline `.github/workflows/ci.yml`. Updated `project_knowledge/00_SYSTEM_OVERVIEW.md` directory trees and setup guides.
-- **Commit**: `git commit -m "add developer documentation, update project_knowledge, and create GitHub Actions CI skeleton"`
+- **Commit**: `c5d0e1f add developer documentation, update project_knowledge, and create GitHub Actions CI skeleton`
+
+---
+
+## 6. Post-Refactoring Code Audit & Bug Fix Log
+
+Following the 6-layer monorepo refactoring, an exhaustive code audit was performed to resolve runtime crashes, state synchronization traps, and security flaws:
+
+1. **State Trap (Infinite Onboarding Redirect Loop)**:
+   - *Problem*: `StudentOnboarding.jsx` and `ClientOnboarding.jsx` submitted profile updates, but never updated `user.onboarding_stage` in `useAuthStore`. Navigating to `StudentDashboard.jsx` immediately triggered `user.onboarding_stage < 2`, redirecting the student back to onboarding in an inescapable loop.
+   - *Fix*: Handled API response and dispatched `updateOnboardingStage(data.onboarding_stage || 2)`.
+   - *Commit*: `7294844 update onboarding_stage in Zustand store upon profile submission in StudentOnboarding.jsx and ClientOnboarding.jsx`
+
+2. **Unseeded Category & Missing Report Crash**:
+   - *Problem*: `generate_skill_test_for_student`, `submit_personality_assessment`, and `get_recommendation` in `server/verification/services.py` performed direct `.get()` lookups for `SkillCategory` and `StudentReport`, throwing `DoesNotExist` 500 crashes whenever a category was unseeded or a user visited before generating a report.
+   - *Fix*: Used `get_or_create` for `StudentReport` and safe fallback lookups for `SkillCategory`.
+   - *Commit*: `6d79ac9 add safety fallbacks for StudentReport and SkillCategory queries in server/verification/services.py`
+
+3. **Upskill JSON Parsing Crash & Field Mismatch**:
+   - *Problem*: `server/modules/services.py` crashed with `JSONDecodeError` if Gemini returned raw markdown or varied output formats. Additionally, `UpskillPage.jsx` looked for `m.learner_level` while the Django model defined the field as `level`.
+   - *Fix*: Added resilient fallback dictionary extraction for non-JSON outputs in `services.py` and aligned `m.level` in `UpskillPage.jsx`.
+   - *Commit*: `89a23e7 harden JSON parsing in server/modules/services.py and align level field in UpskillPage.jsx`
+
+4. **Insecure Direct Object Reference (IDOR) & Proctor Rule Gaps**:
+   - *Problem*: `ProctorEventView` and `EndExamView` queried `ExamSession.objects.get(id=session_id)` without checking `user=request.user`, allowing candidates to inject violations or terminate other students' exam sessions. Furthermore, `rules` in `risk.py` had no mapping for `VIOLATION_WARNING`.
+   - *Fix*: Scoped session queries to `user=request.user`, parsed `confidence` with `try...except`, and added `"VIOLATION_WARNING": 15` to penalty rules.
+   - *Commit*: `c51d041 prevent IDOR on exam sessions in server/proctor/views.py and add warning rules in risk.py`
+
+5. **Unenforced Minimum Skill Score on Job Applications**:
+   - *Problem*: Recruiter job posts specified a `min_skill_score` threshold, but `ApplyJobAPI` never validated the candidate's verified skill score before creating an application.
+   - *Fix*: Added threshold validation comparing candidate's verified skill score against `job.min_skill_score`, returning 403 Forbidden if unqualified.
+   - *Commit*: `a836ea4 enforce minimum skill score check on job applications in server/project/views.py`
+
+6. **Profile Endpoint Auto-Creation & Consistent Registration Schema**:
+   - *Problem*: `ProfileAPI`, `ProfileUpdateAPI`, and `OnboardingAPI` assumed profiles existed, throwing 500 errors for users created via CLI or missing signals. `RegisterAPI` omitted `role` and `onboarding_stage` in responses.
+   - *Fix*: Replaced direct attribute access with `get_or_create(user=user)` and added `role`/`onboarding_stage` to register response.
+   - *Commit*: `ce76668 ensure profile auto-creation on profile endpoints in server/accounts/views.py`
+
+7. **Assessment & Personality Test UI Edge Case Guards**:
+   - *Problem*: `AssessmentPage.jsx` rendered a blank screen if question generation returned empty, and `PersonalityTest.jsx` submitted empty answers without prompting.
+   - *Fix*: Added dedicated "No Questions Available" retry card and answer completion confirmation check.
+   - *Commit*: `7316582 add error and completion guards in AssessmentPage.jsx and PersonalityTest.jsx`
 
