@@ -3,56 +3,58 @@ import { Link } from 'react-router-dom';
 
 const AuthLayout = ({ children, LeftPanel }) => {
     return (
-        <div className="min-h-screen w-full flex flex-col bg-canvas-light font-mono antialiased text-ink-primary select-none">
-            {/* Top Navigation Console Rail */}
-            <header className="w-full h-16 bg-surface border-b border-black/15 select-none z-20">
+        <div className="min-h-screen w-full flex flex-col bg-[#FAFAFA] font-sans antialiased text-gray-900 select-none">
+            {/* Top Navigation Bar */}
+            <header className="w-full h-16 bg-white border-b border-gray-200 select-none z-20">
                 <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <span className="text-canvas-blueprint font-bold text-base">+</span>
-                        <span className="font-bold text-sm sm:text-base uppercase tracking-tight text-ink-primary">
-                            SKILLFORGE // IDENTITY PORTAL
-                        </span>
-                        <span className="hidden sm:inline-block border border-black/15 bg-surface-container-low px-2 py-0.5 text-xs text-canvas-blueprint font-bold uppercase">
-                            [ SYSTEM STATUS: ACTIVE ]
+                        <Link to="/" className="flex items-center gap-2">
+                            <span className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                                SF
+                            </span>
+                            <span className="font-bold text-base tracking-tight text-gray-900">
+                                SkillForge
+                            </span>
+                        </Link>
+                        <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                            Secure Portal
                         </span>
                     </div>
 
                     <div>
                         <Link
                             to="/"
-                            className="border border-black/25 bg-surface px-3 py-1.5 text-xs uppercase hover:bg-black hover:text-white transition-none font-bold flex items-center gap-1.5"
+                            className="px-3.5 py-1.5 rounded-lg border border-gray-300 text-xs font-semibold text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-1.5"
                         >
-                            <span>[ ← RETURN TO HOME ]</span>
+                            <span>← Back to Home</span>
                         </Link>
                     </div>
                 </div>
             </header>
 
-            {/* Main Asymmetrical Split */}
-            <div className="flex-1 w-full flex flex-col lg:flex-row overflow-hidden">
-                {/* Left Panel: Cobalt Blueprint Specification Schematic (42% width) */}
-                <div className="hidden lg:flex w-[42%] bg-canvas-blueprint relative p-8 xl:p-12 border-r border-black/20 overflow-y-auto">
+            {/* Main Split */}
+            <div className="flex-1 w-full flex flex-col lg:flex-row">
+                {/* Left Panel: Value proposition (42% width) */}
+                <div className="hidden lg:flex w-[42%] bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-800 p-8 xl:p-12 text-white flex-col justify-between">
                     <LeftPanel />
                 </div>
 
-                {/* Right Panel: Drafting Paper Off-White Form Viewport (58% width) */}
-                <div className="w-full lg:w-[58%] flex flex-col items-center justify-center p-6 sm:p-10 lg:p-12 overflow-y-auto bg-canvas-light flex-1">
-                    <div className="w-full max-w-xl">
+                {/* Right Panel: Clean form viewport (58% width) */}
+                <div className="w-full lg:w-[58%] flex flex-col items-center justify-center p-6 sm:p-10 lg:p-12 bg-[#FAFAFA] flex-1">
+                    <div className="w-full max-w-lg">
                         {children}
                     </div>
                 </div>
             </div>
 
-            {/* Bottom CAD Utility Footer Strip */}
-            <footer className="w-full bg-surface-container-low border-t border-black/15 py-3 font-mono select-none">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-on-surface-variant">
-                    <div className="flex items-center gap-2">
-                        <span className="text-canvas-blueprint font-bold">[ ENCLAVE VERIFIED ]</span>
-                        <span className="text-black/20">|</span>
-                        <span>SKILLFORGE IDENTITY &amp; AUTHENTICATION PORTAL</span>
+            {/* Bottom Footer */}
+            <footer className="w-full bg-white border-t border-gray-200 py-4 font-sans select-none">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
+                    <div>
+                        SkillForge — Empirical Skill Verification &amp; Intelligent Matching
                     </div>
                     <div>
-                        &copy; {new Date().getFullYear()} SKILLFORGE ALGORITHMIC EVALUATION CORP.
+                        &copy; {new Date().getFullYear()} SkillForge, Inc. All rights reserved.
                     </div>
                 </div>
             </footer>

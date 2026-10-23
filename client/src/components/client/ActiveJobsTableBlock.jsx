@@ -8,53 +8,50 @@ const ActiveJobsTableBlock = ({
     onDeployClick
 }) => {
     return (
-        <section className="w-full border border-black/20 bg-surface-container-lowest shadow-[4px_4px_0px_#0A0A0A] font-mono select-none" id="ActiveJobsTableBlock">
-            {/* Section Header Bar */}
-            <div className="w-full bg-surface-container px-4 sm:px-6 py-3 border-b border-black/20 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <span className="text-canvas-blueprint font-bold text-base">+</span>
-                    <span className="text-sm font-bold uppercase text-ink-primary tracking-tight">
-                        [ DEPLOYED REQUISITIONS // PIPELINE SPECIFICATIONS ]
-                    </span>
+        <section className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm font-sans overflow-hidden" id="ActiveJobsTableBlock">
+            {/* Header Bar */}
+            <div className="w-full px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                    <h3 className="font-bold text-gray-900 text-lg">Active Role Openings</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">Select a role to review evaluated candidate rankings</p>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-on-surface-variant font-bold">
-                    <span className="border border-black/15 px-2 py-0.5 bg-surface text-ink-primary">
-                        REQUISITIONS: <CounterTicker value={jobs.length || 0} duration={0.8} />
+                <div className="flex items-center gap-2">
+                    <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
+                        <CounterTicker value={jobs.length || 0} duration={0.8} /> Active Openings
                     </span>
                 </div>
             </div>
 
-            {/* Data Table Container */}
+            {/* Data Table */}
             <div className="w-full overflow-x-auto">
-                <table className="w-full border-collapse text-left text-xs sm:text-sm">
+                <table className="w-full text-left border-collapse text-sm">
                     <thead>
-                        <tr className="bg-surface-variant/60 text-ink-primary uppercase border-b border-black/20 text-xs font-bold">
-                            <th className="py-3 px-4 border-r border-black/15">[ REQ ID ]</th>
-                            <th className="py-3 px-4 border-r border-black/15">[ DESIGNATION &amp; ROLE ]</th>
-                            <th className="py-3 px-4 border-r border-black/15">[ COMPENSATION SPEC ]</th>
-                            <th className="py-3 px-4 border-r border-black/15">[ BENCHMARK THRESHOLD ]</th>
-                            <th className="py-3 px-4 border-r border-black/15">[ AUDITED APPLICANTS ]</th>
-                            <th className="py-3 px-4 border-r border-black/15">[ STATUS ]</th>
-                            <th className="py-3 px-4 text-right">[ ACTION ]</th>
+                        <tr className="bg-gray-50/70 text-gray-500 uppercase border-b border-gray-100 text-xs font-semibold">
+                            <th className="py-3 px-5">Role Designation</th>
+                            <th className="py-3 px-5">Department</th>
+                            <th className="py-3 px-5">Compensation</th>
+                            <th className="py-3 px-5">Min Score</th>
+                            <th className="py-3 px-5">Verified Talent</th>
+                            <th className="py-3 px-5">Status</th>
+                            <th className="py-3 px-5 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-black/10">
+                    <tbody className="divide-y divide-gray-100 text-gray-900">
                         {jobs.length === 0 ? (
                             <tr>
-                                <td colSpan="7" className="py-8 px-4 text-center text-outline">
-                                    NO REQUISITION SPECIFICATIONS IN ACTIVE PIPELINE.{' '}
+                                <td colSpan="7" className="py-10 px-5 text-center text-gray-400">
+                                    No active role openings found.{' '}
                                     <button
                                         onClick={onDeployClick}
-                                        className="text-canvas-blueprint font-bold underline cursor-pointer ml-1"
+                                        className="text-blue-600 font-semibold underline cursor-pointer ml-1"
                                     >
-                                        [ + DEPLOY NEW TECHNICAL REQUISITION ]
+                                        Post your first opening
                                     </button>
                                 </td>
                             </tr>
                         ) : (
                             jobs.map((job, idx) => {
                                 const isSelected = selectedJob?.id === job.id;
-                                const reqCode = `REQ_${String(idx + 1).padStart(2, '0')}`;
                                 const budgetNum = Number(job.budget_amount || 120000).toLocaleString();
                                 const applicantCount = job.applicant_count || (idx === 0 ? 14 : idx === 1 ? 22 : 8);
 
@@ -62,60 +59,51 @@ const ActiveJobsTableBlock = ({
                                     <tr
                                         key={job.id}
                                         onClick={() => onSelectJob(job)}
-                                        className={`cursor-pointer transition-none ${
-                                            isSelected ? 'bg-blue-50/60' : 'hover:bg-surface-container-low'
+                                        className={`cursor-pointer transition-colors ${
+                                            isSelected ? 'bg-blue-50/50' : 'hover:bg-gray-50/50'
                                         }`}
                                     >
-                                        <td className="py-4 px-4 border-r border-black/15 font-bold text-canvas-blueprint whitespace-nowrap">
-                                            {reqCode}
-                                            {isSelected && (
-                                                <span className="text-[10px] border border-canvas-blueprint/40 bg-canvas-blueprint text-white px-1.5 py-0.5 ml-2 font-bold">
-                                                    ACTIVE
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className="py-4 px-4 border-r border-black/15">
-                                            <div className="font-bold text-ink-primary text-sm sm:text-base">
-                                                {job.title?.toUpperCase()}
-                                            </div>
-                                            <div className="text-xs text-on-surface-variant font-mono mt-0.5">
-                                                DEPT: {job.category?.toUpperCase() || 'INFRA CORE SYSTEMS'}
+                                        <td className="py-4 px-5">
+                                            <div className="font-bold text-gray-900 flex items-center gap-2">
+                                                <span>{job.title}</span>
+                                                {isSelected && (
+                                                    <span className="text-[11px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">
+                                                        Selected
+                                                    </span>
+                                                )}
                                             </div>
                                         </td>
-                                        <td className="py-4 px-4 border-r border-black/15 text-on-surface-variant font-mono">
-                                            <div className="font-bold text-ink-primary">${budgetNum} / YR</div>
-                                            <div className="text-xs text-outline font-bold">
-                                                [{job.budget_type?.toUpperCase() || 'FULL_TIME'}]
-                                            </div>
+                                        <td className="py-4 px-5 text-gray-500 text-xs font-medium">
+                                            {job.category || 'Engineering Core'}
                                         </td>
-                                        <td className="py-4 px-4 border-r border-black/15 text-on-surface-variant font-mono">
-                                            MIN SKILL: <span className="font-bold text-canvas-blueprint">{job.min_skill_score || 80} PTS</span>
+                                        <td className="py-4 px-5 font-semibold text-gray-900">
+                                            ${budgetNum} <span className="text-xs text-gray-400 font-normal">/ yr</span>
                                         </td>
-                                        <td className="py-4 px-4 border-r border-black/15 font-mono">
-                                            <span className="bg-surface-container px-2.5 py-1 border border-black/15 font-bold text-ink-primary text-xs">
-                                                [ <CounterTicker value={applicantCount} duration={0.8} /> VETTED ]
+                                        <td className="py-4 px-5">
+                                            <span className="font-semibold text-blue-600">
+                                                {job.min_skill_score || 80} / 100
                                             </span>
                                         </td>
-                                        <td className="py-4 px-4 border-r border-black/15 font-mono">
-                                            <span className="inline-flex items-center gap-1.5 font-bold text-canvas-blueprint border border-canvas-blueprint/30 bg-blue-50 px-2 py-1 text-xs">
-                                                <span className="w-1.5 h-1.5 bg-canvas-blueprint inline-block"></span>
-                                                OPEN // ROUTING
+                                        <td className="py-4 px-5">
+                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-xs">
+                                                <CounterTicker value={applicantCount} duration={0.8} /> Candidates
                                             </span>
                                         </td>
-                                        <td className="py-4 px-4 text-right">
+                                        <td className="py-4 px-5">
+                                            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                                                Active
+                                            </span>
+                                        </td>
+                                        <td className="py-4 px-5 text-right whitespace-nowrap">
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     onSelectJob(job);
                                                 }}
-                                                className={`text-xs px-3.5 py-2 border uppercase transition-none cursor-pointer font-bold ${
-                                                    isSelected
-                                                        ? 'bg-canvas-blueprint text-white border-canvas-blueprint'
-                                                        : 'bg-surface-container text-ink-primary border-black/20 hover:bg-surface-container-high'
-                                                }`}
-                                                type="button"
+                                                className="px-3.5 py-1.5 rounded-xl border border-gray-200 hover:border-blue-300 text-xs font-semibold text-gray-700 hover:text-blue-600 transition-colors"
                                             >
-                                                [ VIEW PIPELINE → ]
+                                                View Pipeline
                                             </button>
                                         </td>
                                     </tr>
@@ -124,16 +112,6 @@ const ActiveJobsTableBlock = ({
                         )}
                     </tbody>
                 </table>
-            </div>
-
-            {/* Table Micro Status Footer */}
-            <div className="w-full bg-surface-container-low px-4 sm:px-6 py-2.5 border-t border-black/15 flex flex-wrap items-center justify-between text-xs text-on-surface-variant">
-                <div>
-                    ACTIVE SPECIFICATIONS: {String(jobs.length).padStart(2, '0')} ALLOCATED
-                </div>
-                <div className="flex items-center gap-3">
-                    <span className="text-canvas-blueprint font-bold">[ PIPELINE SYNCHRONIZED ]</span>
-                </div>
             </div>
         </section>
     );

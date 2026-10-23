@@ -44,7 +44,7 @@ const StudentOnboarding = () => {
                     });
                 }
             } catch (err) {
-                console.error('Failed to pre-fill profile telemetry:', err);
+                console.error('Failed to pre-fill profile data:', err);
             }
         };
         fetchProfile();
@@ -59,7 +59,7 @@ const StudentOnboarding = () => {
         setIsParsingResume(true);
         setParseStep(1);
 
-        // Simulate async multi-step AST parsing UX
+        // Simulate multi-step parsing
         setTimeout(() => setParseStep(2), 500);
         setTimeout(() => setParseStep(3), 1000);
         setTimeout(() => {
@@ -111,40 +111,39 @@ const StudentOnboarding = () => {
             }
         } catch (err) {
             console.error('Error submitting onboarding profile:', err);
-            setError('Network fault encountered while emitting profile telemetry.');
+            setError('A network error occurred. Please try again.');
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex flex-col select-none">
-            {/* Top Minimalist Console Rail */}
+        <div className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 flex flex-col select-none">
+            {/* Top Navigation */}
             <StudentOnboardingHeader candidateEmail={user?.email || 'candidate@skillforge.io'} />
 
-            {/* Main Form Workplane */}
-            <main className="w-full max-w-5xl mx-auto p-4 sm:p-8 flex-1 flex flex-col gap-6">
-                <div className="bg-surface-container-lowest border border-black/20 p-6 sm:p-10 shadow-[6px_6px_0px_#0A0A0A]">
+            {/* Main Content */}
+            <main className="w-full max-w-4xl mx-auto p-4 sm:p-8 flex-1 flex flex-col gap-6">
+                <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-10 shadow-sm">
                     {/* Section Header */}
-                    <div className="border-b border-black/15 pb-4 mb-6">
-                        <div className="flex items-center gap-2 font-bold text-xs uppercase text-canvas-blueprint tracking-wider mb-2">
-                            <span>[+]</span>
-                            <span>[ CANDIDATE INTAKE PROFILE // SPECIFICATION ]</span>
-                        </div>
-                        <h1 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-ink-primary mb-2">
-                            ESTABLISH EMPIRICAL ENGINEERING PROFILE
+                    <div className="border-b border-gray-100 pb-5 mb-6">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 block mb-1">
+                            Candidate Profile Setup
+                        </span>
+                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-2">
+                            Build Your Verified Profile
                         </h1>
-                        <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
-                            Provide your verified qualifications. Uploaded resume PDFs undergo automated deterministic text extraction to prime your talent match vectors.
+                        <p className="text-sm text-gray-500 leading-relaxed">
+                            Share your background and upload your resume. We'll automatically identify your core skills to match you with top job opportunities.
                         </p>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Identity & Academic Credential */}
+                        {/* Name & Education */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                                    FULL LEGAL NAME *
+                                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                    Full Name <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     name="full_name"
@@ -152,69 +151,69 @@ const StudentOnboarding = () => {
                                     onChange={handleChange}
                                     placeholder="e.g. Alex Vance"
                                     required
-                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                                    ACADEMIC CREDENTIAL / DEGREE *
+                                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                    Highest Degree / Credential <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     name="education"
                                     value={formData.education}
                                     onChange={handleChange}
-                                    placeholder="e.g. B.S. Computer Science"
+                                    placeholder="e.g. B.S. in Computer Science"
                                     required
-                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                                 />
                             </div>
                         </div>
 
-                        {/* Experience Archetype & GitHub URL */}
+                        {/* Experience Level & GitHub */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                                    EXPERIENCE LEVEL
+                                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                    Experience Level
                                 </label>
                                 <select
                                     name="experience_level"
                                     value={formData.experience_level}
                                     onChange={handleChange}
-                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono uppercase font-bold"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
                                 >
-                                    <option value="Beginner">BEGINNER (0-1 YRS)</option>
-                                    <option value="Intermediate">INTERMEDIATE (2-4 YRS)</option>
-                                    <option value="Advanced">ADVANCED (5+ YRS)</option>
+                                    <option value="Beginner">Beginner (0–1 years)</option>
+                                    <option value="Intermediate">Intermediate (2–4 years)</option>
+                                    <option value="Advanced">Advanced (5+ years)</option>
                                 </select>
                             </div>
 
                             <div>
-                                <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                                    GITHUB OR PORTFOLIO URL
+                                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                    GitHub or Portfolio URL
                                 </label>
                                 <input
                                     name="github_url"
                                     value={formData.github_url}
                                     onChange={handleChange}
                                     placeholder="https://github.com/alexvance"
-                                    className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                                 />
                             </div>
                         </div>
 
-                        {/* Biography / Capabilities */}
+                        {/* Bio */}
                         <div>
-                            <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                                ENGINEERING BIOGRAPHY / CAPABILITIES STATEMENT
+                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                Short Biography / Summary
                             </label>
                             <textarea
                                 name="bio"
                                 value={formData.bio}
                                 onChange={handleChange}
                                 rows="3"
-                                placeholder="Summary of engineering competencies, distributed systems experience, and algorithmic strengths..."
-                                className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono resize-none"
+                                placeholder="Tell us about your technical focus, projects you've worked on, and what you enjoy building..."
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors resize-none"
                             />
                         </div>
 
@@ -238,27 +237,27 @@ const StudentOnboarding = () => {
                         />
 
                         {error && (
-                            <div className="border border-red-500 bg-red-50 p-4 text-red-700 text-xs font-bold uppercase">
-                                [VALIDATION FAULT] {error}
+                            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 text-xs font-medium">
+                                {error}
                             </div>
                         )}
 
-                        {/* Action CTA Bar */}
-                        <div className="pt-6 border-t border-black/15 flex flex-wrap items-center justify-between gap-4">
+                        {/* Actions */}
+                        <div className="pt-6 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
                             <button
                                 type="button"
                                 onClick={() => navigate('/student/dashboard')}
-                                className="px-6 py-3.5 border border-black/25 font-bold uppercase text-xs sm:text-sm hover:bg-black/5 transition-none cursor-pointer"
+                                className="px-6 py-2.5 rounded-xl border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                             >
-                                [ CANCEL // RETURN TO DASHBOARD ]
+                                Skip for Now
                             </button>
 
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="bg-canvas-blueprint text-white px-8 py-3.5 font-bold uppercase text-xs sm:text-sm border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer shadow-[3px_3px_0px_#0A0A0A] disabled:opacity-50"
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                             >
-                                {isLoading ? '[ TRANSMITTING RECORD... ]' : '[ CONFIRM & INITIALIZE PROFILE → ]'}
+                                {isLoading ? 'Saving Profile...' : 'Save Profile & Continue →'}
                             </button>
                         </div>
                     </form>

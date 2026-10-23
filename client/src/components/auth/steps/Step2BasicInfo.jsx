@@ -5,123 +5,106 @@ const Step2BasicInfo = () => {
     const { role, formData, updateFormData } = useAuthStore();
 
     return (
-        <div className="space-y-space-md font-mono">
-            <div className="border-b border-black/15 pb-2">
-                <h2 className="text-headline-sm font-bold uppercase text-on-surface">
-                    [ 02_IDENTITY_CREDENTIALS // BASIC_INFORMATION ]
-                </h2>
-                <p className="text-body-sm text-secondary">
-                    Provide legal identity parameters and cryptographic access passkeys.
+        <div className="space-y-4 font-sans">
+            <div className="mb-2">
+                <h3 className="text-sm font-semibold text-gray-900">
+                    Basic Account Information
+                </h3>
+                <p className="text-xs text-gray-500">
+                    Enter your name and login credentials.
                 </p>
             </div>
 
-            <div className="space-y-space-md">
+            <div className="space-y-3.5">
                 <div>
-                    <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                        LEGAL_FULL_NAME *
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                        Full Legal Name <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
                         required
                         value={formData.fullName}
                         onChange={(e) => updateFormData({ fullName: e.target.value })}
-                        placeholder="e.g. ALEX VANCE"
-                        className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                        placeholder="e.g. Alex Vance"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                        PRIMARY_EMAIL_IDENTIFIER *
+                    <label className="block text-xs font-semibold text-gray-700 mb-1">
+                        Email Address <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="email"
                         required
                         value={formData.email}
                         onChange={(e) => updateFormData({ email: e.target.value })}
-                        placeholder="candidate@nexus.io"
-                        className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                        placeholder="you@example.com"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                     />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                {role === 'client' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-700 mb-1">
+                                Company Name <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                required
+                                value={formData.companyName}
+                                onChange={(e) => updateFormData({ companyName: e.target.value })}
+                                placeholder="Acme Inc."
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-semibold text-gray-700 mb-1">
+                                Your Role / Title <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                required
+                                value={formData.designation}
+                                onChange={(e) => updateFormData({ designation: e.target.value })}
+                                placeholder="Technical Recruiter"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                            />
+                        </div>
+                    </div>
+                )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                            PASSWORD_SPECIFICATION *
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            Password <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="password"
                             required
                             value={formData.password}
                             onChange={(e) => updateFormData({ password: e.target.value })}
-                            placeholder="••••••••••••"
-                            className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                            placeholder="At least 8 characters"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                         />
                     </div>
+
                     <div>
-                        <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                            CONFIRM_PASSWORD_VERIFICATION *
+                        <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            Confirm Password <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="password"
                             required
                             value={formData.confirmPassword}
                             onChange={(e) => updateFormData({ confirmPassword: e.target.value })}
-                            placeholder="••••••••••••"
-                            className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                            placeholder="Re-enter password"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                         />
                     </div>
                 </div>
-
-                {/* Client-Specific Fields */}
-                {role === 'client' && (
-                    <div className="space-y-space-md pt-space-xs border-t border-black/15">
-                        <div className="text-label-sm font-bold text-primary-container uppercase">
-                            // ENTERPRISE_ORGANIZATIONAL_PARAMETERS
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
-                            <div>
-                                <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                                    COMPANY_LEGAL_ENTITY_NAME *
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.companyName}
-                                    onChange={(e) => updateFormData({ companyName: e.target.value })}
-                                    placeholder="NEXUS INFRASTRUCTURE INC"
-                                    className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                                    DESIGNATION_OR_ROLE_TITLE *
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.designation}
-                                    onChange={(e) => updateFormData({ designation: e.target.value })}
-                                    placeholder="LEAD TECHNICAL RECRUITER"
-                                    className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                                TELEMETRY_PHONE_CONTACT
-                            </label>
-                            <input
-                                type="tel"
-                                value={formData.phoneNumber}
-                                onChange={(e) => updateFormData({ phoneNumber: e.target.value })}
-                                placeholder="+1 (555) 019-2834"
-                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
-                            />
-                        </div>
-                    </div>
-                )}
             </div>
         </div>
     );

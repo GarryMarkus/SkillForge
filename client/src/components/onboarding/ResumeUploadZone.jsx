@@ -26,7 +26,7 @@ const ResumeUploadZone = ({
             if (dropped.type === 'application/pdf' || dropped.name.endsWith('.pdf')) {
                 onFileSelected(dropped);
             } else {
-                alert('[FORMAT ERROR] Only PDF documents (.pdf) are accepted for deterministic verification.');
+                alert('Please upload a PDF document (.pdf).');
             }
         }
     };
@@ -44,75 +44,77 @@ const ResumeUploadZone = ({
     };
 
     return (
-        <div className="w-full font-mono select-none" id="ResumeUploadZone">
+        <div className="w-full font-sans select-none" id="ResumeUploadZone">
             <div className="flex items-center justify-between mb-2">
-                <label className="block text-xs uppercase font-bold text-outline">
-                    RESUME PDF INGESTION ZONE *
+                <label className="block text-xs font-semibold text-gray-700">
+                    Upload Resume (PDF)
                 </label>
-                <span className="text-xs text-on-surface-variant font-bold">
-                    SPEC: PDF 1.7+ // MAX 15MB
+                <span className="text-xs text-gray-400">
+                    Max size: 15 MB
                 </span>
             </div>
 
             {/* Parsing Progress Animation */}
             {isParsing ? (
-                <div className="w-full border border-canvas-blueprint bg-surface-container-lowest p-6 flex flex-col gap-3 shadow-[4px_4px_0px_#1D52B8]">
-                    <div className="flex items-center justify-between border-b border-black/15 pb-2.5 text-xs font-bold text-canvas-blueprint uppercase">
-                        <span>[ CELERY ASYNC PIPELINE: ACTIVE ]</span>
-                        <span className="animate-pulse">PARSING RESUME...</span>
+                <div className="w-full rounded-2xl border border-blue-200 bg-blue-50/50 p-6 flex flex-col gap-4">
+                    <div className="flex items-center justify-between text-xs font-semibold text-blue-700">
+                        <span>Analyzing Resume</span>
+                        <span className="animate-pulse">Processing...</span>
                     </div>
 
-                    <div className="space-y-2 py-1 text-xs font-bold">
-                        <div className={`flex items-center gap-2 ${parseStep >= 1 ? 'text-canvas-blueprint' : 'text-outline'}`}>
-                            <span>{parseStep >= 1 ? '●' : '○'}</span>
-                            <span>[01. PARSING PDF TEXT STREAMS // AST NORMALIZATION]</span>
+                    <div className="space-y-2 py-1 text-xs">
+                        <div className={`flex items-center gap-2 ${parseStep >= 1 ? 'text-blue-700 font-medium' : 'text-gray-400'}`}>
+                            <span>{parseStep >= 1 ? '✓' : '○'}</span>
+                            <span>Reading resume text and structure</span>
                         </div>
-                        <div className={`flex items-center gap-2 ${parseStep >= 2 ? 'text-canvas-blueprint' : 'text-outline'}`}>
-                            <span>{parseStep >= 2 ? '●' : '○'}</span>
-                            <span>[02. EXTRACTING NER SKILL TOKENS]</span>
+                        <div className={`flex items-center gap-2 ${parseStep >= 2 ? 'text-blue-700 font-medium' : 'text-gray-400'}`}>
+                            <span>{parseStep >= 2 ? '✓' : '○'}</span>
+                            <span>Identifying key technical skills</span>
                         </div>
-                        <div className={`flex items-center gap-2 ${parseStep >= 3 ? 'text-canvas-blueprint' : 'text-outline'}`}>
-                            <span>{parseStep >= 3 ? '●' : '○'}</span>
-                            <span>[03. VECTORIZING TF-IDF EMBEDDINGS]</span>
+                        <div className={`flex items-center gap-2 ${parseStep >= 3 ? 'text-blue-700 font-medium' : 'text-gray-400'}`}>
+                            <span>{parseStep >= 3 ? '✓' : '○'}</span>
+                            <span>Creating your verified skill profile</span>
                         </div>
                     </div>
 
-                    <div className="w-full bg-surface-container h-2 border border-black/20 overflow-hidden mt-1">
+                    <div className="w-full bg-blue-100 h-2 rounded-full overflow-hidden">
                         <div
-                            className="bg-canvas-blueprint h-full transition-all duration-300"
+                            className="bg-blue-600 h-full rounded-full transition-all duration-300"
                             style={{ width: `${(parseStep / 3) * 100}%` }}
                         />
                     </div>
                 </div>
             ) : file ? (
                 /* Metadata Inspection Box */
-                <div className="w-full border border-black/20 bg-surface-container-lowest p-5 flex flex-col gap-3 shadow-[3px_3px_0px_#0A0A0A]">
-                    <div className="flex items-center justify-between border-b border-black/10 pb-2.5">
-                        <div className="flex items-center gap-2 font-bold text-xs uppercase text-ink-primary">
-                            <span className="text-canvas-blueprint font-bold">+</span>
-                            <span>[ ATTACHED DOSSIER: {file.name} ]</span>
+                <div className="w-full rounded-2xl border border-gray-200 bg-gray-50/50 p-5 flex flex-col gap-3">
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+                        <div className="flex items-center gap-2 font-medium text-sm text-gray-900">
+                            <span className="w-6 h-6 rounded-md bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">
+                                PDF
+                            </span>
+                            <span>{file.name}</span>
                         </div>
                         <button
                             type="button"
                             onClick={onFileRemoved}
-                            className="text-red-600 text-xs font-bold uppercase hover:underline cursor-pointer"
+                            className="text-red-600 text-xs font-semibold hover:underline cursor-pointer"
                         >
-                            [ DISCARD FILE ]
+                            Remove File
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-on-surface-variant pt-1 font-mono">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs text-gray-600 pt-1">
                         <div>
-                            <span className="block text-[11px] uppercase font-bold text-outline">FILE SIZE:</span>
-                            <strong className="text-ink-primary">{formatBytes(file.size)}</strong>
+                            <span className="block text-gray-400">File Size:</span>
+                            <strong className="text-gray-900 font-semibold">{formatBytes(file.size)}</strong>
                         </div>
                         <div>
-                            <span className="block text-[11px] uppercase font-bold text-outline">DOCUMENT TYPE:</span>
-                            <strong className="text-ink-primary">{file.type || 'application/pdf'}</strong>
+                            <span className="block text-gray-400">Type:</span>
+                            <strong className="text-gray-900 font-semibold">PDF Document</strong>
                         </div>
                         <div>
-                            <span className="block text-[11px] uppercase font-bold text-outline">INTEGRITY:</span>
-                            <strong className="text-canvas-blueprint font-bold">PARSED READY</strong>
+                            <span className="block text-gray-400">Status:</span>
+                            <strong className="text-green-600 font-semibold">Ready to upload</strong>
                         </div>
                     </div>
                 </div>
@@ -122,10 +124,10 @@ const ResumeUploadZone = ({
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`w-full border-2 border-dashed p-10 sm:p-14 flex flex-col items-center justify-center text-center cursor-pointer transition-none relative ${
+                    className={`w-full border-2 border-dashed rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center text-center cursor-pointer transition-colors relative ${
                         isDragging
-                            ? 'border-canvas-blueprint bg-blue-50/50'
-                            : 'border-black/30 bg-surface hover:bg-surface-container-low hover:border-black/50'
+                            ? 'border-blue-600 bg-blue-50/50'
+                            : 'border-gray-200 bg-gray-50/50 hover:bg-gray-100/50 hover:border-gray-300'
                     }`}
                 >
                     <input
@@ -134,14 +136,14 @@ const ResumeUploadZone = ({
                         onChange={handleInputChange}
                         className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
                     />
-                    <div className="w-12 h-12 bg-surface-container border border-black/15 flex items-center justify-center text-canvas-blueprint text-xl font-bold mb-3">
-                        PDF
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl font-bold mb-3 shadow-sm">
+                        📄
                     </div>
-                    <span className="font-bold text-sm sm:text-base uppercase text-ink-primary mb-1.5">
-                        [ CLICK TO SELECT OR DRAG RESUME PDF HERE ]
+                    <span className="font-semibold text-sm sm:text-base text-gray-900 mb-1">
+                        Drop your resume PDF here, or click to browse
                     </span>
-                    <span className="text-xs text-on-surface-variant max-w-md leading-relaxed font-mono">
-                        Deterministic parsing extracts skill tokens, experience timestamps, and primes your candidate vector dossier.
+                    <span className="text-xs text-gray-500 max-w-sm leading-relaxed">
+                        We automatically parse your skills and experience to save you time.
                     </span>
                 </div>
             )}

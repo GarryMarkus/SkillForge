@@ -1,17 +1,17 @@
 import React from 'react';
 import { useAuthStore } from '../../../store/authStore';
 
-const CadChip = ({ label, selected, onClick }) => (
+const SkillPill = ({ label, selected, onClick }) => (
     <button
         type="button"
         onClick={onClick}
-        className={`px-3 py-1 text-label-sm font-bold uppercase transition-none border cursor-pointer ${
+        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
             selected
-                ? 'bg-primary-container text-on-primary border-primary-container shadow-[2px_2px_0px_#191C1D]'
-                : 'bg-surface text-on-surface border-black/20 hover:bg-surface-container'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`}
     >
-        [{label}]
+        {label}
     </button>
 );
 
@@ -28,38 +28,38 @@ const Step3Details = () => {
 
     if (role === 'student') {
         return (
-            <div className="space-y-space-md font-mono">
-                <div className="border-b border-black/15 pb-2">
-                    <h2 className="text-headline-sm font-bold uppercase text-on-surface">
-                        [ 03_CALIBRATION // CANDIDATE_PROFILE ]
-                    </h2>
-                    <p className="text-body-sm text-secondary">
-                        Calibrate AI diagnostic models to your engineering career trajectory.
+            <div className="space-y-4 font-sans">
+                <div className="mb-2">
+                    <h3 className="text-sm font-semibold text-gray-900">
+                        Customize Your Career Goals
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                        Tell us what you want to achieve so we can suggest relevant assessments.
                     </p>
                 </div>
 
                 {/* Primary Learning Goal */}
                 <div>
-                    <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                        PRIMARY_CAREER_TRAJECTORY_GOAL
+                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                        Primary Career Goal
                     </label>
                     <select
-                        className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono uppercase font-bold"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
                         value={formData.learningGoal || ''}
                         onChange={(e) => updateFormData({ learningGoal: e.target.value })}
                     >
-                        <option value="">-- SELECT GOAL SPECIFICATION --</option>
-                        <option value="first_job">LAND FIRST SYSTEMS ROLE (JUNIOR_L3)</option>
-                        <option value="career_switch">CROSS-DISCIPLINE CAREER SWITCH</option>
-                        <option value="skill_upgrade">ADVANCED EMPIRICAL SKILL UPGRADE (L5+)</option>
-                        <option value="freelancing">AUTONOMOUS CONTRACT &amp; FREELANCING</option>
+                        <option value="">Select a career goal</option>
+                        <option value="first_job">Land my first engineering role</option>
+                        <option value="career_switch">Switch into software engineering</option>
+                        <option value="skill_upgrade">Advance to senior level roles</option>
+                        <option value="freelancing">Find freelance or contract projects</option>
                     </select>
                 </div>
 
                 {/* Experience Tier */}
                 <div>
-                    <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                        CURRENT_ENGINEERING_EXPERIENCE_TIER
+                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                        Experience Level
                     </label>
                     <div className="grid grid-cols-3 gap-2">
                         {['Beginner', 'Intermediate', 'Advanced'].map(level => (
@@ -67,13 +67,13 @@ const Step3Details = () => {
                                 key={level}
                                 type="button"
                                 onClick={() => updateFormData({ experienceLevel: level })}
-                                className={`p-2 border text-label-md font-bold uppercase transition-none cursor-pointer ${
+                                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                                     formData.experienceLevel === level
-                                        ? 'bg-primary-container text-on-primary border-primary-container shadow-[2px_2px_0px_#191C1D]'
-                                        : 'bg-surface text-on-surface border-black/20 hover:bg-surface-container'
+                                        ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                                        : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
                                 }`}
                             >
-                                [{level}]
+                                {level}
                             </button>
                         ))}
                     </div>
@@ -81,12 +81,12 @@ const Step3Details = () => {
 
                 {/* Target Competencies */}
                 <div>
-                    <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                        CORE_TECHNICAL_DOMAINS (SELECT UP TO 5)
+                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                        Areas of Interest
                     </label>
                     <div className="flex flex-wrap gap-2 pt-1">
                         {['Python', 'FastAPI', 'Django', 'Docker', 'PostgreSQL', 'Redis', 'Kubernetes', 'React', 'System Design'].map(topic => (
-                            <CadChip
+                            <SkillPill
                                 key={topic}
                                 label={topic}
                                 selected={formData.interests?.includes(topic)}
@@ -101,37 +101,37 @@ const Step3Details = () => {
 
     // Client/Recruiter Details
     return (
-        <div className="space-y-space-md font-mono">
-            <div className="border-b border-black/15 pb-2">
-                <h2 className="text-headline-sm font-bold uppercase text-on-surface">
-                    [ 03_CALIBRATION // ENTERPRISE_REQUIREMENTS ]
-                </h2>
-                <p className="text-body-sm text-secondary">
-                    Configure technical domain scopes and hiring throughput expectations.
+        <div className="space-y-4 font-sans">
+            <div className="mb-2">
+                <h3 className="text-sm font-semibold text-gray-900">
+                    Hiring Preferences
+                </h3>
+                <p className="text-xs text-gray-500">
+                    Help us match you with candidates fitting your company's scale.
                 </p>
             </div>
 
             <div>
-                <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                    PRIMARY_INDUSTRY_VERTICAL
+                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                    Industry Domain
                 </label>
                 <select
-                    className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono uppercase font-bold"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
                     value={formData.industry || ''}
                     onChange={(e) => updateFormData({ industry: e.target.value })}
                 >
-                    <option value="">-- SELECT INDUSTRY DOMAIN --</option>
-                    <option value="Cloud Infrastructure">CLOUD INFRASTRUCTURE &amp; NETWORKING</option>
-                    <option value="Distributed Systems">DISTRIBUTED SYSTEMS &amp; DATABASES</option>
-                    <option value="Artificial Intelligence">ARTIFICIAL INTELLIGENCE &amp; ML OPS</option>
-                    <option value="Fintech & Banking">FINANCIAL TECHNOLOGY &amp; CRYPTOGRAPHY</option>
-                    <option value="Enterprise SaaS">ENTERPRISE SAAS ARCHITECTURE</option>
+                    <option value="">Select industry</option>
+                    <option value="Cloud Infrastructure">Cloud Infrastructure &amp; Networking</option>
+                    <option value="Distributed Systems">Distributed Systems &amp; Databases</option>
+                    <option value="Artificial Intelligence">Artificial Intelligence &amp; MLOps</option>
+                    <option value="Fintech & Banking">Financial Technology &amp; Banking</option>
+                    <option value="Enterprise SaaS">Enterprise SaaS &amp; Software</option>
                 </select>
             </div>
 
             <div>
-                <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                    ENGINEERING_ORGANIZATION_SIZE
+                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                    Engineering Team Size
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                     {['1-10 Devs', '11-50 Devs', '51-200 Devs', '201+ Devs'].map(size => (
@@ -139,29 +139,29 @@ const Step3Details = () => {
                             key={size}
                             type="button"
                             onClick={() => updateFormData({ companySize: size })}
-                            className={`p-2 border text-label-md font-bold uppercase transition-none cursor-pointer ${
+                            className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                                 formData.companySize === size
-                                    ? 'bg-primary-container text-on-primary border-primary-container shadow-[2px_2px_0px_#191C1D]'
-                                    : 'bg-surface text-on-surface border-black/20 hover:bg-surface-container'
+                                    ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                                    : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
                             }`}
                         >
-                            [{size}]
+                            {size}
                         </button>
                     ))}
                 </div>
             </div>
 
             <div>
-                <label className="block text-label-sm uppercase font-bold text-outline mb-1">
-                    ANNUAL_CANDIDATE_INTAKE_QUOTA
+                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                    Expected Hires This Year
                 </label>
                 <input
                     type="number"
                     min="1"
-                    placeholder="e.g. 15 requisitions"
+                    placeholder="e.g. 15 roles"
                     value={formData.trainCount || ''}
                     onChange={(e) => updateFormData({ trainCount: e.target.value })}
-                    className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                 />
             </div>
         </div>

@@ -31,112 +31,106 @@ const LoginForm = () => {
                 navigate('/');
             }
         } catch (err) {
-            setError(err.message || 'Authentication failed. Please verify credentials.');
+            setError(err.message || 'Authentication failed. Please verify your email and password.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="w-full border border-black/20 bg-surface-container-lowest p-6 sm:p-10 shadow-[6px_6px_0px_#0A0A0A] font-mono select-none">
-            {/* Title Strip */}
-            <div className="border-b border-black/15 pb-4 mb-6">
-                <div className="flex items-center gap-2 font-bold uppercase text-xs text-canvas-blueprint tracking-wider mb-2">
-                    <span>[+]</span>
-                    <span>[ IDENTITY AUTHENTICATION // CREDENTIAL ENTRY ]</span>
-                </div>
-                <h1 className="text-2xl font-bold uppercase tracking-tight text-ink-primary mb-1">
-                    SIGN IN TO CONSOLE
+        <div className="w-full bg-white rounded-2xl border border-gray-200 p-8 sm:p-10 shadow-lg font-sans select-none">
+            {/* Header */}
+            <div className="text-center mb-6">
+                <h1 className="text-2xl font-bold text-gray-900 mb-1.5">
+                    Welcome Back
                 </h1>
-                <p className="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
-                    Enter credentials to access verified candidate or recruiter telemetry console.
+                <p className="text-sm text-gray-500">
+                    Sign in to access your dashboard and assessments
                 </p>
             </div>
 
-            {/* Mode Switcher Rail */}
-            <div className="flex border border-black/20 mb-6 bg-surface-container">
+            {/* Mode Switcher Tabs */}
+            <div className="flex bg-gray-100 p-1 rounded-xl mb-6">
                 <button
                     type="button"
-                    className="flex-1 py-2.5 text-xs font-bold uppercase transition-none bg-canvas-blueprint text-white border-r border-black/20"
+                    className="flex-1 py-2 text-xs font-semibold rounded-lg bg-white text-gray-900 shadow-sm transition-all"
                 >
-                    [ SIGN IN ]
+                    Sign In
                 </button>
                 <button
                     type="button"
                     onClick={() => setAuthMode('register')}
-                    className="flex-1 py-2.5 text-xs font-bold uppercase text-on-surface-variant hover:bg-surface-container-high transition-none cursor-pointer"
+                    className="flex-1 py-2 text-xs font-semibold rounded-lg text-gray-500 hover:text-gray-900 transition-all cursor-pointer"
                 >
-                    [ REGISTER NEW ACCOUNT ]
+                    Create Account
                 </button>
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                        EMAIL ADDRESS *
+                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                        Email Address
                     </label>
                     <input
                         type="email"
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="candidate@example.com or recruiter@example.com"
-                        className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                        placeholder="you@example.com"
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                        PASSWORD CREDENTIAL *
+                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                        Password
                     </label>
                     <input
                         type="password"
                         required
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        placeholder="••••••••••••"
-                        className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                        placeholder="Enter your password"
+                        className="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                     />
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-on-surface-variant pt-1 font-mono">
+                <div className="flex items-center justify-between text-xs text-gray-600 pt-1">
                     <label className="flex items-center gap-2 cursor-pointer select-none">
                         <input
                             type="checkbox"
                             defaultChecked
-                            className="w-3.5 h-3.5 border border-black/30 rounded-none accent-canvas-blueprint cursor-pointer"
+                            className="w-4 h-4 rounded border-gray-300 text-blue-600 accent-blue-600 cursor-pointer"
                         />
-                        <span>PERSIST SESSION LOCAL</span>
+                        <span>Remember me</span>
                     </label>
-                    <span className="text-canvas-blueprint font-bold border border-canvas-blueprint/20 px-1.5 py-0.5 bg-blue-50 text-[11px]">
-                        256-BIT ENCRYPTED
+                    <span className="text-gray-400">
+                        256-bit encrypted
                     </span>
                 </div>
 
                 {error && (
-                    <div className="border border-red-500 bg-red-50 p-3.5 text-red-700 text-xs font-bold uppercase">
-                        [AUTHENTICATION FAULT] {error}
+                    <div className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-red-700 text-xs font-medium">
+                        {error}
                     </div>
                 )}
 
-                <div className="pt-3">
+                <div className="pt-2">
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-canvas-blueprint text-white py-3.5 px-6 font-bold uppercase text-xs sm:text-sm border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer flex items-center justify-center gap-2 shadow-[3px_3px_0px_#0A0A0A] disabled:opacity-50"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl font-semibold text-sm transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                     >
-                        <span>
-                            {loading ? '[ VERIFYING CREDENTIALS... ]' : '[ SIGN IN TO CONSOLE → ]'}
-                        </span>
+                        {loading ? 'Signing In...' : 'Sign In →'}
                     </button>
                 </div>
             </form>
 
             {/* Quick Demo Credentials Footer */}
-            <div className="mt-6 pt-3 border-t border-black/10 flex flex-wrap items-center justify-between gap-2 text-[11px] text-outline font-mono">
-                <span>DEMO CANDIDATE: student@example.com / Password123!</span>
-                <span>DEMO RECRUITER: recruiter@example.com / Password123!</span>
+            <div className="mt-6 pt-4 border-t border-gray-100 flex flex-col gap-1 text-xs text-gray-400 text-center">
+                <span>Demo Student: student@example.com / Password123!</span>
+                <span>Demo Recruiter: recruiter@example.com / Password123!</span>
             </div>
         </div>
     );

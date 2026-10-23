@@ -2,49 +2,47 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const UpskillHeader = ({
-    moduleRef = 'CURR-04',
-    moduleTopic = 'ORCHESTRATION',
+    moduleRef = 'Module 1',
+    moduleTopic = 'System Architecture',
     isCompleted = false
 }) => {
     const navigate = useNavigate();
 
     return (
-        <header className="fixed top-0 left-0 w-full z-50 bg-surface-container-lowest border-b border-black/15 select-none font-mono" id="UpskillHeader">
+        <header className="fixed top-0 left-0 w-full z-50 bg-white border-b border-gray-200 select-none font-sans" id="UpskillHeader">
             <div className="h-16 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <span className="text-canvas-blueprint font-bold text-base">+</span>
-                    <span className="text-sm sm:text-base font-bold text-ink-primary uppercase tracking-tight truncate">
-                        SKILLFORGE // ADAPTIVE CURRICULUM READER
+                    <span className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                        SF
                     </span>
-                    <span className="border border-black/15 bg-surface-container-low px-2 py-0.5 text-xs font-bold text-canvas-blueprint uppercase hidden md:inline-block">
-                        [ SYSTEM STATUS: ACTIVE ]
+                    <span className="text-base font-bold text-gray-900 tracking-tight">
+                        SkillForge
+                    </span>
+                    <span className="hidden md:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                        Learning Center
                     </span>
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="hidden lg:flex items-center gap-2 border-r border-black/15 pr-4 text-xs font-bold">
-                        <span className="text-outline uppercase">MODULE:</span>
-                        <span className="text-canvas-blueprint">
-                            [ {moduleRef} // {moduleTopic?.toUpperCase() || 'CURRICULUM'} ]
+                    <div className="hidden lg:flex items-center gap-2 border-r border-gray-200 pr-4 text-xs">
+                        <span className="font-semibold text-gray-900">
+                            {moduleRef} • {moduleTopic}
                         </span>
-                        <span className={`px-1.5 py-0.5 border text-[11px] uppercase ml-1 ${
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ml-1 ${
                             isCompleted
-                                ? 'bg-blue-50 border-canvas-blueprint text-canvas-blueprint'
-                                : 'bg-surface border-black/15 text-outline'
+                                ? 'bg-green-50 text-green-700 border border-green-200'
+                                : 'bg-gray-100 text-gray-600'
                         }`}>
-                            {isCompleted ? 'COMPLETED' : 'IN TRAINING'}
+                            {isCompleted ? 'Completed' : 'In Progress'}
                         </span>
                     </div>
 
                     <button
                         onClick={() => navigate('/student/dashboard')}
-                        className="border border-black/25 bg-surface-container-lowest px-3 py-1.5 text-xs text-ink-primary uppercase hover:bg-black hover:text-white transition-none cursor-pointer font-bold flex items-center gap-1"
+                        className="px-3.5 py-1.5 rounded-lg border border-gray-300 bg-white text-xs text-gray-700 font-semibold hover:bg-gray-50 transition-colors cursor-pointer flex items-center gap-1"
                     >
-                        <span>[ ← RETURN TO DASHBOARD ]</span>
+                        <span>← Return to Dashboard</span>
                     </button>
-                    <div className="w-8 h-8 bg-canvas-blueprint flex items-center justify-center shrink-0 text-white font-bold text-xs">
-                        U
-                    </div>
                 </div>
             </div>
         </header>

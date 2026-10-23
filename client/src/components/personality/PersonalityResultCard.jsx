@@ -5,87 +5,83 @@ const PersonalityResultCard = ({ result, onProceed }) => {
 
     const paceDetails = {
         fast: {
-            title: 'ACCELERATED PACING CADENCE',
-            badge: 'VELOCITY: HIGH',
-            desc: 'Your profile exhibits rapid concept ingestion and proactive problem decomposition. Curriculum modules will deploy compressed theoretical review intervals and high-complexity synthesis challenges.'
+            title: 'Accelerated Learning Cadence',
+            badge: 'Fast Pace',
+            desc: 'You quickly grasp new technical concepts and prefer diving straight into hands-on implementation. We will recommend advanced challenge problems with concise, high-density theoretical summaries.'
         },
         average: {
-            title: 'BALANCED EXECUTION CADENCE',
-            badge: 'VELOCITY: OPTIMAL',
-            desc: 'Your profile demonstrates methodical execution, balanced between structured preparation and pragmatic delivery. Modules are calibrated for consistent theoretical reinforcement and applied sprints.'
+            title: 'Balanced Learning Cadence',
+            badge: 'Optimal Pace',
+            desc: 'You balance theoretical understanding with practical application. We will recommend learning modules that combine clear architectural explanations with targeted coding exercises.'
         },
         slow: {
-            title: 'FOUNDATIONAL DEPTH CADENCE',
-            badge: 'VELOCITY: FOUNDATIONAL',
-            desc: 'Your profile benefits from thorough concept grounding and detailed architectural walkthroughs. Curriculum modules will emphasize deep fundamentals and progressive milestones.'
+            title: 'Foundational Depth Cadence',
+            badge: 'In-Depth Pace',
+            desc: 'You prefer a thorough, step-by-step breakdown of fundamental concepts before tackling complex implementations. We will recommend foundational guides and progressive milestones.'
         }
     };
 
     const activePace = paceDetails[pace] || paceDetails.average;
 
     return (
-        <div className="w-full max-w-3xl mx-auto space-y-6 font-mono select-none" id="PersonalityResultCard">
-            {/* Top Specification Tracker Banner */}
-            <div className="border border-black/20 bg-surface-container-lowest p-4 sm:p-5 flex flex-wrap items-center justify-between gap-2 shadow-[2px_2px_0px_#1D52B8]">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase text-canvas-blueprint">
-                    <span>[+]</span>
-                    <span>[ SYNTHESIS COMPLETE // PSYCHOMETRIC CALIBRATION REPORT ]</span>
-                </div>
-                <div className="text-xs text-outline font-bold">
-                    STAGE: CALIBRATION COMPLETED
-                </div>
-            </div>
-
-            {/* Cobalt Blue Result Highlight Card */}
-            <div className="bg-canvas-blueprint text-white border border-primary p-6 sm:p-8 shadow-[4px_4px_0px_#0A0A0A]">
-                <div className="flex items-center justify-between border-b border-white/20 pb-3 mb-5">
-                    <span className="text-xs uppercase tracking-wider text-white font-bold">
-                        [ SYSTEM SYNTHESIS REPORT // PSYCHOMETRIC CALIBRATION ]
+        <div className="w-full max-w-3xl mx-auto space-y-6 font-sans select-none" id="PersonalityResultCard">
+            {/* Main Result Card */}
+            <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-10 shadow-sm space-y-6">
+                <div className="text-center sm:text-left border-b border-gray-100 pb-5">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200 mb-2">
+                        Assessment Complete
                     </span>
-                    <span className="bg-white/10 px-2.5 py-0.5 text-xs border border-white/30 uppercase font-bold text-green-300">
-                        {activePace.badge}
-                    </span>
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-2">
+                        Your Personalized Learning Profile
+                    </h1>
+                    <p className="text-sm text-gray-500 leading-relaxed">
+                        Based on your responses, we have customized your learning curriculum and assessment cadence.
+                    </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-                    <div className="border border-white/20 bg-white/5 p-4">
-                        <div className="text-xs text-white/70 uppercase">AGGREGATE PSYCHOMETRIC SCORE</div>
-                        <div className="text-3xl sm:text-4xl text-white font-bold mt-1 tracking-tight">
-                            {result?.score ?? '--'} <span className="text-lg text-white/60 font-normal">/ 28 PTS</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="bg-gray-50 rounded-2xl border border-gray-200 p-5">
+                        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                            Assessment Score
+                        </div>
+                        <div className="text-3xl sm:text-4xl text-gray-900 font-bold mt-2 tracking-tight">
+                            {result?.score ?? '--'} <span className="text-sm text-gray-400 font-normal">/ 28</span>
                         </div>
                     </div>
 
-                    <div className="border border-white/20 bg-white/5 p-4">
-                        <div className="text-xs text-white/70 uppercase">CALIBRATED LEARNING VELOCITY</div>
-                        <div className="text-3xl sm:text-4xl text-green-300 font-bold mt-1 uppercase tracking-tight">
-                            {result?.learning_level || 'AVERAGE'}
+                    <div className="bg-blue-50/50 rounded-2xl border border-blue-100 p-5">
+                        <div className="text-xs font-semibold text-blue-700 uppercase tracking-wider">
+                            Recommended Pace
+                        </div>
+                        <div className="text-3xl sm:text-4xl text-blue-700 font-bold mt-2 uppercase tracking-tight">
+                            {result?.learning_level || 'Balanced'}
                         </div>
                     </div>
                 </div>
 
-                <div className="border border-white/20 bg-white/5 p-4">
-                    <div className="font-bold text-xs uppercase text-white mb-1">
+                <div className="bg-gray-50 rounded-2xl border border-gray-200 p-6">
+                    <h3 className="font-bold text-base text-gray-900 mb-2">
                         {activePace.title}
-                    </div>
-                    <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-mono">
+                    </h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
                         {activePace.desc}
                     </p>
                 </div>
-            </div>
 
-            {/* Action Return Container */}
-            <div className="bg-surface-container-lowest border border-black/20 p-6 shadow-[4px_4px_0px_#0A0A0A] flex flex-wrap items-center justify-between gap-4">
-                <div className="text-xs sm:text-sm text-on-surface-variant font-mono">
-                    Diagnostic telemetry has been appended to your candidate verification report.
+                {/* Actions */}
+                <div className="pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
+                    <span className="text-xs text-gray-500">
+                        Saved to your candidate profile
+                    </span>
+
+                    <button
+                        type="button"
+                        onClick={onProceed}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer"
+                    >
+                        Go to Candidate Dashboard →
+                    </button>
                 </div>
-
-                <button
-                    type="button"
-                    onClick={onProceed}
-                    className="bg-canvas-blueprint text-white px-8 py-3.5 text-xs sm:text-sm uppercase tracking-wider font-bold border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer shadow-[3px_3px_0px_#0A0A0A]"
-                >
-                    [ PROCEED TO CANDIDATE CONSOLE → ]
-                </button>
             </div>
         </div>
     );

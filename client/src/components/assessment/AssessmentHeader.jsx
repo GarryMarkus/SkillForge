@@ -1,60 +1,56 @@
 import React from 'react';
-import { DecryptedText, MagneticButton } from '../ui/animations';
 
 const AssessmentHeader = ({
-    examId = 'SF-2026-DISTRIBUTED-09',
+    examId = 'SF-2026-09',
     currentQuestion = 0,
     totalQuestions = 5,
-    formattedTime = '[ 18:42 ]',
+    formattedTime = '18:42',
     onAbort
 }) => {
+    const cleanTime = String(formattedTime).replace(/[[\]]/g, '').trim();
+
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-black/15 select-none font-mono" id="AssessmentHeader">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 font-sans shadow-xs" id="AssessmentHeader">
             <div className="h-16 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                    <span className="text-canvas-blueprint font-bold text-base">+</span>
-                    <span className="text-sm font-bold text-ink-primary uppercase tracking-tight truncate">
-                        <DecryptedText text="SKILLFORGE // PROCTOR RUNNER" animateOn="mount" speed={25} />
+                    <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-xs">
+                        S
+                    </div>
+                    <span className="text-sm sm:text-base font-bold text-gray-900 tracking-tight truncate">
+                        Practical Skill Evaluation
                     </span>
-                    <span className="border border-black/15 bg-surface-container-low px-2 py-0.5 text-xs text-outline font-bold hidden md:inline-block">
-                        EXAM: {examId}
+                    <span className="px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-500 text-xs font-medium hidden md:inline-block">
+                        Session: {examId}
                     </span>
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="px-3 py-1 bg-surface-container border border-black/15 text-xs font-bold whitespace-nowrap">
-                        <span className="text-on-surface-variant">QUESTION:</span>{' '}
-                        <span className="text-canvas-blueprint font-bold">
-                            [ {String(currentQuestion + 1).padStart(2, '0')} / {String(totalQuestions).padStart(2, '0')} ]
-                        </span>
+                    <div className="px-3.5 py-1.5 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold whitespace-nowrap">
+                        Question {currentQuestion + 1} of {totalQuestions}
                     </div>
 
-                    <div className="px-3.5 py-1 bg-ink-primary text-white border border-ink-primary text-xs font-bold flex items-center gap-2 shadow-[2px_2px_0px_#1D52B8] whitespace-nowrap">
-                        <span className="inline-block w-2 h-2 bg-red-500 animate-pulse"></span>
-                        <span className="hidden sm:inline">REMAINING:</span>
-                        <span className="font-bold text-sm tracking-wider">
-                            {formattedTime}
+                    <div className="px-3.5 py-1.5 rounded-full bg-gray-900 text-white text-xs font-semibold flex items-center gap-2 whitespace-nowrap shadow-xs">
+                        <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span className="hidden sm:inline">Time Remaining:</span>
+                        <span className="font-bold font-mono tracking-wider">
+                            {cleanTime}
                         </span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs">
-                    <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 border border-green-600/30 bg-green-50 text-green-800 font-bold">
-                        <span className="w-1.5 h-1.5 bg-green-600 inline-block"></span>
-                        <span>
-                            <DecryptedText text="[ HARDWARE LOCK: ENGAGED ]" animateOn="mount" speed={30} />
-                        </span>
+                    <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        <span>Proctoring Active</span>
                     </div>
 
-                    <MagneticButton strength={0.15} maxDisplacement={5}>
-                        <button
-                            onClick={onAbort}
-                            className="px-3 py-1.5 border border-red-300 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white uppercase transition-none font-bold cursor-pointer"
-                            type="button"
-                        >
-                            [ ABORT EXAM ]
-                        </button>
-                    </MagneticButton>
+                    <button
+                        onClick={onAbort}
+                        className="px-3.5 py-1.5 rounded-xl border border-gray-200 hover:border-red-200 text-gray-600 hover:text-red-600 font-semibold transition-colors cursor-pointer text-xs"
+                        type="button"
+                    >
+                        Exit Assessment
+                    </button>
                 </div>
             </div>
         </header>

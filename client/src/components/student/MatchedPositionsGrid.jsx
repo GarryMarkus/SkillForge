@@ -18,105 +18,114 @@ const MatchedPositionsGrid = ({
     });
 
     return (
-        <section className="border border-black/20 bg-canvas-light flex flex-col font-mono shadow-[4px_4px_0px_#0A0A0A]" id="MatchedPositionsGrid">
-            <div className="p-4 sm:p-6 border-b border-black/15 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-surface-container-low">
-                <div className="flex items-center gap-2 font-bold text-sm text-ink-primary">
-                    <span className="text-canvas-blueprint font-bold">[#]</span>
-                    <span>[ REQUISITION MATCH ENGINE // TF-IDF COSINE SIMILARITY ]</span>
+        <section className="bg-white rounded-2xl border border-gray-100 flex flex-col font-sans shadow-sm overflow-hidden" id="MatchedPositionsGrid">
+            {/* Header & Filter Controls */}
+            <div className="p-5 sm:p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h3 className="font-bold text-lg text-gray-900 tracking-tight">
+                        Matched Engineering Roles
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-0.5">
+                        Opportunities matched directly to your verified technical strengths
+                    </p>
                 </div>
+
+                {/* Filter Pills */}
                 <div className="flex items-center gap-2 text-xs">
                     <button
                         onClick={() => setFilterMode('ALL')}
-                        className={`px-3 py-1.5 uppercase font-bold cursor-pointer transition-none ${
+                        className={`px-3.5 py-1.5 rounded-full font-semibold cursor-pointer transition-all ${
                             filterMode === 'ALL' 
-                                ? 'bg-canvas-blueprint text-white border border-canvas-blueprint' 
-                                : 'bg-surface-container-lowest text-ink-primary border border-black/20 hover:bg-black hover:text-white'
+                                ? 'bg-blue-600 text-white shadow-xs' 
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                         type="button"
                     >
-                        [ALL ROLES]
+                        All Roles
                     </button>
                     <button
                         onClick={() => setFilterMode('MATCH_85')}
-                        className={`px-3 py-1.5 uppercase font-bold cursor-pointer transition-none ${
+                        className={`px-3.5 py-1.5 rounded-full font-semibold cursor-pointer transition-all ${
                             filterMode === 'MATCH_85' 
-                                ? 'bg-canvas-blueprint text-white border border-canvas-blueprint' 
-                                : 'bg-surface-container-lowest text-ink-primary border border-black/20 hover:bg-black hover:text-white'
+                                ? 'bg-blue-600 text-white shadow-xs' 
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                         type="button"
                     >
-                        [MATCH &gt; 85%]
+                        Top Matches (85%+)
                     </button>
                     <button
                         onClick={() => setFilterMode('APPLIED')}
-                        className={`px-3 py-1.5 uppercase font-bold cursor-pointer transition-none ${
+                        className={`px-3.5 py-1.5 rounded-full font-semibold cursor-pointer transition-all ${
                             filterMode === 'APPLIED' 
-                                ? 'bg-canvas-blueprint text-white border border-canvas-blueprint' 
-                                : 'bg-surface-container-lowest text-ink-primary border border-black/20 hover:bg-black hover:text-white'
+                                ? 'bg-blue-600 text-white shadow-xs' 
+                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                         type="button"
                     >
-                        [APPLIED ({myApplications.length})]
+                        Applied ({myApplications.length})
                     </button>
                 </div>
             </div>
 
-            {/* Clean Data Table */}
+            {/* Clean Modern Data Table */}
             <div className="w-full overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                <table className="w-full text-left border-collapse text-sm">
                     <thead>
-                        <tr className="bg-surface-container text-xs text-on-surface-variant uppercase border-b border-black/15">
-                            <th className="p-3.5 sm:p-4 border-r border-black/15 font-bold">MATCH SCORE</th>
-                            <th className="p-3.5 sm:p-4 border-r border-black/15 font-bold">TARGET DESIGNATION</th>
-                            <th className="p-3.5 sm:p-4 border-r border-black/15 font-bold">COMPANY</th>
-                            <th className="p-3.5 sm:p-4 border-r border-black/15 font-bold">DOMAIN</th>
-                            <th className="p-3.5 sm:p-4 border-r border-black/15 font-bold">REQUIRED STACK</th>
-                            <th className="p-3.5 sm:p-4 font-bold text-right">ACTION</th>
+                        <tr className="bg-gray-50/70 text-xs text-gray-500 uppercase border-b border-gray-100 font-semibold">
+                            <th className="py-3 px-5">Match Fit</th>
+                            <th className="py-3 px-5">Role &amp; Company</th>
+                            <th className="py-3 px-5">Category</th>
+                            <th className="py-3 px-5">Compensation</th>
+                            <th className="py-3 px-5 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-black/10 text-ink-primary">
+                    <tbody className="divide-y divide-gray-100 text-gray-900">
                         {filteredJobs.length === 0 ? (
                             <tr>
-                                <td colSpan="6" className="p-8 text-center text-outline italic">
-                                    No matched requisitions found for the selected filter.
+                                <td colSpan="5" className="py-12 px-5 text-center text-gray-400">
+                                    No open roles match the current filter selection.
                                 </td>
                             </tr>
                         ) : (
-                            filteredJobs.map(job => {
+                            filteredJobs.map((job) => {
                                 const applied = hasApplied(job.id);
-                                const matchPercent = typeof job.match === 'number' ? Math.round(job.match) : 92;
+                                const matchScore = typeof job.match === 'number' ? Math.round(job.match) : 92;
+                                const isApplying = applyingTo === job.id;
+
                                 return (
-                                    <tr key={job.id} className="hover:bg-surface-container-low transition-none">
-                                        <td className="p-3.5 sm:p-4 border-r border-black/15 font-bold text-canvas-blueprint whitespace-nowrap text-sm sm:text-base">
-                                            {matchPercent}% MATCH
-                                        </td>
-                                        <td className="p-3.5 sm:p-4 border-r border-black/15 font-bold text-ink-primary">
-                                            {job.title?.toUpperCase()}
-                                        </td>
-                                        <td className="p-3.5 sm:p-4 border-r border-black/15 text-on-surface-variant font-medium">
-                                            {job.company_name || 'Enterprise Client'}
-                                        </td>
-                                        <td className="p-3.5 sm:p-4 border-r border-black/15 whitespace-nowrap">
-                                            <span className="border border-black/15 px-2 py-0.5 text-xs bg-surface-container">
-                                                {job.category || 'REMOTE_GLOBAL'}
+                                    <tr key={job.id} className="hover:bg-gray-50/60 transition-colors">
+                                        <td className="py-4 px-5 whitespace-nowrap">
+                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                {matchScore}% Fit
                                             </span>
                                         </td>
-                                        <td className="p-3.5 sm:p-4 border-r border-black/15 text-xs text-on-surface-variant">
-                                            {job.skills_required || 'Python, Django, React'}
+                                        <td className="py-4 px-5">
+                                            <div className="font-bold text-gray-900">{job.title}</div>
+                                            <div className="text-xs text-gray-500">{job.company_name || 'Tech Partner Team'}</div>
                                         </td>
-                                        <td className="p-3.5 sm:p-4 text-right whitespace-nowrap">
+                                        <td className="py-4 px-5 text-gray-600 text-xs">
+                                            <span className="px-2 py-0.5 rounded-md bg-gray-100 font-medium">
+                                                {job.category || 'Software Engineering'}
+                                            </span>
+                                        </td>
+                                        <td className="py-4 px-5 whitespace-nowrap font-semibold text-gray-900">
+                                            ${Number(job.budget_amount || 135000).toLocaleString()} <span className="text-xs text-gray-400 font-normal">/ yr</span>
+                                        </td>
+                                        <td className="py-4 px-5 text-right whitespace-nowrap">
                                             {applied ? (
-                                                <span className="inline-block border border-primary-container bg-primary-fixed/30 text-primary-container px-3 py-1.5 text-xs uppercase font-bold">
-                                                    [ DISPATCHED ✓ ]
+                                                <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 px-3 py-1.5 rounded-lg bg-emerald-50">
+                                                    <span className="material-symbols-outlined text-[16px]">check</span>
+                                                    Applied
                                                 </span>
                                             ) : (
                                                 <button
                                                     onClick={() => onApply(job.id)}
-                                                    disabled={applyingTo === job.id}
-                                                    className="bg-surface-container-lowest text-canvas-blueprint border border-canvas-blueprint hover:bg-canvas-blueprint hover:text-white px-3.5 py-1.5 text-xs uppercase font-bold transition-none cursor-pointer disabled:opacity-50"
-                                                    type="button"
+                                                    disabled={isApplying}
+                                                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
                                                 >
-                                                    {applyingTo === job.id ? '[ DISPATCHING... ]' : '[ DISPATCH PROFILE ]'}
+                                                    {isApplying ? 'Submitting...' : 'Apply with Profile'}
                                                 </button>
                                             )}
                                         </td>
@@ -126,11 +135,6 @@ const MatchedPositionsGrid = ({
                         )}
                     </tbody>
                 </table>
-            </div>
-
-            <div className="px-4 py-2.5 border-t border-black/15 bg-surface-container-low flex justify-between items-center text-xs text-outline font-medium">
-                <span>SHOWING {filteredJobs.length} OF {jobs.length} REQUISITIONS</span>
-                <span>DISPATCH ENGINE ACTIVE</span>
             </div>
         </section>
     );

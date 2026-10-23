@@ -221,7 +221,7 @@ const ClientDashboard = () => {
         : ["PYTHON", "FASTAPI", "DOCKER", "KUBERNETES", "POSTGRESQL_INDEXING", "REDIS"];
 
     return (
-        <div className="bg-canvas-light text-ink-primary font-mono antialiased select-none min-h-screen flex flex-col">
+        <div className="bg-[#FAFAFA] text-gray-900 font-sans antialiased min-h-screen flex flex-col">
             {/* Top Enterprise Console Header with Integrated Metric Ribbon */}
             <ClientHeader
                 companyName={companyName}
@@ -230,12 +230,12 @@ const ClientDashboard = () => {
                 jobsCount={jobs.length}
                 totalApplicantsCount={totalApplicantsCount}
                 verifiedTalentIndex="96.2%"
-                timeToShortlist="1.4 DAYS"
+                timeToShortlist="1.4 Days"
                 onLogout={handleLogout}
             />
 
             {/* Main Console Workspace */}
-            <main className="w-full pt-52 sm:pt-48 bg-canvas-light min-h-screen flex-1 flex flex-col justify-between">
+            <main className="w-full pt-32 bg-[#FAFAFA] min-h-screen flex-1 flex flex-col justify-between">
                 <div>
                     {/* Requisition Deployment Action Bar */}
                     <RequisitionActionBar

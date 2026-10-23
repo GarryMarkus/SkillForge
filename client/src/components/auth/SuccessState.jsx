@@ -38,30 +38,30 @@ const SuccessState = () => {
     };
 
     return (
-        <div className="w-full border border-black/20 bg-surface-container-lowest p-space-lg shadow-[4px_4px_0px_#1D52B8] font-mono text-center flex flex-col items-center gap-space-md">
-            <div className="border border-primary-container bg-primary-fixed/30 text-primary-container px-space-md py-1 text-label-md font-bold uppercase">
-                [+] SYSTEM_PROVISIONED: ACCOUNT_INITIALIZED
+        <div className="w-full bg-white rounded-2xl border border-gray-200 p-8 sm:p-12 shadow-lg font-sans text-center flex flex-col items-center gap-5">
+            <div className="w-14 h-14 rounded-full bg-green-50 border border-green-200 text-green-600 flex items-center justify-center text-2xl font-bold">
+                ✓
             </div>
 
-            <div className="space-y-1">
-                <h2 className="text-headline-sm font-bold uppercase text-on-surface">
-                    WELCOME TO SKILLFORGE ENTERPRISE
+            <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-gray-900">
+                    Welcome to SkillForge!
                 </h2>
-                <p className="text-body-sm text-secondary max-w-md mx-auto">
-                    Your cryptographic credentials have been registered. The system is routing you to the intake terminal.
+                <p className="text-sm text-gray-500 max-w-sm mx-auto leading-relaxed">
+                    Your account has been created successfully. We're setting up your workspace now.
                 </p>
             </div>
 
-            <div className="border border-black/15 bg-surface px-space-md py-space-xs text-label-sm font-bold text-on-surface">
-                AUTO_ROUTING_IN: [ {count} SECONDS ]
+            <div className="text-xs text-gray-400">
+                Redirecting automatically in {count} seconds...
             </div>
 
             <button
                 type="button"
                 onClick={handleProceedNow}
-                className="bg-primary-container text-on-primary py-2 px-space-lg font-bold uppercase text-label-md border border-primary-container hover:bg-primary shadow-[2px_2px_0px_#191C1D] cursor-pointer"
+                className="bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-6 rounded-xl font-semibold text-xs sm:text-sm transition-colors shadow-sm cursor-pointer"
             >
-                [ PROCEED_TO_INTAKE_CONSOLE_NOW -&gt; ]
+                Continue to Setup Now →
             </button>
         </div>
     );

@@ -41,10 +41,10 @@ const LandingPage = () => {
     };
 
     return (
-        <div className="w-full bg-canvas-light text-ink-primary font-mono min-h-screen selection:bg-canvas-blueprint selection:text-white">
+        <div className="w-full bg-[#FAFAFA] text-gray-900 font-sans min-h-screen selection:bg-blue-100 selection:text-blue-900">
             <Navbar />
 
-            <main className="w-full pt-20 sm:pt-24 bg-canvas-light min-h-[calc(100vh-48px)]">
+            <main className="w-full pt-20 sm:pt-24 bg-[#FAFAFA] min-h-[calc(100vh-48px)]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
                     <div className="flex flex-col w-full">
                         {/* Empirical Skill Verification Hero Section */}

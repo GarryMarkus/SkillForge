@@ -1,73 +1,61 @@
 import React from 'react';
-import { DecryptedText } from '../ui/animations';
 
 const QuestionWorkspace = ({ question, questionIndex = 0 }) => {
     if (!question) return null;
 
-    const sectionTitle = question.section || 'SYSTEM CONCURRENCY & INDEXING';
-    const weight = question.weight || '25 PTS';
-    const taxonomy = question.taxonomy || 'SYNTHESIS';
-    const title = question.title || question.question || question.text || 'SCENARIO SPECIFICATION';
-    const description = question.description || 'Analyze the technical scenario below and identify the architecturally optimal resolution vector.';
+    const sectionTitle = question.section || 'System Architecture & Problem Solving';
+    const weight = question.weight || '25 Points';
+    const taxonomy = question.taxonomy || 'Practical Application';
+    const title = question.title || question.question || question.text || 'Technical Scenario';
+    const description = question.description || 'Review the scenario below and select the most appropriate solution based on standard engineering best practices.';
     const codeSnippet = question.code_snippet;
 
     return (
-        <div className="bg-surface-container-lowest border border-black/20 p-6 sm:p-8 shadow-[4px_4px_0px_#0A0A0A] font-mono select-none" id="QuestionWorkspace">
-            {/* Question Header Coordinates */}
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/15 pb-4 mb-4">
-                <span className="text-xs text-canvas-blueprint font-bold tracking-wider uppercase">
-                    <DecryptedText 
-                        key={`sec-${questionIndex}`}
-                        text={`[ SECTION ${String(questionIndex + 1).padStart(2, '0')} // ${sectionTitle} ]`} 
-                        animateOn="mount" 
-                        speed={20} 
-                    />
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 sm:p-8 shadow-sm font-sans" id="QuestionWorkspace">
+            {/* Question Header Information */}
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4 mb-5">
+                <span className="text-xs text-blue-600 font-bold uppercase tracking-wider">
+                    Section {questionIndex + 1} — {sectionTitle}
                 </span>
-                <div className="flex items-center gap-3 text-xs text-on-surface-variant font-bold">
-                    <span className="bg-surface-container px-2 py-0.5 border border-black/15 text-ink-primary">
-                        WEIGHT: {weight}
+                <div className="flex items-center gap-3 text-xs text-gray-500 font-medium">
+                    <span className="bg-gray-100 px-2.5 py-1 rounded-md text-gray-700 font-semibold">
+                        {weight}
                     </span>
-                    <span className="text-black/30">|</span>
-                    <span className="text-outline uppercase">TAXONOMY: {taxonomy}</span>
+                    <span className="text-gray-300">·</span>
+                    <span>{taxonomy}</span>
                 </div>
             </div>
 
             {/* Problem Statement */}
             <div className="space-y-3 mb-6">
-                <h1 className="text-xl sm:text-2xl text-ink-primary uppercase font-bold tracking-tight leading-snug">
-                    <DecryptedText 
-                        key={`title-${questionIndex}`}
-                        text={title} 
-                        animateOn="mount" 
-                        speed={15} 
-                        maxIterations={5} 
-                    />
+                <h1 className="text-xl sm:text-2xl text-gray-900 font-bold tracking-tight leading-snug">
+                    {title}
                 </h1>
-                <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     {description}
                 </p>
             </div>
 
-            {/* Code Snippet Panel */}
+            {/* Clean Code Snippet Panel */}
             {codeSnippet && (
-                <div className="mt-4 bg-[#0A0A0A] text-[#EDEEEF] border border-black/40 shadow-[3px_3px_0px_#1D52B8]" id="CodeSnippetBox">
-                    <div className="bg-[#191C1D] text-[#EDEEEF] px-4 py-2 border-b border-[#3F4141] flex items-center justify-between text-xs font-bold">
+                <div className="mt-5 rounded-xl overflow-hidden border border-gray-200 bg-gray-900 text-gray-100" id="CodeSnippetBox">
+                    <div className="bg-gray-800 px-4 py-2 border-b border-gray-700 flex items-center justify-between text-xs text-gray-300 font-medium">
                         <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 bg-primary-fixed inline-block"></span>
-                            <span>[ ARCHITECTURE IMPLEMENTATION // PYTHON RUNTIME ]</span>
+                            <span className="w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+                            <span>Code Reference (Python)</span>
                         </div>
-                        <span className="text-white/60 font-mono text-[11px] uppercase">READ-ONLY BUFFER</span>
+                        <span className="text-gray-400 text-xs">Read-Only</span>
                     </div>
 
                     <div className="p-4 sm:p-5 overflow-x-auto text-left leading-relaxed">
-                        <pre className="font-mono text-xs sm:text-sm text-[#EDEEEF] m-0 whitespace-pre">
+                        <pre className="font-mono text-xs sm:text-sm text-emerald-300 m-0 whitespace-pre">
                             {codeSnippet}
                         </pre>
                     </div>
 
-                    <div className="bg-[#141617] px-4 py-1.5 border-t border-[#3F4141] flex items-center justify-between text-[#737784] text-xs">
-                        <span>AST PARSED // SYNTAX CONFIRMED</span>
-                        <span className="text-primary-fixed-dim">[ENCODING: UTF-8]</span>
+                    <div className="bg-gray-800/60 px-4 py-1.5 border-t border-gray-700 flex items-center justify-between text-gray-400 text-xs">
+                        <span>Standard Runtime Environment</span>
+                        <span>UTF-8</span>
                     </div>
                 </div>
             )}

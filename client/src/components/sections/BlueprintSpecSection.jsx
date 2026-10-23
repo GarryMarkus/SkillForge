@@ -1,159 +1,138 @@
 import React from 'react';
-import { CadGridBackground, DecryptedText, BorderBeam } from '../ui/animations';
+
+const workflowSteps = [
+    {
+        num: '1',
+        title: 'Intake & Code Analysis',
+        detail: 'Upload your resume or connect GitHub. We highlight real projects and actual code contributions.',
+        badge: 'Minutes'
+    },
+    {
+        num: '2',
+        title: 'Practical Assessment',
+        detail: 'Complete a brief 20-minute hands-on scenario tailored to real-world technical problems.',
+        badge: '20 Mins'
+    },
+    {
+        num: '3',
+        title: 'Verified Skill Score',
+        detail: 'Receive an authenticated skill certificate with clear feedback on your technical strengths.',
+        badge: 'Instant'
+    },
+    {
+        num: '4',
+        title: 'Direct Team Introductions',
+        detail: 'Connect with hiring managers looking for your exact abilities, skipping preliminary screening.',
+        badge: 'Direct'
+    }
+];
+
+const comparisons = [
+    {
+        aspect: 'Candidate Evaluation',
+        traditional: 'Keywords filtered through automated resume scrapers',
+        skillforge: 'Objective evaluation of actual problem-solving and code quality'
+    },
+    {
+        aspect: 'Hiring Decision Speed',
+        traditional: '4 to 8 weeks across multiple repetitive interview rounds',
+        skillforge: 'Fast-tracked directly to final cultural & team-fit conversations'
+    },
+    {
+        aspect: 'Candidate Feedback',
+        traditional: 'Generic automated rejection emails with zero insight',
+        skillforge: 'Comprehensive skill breakdown and actionable career recommendations'
+    },
+    {
+        aspect: 'Fairness & Bias',
+        traditional: 'Heavily biased toward elite university names and pedigree',
+        skillforge: '100% merit-based evaluation accessible to all self-taught and traditional talent'
+    }
+];
 
 const BlueprintSpecSection = () => {
     return (
-        <section className="w-full bg-canvas-blueprint text-on-primary font-mono py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border border-white/20 mb-12 sm:mb-16 shadow-[6px_6px_0px_#0A0A0A] relative overflow-hidden" id="BlueprintSection">
-            <CadGridBackground 
-                gridSize={40} 
-                crosshairSize={5} 
-                gridColor="rgba(255, 255, 255, 0.08)" 
-                crosshairColor="rgba(255, 255, 255, 0.25)" 
-                proximityColor="rgba(255, 255, 255, 0.15)" 
-                proximityCrosshairColor="#FFFFFF" 
-                interactive={true} 
-            />
-            <div className="flex flex-col gap-6 relative z-10">
-                {/* Blueprint Header Strip */}
-                <div className="border border-white/20 bg-primary/80 p-3 sm:p-4 flex flex-wrap items-center justify-between gap-2 text-xs">
-                    <div className="flex items-center gap-2">
-                        <span className="bg-white text-canvas-blueprint font-bold px-2 py-0.5">SCHEMATIC</span>
-                        <span className="tracking-wider uppercase text-white font-bold">
-                            ENGINEERING BLUEPRINT: MULTI-STAGE VERIFICATION PIPELINE
-                        </span>
-                    </div>
-                    <span className="bg-white/20 text-white px-2 py-0.5 font-bold uppercase border border-white/30">
-                        <DecryptedText text="[ STATUS: ACTIVE SPECIFICATION ]" animateOn="view" speed={25} />
+        <section className="w-full font-sans py-16 mb-16" id="BlueprintSection">
+            <div className="bg-white rounded-3xl border border-gray-100 p-8 sm:p-12 lg:p-16 shadow-sm flex flex-col gap-12">
+                {/* Header */}
+                <div className="text-center max-w-2xl mx-auto space-y-3">
+                    <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">
+                        Transparent Evaluation Flow
                     </span>
+                    <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-950 tracking-tight">
+                        How We Replace Resume Guesswork
+                    </h2>
+                    <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+                        A seamless, human-centric evaluation journey engineered to be fair, respectful, and crystal-clear.
+                    </p>
                 </div>
 
-                {/* Main Blueprint Split Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 border border-white/20 divide-y lg:divide-y-0 lg:divide-x divide-white/20 bg-primary/40">
-                    {/* Left Panel: CAD Flow Pipeline Graphic */}
-                    <div className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between gap-6 relative overflow-hidden">
-                        <BorderBeam size={28} duration={8} color="#FFFFFF" secondaryColor="rgba(255, 255, 255, 0)" borderWidth={1.5} />
-                        <div className="flex items-center justify-between border-b border-white/20 pb-2 text-xs relative z-10">
-                            <span className="font-bold tracking-wider text-white">[ PIPELINE STAGES: 01 THROUGH 04 ]</span>
-                            <span className="text-white/70">END-TO-END VERIFICATION</span>
+                {/* 4 Steps Horizontal Flow */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {workflowSteps.map((s) => (
+                        <div
+                            key={s.num}
+                            className="bg-gray-50/70 rounded-2xl p-6 sm:p-7 border border-gray-100 flex flex-col justify-between space-y-4 hover:bg-white hover:shadow-md transition-all"
+                        >
+                            <div className="flex items-center justify-between">
+                                <span className="w-9 h-9 rounded-xl bg-blue-600 text-white font-bold text-sm flex items-center justify-center">
+                                    {s.num}
+                                </span>
+                                <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700">
+                                    {s.badge}
+                                </span>
+                            </div>
+                            <div className="space-y-1.5">
+                                <h3 className="font-bold text-gray-900 text-base sm:text-lg">
+                                    {s.title}
+                                </h3>
+                                <p className="text-sm text-gray-600 leading-relaxed">
+                                    {s.detail}
+                                </p>
+                            </div>
                         </div>
+                    ))}
+                </div>
 
-                        {/* Inline Technical SVG Blueprint Schematic */}
-                        <div className="w-full py-2 overflow-hidden flex items-center justify-center">
-                            <svg className="w-full h-auto max-w-[500px] text-white" fill="none" viewBox="0 0 540 380" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                    <pattern height="20" id="cadGridClean" patternUnits="userSpaceOnUse" width="20">
-                                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="0.75"></path>
-                                    </pattern>
-                                </defs>
-                                <rect fill="url(#cadGridClean)" height="380" width="540"></rect>
-
-                                {/* Perimeter Registration Markers */}
-                                <path d="M 10 20 L 10 10 L 20 10" stroke="white" strokeWidth="1.5"></path>
-                                <path d="M 530 20 L 530 10 L 520 10" stroke="white" strokeWidth="1.5"></path>
-                                <path d="M 10 360 L 10 370 L 20 370" stroke="white" strokeWidth="1.5"></path>
-                                <path d="M 530 360 L 530 370 L 520 370" stroke="white" strokeWidth="1.5"></path>
-
-                                {/* Node 1: Ingestion Sources */}
-                                <rect fill="rgba(0,59,148,0.7)" height="60" stroke="white" strokeWidth="1.2" width="200" x="30" y="55"></rect>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="10" fontWeight="bold" x="42" y="75">[NODE 01: RAW INTAKE]</text>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="9" opacity="0.85" x="42" y="93">&gt; RESUME PDF (STRUCT)</text>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="9" opacity="0.85" x="42" y="105">&gt; GITHUB REPO REST API</text>
-                                <circle cx="230" cy="85" fill="white" r="3"></circle>
-
-                                {/* Connector 1 -> 2 */}
-                                <path d="M 230 85 L 290 85 L 290 140 L 320 140" stroke="white" strokeDasharray="3 3" strokeWidth="1.5"></path>
-                                <polygon fill="white" points="320,137 326,140 320,143"></polygon>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="8" opacity="0.7" x="240" y="78">JSON_AST</text>
-
-                                {/* Node 2: AI Diagnostic Node / AST */}
-                                <rect fill="rgba(0,59,148,0.9)" height="60" stroke="white" strokeWidth="1.5" width="190" x="320" y="115"></rect>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="10" fontWeight="bold" x="330" y="135">[NODE 02: AST &amp; CODE EVAL]</text>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="9" opacity="0.9" x="330" y="152">&gt; GEMINI PARSER ENGINE</text>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="9" opacity="0.9" x="330" y="164">&gt; CODE HEURISTIC VERIFY</text>
-                                <circle cx="415" cy="175" fill="white" r="3"></circle>
-
-                                {/* Connector 2 -> 3 */}
-                                <path d="M 415 175 L 415 220 L 260 220 L 260 245" stroke="white" strokeWidth="1.5"></path>
-                                <polygon fill="white" points="257,245 260,251 263,245"></polygon>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="8" opacity="0.7" x="280" y="214">EMBED_GRAPH</text>
-
-                                {/* Node 3: Proctor Telemetry Engine */}
-                                <rect fill="rgba(0,59,148,0.7)" height="55" stroke="white" strokeWidth="1.2" width="240" x="140" y="245"></rect>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="10" fontWeight="bold" x="152" y="265">[NODE 03: PROCTOR_TELEMETRY]</text>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="9" opacity="0.85" x="152" y="282">&gt; GAZE &amp; HARDWARE FOCUS LOCK</text>
-                                <text fill="white" fontFamily="Courier Prime" fontSize="9" opacity="0.85" x="152" y="293">&gt; 50-PT RISK HEURISTIC MONITOR</text>
-                                <circle cx="380" cy="272" fill="white" r="3"></circle>
-
-                                {/* Connector 3 -> 4 */}
-                                <path d="M 260 300 L 260 325" stroke="white" strokeWidth="1.5"></path>
-                                <polygon fill="white" points="257,325 260,331 263,325"></polygon>
-
-                                {/* Node 4: Final Output Hash */}
-                                <rect fill="white" height="40" stroke="white" strokeWidth="1.5" width="280" x="120" y="325"></rect>
-                                <text fill="#003b94" fontFamily="Courier Prime" fontSize="10" fontWeight="bold" x="135" y="342">[NODE 04: VERIFIED CREDENTIAL]</text>
-                                <text fill="#003b94" fontFamily="Courier Prime" fontSize="8.5" x="135" y="356">SCORE DOSSIER // DIRECT EMPLOYER SHORTLIST</text>
-                            </svg>
-                        </div>
-
-                        <div className="border-t border-white/20 pt-2 flex items-center justify-between text-xs text-white/80">
-                            <span>CRYPTOGRAPHIC INTEGRITY: CONFIRMED</span>
-                            <span className="bg-white/20 px-2 py-0.5 font-bold text-white">[PIPELINE READY]</span>
-                        </div>
+                {/* Modern Comparison Table */}
+                <div className="mt-4 pt-8 border-t border-gray-100">
+                    <div className="mb-6 text-center">
+                        <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                            Traditional Hiring vs SkillForge
+                        </h3>
                     </div>
 
-                    {/* Right Panel: Structured Specification Definitions */}
-                    <div className="lg:col-span-6 p-6 sm:p-8 flex flex-col justify-between gap-6">
-                        <div>
-                            <div className="flex items-center justify-between border-b border-white/20 pb-2 text-xs mb-4">
-                                <span className="font-bold tracking-wider text-white">[ SPEC_MATRIX: SYSTEM CAPABILITIES ]</span>
-                                <span className="text-white/70">ARCHITECTURAL GUARANTEES</span>
-                            </div>
-
-                            {/* Spec Rows Table */}
-                            <table className="w-full border-collapse border border-white/30 text-left text-sm">
-                                <tbody>
-                                    <tr className="border-b border-white/20 bg-white/10">
-                                        <td className="p-3 font-bold border-r border-white/20 w-12 text-center text-xs text-white">01</td>
-                                        <td className="p-3">
-                                            <div className="font-bold text-white">Multi-Modal Code &amp; Resume Ingestion</div>
-                                            <div className="text-xs text-white/80 mt-0.5">Dual-stream AST code and resume tokenization</div>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left border-collapse text-sm">
+                            <thead>
+                                <tr className="border-b border-gray-100 text-xs uppercase tracking-wider text-gray-500">
+                                    <th className="py-3 px-4 font-semibold">Evaluation Aspect</th>
+                                    <th className="py-3 px-4 font-semibold text-gray-400">Traditional Job Boards</th>
+                                    <th className="py-3 px-4 font-semibold text-blue-600">The SkillForge Way</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-gray-100">
+                                {comparisons.map((c, i) => (
+                                    <tr key={i} className="hover:bg-gray-50/50 transition-colors">
+                                        <td className="py-4 px-4 font-semibold text-gray-900 whitespace-nowrap">
+                                            {c.aspect}
+                                        </td>
+                                        <td className="py-4 px-4 text-gray-500">
+                                            <div className="flex items-center gap-2">
+                                                <span className="material-symbols-outlined text-rose-500 text-[18px]">close</span>
+                                                <span>{c.traditional}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-4 px-4 font-medium text-gray-900 bg-blue-50/30">
+                                            <div className="flex items-center gap-2 text-blue-900">
+                                                <span className="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span>
+                                                <span>{c.skillforge}</span>
+                                            </div>
                                         </td>
                                     </tr>
-                                    <tr className="border-b border-white/20">
-                                        <td className="p-3 font-bold border-r border-white/20 w-12 text-center text-xs text-white">02</td>
-                                        <td className="p-3">
-                                            <div className="font-bold text-white">Zero-Trust Browser Proctor Telemetry</div>
-                                            <div className="text-xs text-white/80 mt-0.5">Real-time webcam face-lock and tab focus monitoring</div>
-                                        </td>
-                                    </tr>
-                                    <tr className="border-b border-white/20 bg-white/10">
-                                        <td className="p-3 font-bold border-r border-white/20 w-12 text-center text-xs text-white">03</td>
-                                        <td className="p-3">
-                                            <div className="font-bold text-white">Vector-Space Candidate Ranking</div>
-                                            <div className="text-xs text-white/80 mt-0.5">Cosine similarity fit against production job requisitions</div>
-                                        </td>
-                                    </tr>
-                                    <tr className="border-b border-white/20">
-                                        <td className="p-3 font-bold border-r border-white/20 w-12 text-center text-xs text-white">04</td>
-                                        <td className="p-3">
-                                            <div className="font-bold text-white">Adaptive Upskilling Curricula</div>
-                                            <div className="text-xs text-white/80 mt-0.5">Personalized modules automatically targeting identified skill gaps</div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            {/* Mid-Table Tagline */}
-                            <div className="py-4 text-center italic text-sm text-white/90 border-b border-white/20">
-                                &ldquo;Engineered for empirical proof. Built to eliminate hiring guesswork.&rdquo;
-                            </div>
-                        </div>
-
-                        {/* Bottom Status Strip */}
-                        <div className="border border-white/30 p-2.5 text-xs text-center text-white/90 bg-primary/60 flex items-center justify-between">
-                            <span>SKILLFORGE VERIFICATION CORE</span>
-                            <span className="font-bold text-white">VERIFIED // ANTI-CHEAT COMPLIANT</span>
-                        </div>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

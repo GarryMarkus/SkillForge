@@ -41,11 +41,11 @@ const PersonalityTest = () => {
                     const data = await response.json();
                     setQuestions(Array.isArray(data) ? data : []);
                 } else {
-                    setError('Failed to retrieve psychometric questions from server.');
+                    setError('Failed to retrieve questions from the server.');
                 }
             } catch (err) {
                 console.error('Error fetching questions:', err);
-                setError('Network fault occurred while retrieving diagnostic telemetry.');
+                setError('A network error occurred while retrieving questions.');
             } finally {
                 setLoading(false);
             }
@@ -66,7 +66,7 @@ const PersonalityTest = () => {
 
     const handleAbort = () => {
         const confirmed = window.confirm(
-            '[SYSTEM_WARNING] Aborting psychometric diagnostic will discard unsaved responses. Return to dashboard?'
+            'Are you sure you want to leave? Your unsaved answers will be lost.'
         );
         if (confirmed) {
             if (document.fullscreenElement && document.exitFullscreen) {
@@ -101,7 +101,7 @@ const PersonalityTest = () => {
         const answeredCount = Object.keys(answers).length;
         if (questions.length > 0 && answeredCount < questions.length) {
             const confirmed = window.confirm(
-                `[PARTIAL_EVALUATION] You have answered ${answeredCount} of ${questions.length} questions. Submit anyway?`
+                `You have answered ${answeredCount} of ${questions.length} questions. Do you want to submit anyway?`
             );
             if (!confirmed) return;
         }
@@ -116,11 +116,11 @@ const PersonalityTest = () => {
                     document.exitFullscreen().catch(() => {});
                 }
             } else {
-                alert('[SUBMISSION_ERROR] Failed to record personality test telemetry.');
+                alert('Failed to record assessment responses. Please try again.');
             }
         } catch (err) {
             console.error('Submission error:', err);
-            alert('[NETWORK_FAULT] Failed to transmit psychometric answers.');
+            alert('A network error occurred while submitting your answers.');
         } finally {
             setIsSubmitting(false);
         }
@@ -128,14 +128,14 @@ const PersonalityTest = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex items-center justify-center p-4">
-                <div className="border border-black/20 bg-surface-container-lowest p-8 shadow-[4px_4px_0px_#1D52B8] text-center max-w-md w-full">
-                    <div className="w-3 h-3 bg-canvas-blueprint inline-block animate-pulse mb-3"></div>
-                    <div className="text-canvas-blueprint font-bold text-xs uppercase mb-1">
-                        [ INITIALIZING PSYCHOMETRIC NODE ]
+            <div className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 flex items-center justify-center p-4">
+                <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm text-center max-w-sm w-full space-y-3">
+                    <div className="w-8 h-8 rounded-full border-2 border-blue-600 border-t-transparent animate-spin mx-auto"></div>
+                    <div className="font-semibold text-sm text-gray-900">
+                        Loading Assessment
                     </div>
-                    <div className="text-xs text-on-surface-variant">
-                        Retrieving behavioral question bank...
+                    <div className="text-xs text-gray-500">
+                        Preparing your questions...
                     </div>
                 </div>
             </div>
@@ -144,7 +144,7 @@ const PersonalityTest = () => {
 
     if (result) {
         return (
-            <div className="min-h-screen bg-canvas-light font-mono text-ink-primary p-4 sm:p-8 flex items-center justify-center">
+            <div className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 p-4 sm:p-8 flex items-center justify-center">
                 <PersonalityResultCard
                     result={result}
                     onProceed={() => navigate('/student/dashboard')}
@@ -155,7 +155,7 @@ const PersonalityTest = () => {
 
     if (!started) {
         return (
-            <div className="min-h-screen bg-canvas-light font-mono text-ink-primary p-4 sm:p-8 flex items-center justify-center">
+            <div className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 p-4 sm:p-8 flex items-center justify-center">
                 <PersonalityIntroCard
                     onStart={handleStart}
                     onReturn={() => navigate('/student/dashboard')}
@@ -169,7 +169,7 @@ const PersonalityTest = () => {
     const canSubmit = Object.keys(answers).length > 0;
 
     return (
-        <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex flex-col select-none">
+        <div className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 flex flex-col select-none">
             <PersonalityHeader
                 currentIndex={currentIndex}
                 totalQuestions={questions.length}
@@ -177,10 +177,10 @@ const PersonalityTest = () => {
                 onAbort={handleAbort}
             />
 
-            <main className="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+            <main className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
                 {error && (
-                    <div className="mb-6 border border-red-500 bg-red-50 p-4 text-red-700 text-xs font-bold uppercase">
-                        <span>[TELEMETRY ERROR]:</span> {error}
+                    <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 text-xs font-medium">
+                        {error}
                     </div>
                 )}
 

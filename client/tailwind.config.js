@@ -8,10 +8,13 @@ export default {
   theme: {
     borderRadius: {
       'none': '0',
-      'sm': '2px',
-      DEFAULT: '2px',
-      'md': '4px',
-      'lg': '6px',
+      'sm': '4px',
+      DEFAULT: '8px',
+      'md': '10px',
+      'lg': '12px',
+      'xl': '16px',
+      '2xl': '20px',
+      '3xl': '24px',
       'full': '9999px',
     },
     extend: {
@@ -100,8 +103,8 @@ export default {
         'label-sm': ['9px', { lineHeight: '12px', letterSpacing: '0.10em', fontWeight: '700' }],
       },
       fontFamily: {
-        mono: ['"Courier Prime"', 'Consolas', '"Courier New"', 'monospace'],
-        sans: ['"Courier Prime"', 'Consolas', 'monospace'], // Default all text to monospace
+        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'Consolas', 'monospace'],
       },
       typography: (theme) => ({
         DEFAULT: {

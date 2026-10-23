@@ -75,7 +75,7 @@ const UpskillPage = () => {
         if (e) e.preventDefault();
         const trimmed = topicInput.trim();
         if (!trimmed) {
-            setErrorMessage('Please specify a target engineering topic.');
+            setErrorMessage('Please enter a topic you want to learn.');
             return;
         }
 
@@ -96,11 +96,11 @@ const UpskillPage = () => {
                 }
             } else {
                 const err = await res.json().catch(() => ({}));
-                setErrorMessage(err.error || 'Failed to synthesize upskill module.');
+                setErrorMessage(err.error || 'Failed to generate learning module.');
             }
         } catch (err) {
             console.error('Error generating module', err);
-            setErrorMessage('Network error during AI curriculum synthesis.');
+            setErrorMessage('Network error while generating curriculum.');
         } finally {
             setIsGenerating(false);
         }
@@ -121,33 +121,38 @@ const UpskillPage = () => {
 
     const metadata = parseMetadata(currentModule);
     const isCompleted = currentModule ? completedModuleIds.includes(currentModule.id) : false;
-    const moduleRef = currentModule ? `CURR-${String(currentModule.id).padStart(2, '0')}` : 'CURR-01';
+    const moduleRef = currentModule ? `Module ${currentModule.id}` : 'Module 1';
 
     return (
-        <div className="bg-canvas-light text-ink-primary font-mono antialiased selection:bg-canvas-blueprint selection:text-white min-h-screen flex flex-col">
-            {/* Top Minimalist Console Bar */}
+        <div className="bg-[#FAFAFA] text-gray-900 font-sans antialiased min-h-screen flex flex-col">
+            {/* Top Navigation */}
             <UpskillHeader
                 moduleRef={moduleRef}
-                moduleTopic={currentModule?.topic || 'ORCHESTRATION'}
+                moduleTopic={currentModule?.topic || 'Curriculum'}
                 isCompleted={isCompleted}
             />
 
             {/* Main Content Workspace */}
             <main className="w-full pt-20 sm:pt-24 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 flex-1 flex flex-col gap-6">
-                {/* Generation Drawer / Control Strip */}
+                {/* Generation Drawer */}
                 {showGenerator && (
-                    <section className="w-full border border-black/20 bg-surface-container-lowest p-5 sm:p-6 shadow-[4px_4px_0px_#1D52B8]">
-                        <div className="flex items-center justify-between border-b border-black/15 pb-3 mb-4">
-                            <div className="flex items-center gap-2 font-bold uppercase text-xs text-ink-primary">
-                                <span className="text-canvas-blueprint font-bold">+</span>
-                                <span>[ AI CURRICULUM SYNTHESIS ENGINE // TOPIC INPUT ]</span>
+                    <section className="w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                        <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                            <div>
+                                <h3 className="text-sm font-semibold text-gray-900">
+                                    Generate New Learning Guide
+                                </h3>
+                                <p className="text-xs text-gray-500">
+                                    Our AI creates an interactive guide tailored to your skill gaps
+                                </p>
                             </div>
                             {modules.length > 0 && (
                                 <button
                                     onClick={() => setShowGenerator(false)}
-                                    className="px-2.5 py-1 border border-black/20 hover:bg-black hover:text-white text-xs uppercase font-bold"
+                                    className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 text-sm font-semibold transition-colors"
+                                    aria-label="Close"
                                 >
-                                    [ESC]
+                                    ✕
                                 </button>
                             )}
                         </div>
@@ -157,33 +162,33 @@ const UpskillPage = () => {
                                 type="text"
                                 value={topicInput}
                                 onChange={(e) => setTopicInput(e.target.value)}
-                                placeholder="Enter engineering topic: e.g. Docker Containerization, PostgreSQL Indexing, Concurrency..."
+                                placeholder="Enter topic: e.g. Docker Containerization, PostgreSQL Indexing, Concurrency..."
                                 disabled={isGenerating}
-                                className="flex-1 px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                                className="flex-1 px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                             />
                             <button
                                 type="submit"
                                 disabled={isGenerating}
-                                className="bg-canvas-blueprint text-white px-6 py-2.5 font-bold uppercase text-xs sm:text-sm border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer whitespace-nowrap shadow-[2px_2px_0px_#0A0A0A] disabled:opacity-50"
+                                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm cursor-pointer whitespace-nowrap disabled:opacity-50"
                             >
-                                {isGenerating ? '[ SYNTHESIZING... ]' : '[ + GENERATE CURRICULUM SPEC → ]'}
+                                {isGenerating ? 'Generating Guide...' : '+ Generate Guide →'}
                             </button>
                         </form>
 
                         {errorMessage && (
-                            <p className="mt-2 text-red-600 text-xs font-bold uppercase">
-                                [FAULT] {errorMessage}
+                            <p className="mt-2 text-red-600 text-xs font-medium">
+                                {errorMessage}
                             </p>
                         )}
 
-                        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-on-surface-variant font-mono">
-                            <span className="font-bold">RECOMMENDED DEFICIT TOPICS:</span>
+                        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                            <span className="font-semibold text-gray-700">Recommended Topics:</span>
                             {['Docker & Containers', 'PostgreSQL Query Optimization', 'FastAPI Concurrency', 'Redis In-Memory Caching'].map((s) => (
                                 <button
                                     key={s}
                                     type="button"
                                     onClick={() => setTopicInput(s)}
-                                    className="px-2.5 py-1 bg-surface border border-black/15 hover:border-black text-ink-primary uppercase text-xs"
+                                    className="px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium transition-colors cursor-pointer"
                                 >
                                     {s}
                                 </button>
@@ -192,27 +197,26 @@ const UpskillPage = () => {
                     </section>
                 )}
 
-                {/* Two-Column Engineering Layout */}
+                {/* Two-Column Layout */}
                 <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    {/* Left Rail: Curriculum History Index (3 Cols) */}
-                    <aside className="lg:col-span-3 border border-black/20 bg-surface-container-lowest shadow-[4px_4px_0px_#0A0A0A] flex flex-col select-none">
-                        <div className="w-full bg-surface-container px-4 py-3 border-b border-black/20 flex items-center justify-between">
-                            <div className="flex items-center gap-1.5 font-bold uppercase text-xs text-ink-primary">
-                                <span className="text-canvas-blueprint">+</span>
-                                <span>MODULE INDEX ({modules.length})</span>
-                            </div>
+                    {/* Left Column: Modules List (3 Cols) */}
+                    <aside className="lg:col-span-3 rounded-2xl border border-gray-200 bg-white shadow-sm flex flex-col select-none overflow-hidden">
+                        <div className="w-full bg-gray-50 px-4 py-3.5 border-b border-gray-200 flex items-center justify-between">
+                            <span className="font-semibold text-xs text-gray-900">
+                                My Modules ({modules.length})
+                            </span>
                             <button
                                 onClick={() => setShowGenerator(prev => !prev)}
-                                className="text-canvas-blueprint text-xs font-bold hover:underline uppercase"
+                                className="text-blue-600 text-xs font-semibold hover:underline"
                             >
-                                [+ NEW]
+                                + New
                             </button>
                         </div>
 
-                        <div className="divide-y divide-black/10 max-h-[600px] overflow-y-auto">
+                        <div className="divide-y divide-gray-100 max-h-[600px] overflow-y-auto">
                             {modules.length === 0 ? (
-                                <div className="p-4 text-center text-outline text-xs italic">
-                                    NO GENERATED MODULES IN LOG.
+                                <div className="p-5 text-center text-gray-400 text-xs">
+                                    No guides generated yet. Click "+ New" to create one.
                                 </div>
                             ) : (
                                 modules.map((mod, idx) => {
@@ -223,26 +227,26 @@ const UpskillPage = () => {
                                         <button
                                             key={mod.id}
                                             onClick={() => handleSelectModule(mod)}
-                                            className={`w-full text-left p-3.5 transition-none cursor-pointer flex flex-col gap-1 ${
+                                            className={`w-full text-left p-4 transition-colors cursor-pointer flex flex-col gap-1.5 ${
                                                 isSelected
-                                                    ? 'bg-blue-50/70 border-l-4 border-l-canvas-blueprint'
-                                                    : 'hover:bg-surface-container-low'
+                                                    ? 'bg-blue-50/70 border-l-4 border-l-blue-600'
+                                                    : 'hover:bg-gray-50'
                                             }`}
                                         >
-                                            <div className="flex items-center justify-between gap-1 text-xs font-bold text-ink-primary">
+                                            <div className="flex items-center justify-between gap-1 text-xs font-semibold text-gray-900">
                                                 <span className="truncate">
-                                                    #{String(idx + 1).padStart(2, '0')} {mod.topic?.toUpperCase()}
+                                                    {idx + 1}. {mod.topic}
                                                 </span>
-                                                <span className={`text-[10px] px-1.5 py-0.5 border uppercase font-mono ${
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
                                                     isModCompleted
-                                                        ? 'bg-blue-50 text-canvas-blueprint border-canvas-blueprint/40'
-                                                        : 'bg-surface text-outline border-black/15'
+                                                        ? 'bg-green-50 text-green-700 border border-green-200'
+                                                        : 'bg-gray-100 text-gray-500'
                                                 }`}>
-                                                    {isModCompleted ? 'DONE' : 'ACTIVE'}
+                                                    {isModCompleted ? 'Done' : 'Active'}
                                                 </span>
                                             </div>
-                                            <div className="flex items-center justify-between text-[11px] text-on-surface-variant font-mono">
-                                                <span>LVL: {mod.level?.toUpperCase() || 'MID'}</span>
+                                            <div className="flex items-center justify-between text-[11px] text-gray-500">
+                                                <span>Level: {mod.level || 'Mid'}</span>
                                                 <span>{new Date(mod.created_at).toLocaleDateString()}</span>
                                             </div>
                                         </button>
@@ -252,44 +256,43 @@ const UpskillPage = () => {
                         </div>
                     </aside>
 
-                    {/* Right Column: Active Module Specification View (9 Cols) */}
+                    {/* Right Column: Active Module View (9 Cols) */}
                     <div className="lg:col-span-9 flex flex-col gap-6">
                         {isGenerating ? (
-                            /* Loading Skeleton Wireframe */
-                            <div className="w-full border-2 border-dashed border-canvas-blueprint bg-surface-container-lowest p-10 flex flex-col items-center justify-center text-center gap-4">
-                                <div className="w-10 h-10 border-2 border-canvas-blueprint border-t-transparent animate-spin"></div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="font-bold text-base uppercase text-canvas-blueprint">
-                                        [ + SYNTHESIZING ADAPTIVE ENGINEERING CURRICULUM ]
-                                    </span>
-                                    <span className="text-xs text-on-surface-variant">
-                                        CALIBRATING TAXONOMY // EXTRACTING SPECIFICATIONS // GENERATING CODE EXAMPLES
-                                    </span>
+                            <div className="w-full rounded-2xl border-2 border-dashed border-blue-300 bg-white p-12 flex flex-col items-center justify-center text-center gap-4">
+                                <div className="w-10 h-10 border-3 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                                <div className="space-y-1">
+                                    <h3 className="font-semibold text-base text-gray-900">
+                                        Generating Curriculum Guide
+                                    </h3>
+                                    <p className="text-xs text-gray-500">
+                                        Synthesizing explanations, real-world examples, and best practices...
+                                    </p>
                                 </div>
-                                <div className="border border-black/15 bg-surface px-4 py-1 text-xs font-bold text-ink-primary">
-                                    TOPIC VECTOR: {topicInput.toUpperCase() || 'TECHNICAL SPEC'}
+                                <div className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
+                                    Topic: {topicInput || 'Technical Guide'}
                                 </div>
                             </div>
                         ) : loading ? (
-                            <div className="w-full border border-black/20 bg-surface-container-lowest p-10 text-center text-outline text-xs">
-                                <span className="font-bold">[ RETRIEVING MODULE STATE... ]</span>
+                            <div className="w-full rounded-2xl border border-gray-200 bg-white p-12 text-center text-gray-400 text-sm">
+                                Loading learning modules...
                             </div>
                         ) : currentModule ? (
                             <>
-                                {/* Module Progress Spec Banner */}
+                                {/* Module Progress Banner */}
                                 <ModuleProgressBanner
                                     topic={currentModule.topic}
                                     level={currentModule.level}
                                     isCompleted={isCompleted}
-                                    estimatedTime={metadata.estimated_time || '15 MINUTES'}
+                                    estimatedTime={metadata.estimated_time || '15 minutes'}
                                     prerequisites={metadata.prerequisites || []}
                                     scoreBoost="+15%"
                                 />
 
-                                {/* Markdown Monospace Content Viewport */}
+                                {/* Markdown Content Reader */}
                                 <MarkdownContentReader content={currentModule.content} />
 
-                                {/* Bottom Completion & Re-Test Actions */}
+                                {/* Bottom Completion Actions */}
                                 <ModuleCompletionActions
                                     moduleId={currentModule.id}
                                     isCompleted={isCompleted}
@@ -298,18 +301,18 @@ const UpskillPage = () => {
                                 />
                             </>
                         ) : (
-                            <div className="w-full border border-dashed border-black/25 bg-surface-container-lowest p-10 text-center flex flex-col items-center justify-center gap-3">
-                                <span className="font-bold text-base uppercase text-ink-primary">
-                                    [ NO CURRICULUM MODULE SELECTED ]
-                                </span>
-                                <p className="text-xs text-on-surface-variant max-w-md">
-                                    Generate an adaptive learning module tailored to eliminate verification score deficits, or select a previous module from the index.
+                            <div className="w-full rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center flex flex-col items-center justify-center gap-3">
+                                <h3 className="font-semibold text-base text-gray-900">
+                                    No Learning Guide Selected
+                                </h3>
+                                <p className="text-xs text-gray-500 max-w-sm leading-relaxed">
+                                    Select a guide from the sidebar or generate a new topic tailored to your target skills.
                                 </p>
                                 <button
                                     onClick={() => setShowGenerator(true)}
-                                    className="mt-2 bg-canvas-blueprint text-white px-6 py-3 font-bold uppercase text-xs border border-canvas-blueprint hover:bg-primary-hover shadow-[2px_2px_0px_#0A0A0A] cursor-pointer"
+                                    className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold text-xs transition-colors shadow-sm cursor-pointer"
                                 >
-                                    [ + LAUNCH AI CURRICULUM SYNTHESIS ]
+                                    + Generate New Guide
                                 </button>
                             </div>
                         )}

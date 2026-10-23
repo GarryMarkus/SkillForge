@@ -33,7 +33,7 @@ const ClientOnboarding = () => {
                     });
                 }
             } catch (err) {
-                console.error('Error fetching profile telemetry:', err);
+                console.error('Error fetching profile data:', err);
             }
         };
         fetchProfile();
@@ -70,14 +70,14 @@ const ClientOnboarding = () => {
             }
         } catch (err) {
             console.error('Error submitting client profile:', err);
-            setError('Network fault occurred while transmitting client entity specifications.');
+            setError('A network error occurred while updating your company profile.');
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex flex-col select-none">
+        <div className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 flex flex-col select-none">
             <ClientOnboardingHeader clientEmail={user?.email || 'recruiter@enterprise.io'} />
 
             <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

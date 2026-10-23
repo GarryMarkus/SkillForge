@@ -1,5 +1,4 @@
 import React from 'react';
-import { MagneticButton } from '../ui/animations';
 
 const OptionsMatrix = ({
     options = [],
@@ -12,14 +11,14 @@ const OptionsMatrix = ({
     isLastQuestion
 }) => {
     return (
-        <div className="font-mono flex flex-col gap-4 select-none" id="OptionsMatrix">
+        <div className="font-sans flex flex-col gap-5 select-none" id="OptionsMatrix">
             {/* Multiple-Choice Answer Selector Panel */}
             <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between pb-1 border-b border-black/10">
-                    <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">
-                        [ PROPOSED RESOLUTION VECTORS (SELECT ONE) ]
+                <div className="flex items-center justify-between pb-1">
+                    <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">
+                        Select the Best Solution
                     </span>
-                    <span className="text-xs text-outline font-bold">DETERMINISTIC EVALUATION</span>
+                    <span className="text-xs text-gray-400">Single Choice</span>
                 </div>
 
                 {options.map((option, idx) => {
@@ -31,20 +30,20 @@ const OptionsMatrix = ({
                             key={idx}
                             type="button"
                             onClick={() => onSelectOption(idx)}
-                            className={`w-full text-left cursor-pointer transition-none p-4 sm:p-5 flex items-start gap-4 select-none ${
+                            className={`w-full text-left cursor-pointer p-4 sm:p-5 rounded-2xl flex items-start gap-4 transition-all ${
                                 isSelected
-                                    ? 'border-2 border-canvas-blueprint bg-canvas-blueprint text-white shadow-[4px_4px_0px_#001847]'
-                                    : 'border border-black/20 bg-surface-container-low hover:border-black/50 hover:bg-surface-container text-ink-primary'
+                                    ? 'border-2 border-blue-600 bg-blue-50/40 text-blue-950 shadow-sm'
+                                    : 'border border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/60 text-gray-800'
                             }`}
                         >
-                            <div className={`font-bold px-2 py-0.5 text-xs sm:text-sm shrink-0 uppercase border ${
+                            <div className={`w-8 h-8 rounded-xl font-bold text-sm shrink-0 flex items-center justify-center transition-colors ${
                                 isSelected
-                                    ? 'bg-white text-canvas-blueprint border-white'
-                                    : 'bg-surface-container-lowest border-black/20 text-ink-primary'
+                                    ? 'bg-blue-600 text-white shadow-xs'
+                                    : 'bg-gray-100 text-gray-700'
                             }`}>
-                                [ {letter} ]
+                                {letter}
                             </div>
-                            <div className={`flex-1 text-sm sm:text-base leading-relaxed ${isSelected ? 'text-white font-bold' : 'text-ink-primary font-medium'}`}>
+                            <div className={`flex-1 text-sm sm:text-base leading-relaxed ${isSelected ? 'font-semibold text-blue-950' : 'font-medium text-gray-800'}`}>
                                 {option}
                             </div>
                         </button>
@@ -52,34 +51,35 @@ const OptionsMatrix = ({
                 })}
             </div>
 
-            {/* Bottom Navigation & Submission Rail */}
-            <div className="mt-2 pt-4 border-t border-black/15 flex flex-wrap justify-between items-center gap-3">
+            {/* Bottom Navigation Controls */}
+            <div className="mt-2 pt-4 border-t border-gray-100 flex flex-wrap justify-between items-center gap-3">
                 <button
                     onClick={onPrevQuestion}
                     disabled={isFirstQuestion}
-                    className="px-5 py-3 border border-black/30 bg-surface-container-lowest text-ink-primary text-xs uppercase hover:bg-black hover:text-white disabled:opacity-30 transition-none font-bold cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs sm:text-sm font-semibold disabled:opacity-40 transition-colors cursor-pointer"
                     type="button"
                 >
-                    [ &lt;- PREV QUESTION ]
+                    ← Previous Question
                 </button>
 
                 <div className="flex items-center gap-3">
-                    <button
-                        onClick={onClearSelection}
-                        className="px-4 py-3 border border-black/20 bg-surface-container text-on-surface-variant text-xs hover:text-ink-primary hover:bg-black/10 transition-none uppercase cursor-pointer font-bold"
-                        type="button"
-                    >
-                        [ CLEAR ]
-                    </button>
-                    <MagneticButton strength={0.2} maxDisplacement={6}>
+                    {selectedOptionIdx !== null && selectedOptionIdx !== undefined && (
                         <button
-                            onClick={onNextQuestion}
-                            className="px-6 py-3 bg-canvas-blueprint text-white border-2 border-canvas-blueprint text-xs sm:text-sm hover:bg-black shadow-[3px_3px_0px_#0A0A0A] transition-none font-bold uppercase tracking-wider cursor-pointer"
+                            onClick={onClearSelection}
+                            className="px-4 py-2.5 rounded-xl text-gray-500 hover:text-gray-800 hover:bg-gray-100 text-xs sm:text-sm font-medium transition-colors cursor-pointer"
                             type="button"
                         >
-                            {isLastQuestion ? '[ SUBMIT EVALUATION → ]' : '[ COMMIT & NEXT → ]'}
+                            Clear Selection
                         </button>
-                    </MagneticButton>
+                    )}
+                    <button
+                        onClick={onNextQuestion}
+                        className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold shadow-sm hover:shadow transition-all cursor-pointer flex items-center gap-1.5"
+                        type="button"
+                    >
+                        <span>{isLastQuestion ? 'Submit Assessment' : 'Next Question'}</span>
+                        <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                    </button>
                 </div>
             </div>
         </div>

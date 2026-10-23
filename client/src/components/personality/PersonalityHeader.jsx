@@ -7,39 +7,39 @@ const PersonalityHeader = ({
     onAbort
 }) => {
     return (
-        <header className="w-full bg-surface-container-lowest border-b border-black/15 select-none font-mono" id="PersonalityHeader">
+        <header className="w-full bg-white border-b border-gray-200 select-none font-sans" id="PersonalityHeader">
             <div className="h-16 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <span className="text-canvas-blueprint font-bold text-base">+</span>
-                    <span className="text-sm sm:text-base font-bold text-ink-primary uppercase tracking-tight truncate">
-                        SKILLFORGE // PSYCHOMETRIC EVALUATION CONSOLE
+                    <span className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                        SF
                     </span>
-                    <span className="border border-black/15 bg-surface-container-low px-2 py-0.5 text-xs font-bold text-canvas-blueprint uppercase hidden md:inline-block">
-                        [ SYSTEM STATUS: ACTIVE ]
+                    <span className="text-base font-bold text-gray-900 tracking-tight">
+                        SkillForge
+                    </span>
+                    <span className="hidden md:inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                        Learning Style Assessment
                     </span>
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="flex items-center gap-2 border-r border-black/15 pr-4 text-xs font-bold">
-                        <span className="text-outline">PROGRESS:</span>
-                        <span className="text-canvas-blueprint">
-                            [ {String(currentIndex + 1).padStart(2, '0')} / {String(totalQuestions).padStart(2, '0')} ]
+                    <div className="flex items-center gap-2 border-r border-gray-200 pr-4 text-xs font-medium text-gray-500">
+                        <span>Question</span>
+                        <span className="font-semibold text-gray-900">
+                            {currentIndex + 1} of {totalQuestions}
                         </span>
                     </div>
 
-                    <div className="hidden sm:flex items-center gap-1.5 border border-black/15 px-2.5 py-1 text-xs font-bold">
-                        <span className={`w-2 h-2 ${isFullscreen ? 'bg-green-600' : 'bg-amber-500'}`}></span>
-                        <span className="text-outline uppercase">
-                            {isFullscreen ? 'FULLSCREEN' : 'WINDOWED'}
-                        </span>
+                    <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                        <span className={`w-2 h-2 rounded-full ${isFullscreen ? 'bg-green-500' : 'bg-amber-400'}`}></span>
+                        <span>{isFullscreen ? 'Fullscreen' : 'Windowed'}</span>
                     </div>
 
                     <button
                         type="button"
                         onClick={onAbort}
-                        className="border border-red-300 text-red-700 bg-red-50/50 px-3 py-1.5 text-xs uppercase hover:bg-red-600 hover:text-white transition-none cursor-pointer font-bold"
+                        className="px-3.5 py-1.5 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 text-xs font-semibold transition-colors cursor-pointer"
                     >
-                        [ ABORT ]
+                        Exit Assessment
                     </button>
                 </div>
             </div>

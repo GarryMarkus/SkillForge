@@ -32,71 +32,76 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                 onClose();
             } else {
                 const err = await response.json().catch(() => ({}));
-                alert(`[DEPLOYMENT ERROR] ${err.error || 'Failed to deploy requisition specification.'}`);
+                alert(`Error: ${err.error || 'Failed to post new job opening.'}`);
             }
         } catch (error) {
             console.error('Error posting job:', error);
-            alert('[DEPLOYMENT ERROR] Network fault encountered while emitting job specification.');
+            alert('A network error occurred while posting this job. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 font-mono select-none">
-            <div className="bg-surface-container-lowest border border-black/30 w-full max-w-2xl shadow-[6px_6px_0px_#1D52B8] max-h-[92vh] flex flex-col overflow-hidden">
-                {/* Modal Title Rail */}
-                <div className="px-5 py-3.5 bg-surface-container border-b border-black/20 flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase text-ink-primary">
-                        <span className="text-canvas-blueprint font-bold">+</span>
-                        <span>[ REQUISITION DEPLOYMENT // SPEC ENTRY ]</span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm select-none font-sans">
+            <div className="bg-white rounded-2xl border border-gray-200 w-full max-w-2xl shadow-2xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                {/* Modal Header */}
+                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                    <div>
+                        <h2 className="text-base font-bold text-gray-900">
+                            Post New Job Opening
+                        </h2>
+                        <p className="text-xs text-gray-500">
+                            Create a role specification to find matched, verified candidates
+                        </p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="px-2.5 py-1 border border-black/20 hover:bg-black hover:text-white text-xs uppercase transition-none cursor-pointer font-bold"
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-200 text-sm font-semibold transition-colors cursor-pointer"
+                        aria-label="Close"
                     >
-                        [ESC]
+                        ✕
                     </button>
                 </div>
 
                 {/* Modal Form Body */}
-                <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1 text-ink-primary text-xs sm:text-sm">
+                <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1 text-gray-800 text-sm">
                     <div>
-                        <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                            TARGET DESIGNATION TITLE *
+                        <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                            Job Title <span className="text-red-500">*</span>
                         </label>
                         <input
                             name="title"
                             value={formData.title}
                             onChange={handleChange}
-                            placeholder="e.g. SR. SYSTEMS ENGINEER // DISTRIBUTED BACKEND"
+                            placeholder="e.g. Senior Frontend Engineer"
                             required
-                            className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                                DOMAIN CATEGORY
+                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                Category
                             </label>
                             <select
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs uppercase font-bold font-mono"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
                             >
                                 <option value="Web Development">Web Development</option>
                                 <option value="Backend Systems">Backend Systems</option>
                                 <option value="Machine Learning">Machine Learning</option>
                                 <option value="Cloud Architecture">Cloud Architecture</option>
-                                <option value="Security / Forensic">Security / Forensic</option>
+                                <option value="Security / Forensic">Security & DevOps</option>
                             </select>
                         </div>
 
                         <div>
-                            <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                                ANNUAL COMPENSATION BUDGET ($USD) *
+                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                Annual Budget ($USD) <span className="text-red-500">*</span>
                             </label>
                             <input
                                 type="number"
@@ -105,15 +110,15 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                                 onChange={handleChange}
                                 placeholder="120000"
                                 required
-                                className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                             />
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                                MINIMUM SKILL THRESHOLD (0-100)
+                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                Minimum Skill Score (0–100)
                             </label>
                             <input
                                 type="number"
@@ -124,73 +129,73 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                                 onChange={handleChange}
                                 placeholder="80"
                                 required
-                                className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                                CONTRACT STRUCTURE
+                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                Compensation Type
                             </label>
                             <select
                                 name="budget_type"
                                 value={formData.budget_type}
                                 onChange={handleChange}
-                                className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs uppercase font-bold font-mono"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
                             >
-                                <option value="fixed">Fixed Salary Specification</option>
+                                <option value="fixed">Full-Time Annual Salary</option>
                                 <option value="hourly">Hourly Contract Rate</option>
                             </select>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                            REQUIRED TECHNICAL STACK (COMMA SEPARATED) *
+                        <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                            Required Skills (comma-separated) <span className="text-red-500">*</span>
                         </label>
                         <input
                             name="skills_required"
                             value={formData.skills_required}
                             onChange={handleChange}
-                            placeholder="Python, FastAPI, Redis, Docker, PostgreSQL"
+                            placeholder="Python, React, TypeScript, Docker, PostgreSQL"
                             required
-                            className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
                         />
-                        <span className="text-[11px] text-outline block mt-1">
-                            Used directly by TF-IDF vectorizer to calculate cosine similarity fit.
+                        <span className="text-xs text-gray-500 block mt-1">
+                            Candidates with matching verified skills will be automatically recommended.
                         </span>
                     </div>
 
                     <div>
-                        <label className="block text-xs uppercase font-bold text-outline mb-1.5">
-                            DETAILED REQUISITION SPECIFICATION *
+                        <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                            Role Description <span className="text-red-500">*</span>
                         </label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
                             rows="4"
-                            placeholder="Architectural mandates, concurrency requirements, expected protocol standards..."
+                            placeholder="Describe the responsibilities, team structure, and qualifications needed..."
                             required
-                            className="w-full px-3.5 py-2.5 bg-surface border border-black/25 focus:border-canvas-blueprint focus:outline-none text-xs sm:text-sm font-mono resize-none"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors resize-none"
                         />
                     </div>
 
-                    {/* Bottom CTA Bar */}
-                    <div className="pt-4 border-t border-black/15 flex flex-wrap items-center justify-between gap-3">
+                    {/* Bottom Actions */}
+                    <div className="pt-4 border-t border-gray-200 flex flex-wrap items-center justify-between gap-3">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-5 py-3 border border-black/25 text-xs font-bold uppercase hover:bg-black/5 transition-none cursor-pointer"
+                            className="px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
                         >
-                            [ CANCEL ]
+                            Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="bg-canvas-blueprint text-white px-6 py-3 text-xs uppercase font-bold border border-canvas-blueprint hover:bg-primary-hover transition-none shadow-[3px_3px_0px_#0A0A0A] cursor-pointer disabled:opacity-50"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                         >
-                            {loading ? '[ EMITTING SPEC... ]' : '[ DEPLOY REQUISITION TO INDEX → ]'}
+                            {loading ? 'Publishing...' : 'Publish Job Opening →'}
                         </button>
                     </div>
                 </form>
