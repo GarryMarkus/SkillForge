@@ -1,8 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
-import { AlertTriangle, Eye, AlertOctagon, UserX } from 'lucide-react';
 
-const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
+const ProctorWrapper = ({ 
+    children, 
+    onDisqualify, 
+    onWarning, 
+    onFaceDetectedChange,
+    onLogEvent,
+    showStandaloneWebcam = false 
+}) => {
     const [warnings, setWarnings] = useState(0);
     const [isFullScreen, setIsFullScreen] = useState(true);
     const [isArmed, setIsArmed] = useState(false);
@@ -11,9 +17,9 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
     const canvasRef = useRef(null);
     const noFaceCountRef = useRef(0);
 
-    // Arm the system after 3 seconds
+    // Arm after 2 seconds
     useEffect(() => {
-        const timer = setTimeout(() => setIsArmed(true), 3000);
+        const timer = setTimeout(() => setIsArmed(true), 2000);
         return () => clearTimeout(timer);
     }, []);
 
@@ -21,35 +27,35 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
         setWarnings(prev => {
             const newCount = prev + 1;
             onWarning?.(`${reason} (${newCount}/3)`);
+            onLogEvent?.(`WARNING: ${reason.toUpperCase()} (+15 PTS)`);
             if (newCount >= 3) {
+                onLogEvent?.(`DISQUALIFICATION: SECURITY_THRESHOLD_BREACHED`);
                 onDisqualify?.("Security violation limit reached.");
             }
             return newCount;
         });
-    }, [onWarning, onDisqualify]);
+    }, [onWarning, onDisqualify, onLogEvent]);
 
-    // Face detection using simple brightness/motion detection
+    // Face detection using simple brightness & skin-tone heuristics
     const checkForFace = useCallback(() => {
         if (!webcamRef.current || !isArmed) return;
 
         const video = webcamRef.current.video;
         if (!video || video.readyState !== 4) return;
 
-        // Create canvas if not exists
         if (!canvasRef.current) {
             canvasRef.current = document.createElement('canvas');
         }
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-        canvas.width = 64;  // Low resolution for performance
+        canvas.width = 64;
         canvas.height = 48;
 
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
-        // Calculate average brightness and variance in center region
         let totalBrightness = 0;
         let pixelCount = 0;
         const centerX = canvas.width / 2;
@@ -65,48 +71,47 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
             }
         }
 
-        const avgBrightness = totalBrightness / pixelCount;
+        const avgBrightness = totalBrightness / Math.max(1, pixelCount);
 
-        // Check for skin-tone-like colors in center (very simplified)
         let skinTonePixels = 0;
         for (let y = Math.max(0, centerY - regionSize); y < Math.min(canvas.height, centerY + regionSize); y++) {
             for (let x = Math.max(0, centerX - regionSize); x < Math.min(canvas.width, centerX + regionSize); x++) {
                 const idx = (y * canvas.width + x) * 4;
                 const r = data[idx], g = data[idx + 1], b = data[idx + 2];
-                // Simple skin tone detection (works for various skin tones)
                 if (r > 60 && g > 40 && b > 20 && r > g && r > b && Math.abs(r - g) > 15) {
                     skinTonePixels++;
                 }
             }
         }
 
-        const skinToneRatio = skinTonePixels / pixelCount;
-
-        // If too dark or no skin-tone detected, might be no face
-        const isFaceDetected = avgBrightness > 30 && skinToneRatio > 0.05;
+        const skinToneRatio = skinTonePixels / Math.max(1, pixelCount);
+        const isFaceDetected = avgBrightness > 25 && skinToneRatio > 0.04;
+        onFaceDetectedChange?.(isFaceDetected);
 
         if (!isFaceDetected) {
             noFaceCountRef.current++;
-            if (noFaceCountRef.current >= 5) { // 5 consecutive checks (~5 seconds)
+            if (noFaceCountRef.current >= 4) {
                 setNoFaceWarning(true);
-                if (noFaceCountRef.current === 5) {
-                    onWarning?.("No face detected - please stay visible to camera");
+                if (noFaceCountRef.current === 4) {
+                    triggerWarning("OPTICAL_GAZE_LOST_NO_FACE");
                 }
             }
         } else {
+            if (noFaceCountRef.current >= 4) {
+                onLogEvent?.("RE-ACQUIRED_PRIMARY_GAZE");
+            }
             noFaceCountRef.current = 0;
             setNoFaceWarning(false);
         }
-    }, [isArmed, onWarning]);
+    }, [isArmed, triggerWarning, onFaceDetectedChange, onLogEvent]);
 
-    // Run face detection every second
     useEffect(() => {
         if (!isArmed) return;
-        const interval = setInterval(checkForFace, 1000);
+        const interval = setInterval(checkForFace, 1200);
         return () => clearInterval(interval);
     }, [isArmed, checkForFace]);
 
-    // 1. Enforce Fullscreen
+    // Enforce Fullscreen
     const enterFullScreen = () => {
         const elem = document.documentElement;
         const requestFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
@@ -120,7 +125,7 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
             const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
             if (!isFS && isArmed) {
                 setIsFullScreen(false);
-                triggerWarning("Exited Fullscreen");
+                triggerWarning("FULLSCREEN_KERNEL_LOCK_EXITED");
             } else {
                 setIsFullScreen(true);
             }
@@ -139,17 +144,17 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
         };
     }, [isArmed, triggerWarning]);
 
-    // 2. Tab Switching & Focus Loss Detection
+    // Tab Switching & Focus Loss Detection
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden && isArmed) {
-                triggerWarning("Tab switch detected!");
+                triggerWarning("TAB_SWITCH_ACTIVE_WINDOW_LOST");
             }
         };
 
         const handleBlur = () => {
             if (isArmed && document.activeElement !== document.body) {
-                triggerWarning("Window focus lost (Alt-Tab/Minimize)!");
+                triggerWarning("WINDOW_BLUR_OR_MINIMIZE");
             }
         };
 
@@ -162,7 +167,7 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
         };
     }, [isArmed, triggerWarning]);
 
-    // 3. Disable Copy/Paste
+    // Disable Right-Click / Copy / Paste
     useEffect(() => {
         const preventDefault = (e) => e.preventDefault();
         document.addEventListener('contextmenu', preventDefault);
@@ -180,62 +185,75 @@ const ProctorWrapper = ({ children, onDisqualify, onWarning }) => {
 
     if (warnings >= 3) {
         return (
-            <div className="fixed inset-0 bg-red-900 text-white flex flex-col items-center justify-center z-[100]">
-                <AlertOctagon className="w-24 h-24 mb-4" />
-                <h1 className="text-4xl font-black mb-2">DISQUALIFIED</h1>
-                <p className="text-xl">Multiple security violations detected.</p>
-                <button onClick={() => window.location.href = '/student/dashboard'} className="mt-8 bg-white text-red-900 px-6 py-2 rounded-full font-bold">Return to Dashboard</button>
+            <div className="fixed inset-0 bg-[#BA1A1A] text-white flex flex-col items-center justify-center z-[100] font-mono p-6 text-center select-none">
+                <div className="border-4 border-white p-space-xl max-w-lg bg-black text-white shadow-[8px_8px_0px_#FFFFFF]">
+                    <div className="font-label-sm text-label-sm text-[#FFDAD6] uppercase tracking-widest mb-2 font-bold">
+                        [ CRITICAL_HARDWARE_EXCEPTION ]
+                    </div>
+                    <h1 className="font-headline-xl text-headline-xl uppercase font-bold mb-4">
+                        SESSION_DISQUALIFIED
+                    </h1>
+                    <p className="font-body-md text-body-md text-[#FFDAD6] mb-6">
+                        Exceeded maximum permitted proctor risk threshold (3 security breach events logged to tamper-evident ledger).
+                    </p>
+                    <button 
+                        onClick={() => window.location.href = '/student/dashboard'} 
+                        className="bg-white text-black px-space-xl py-3 font-label-md text-label-md uppercase font-bold hover:bg-[#FFDAD6] transition-none cursor-pointer"
+                    >
+                        [ RETURN_TO_CANDIDATE_CONSOLE ]
+                    </button>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="relative min-h-screen bg-gray-900 text-white select-none">
-            {/* Webcam Overlay */}
-            <div className={`fixed bottom-4 right-4 w-48 h-36 bg-black rounded-xl overflow-hidden shadow-2xl z-50 border-2 ${noFaceWarning ? 'border-yellow-500 animate-pulse' : 'border-red-500'} pointer-events-none`}>
-                <Webcam
-                    ref={webcamRef}
-                    audio={false}
-                    className="w-full h-full object-cover"
-                    screenshotFormat="image/jpeg"
-                />
-                <div className="absolute top-2 left-2 flex items-center gap-1 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
-                    <Eye className="w-3 h-3" /> REC
-                </div>
-                {/* No Face Warning Badge */}
-                {noFaceWarning && (
-                    <div className="absolute bottom-2 left-2 right-2 flex items-center justify-center gap-1 bg-yellow-500 text-black text-[10px] font-bold px-2 py-1 rounded-full">
-                        <UserX className="w-3 h-3" /> NO FACE DETECTED
-                    </div>
-                )}
-            </div>
-
-            {/* Warning Banner */}
-            {warnings > 0 && (
-                <div className="fixed top-0 left-0 right-0 bg-red-600 p-2 text-center font-bold text-sm animate-pulse z-50">
-                    WARNING: Security protocols breached! ({warnings}/3)
+        <div className="relative min-h-screen bg-surface text-on-surface font-mono select-none">
+            {/* Standalone webcam if requested */}
+            {showStandaloneWebcam && (
+                <div className={`fixed bottom-4 right-4 w-48 h-36 bg-black border-2 ${noFaceWarning ? 'border-error animate-pulse' : 'border-primary'} z-50 pointer-events-none`}>
+                    <Webcam
+                        ref={webcamRef}
+                        audio={false}
+                        className="w-full h-full object-cover"
+                        screenshotFormat="image/jpeg"
+                    />
                 </div>
             )}
 
-            {/* No Face Warning Banner */}
-            {noFaceWarning && warnings < 3 && (
-                <div className="fixed top-10 left-0 right-0 bg-yellow-500 text-black p-2 text-center font-bold text-sm z-50">
-                    ⚠️ No face detected! Please stay visible to the camera.
+            {/* Hidden persistent webcam element used for optical face checking if not standalone */}
+            {!showStandaloneWebcam && (
+                <div className="fixed -top-[9999px] -left-[9999px] pointer-events-none opacity-0">
+                    <Webcam
+                        ref={webcamRef}
+                        audio={false}
+                        width={128}
+                        height={96}
+                        screenshotFormat="image/jpeg"
+                    />
                 </div>
             )}
 
             {/* Fullscreen Re-entry blocker */}
             {!isFullScreen && isArmed && (
-                <div className="fixed inset-0 bg-black/95 z-[60] flex flex-col items-center justify-center p-8 text-center backdrop-blur-sm">
-                    <AlertTriangle className="w-16 h-16 text-yellow-500 mb-4" />
-                    <h2 className="text-2xl font-bold mb-4">Fullscreen Required</h2>
-                    <p className="mb-6 max-w-md">You exited fullscreen mode. This is recorded as a violation. Please return immediately to continue.</p>
-                    <button
-                        onClick={enterFullScreen}
-                        className="bg-white text-black px-6 py-3 rounded-full font-bold hover:scale-105 transition-transform"
-                    >
-                        Return to Test
-                    </button>
+                <div className="fixed inset-0 bg-black/95 z-[60] flex flex-col items-center justify-center p-8 text-center text-white font-mono backdrop-blur-sm">
+                    <div className="border border-white/40 bg-surface-container-lowest text-on-surface p-space-xl max-w-md shadow-[6px_6px_0px_#1D52B8]">
+                        <span className="font-label-sm text-label-sm text-error uppercase font-bold tracking-widest block mb-2">
+                            [ VIOLATION_FLAG: WINDOW_ESCAPED ]
+                        </span>
+                        <h2 className="font-headline-sm text-headline-sm uppercase font-bold mb-3">
+                            FULLSCREEN KERNEL LOCK REQUIRED
+                        </h2>
+                        <p className="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                            Exiting fullscreen registers a multi-sensor telemetry penalty. Re-engage window lock immediately to prevent session termination.
+                        </p>
+                        <button
+                            onClick={enterFullScreen}
+                            className="bg-primary text-on-primary px-space-xl py-3 font-label-md text-label-md uppercase font-bold border border-primary hover:bg-on-primary hover:text-primary transition-none cursor-pointer"
+                        >
+                            [ RE-ENGAGE_FULLSCREEN_LOCK ]
+                        </button>
+                    </div>
                 </div>
             )}
 
