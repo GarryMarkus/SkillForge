@@ -88,6 +88,12 @@ const ClientDashboard = () => {
     const [inspectingCandidate, setInspectingCandidate] = useState(null);
     const [filterMode, setFilterMode] = useState('COSINE_DESC');
 
+    useEffect(() => {
+        if (user && user.onboarding_stage !== undefined && user.onboarding_stage < 2) {
+            navigate('/client/onboarding');
+        }
+    }, [user, navigate]);
+
     const fetchProfile = useCallback(async () => {
         try {
             const response = await client.get('/accounts/profile/');
