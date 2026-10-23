@@ -14,5 +14,6 @@ urlpatterns = [
     path("personality/questions/", PersonalityQuestionsAPI.as_view(), name="personality-questions"),
     path("personality/submit/", SubmitPersonalityAPI.as_view(), name="personality-submit"),
     path("recommendation/", RecommendationAPI.as_view(), name="recommendation"),
+    path("tasks/<str:task_id>/status/", TaskStatusAPI.as_view(), name="task-status-endpoint"),
     path("tasks/<str:task_id>/", TaskStatusAPI.as_view(), name="task-status"),
 ]

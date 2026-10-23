@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from celery.result import AsyncResult
 from accounts.permissions import IsStudentUser
+from .tasks import generate_skill_test_task
 
 logger = logging.getLogger(__name__)
 
@@ -20,26 +21,25 @@ from .services import (
 class GenerateSkillTestAPI(APIView):
     """
     Generate dynamic assessment questions tailored to candidate strengths using Gemini LLM.
-    Provisions a proctored ExamSession.
+    Dispatches Celery background worker and returns 202 Accepted with task_id.
     """
     permission_classes = [IsAuthenticated, IsStudentUser]
 
     def post(self, request):
         try:
             category_id = request.data.get("category_id")
-            attempt = generate_skill_test_for_student(request.user.id, category_id)
+            task = generate_skill_test_task.delay(request.user.id, category_id)
 
             return Response({
-                "attempt_id": attempt.id,
-                "session_id": attempt.proctor_session.id if attempt.proctor_session else None,
-                "category": attempt.category.name,
-                "questions": attempt.generated_questions,
-                "total_questions": attempt.total_questions
-            }, status=status.HTTP_200_OK)
+                "task_id": str(task.id),
+                "status": "QUEUED",
+                "message": "Assessment generation initiated in background worker."
+            }, status=status.HTTP_202_ACCEPTED)
 
-        except Exception:
+        except Exception as exc:
+            logger.exception("Failed to dispatch skill test generation task: %s", exc)
             return Response(
-                {"error": "Failed to generate test. Ensure AI services are configured."},
+                {"error": "Failed to queue test generation. Ensure Celery broker is running."},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
@@ -108,7 +108,7 @@ class RecommendationAPI(APIView):
 class TaskStatusAPI(APIView):
     """
     Check the status and result of an asynchronous Celery task.
-    Returns: { "status": "PENDING" | "SUCCESS" | "FAILURE", "result": ... }
+    Returns: { "task_id": str, "status": "PENDING" | "STARTED" | "SUCCESS" | "FAILURE", "result": ... }
     """
     permission_classes = [IsAuthenticated]
 
@@ -119,22 +119,20 @@ class TaskStatusAPI(APIView):
         except Exception as exc:
             logger.warning("Could not query Celery result backend for task %s: %s", task_id, exc)
             return Response({
+                "task_id": task_id,
                 "status": "PENDING",
                 "result": None
             }, status=status.HTTP_200_OK)
 
-        if task_status == "SUCCESS":
-            return Response({
-                "status": "SUCCESS",
-                "result": res.result
-            }, status=status.HTTP_200_OK)
-        elif task_status == "FAILURE":
-            return Response({
-                "status": "FAILURE",
-                "error": str(res.result) if res.result else "Task execution failed"
-            }, status=status.HTTP_200_OK)
-        else:
-            return Response({
-                "status": "PENDING",
-                "result": None
-            }, status=status.HTTP_200_OK)
+        result_payload = res.result if task_status == "SUCCESS" else None
+        error_payload = str(res.result) if task_status == "FAILURE" else None
+
+        response_data = {
+            "task_id": task_id,
+            "status": task_status,
+            "result": result_payload
+        }
+        if error_payload:
+            response_data["error"] = error_payload
+
+        return Response(response_data, status=status.HTTP_200_OK)

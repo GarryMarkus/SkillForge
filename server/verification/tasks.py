@@ -52,3 +52,32 @@ def generate_skill_test_task(self, student_id: int, category_id: int | None = No
         "student_id": student_id,
         "error": "Failed to generate skill test"
     }
+
+
+@shared_task(bind=True)
+def generate_learning_module_task(self, student_id: int, topic: str):
+    """
+    Celery task to asynchronously generate an upskilling module calibrated to the student's learning pace.
+    """
+    logger.info("Executing async learning module generation for student %s, topic '%s' (Task %s)", student_id, topic, self.request.id)
+    from modules.services import generate_upskill_module
+    try:
+        module = generate_upskill_module(student_id, topic)
+        return {
+            "status": "SUCCESS",
+            "module_id": module.id,
+            "topic": module.topic,
+            "level": module.level
+        }
+    except Exception as exc:
+        logger.exception("Learning module generation task failed: %s", exc)
+        return {
+            "status": "FAILURE",
+            "error": str(exc)
+        }
+
+
+# Canonical aliases
+generate_partial_report = generate_partial_report_task
+generate_skill_test_for_student = generate_skill_test_task
+generate_learning_module = generate_learning_module_task
