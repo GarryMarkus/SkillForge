@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "rest_framework",  
     'rest_framework_simplejwt.token_blacklist',
     "corsheaders",
+    "drf_spectacular",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True 
@@ -66,7 +67,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'EXCEPTION_HANDLER': 'skillforge.exceptions.custom_exception_handler',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'SkillForge API',
+    'DESCRIPTION': 'SkillForge platform API for AI skill verification, online proctoring, and talent matching.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 AUTH_USER_MODEL = "accounts.User"
