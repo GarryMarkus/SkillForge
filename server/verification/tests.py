@@ -75,3 +75,56 @@ class CeleryTaskQueueTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["status"], "FAILURE")
         self.assertIn("AI API timeout error", response.data["error"])
+
+    def test_schema_validation_and_fallback(self):
+        """Test Pydantic schema validation and fallback behavior for dynamic AI JSON payloads."""
+        from verification.schemas import (
+            GeneratedTestPayloadSchema,
+            FinalReportSummarySchema,
+            UpskillModuleContentSchema,
+        )
+
+        # 1. Valid test payload
+        valid_raw_test = {
+            "role": "Frontend Specialist",
+            "questions": [
+                {
+                    "question": "What is the primary benefit of React Virtual DOM?",
+                    "options": ["Direct DOM mutation", "Batched reconciliations", "Server threading", "SQL cache"],
+                    "correct_answer": "B",
+                    "difficulty": "Easy"
+                }
+            ]
+        }
+        test_schema = GeneratedTestPayloadSchema.validate_or_fallback(valid_raw_test)
+        self.assertEqual(len(test_schema.questions), 1)
+        self.assertEqual(test_schema.questions[0].correct_option, "B")
+
+        # Fallback on corrupt input
+        fallback_test = GeneratedTestPayloadSchema.validate_or_fallback("Not a dict at all")
+        self.assertGreater(len(fallback_test.questions), 0)
+
+        # 2. Final report schema validation
+        valid_report = {
+            "star_rating": 4.5,
+            "strengths": ["Deep Django ORM knowledge"],
+            "weaknesses": ["Async pipelines"],
+            "technical_tags": ["Backend", "Python"]
+        }
+        report_schema = FinalReportSummarySchema.validate_or_fallback(valid_report)
+        self.assertEqual(report_schema.star_rating, 4.5)
+        self.assertIn("Deep Django ORM knowledge", report_schema.strengths)
+
+        # Fallback on corrupt report input
+        fallback_report = FinalReportSummarySchema.validate_or_fallback("{corrupt_json: true")
+        self.assertTrue(1.0 <= fallback_report.star_rating <= 5.0)
+        self.assertGreater(len(fallback_report.strengths), 0)
+
+        # 3. Upskill module schema
+        module_schema = UpskillModuleContentSchema.validate_or_fallback(
+            {"content": "# Docker Guide", "metadata": {"estimated_hours": 2}},
+            topic="Docker",
+            level="fast"
+        )
+        self.assertIn("# Docker Guide", module_schema.content)
+

@@ -8,6 +8,7 @@ from accounts.models import StudentProfile, StudentReport
 from proctor.models import Exam, ExamSession
 from .models import SkillCategory, SkillTestAttempt, PersonalityAttempt
 from .personality_data import PERSONALITY_QUESTIONS
+from .schemas import GeneratedTestPayloadSchema, FinalReportSummarySchema
 from .utils.git_utils import fetch_github_profile
 from .utils.langchain_utils import (
     analyze_resume,
@@ -113,11 +114,14 @@ def generate_skill_test_for_student(student_id: int, category_id: int | None = N
             role_hint=category.name
         )
 
+        validated_payload = GeneratedTestPayloadSchema.validate_or_fallback(payload, fallback_role=category.name)
+        questions_list = [q.to_dict() for q in validated_payload.questions]
+
         attempt = SkillTestAttempt.objects.create(
             user=user,
             category=category,
-            generated_questions=payload.get("questions", []),
-            total_questions=len(payload.get("questions", [])),
+            generated_questions=questions_list,
+            total_questions=len(questions_list),
         )
 
         # Create Proctor Session
@@ -185,8 +189,11 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
             "PASS" if passed else "FAIL"
         )
 
+        validated_summary = FinalReportSummarySchema.validate_or_fallback(final_report)
+        final_dict = validated_summary.to_dict()
+
         report.skill_test_score = percentage
-        report.report_summary["final"] = final_report
+        report.report_summary["final"] = final_dict
         report.report_summary["stage"] = "verified" if passed else "needs_improvement"
         report.save()
 
@@ -195,7 +202,7 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
             "score": correct,
             "percentage": percentage,
             "passed": passed,
-            "analysis": final_report
+            "analysis": final_dict
         }
 
     except Exception:

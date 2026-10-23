@@ -2,6 +2,7 @@ import json
 import re
 from django.contrib.auth import get_user_model
 from accounts.models import StudentReport
+from verification.schemas import UpskillModuleContentSchema
 from .models import UpskillModule
 from .langchain_utils import generate_learning_module
 
@@ -11,6 +12,7 @@ User = get_user_model()
 def generate_upskill_module(student_id: int, topic: str) -> UpskillModule:
     """
     Generate an interactive markdown learning module tailored to the student's personality learning pace.
+    Validates output payload through UpskillModuleContentSchema before database persistence.
     """
     user = User.objects.get(id=student_id)
     report = StudentReport.objects.filter(student=user.student_profile).first()
@@ -35,12 +37,14 @@ def generate_upskill_module(student_id: int, topic: str) -> UpskillModule:
     elif not isinstance(result, dict):
         result = {"content": str(result), "metadata": {}}
 
+    validated_payload = UpskillModuleContentSchema.validate_or_fallback(result, topic, level)
+
     module = UpskillModule.objects.create(
         user=user,
         topic=topic,
         level=level,
-        content=result.get("content", ""),
-        ai_metadata=result.get("metadata", {})
+        content=validated_payload.content,
+        ai_metadata=validated_payload.metadata
     )
 
     return module
