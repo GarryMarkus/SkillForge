@@ -14,10 +14,10 @@ const RegisterWizard = () => {
     const [error, setError] = useState(null);
 
     const steps = [
-        { id: 1, title: '01_ROLE' },
-        { id: 2, title: '02_IDENTITY' },
-        { id: 3, title: '03_CALIBRATE' },
-        { id: 4, title: '04_CONFIRM' },
+        { id: 1, title: '01. ROLE' },
+        { id: 2, title: '02. IDENTITY' },
+        { id: 3, title: '03. PROFILE' },
+        { id: 4, title: '04. CONFIRM' },
     ];
 
     const validateCurrentStep = () => {
@@ -74,24 +74,24 @@ const RegisterWizard = () => {
     }
 
     return (
-        <div className="w-full border border-black/20 bg-surface-container-lowest p-space-lg shadow-[4px_4px_0px_#1D52B8] font-mono">
+        <div className="w-full border border-black/20 bg-surface-container-lowest p-6 sm:p-10 shadow-[6px_6px_0px_#0A0A0A] font-mono select-none">
             {/* Wizard Header Bar & Step Stepper */}
-            <div className="border-b border-black/15 pb-space-sm mb-space-md">
-                <div className="flex items-center justify-between mb-2">
-                    <span className="text-label-sm font-bold uppercase text-primary-container">
-                        [ REQUISITION_REGISTRATION // WIZARD_TX ]
+            <div className="border-b border-black/15 pb-4 mb-6">
+                <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-bold uppercase text-canvas-blueprint tracking-wider">
+                        [ REQUISITION REGISTRATION // WIZARD ]
                     </span>
                     <button
                         type="button"
                         onClick={() => setAuthMode('login')}
-                        className="text-label-sm font-bold uppercase text-secondary hover:text-black hover:underline cursor-pointer"
+                        className="text-xs font-bold uppercase text-outline hover:text-ink-primary hover:underline cursor-pointer"
                     >
-                        [ ALREADY_REGISTERED? SIGN_IN ]
+                        [ ALREADY REGISTERED? SIGN IN ]
                     </button>
                 </div>
 
                 {/* Stepper Tabs */}
-                <div className="grid grid-cols-4 gap-1 border border-black/20 bg-surface-container p-0.5">
+                <div className="grid grid-cols-4 gap-1 border border-black/20 bg-surface-container p-1">
                     {steps.map((s) => {
                         const isActive = s.id === step;
                         const isPast = s.id < step;
@@ -99,11 +99,11 @@ const RegisterWizard = () => {
                         return (
                             <div
                                 key={s.id}
-                                className={`text-center py-1 text-[10px] font-bold uppercase transition-none ${
+                                className={`text-center py-1.5 text-[11px] font-bold uppercase transition-none ${
                                     isActive
-                                        ? 'bg-primary-container text-on-primary'
+                                        ? 'bg-canvas-blueprint text-white'
                                         : isPast
-                                        ? 'bg-primary-fixed/30 text-primary-container'
+                                        ? 'bg-blue-50 text-canvas-blueprint'
                                         : 'text-on-surface-variant'
                                 }`}
                             >
@@ -123,26 +123,26 @@ const RegisterWizard = () => {
             </div>
 
             {error && (
-                <div className="mt-space-md border border-error bg-error-container/20 p-space-sm text-error text-label-sm font-bold uppercase">
-                    [VALIDATION_FAULT] {error}
+                <div className="mt-4 border border-red-500 bg-red-50 p-3.5 text-red-700 text-xs font-bold uppercase">
+                    [VALIDATION FAULT] {error}
                 </div>
             )}
 
             {/* Stepper Action Bar */}
-            <div className="mt-space-lg pt-space-sm border-t border-black/15 flex items-center justify-between">
+            <div className="mt-6 pt-4 border-t border-black/15 flex items-center justify-between">
                 {step > 1 ? (
                     <button
                         type="button"
                         onClick={prevStep}
-                        className="border border-black/30 bg-surface px-space-md py-2 font-bold uppercase text-label-md text-on-surface hover:bg-surface-container transition-none cursor-pointer"
+                        className="border border-black/25 bg-surface px-6 py-3 font-bold uppercase text-xs text-ink-primary hover:bg-surface-container transition-none cursor-pointer"
                     >
-                        [ &lt;- PREVIOUS_STEP ]
+                        [ ← PREVIOUS STEP ]
                     </button>
                 ) : (
                     <button
                         type="button"
                         onClick={() => setAuthMode('login')}
-                        className="text-secondary text-label-sm font-bold uppercase hover:underline cursor-pointer"
+                        className="text-outline text-xs font-bold uppercase hover:underline cursor-pointer"
                     >
                         [ CANCEL ]
                     </button>
@@ -152,14 +152,14 @@ const RegisterWizard = () => {
                     type="button"
                     onClick={handleNext}
                     disabled={isLoading}
-                    className="bg-primary-container text-on-primary px-space-lg py-2 font-bold uppercase text-label-md border border-primary-container hover:bg-primary transition-none cursor-pointer shadow-[2px_2px_0px_#191C1D] disabled:opacity-50"
+                    className="bg-canvas-blueprint text-white px-8 py-3.5 font-bold uppercase text-xs sm:text-sm border border-canvas-blueprint hover:bg-primary-hover transition-none cursor-pointer shadow-[3px_3px_0px_#0A0A0A] disabled:opacity-50"
                 >
                     <span>
                         {isLoading
-                            ? '[ COMMITTING_DOSSIER... ]'
+                            ? '[ INITIALIZING ACCOUNT... ]'
                             : step === 4
-                            ? '[ INITIALIZE_ACCOUNT -> ]'
-                            : '[ PROCEED_NEXT_STEP -> ]'}
+                            ? '[ INITIALIZE ACCOUNT → ]'
+                            : '[ PROCEED TO NEXT STEP → ]'}
                     </span>
                 </button>
             </div>

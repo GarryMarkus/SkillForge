@@ -46,7 +46,7 @@ const Navbar = () => {
                             href="#PersonaSplitSection" 
                             className="text-xs uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
                         >
-                            MATCH_ENGINE
+                            MATCH ENGINE
                         </a>
                         {isAuthenticated ? (
                             <>
@@ -75,7 +75,7 @@ const Navbar = () => {
 
                     <Link
                         to={isAuthenticated ? "/student/assessment" : "/auth"}
-                        className="inline-flex items-center justify-center text-xs sm:text-sm bg-primary-container text-white border border-primary-container px-4 py-2 uppercase hover:bg-black transition-none font-bold"
+                        className="inline-flex items-center justify-center text-xs sm:text-sm bg-primary-container text-white border border-primary-container px-4 py-2 uppercase hover:bg-black shadow-[2px_2px_0px_#0A0A0A] transition-none font-bold"
                     >
                         [ START ASSESSMENT ]
                     </Link>
@@ -133,7 +133,7 @@ const Navbar = () => {
                         onClick={() => setMobileMenuOpen(false)}
                         className="py-1 uppercase text-on-surface-variant hover:text-primary-container font-bold"
                     >
-                        &gt; MATCH_ENGINE
+                        &gt; MATCH ENGINE
                     </a>
                     {isAuthenticated ? (
                         <>

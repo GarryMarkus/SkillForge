@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/sections/Navbar';
+import Navbar from '../components/layout/Navbar';
 import HeroSection from '../components/sections/HeroSection';
 import CapabilitiesGrid from '../components/sections/CapabilitiesGrid';
 import BlueprintSpecSection from '../components/sections/BlueprintSpecSection';
