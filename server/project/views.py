@@ -6,14 +6,14 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from accounts.models import ClientProfile, StudentProfile
-from skillforge.permissions import IsClient, IsStudent
+from accounts.permissions import IsClientUser, IsStudentUser
 from .models import JobPost, JobApplication
 from .serializers import JobPostSerializer, JobApplicationSerializer
 
 
 class CreateJobAPI(APIView):
     """Allows authenticated clients (recruiters) to publish new project/job postings."""
-    permission_classes = [IsAuthenticated, IsClient]
+    permission_classes = [IsAuthenticated, IsClientUser]
 
     def post(self, request):
         try:
@@ -30,7 +30,7 @@ class CreateJobAPI(APIView):
 
 class ClientJobsAPI(APIView):
     """Returns all job postings created by the authenticated recruiter."""
-    permission_classes = [IsAuthenticated, IsClient]
+    permission_classes = [IsAuthenticated, IsClientUser]
 
     def get(self, request):
         try:
@@ -106,7 +106,7 @@ class AllJobsAPI(APIView):
 
 class ApplyJobAPI(APIView):
     """Allows an authenticated student to submit an application to an open job."""
-    permission_classes = [IsAuthenticated, IsStudent]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def post(self, request):
         job_id = request.data.get('job_id')
@@ -143,7 +143,7 @@ class ApplyJobAPI(APIView):
 
 class MyApplicationsAPI(APIView):
     """Returns all job applications submitted by the logged-in student."""
-    permission_classes = [IsAuthenticated, IsStudent]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def get(self, request):
         try:
@@ -160,7 +160,7 @@ class JobApplicantsAPI(APIView):
     Returns all candidate applicants for a recruiter's job posting,
     ranked descending by TF-IDF profile match score.
     """
-    permission_classes = [IsAuthenticated, IsClient]
+    permission_classes = [IsAuthenticated, IsClientUser]
 
     def get(self, request, job_id):
         try:

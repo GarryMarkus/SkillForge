@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from accounts.permissions import IsStudentUser
 
 from .models import UpskillModule
 from .serializers import UpskillModuleSerializer
@@ -12,7 +13,7 @@ class GenerateUpskillModuleAPI(APIView):
     """
     Generate an AI learning module for a requested topic, calibrated to the student's learning level.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def post(self, request):
         topic = request.data.get("topic")
@@ -38,7 +39,7 @@ class GenerateUpskillModuleAPI(APIView):
 
 class ListUpskillModulesAPI(APIView):
     """List all personalized learning modules generated for the authenticated student."""
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def get(self, request):
         modules = list_user_modules(request.user.id)
@@ -48,7 +49,7 @@ class ListUpskillModulesAPI(APIView):
 
 class GetUpskillModuleAPI(APIView):
     """Retrieve full markdown content and metadata for a specific learning module."""
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def get(self, request, module_id):
         try:

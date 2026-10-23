@@ -101,3 +101,31 @@ class AccountsAPITests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["company_name"], "Acme Global")
         self.assertEqual(response.data["industry"], "FinTech")
+
+    def test_permission_classes_role_validation(self):
+        """Test IsStudentUser, IsClientUser, and HasCompletedOnboarding permissions."""
+        from django.test import RequestFactory
+        from accounts.permissions import IsStudentUser, IsClientUser, HasCompletedOnboarding
+
+        factory = RequestFactory()
+        student = User.objects.create_user(email="perm_student@example.com", password="Password123!", role="student", onboarding_stage=2)
+        client = User.objects.create_user(email="perm_client@example.com", password="Password123!", role="client", onboarding_stage=1)
+
+        req_student = factory.get("/test")
+        req_student.user = student
+
+        req_client = factory.get("/test")
+        req_client.user = client
+
+        # IsStudentUser
+        self.assertTrue(IsStudentUser().has_permission(req_student, None))
+        self.assertFalse(IsStudentUser().has_permission(req_client, None))
+
+        # IsClientUser
+        self.assertFalse(IsClientUser().has_permission(req_student, None))
+        self.assertTrue(IsClientUser().has_permission(req_client, None))
+
+        # HasCompletedOnboarding
+        self.assertTrue(HasCompletedOnboarding().has_permission(req_student, None))
+        self.assertFalse(HasCompletedOnboarding().has_permission(req_client, None))
+

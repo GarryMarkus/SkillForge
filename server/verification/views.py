@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from accounts.permissions import IsStudentUser
 
 from .personality_data import PERSONALITY_QUESTIONS
 from .services import (
@@ -17,7 +18,7 @@ class GenerateSkillTestAPI(APIView):
     Generate dynamic assessment questions tailored to candidate strengths using Gemini LLM.
     Provisions a proctored ExamSession.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def post(self, request):
         try:
@@ -44,7 +45,7 @@ class SubmitSkillTestAPI(APIView):
     Submit completed answers for a proctored test attempt.
     Grades responses, computes score percentage, and generates final analysis.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def post(self, request):
         attempt_id = request.data.get("attempt_id")
@@ -72,7 +73,7 @@ class SubmitSkillTestAPI(APIView):
 
 class PersonalityQuestionsAPI(APIView):
     """Returns the static bank of 7 psychometric personality questions."""
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def get(self, request):
         return Response(PERSONALITY_QUESTIONS, status=status.HTTP_200_OK)
@@ -83,7 +84,7 @@ class SubmitPersonalityAPI(APIView):
     Submit answers to the 7-question psychometric test.
     Computes personality score and assigns learning pace level.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def post(self, request):
         answers = request.data.get("answers", {})
@@ -93,7 +94,7 @@ class SubmitPersonalityAPI(APIView):
 
 class RecommendationAPI(APIView):
     """Retrieve the candidate's verified recommendation card, star rating, and tags."""
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsStudentUser]
 
     def get(self, request):
         data = get_recommendation(request.user.id)
