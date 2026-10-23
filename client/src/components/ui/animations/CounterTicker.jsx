@@ -2,11 +2,12 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 /**
  * CounterTicker - Mechanical monospace odometer/number ticker.
- * Smoothly counts from 0 (or start) up to target value with zero layout shifting.
+ * Smoothly counts from start up to target value with zero layout shifting.
+ * Supports real-time dynamic value updates.
  */
 const CounterTicker = ({
     value,
-    duration = 1.4,
+    duration = 1.2,
     prefix = '',
     suffix = '',
     decimals,
@@ -15,7 +16,9 @@ const CounterTicker = ({
     easing = 'easeOut', // 'easeOut' | 'linear'
 }) => {
     // Parse value if passed as string like "96.4%" or "12ms"
-    const parsedTarget = typeof value === 'number' ? value : parseFloat(String(value).replace(/[^0-9.-]/g, '')) || 0;
+    const parsedTarget = typeof value === 'number' 
+        ? value 
+        : parseFloat(String(value).replace(/[^0-9.-]/g, '')) || 0;
     
     // Auto-detect decimal places if not specified
     const inferredDecimals = decimals !== undefined 
@@ -24,14 +27,26 @@ const CounterTicker = ({
 
     const [currentVal, setCurrentVal] = useState(0);
     const [hasAnimated, setHasAnimated] = useState(false);
+    const currentValRef = useRef(0);
+    const prevTargetRef = useRef(parsedTarget);
     const containerRef = useRef(null);
     const rafRef = useRef(null);
 
-    const startTick = useCallback(() => {
+    const startTick = useCallback((fromValue, toValue, customDuration) => {
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+
         const startTime = performance.now();
-        const durationMs = duration * 1000;
-        const startValue = 0;
-        const changeInValue = parsedTarget - startValue;
+        const durationMs = (customDuration || duration) * 1000;
+        const changeInValue = toValue - fromValue;
+
+        if (changeInValue === 0) {
+            rafRef.current = requestAnimationFrame(() => {
+                setCurrentVal(toValue);
+                currentValRef.current = toValue;
+                setHasAnimated(true);
+            });
+            return;
+        }
 
         const animate = (currentTime) => {
             const elapsed = currentTime - startTime;
@@ -43,23 +58,26 @@ const CounterTicker = ({
                 easedProgress = 1 - Math.pow(1 - progress, 3);
             }
 
-            const nextValue = startValue + changeInValue * easedProgress;
+            const nextValue = fromValue + changeInValue * easedProgress;
             setCurrentVal(nextValue);
+            currentValRef.current = nextValue;
 
             if (progress < 1) {
                 rafRef.current = requestAnimationFrame(animate);
             } else {
-                setCurrentVal(parsedTarget);
+                setCurrentVal(toValue);
+                currentValRef.current = toValue;
                 setHasAnimated(true);
             }
         };
 
         rafRef.current = requestAnimationFrame(animate);
-    }, [duration, easing, parsedTarget]);
+    }, [duration, easing]);
 
+    // Initial trigger
     useEffect(() => {
         if (trigger === 'mount') {
-            startTick();
+            startTick(0, parsedTarget, duration);
             return () => {
                 if (rafRef.current) cancelAnimationFrame(rafRef.current);
             };
@@ -69,17 +87,18 @@ const CounterTicker = ({
             const observer = new IntersectionObserver(
                 ([entry]) => {
                     if (entry.isIntersecting && !hasAnimated) {
-                        startTick();
+                        startTick(0, parsedTarget, duration);
+                        observer.disconnect();
                     }
                 },
-                { threshold: 0.2 }
+                { threshold: 0.15 }
             );
 
             const el = containerRef.current;
             if (el) observer.observe(el);
 
             return () => {
-                if (el) observer.unobserve(el);
+                observer.disconnect();
                 if (rafRef.current) cancelAnimationFrame(rafRef.current);
             };
         }
@@ -87,7 +106,15 @@ const CounterTicker = ({
         return () => {
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
-    }, [trigger, hasAnimated, startTick]);
+    }, [trigger, hasAnimated, parsedTarget, duration, startTick]);
+
+    // Handle dynamic updates to `parsedTarget`
+    useEffect(() => {
+        if (hasAnimated && parsedTarget !== prevTargetRef.current) {
+            startTick(currentValRef.current, parsedTarget, Math.min(duration, 0.8));
+            prevTargetRef.current = parsedTarget;
+        }
+    }, [parsedTarget, hasAnimated, duration, startTick]);
 
     const formattedNumber = currentVal.toLocaleString('en-US', {
         minimumFractionDigits: inferredDecimals,

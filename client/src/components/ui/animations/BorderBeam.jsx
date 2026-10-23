@@ -15,7 +15,8 @@ const BorderBeam = ({
     borderWidth = 1.5,
     reverse = false,
 }) => {
-    const gradientId = React.useId();
+    const rawId = React.useId();
+    const cleanId = `beam-${rawId.replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
     return (
         <div
@@ -25,23 +26,26 @@ const BorderBeam = ({
             <svg
                 className="w-full h-full block"
                 xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
             >
                 <defs>
-                    <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
+                    <linearGradient id={cleanId} x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor={color} stopOpacity="1" />
                         <stop offset="60%" stopColor={color} stopOpacity="0.4" />
                         <stop offset="100%" stopColor={secondaryColor} stopOpacity="0" />
                     </linearGradient>
                 </defs>
                 <motion.rect
-                    x="0.5"
-                    y="0.5"
-                    width="calc(100% - 1px)"
-                    height="calc(100% - 1px)"
+                    x="0"
+                    y="0"
+                    width="100"
+                    height="100"
                     fill="none"
-                    stroke={`url(#${gradientId})`}
+                    stroke={`url(#${cleanId})`}
                     strokeWidth={borderWidth}
                     strokeLinecap="square"
+                    vectorEffect="non-scaling-stroke"
                     pathLength={100}
                     strokeDasharray={`${size} ${100 - size}`}
                     initial={{ strokeDashoffset: reverse ? -100 : 0 }}

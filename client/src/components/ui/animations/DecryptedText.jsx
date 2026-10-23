@@ -91,6 +91,7 @@ const DecryptedText = ({
                 ([entry]) => {
                     if (entry.isIntersecting && !hasAnimated) {
                         startScramble();
+                        observer.disconnect();
                     }
                 },
                 { threshold: 0.15 }
@@ -100,7 +101,7 @@ const DecryptedText = ({
             if (el) observer.observe(el);
 
             return () => {
-                if (el) observer.unobserve(el);
+                observer.disconnect();
                 if (intervalRef.current) clearInterval(intervalRef.current);
             };
         }

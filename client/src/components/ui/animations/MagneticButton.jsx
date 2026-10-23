@@ -25,7 +25,7 @@ const MagneticButton = ({
     const springY = useSpring(y, springConfig);
 
     const handlePointerMove = (e) => {
-        if (disabled || !ref.current) return;
+        if (disabled || !ref.current || e.pointerType === 'touch') return;
 
         const rect = ref.current.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
