@@ -1,69 +1,68 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Check, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../ui/Button';
+import { useAuthStore } from '../../store/authStore';
 
 const SuccessState = () => {
     const navigate = useNavigate();
-    const [count, setCount] = useState(5);
+    const { role } = useAuthStore();
+    const [count, setCount] = useState(3);
 
     useEffect(() => {
         const timer = setInterval(() => {
             setCount((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer);
-                    navigate('/');
+                    if (role === 'student') {
+                        navigate('/student/onboarding');
+                    } else if (role === 'client') {
+                        navigate('/client/onboarding');
+                    } else {
+                        navigate('/');
+                    }
                     return 0;
                 }
                 return prev - 1;
             });
         }, 1000);
         return () => clearInterval(timer);
-    }, [navigate]);
+    }, [navigate, role]);
+
+    const handleProceedNow = () => {
+        if (role === 'student') {
+            navigate('/student/onboarding');
+        } else if (role === 'client') {
+            navigate('/client/onboarding');
+        } else {
+            navigate('/');
+        }
+    };
 
     return (
-        <div className="flex flex-col items-center justify-center py-10 text-center">
-            <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="w-24 h-24 rounded-full bg-green-500 flex items-center justify-center mb-6 shadow-xl shadow-green-500/30"
-            >
-                <Check className="w-12 h-12 text-white stroke-[3]" />
-            </motion.div>
+        <div className="w-full border border-black/20 bg-surface-container-lowest p-space-lg shadow-[4px_4px_0px_#1D52B8] font-mono text-center flex flex-col items-center gap-space-md">
+            <div className="border border-primary-container bg-primary-fixed/30 text-primary-container px-space-md py-1 text-label-md font-bold uppercase">
+                [+] SYSTEM_PROVISIONED: ACCOUNT_INITIALIZED
+            </div>
 
-            <motion.h2
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-3xl font-black text-black dark:text-white mb-2"
-            >
-                Welcome to SkillForge!
-            </motion.h2>
-
-            <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-gray-500 text-lg mb-8 max-w-sm"
-            >
-                Your account has been created successfully. Let's start transforming your career.
-            </motion.p>
-
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="space-y-4"
-            >
-                <Button onClick={() => navigate('/')} className="px-8 py-3 flex items-center gap-2">
-                    Start Your Journey <ArrowRight className="w-4 h-4" />
-                </Button>
-                <p className="text-sm text-gray-400">
-                    Redirecting in {count}s...
+            <div className="space-y-1">
+                <h2 className="text-headline-sm font-bold uppercase text-on-surface">
+                    WELCOME TO SKILLFORGE ENTERPRISE
+                </h2>
+                <p className="text-body-sm text-secondary max-w-md mx-auto">
+                    Your cryptographic credentials have been registered. The system is routing you to the intake terminal.
                 </p>
-            </motion.div>
+            </div>
+
+            <div className="border border-black/15 bg-surface px-space-md py-space-xs text-label-sm font-bold text-on-surface">
+                AUTO_ROUTING_IN: [ {count} SECONDS ]
+            </div>
+
+            <button
+                type="button"
+                onClick={handleProceedNow}
+                className="bg-primary-container text-on-primary py-2 px-space-lg font-bold uppercase text-label-md border border-primary-container hover:bg-primary shadow-[2px_2px_0px_#191C1D] cursor-pointer"
+            >
+                [ PROCEED_TO_INTAKE_CONSOLE_NOW -&gt; ]
+            </button>
         </div>
     );
 };

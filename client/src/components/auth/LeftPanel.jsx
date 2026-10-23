@@ -1,69 +1,85 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, Zap, Trophy, Target } from 'lucide-react';
 
 const LeftPanel = () => {
     return (
-        <>
-            <div className="absolute inset-0 w-full h-full">
-                <div className="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] bg-purple-600/30 rounded-full blur-[120px] animate-pulse" />
-                <div className="absolute bottom-[-20%] right-[-20%] w-[80%] h-[80%] bg-blue-600/30 rounded-full blur-[120px] animate-pulse delay-1000" />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
+        <div className="w-full h-full flex flex-col justify-between font-mono select-none text-on-primary">
+            {/* Corner Crosshairs */}
+            <div className="absolute top-2 left-2 text-on-primary/40 text-[10px] pointer-events-none">+</div>
+            <div className="absolute top-2 right-2 text-on-primary/40 text-[10px] pointer-events-none">+</div>
+            <div className="absolute bottom-2 left-2 text-on-primary/40 text-[10px] pointer-events-none">+</div>
+            <div className="absolute bottom-2 right-2 text-on-primary/40 text-[10px] pointer-events-none">+</div>
+
+            {/* Top Brand & Node Strip */}
+            <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-headline-sm font-bold tracking-tight uppercase">
+                    <span className="text-white font-bold">+</span>
+                    <span>SKILLFORGE // IDENTITY_GATEWAY</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 text-label-sm font-label-sm border border-white/30 bg-white/10 px-space-xs py-0.5 w-fit uppercase font-bold">
+                    <span>[NODE: AUTH_GATEWAY_V4 // 256-BIT_ENCRYPTION]</span>
+                </div>
             </div>
 
-            <div className="relative z-10">
-                <div className="flex items-center gap-3">
-                    <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10">
-                        <Sparkles className="w-8 h-8 text-white" />
+            {/* Middle Architectural Schematic Box */}
+            <div className="flex flex-col gap-space-md my-auto py-space-lg">
+                <div className="border border-white/20 bg-primary/40 p-space-md flex flex-col gap-3 shadow-[3px_3px_0px_rgba(0,0,0,0.3)]">
+                    <div className="text-label-sm font-label-sm uppercase text-on-primary/80 font-bold border-b border-white/20 pb-1 flex items-center justify-between">
+                        <span>// ARCHITECTURAL_SUBSYSTEMS</span>
+                        <span className="text-[9px] text-white/50">CAD_SPEC_09</span>
                     </div>
-                    <span className="text-3xl font-black text-white tracking-tighter">SkillForge</span>
+
+                    <div className="space-y-2 text-body-sm font-body-sm">
+                        <div className="flex items-start gap-2">
+                            <span className="text-primary-fixed font-bold">01.</span>
+                            <div>
+                                <strong className="text-white block uppercase">TF-IDF Vector Matching Engine</strong>
+                                <span className="text-on-primary/80 text-[11px] leading-tight block">
+                                    Cosine similarity ranking against enterprise technical requisitions.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-start gap-2">
+                            <span className="text-primary-fixed font-bold">02.</span>
+                            <div>
+                                <strong className="text-white block uppercase">Hardware-Locked Proctoring</strong>
+                                <span className="text-on-primary/80 text-[11px] leading-tight block">
+                                    Real-time canvas pixel heuristics and multi-signal risk accumulator.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-start gap-2">
+                            <span className="text-primary-fixed font-bold">03.</span>
+                            <div>
+                                <strong className="text-white block uppercase">Adaptive Curriculum Synthesizer</strong>
+                                <span className="text-on-primary/80 text-[11px] leading-tight block">
+                                    Automated personalized modules designed to resolve skill score deficits.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Technical Parameters DL */}
+                <div className="border border-white/20 bg-primary/30 p-space-sm text-label-sm font-label-sm">
+                    <dl className="grid grid-cols-2 gap-y-1 text-on-primary/90">
+                        <dt className="text-on-primary/60">CRYPTOGRAPHY:</dt>
+                        <dd className="text-right font-bold">SHA256 + BLAKE3</dd>
+                        <dt className="text-on-primary/60">TOKEN_STANDARD:</dt>
+                        <dd className="text-right font-bold">JWT (BEARER_AUTH)</dd>
+                        <dt className="text-on-primary/60">SECURITY_CLEARANCE:</dt>
+                        <dd className="text-right font-bold text-primary-fixed">NIST_COMPLIANT</dd>
+                    </dl>
                 </div>
             </div>
 
-            <div className="relative z-10 flex flex-col gap-8">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                >
-                    <h1 className="text-5xl font-bold text-white leading-tight mb-4">
-                        Transform Your Skills, <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-                            Transform Your Career.
-                        </span>
-                    </h1>
-                    <p className="text-gray-400 text-lg max-w-md">
-                        Join thousands of students and companies bridging the gap between learning and earning.
-                    </p>
-                </motion.div>
-
-                <div className="space-y-4">
-                    {[
-                        { icon: Zap, text: "AI-Powered Personalization", color: "text-yellow-400" },
-                        { icon: Target, text: "Learn 40% Faster", color: "text-red-400" },
-                        { icon: Trophy, text: "60% Job Placement Rate", color: "text-green-400" },
-                    ].map((item, i) => (
-                        <motion.div
-                            key={i}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.4 + (i * 0.1) }}
-                            className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors backdrop-blur-sm"
-                        >
-                            <item.icon className={`w-6 h-6 ${item.color}`} />
-                            <span className="text-white font-medium">{item.text}</span>
-                        </motion.div>
-                    ))}
-                </div>
+            {/* Base Coordinate Ribbon */}
+            <div className="border-t border-white/20 pt-space-xs flex items-center justify-between text-label-sm font-label-sm text-on-primary/70">
+                <span>COORD: X00-Y00 // ORTHO</span>
+                <span>REV: 2026.4 // WORM_LOCKED</span>
             </div>
-
-            <div className="relative z-10 w-full">
-                <div className="flex items-center justify-between text-xs text-gray-500 font-mono">
-                    <span>© 2026 SkillForge Inc.</span>
-                    <span>v2.0.1</span>
-                </div>
-            </div>
-        </>
+        </div>
     );
 };
 

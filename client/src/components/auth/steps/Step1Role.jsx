@@ -1,47 +1,47 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-
 import { useAuthStore } from '../../../store/authStore';
-import { User, Briefcase, CheckCircle } from 'lucide-react';
 
-const RoleCard = ({ role, title, icon: Icon, description, benefits, selectRole, selected }) => {
+const RoleCard = ({ role, title, code, description, specifications, selectRole, selected }) => {
     return (
-        <motion.div
-            whileHover={{ y: -5 }}
-            whileTap={{ scale: 0.98 }}
+        <div
             onClick={() => selectRole(role)}
-            className={`relative cursor-pointer p-6 rounded-3xl border-2 transition-all duration-300 overflow-hidden group
-        ${selected
-                    ? 'border-blue-500 bg-blue-50/10 shadow-[0px_4px_20px_rgba(59,130,246,0.15)] dark:bg-blue-900/10'
-                    : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-blue-300 dark:hover:border-blue-700'
-                }
-      `}
+            className={`p-space-md border transition-none cursor-pointer flex flex-col justify-between ${
+                selected
+                    ? 'border-2 border-primary-container bg-primary-fixed/20 shadow-[3px_3px_0px_#1D52B8]'
+                    : 'border-black/20 bg-surface hover:bg-surface-container-low'
+            }`}
         >
-            {/* Selected Checkmark */}
-            {selected && (
-                <div className="absolute top-4 right-4">
-                    <CheckCircle className="w-6 h-6 text-blue-500 fill-current" />
+            <div>
+                <div className="flex items-center justify-between mb-2">
+                    <span className="text-[10px] text-secondary font-bold uppercase">
+                        [{code}]
+                    </span>
+                    <span className={`text-[10px] px-1.5 py-0.2 border uppercase font-bold ${
+                        selected
+                            ? 'bg-primary-container text-white border-primary-container'
+                            : 'bg-surface border-black/15 text-secondary'
+                    }`}>
+                        {selected ? 'SELECTED' : 'SELECT'}
+                    </span>
                 </div>
-            )}
 
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-colors
-        ${selected ? 'bg-blue-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 group-hover:text-blue-500'}
-      `}>
-                <Icon className="w-7 h-7" />
+                <h3 className="text-body-md font-bold text-on-surface uppercase mb-1">
+                    {title}
+                </h3>
+                <p className="text-body-sm text-secondary leading-relaxed mb-3">
+                    {description}
+                </p>
             </div>
 
-            <h3 className="text-xl font-bold text-black dark:text-white mb-2">{title}</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 leading-relaxed">{description}</p>
-
-            <ul className="space-y-2">
-                {benefits.map((benefit, i) => (
-                    <li key={i} className="flex items-center gap-2 text-xs font-medium text-gray-600 dark:text-gray-300">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                        {benefit}
-                    </li>
+            <div className="border-t border-black/10 pt-2 space-y-1">
+                {specifications.map((spec, i) => (
+                    <div key={i} className="flex items-center gap-1.5 text-label-sm text-on-surface-variant font-bold">
+                        <span className="text-primary-container font-bold">+</span>
+                        <span>{spec}</span>
+                    </div>
                 ))}
-            </ul>
-        </motion.div>
+            </div>
+        </div>
     );
 };
 
@@ -49,28 +49,43 @@ const Step1Role = () => {
     const { role, setRole } = useAuthStore();
 
     return (
-        <div className="space-y-6">
-            <div className="text-center">
-                <h2 className="text-2xl font-black text-black dark:text-white">Choose Your Path</h2>
-                <p className="text-gray-500">How would you like to use SkillForge?</p>
+        <div className="space-y-space-md font-mono">
+            <div className="border-b border-black/15 pb-2">
+                <h2 className="text-headline-sm font-bold uppercase text-on-surface">
+                    [ 01_ROLE_SPECIFICATION // SELECT_PERSONA ]
+                </h2>
+                <p className="text-body-sm text-secondary">
+                    Configure your operational mandate to initialize the appropriate telemetry dashboard.
+                </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
                 <RoleCard
                     role="student"
-                    title="Student / Individual"
-                    icon={User}
-                    description="I want to verify my skills and get hired by top startups."
-                    benefits={["AI Skill Verification", "Portfolio Builder", "Direct Job Access"]}
+                    title="Student / Candidate"
+                    code="SPEC: CANDIDATE_NODE"
+                    description="Verify empirical engineering capabilities, pass anti-cheat proctoring, and match with open technical roles."
+                    specifications={[
+                        "AI Verified Skill Score",
+                        "Live Hardware Proctoring",
+                        "TF-IDF Algorithmic Matching",
+                        "Adaptive Deficit Learning"
+                    ]}
                     selectRole={setRole}
                     selected={role === 'student'}
                 />
+
                 <RoleCard
                     role="client"
-                    title="Client / Startup"
-                    icon={Briefcase}
-                    description="I want to hire verified talent or train my team."
-                    benefits={["Access Top 1% Talent", "Custom Skill assessments", "Team Training Dashboard"]}
+                    title="Recruiter / Enterprise"
+                    code="SPEC: ENTERPRISE_NODE"
+                    description="Publish job requisitions, rank candidates by TF-IDF cosine similarity, and audit tamper-proof proctor telemetry."
+                    specifications={[
+                        "Deploy Job Requisitions",
+                        "Cosine Similarity Matcher",
+                        "Audit Proctor Risk Logs",
+                        "Instant Cryptographic Offers"
+                    ]}
                     selectRole={setRole}
                     selected={role === 'client'}
                 />

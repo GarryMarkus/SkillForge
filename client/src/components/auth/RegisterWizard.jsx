@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../store/authStore';
-import { ChevronRight, ChevronLeft, Check } from 'lucide-react';
-import Button from '../ui/Button';
 
-// Steps
 import Step1Role from './steps/Step1Role';
 import Step2BasicInfo from './steps/Step2BasicInfo';
 import Step3Details from './steps/Step3Details';
@@ -13,32 +8,45 @@ import Step4Confirm from './steps/Step4Confirm';
 import SuccessState from './SuccessState';
 
 const RegisterWizard = () => {
-    const { step, nextStep, prevStep, role, setAuthMode, signup } = useAuthStore();
-    const navigate = useNavigate();
+    const { step, nextStep, prevStep, role, setAuthMode, signup, formData } = useAuthStore();
     const [isSuccess, setIsSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    // Step configuration
     const steps = [
-        { id: 1, title: 'Role' },
-        { id: 2, title: 'Basic Info' },
-        { id: 3, title: 'Details' },
-        { id: 4, title: 'Confirm' },
+        { id: 1, title: '01_ROLE' },
+        { id: 2, title: '02_IDENTITY' },
+        { id: 3, title: '03_CALIBRATE' },
+        { id: 4, title: '04_CONFIRM' },
     ];
 
-    const renderStep = () => {
-        switch (step) {
-            case 1: return <Step1Role />;
-            case 2: return <Step2BasicInfo />;
-            case 3: return <Step3Details />;
-            case 4: return <Step4Confirm />;
-            default: return null;
+    const validateCurrentStep = () => {
+        if (step === 1) {
+            if (!role) {
+                setError('Please select an operational role.');
+                return false;
+            }
         }
-    }
+        if (step === 2) {
+            if (!formData.fullName || !formData.email || !formData.password) {
+                setError('Please fill in all required fields (Name, Email, Password).');
+                return false;
+            }
+            if (formData.password !== formData.confirmPassword) {
+                setError('Password verification does not match.');
+                return false;
+            }
+            if (role === 'client' && (!formData.companyName || !formData.designation)) {
+                setError('Company Name and Designation are mandatory for recruiter accounts.');
+                return false;
+            }
+        }
+        setError(null);
+        return true;
+    };
 
     const handleNext = () => {
-        // Validation logic can go here
-        if (step === 1 && !role) return;
+        if (!validateCurrentStep()) return;
 
         if (step === 4) {
             handleComplete();
@@ -49,21 +57,14 @@ const RegisterWizard = () => {
 
     const handleComplete = async () => {
         setIsLoading(true);
+        setError(null);
         try {
-            const user = await signup();
+            await signup();
             setIsSuccess(true);
-            // Delay for success animation before redirect
-            setTimeout(() => {
-                if (user.role === 'student') {
-                    navigate('/student/dashboard');
-                } else if (user.role === 'client') {
-                    navigate('/client/dashboard');
-                }
-            }, 2000);
-        } catch (error) {
-            console.error(error);
-            // Handle error (maybe show a toast or alert - simple alert for now)
-            alert('Registration failed: ' + error.message);
+        } catch (err) {
+            console.error('Registration failed:', err);
+            setError(err.message || 'Registration failed. Please verify submitted details.');
+        } finally {
             setIsLoading(false);
         }
     };
@@ -73,83 +74,94 @@ const RegisterWizard = () => {
     }
 
     return (
-        <div className="w-full">
-            {/* Header / Progress */}
-            <div className="mb-8">
-                <div className="flex items-center justify-between relative mb-2">
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-200 dark:bg-gray-800 rounded-full -z-10" />
-                    <div
-                        className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-blue-500 rounded-full -z-10 transition-all duration-300"
-                        style={{ width: `${((step - 1) / (steps.length - 1)) * 100}%` }}
-                    />
+        <div className="w-full border border-black/20 bg-surface-container-lowest p-space-lg shadow-[4px_4px_0px_#1D52B8] font-mono">
+            {/* Wizard Header Bar & Step Stepper */}
+            <div className="border-b border-black/15 pb-space-sm mb-space-md">
+                <div className="flex items-center justify-between mb-2">
+                    <span className="text-label-sm font-bold uppercase text-primary-container">
+                        [ REQUISITION_REGISTRATION // WIZARD_TX ]
+                    </span>
+                    <button
+                        type="button"
+                        onClick={() => setAuthMode('login')}
+                        className="text-label-sm font-bold uppercase text-secondary hover:text-black hover:underline cursor-pointer"
+                    >
+                        [ ALREADY_REGISTERED? SIGN_IN ]
+                    </button>
+                </div>
 
+                {/* Stepper Tabs */}
+                <div className="grid grid-cols-4 gap-1 border border-black/20 bg-surface-container p-0.5">
                     {steps.map((s) => {
                         const isActive = s.id === step;
-                        const isCompleted = s.id < step;
+                        const isPast = s.id < step;
 
                         return (
-                            <div key={s.id} className="flex flex-col items-center gap-2">
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 border-4
-                                     ${isActive ? 'bg-blue-500 text-white border-white dark:border-black scale-110 shadow-lg' :
-                                        isCompleted ? 'bg-blue-500 text-white border-white dark:border-black' :
-                                            'bg-gray-200 dark:bg-gray-800 text-gray-500 border-transparent'}
-                                 `}>
-                                    {isCompleted ? <Check className="w-4 h-4" /> : s.id}
-                                </div>
+                            <div
+                                key={s.id}
+                                className={`text-center py-1 text-[10px] font-bold uppercase transition-none ${
+                                    isActive
+                                        ? 'bg-primary-container text-on-primary'
+                                        : isPast
+                                        ? 'bg-primary-fixed/30 text-primary-container'
+                                        : 'text-on-surface-variant'
+                                }`}
+                            >
+                                {s.title}
                             </div>
-                        )
+                        );
                     })}
                 </div>
-                <div className="flex justify-between px-1">
-                    {steps.map((s) => (
-                        <span key={s.id} className={`text-[10px] font-bold uppercase tracking-wider transition-colors
-                             ${s.id === step ? 'text-blue-500' : 'text-gray-400'}
-                         `}>{s.title}</span>
-                    ))}
+            </div>
+
+            {/* Step Body */}
+            <div className="min-h-[280px]">
+                {step === 1 && <Step1Role />}
+                {step === 2 && <Step2BasicInfo />}
+                {step === 3 && <Step3Details />}
+                {step === 4 && <Step4Confirm />}
+            </div>
+
+            {error && (
+                <div className="mt-space-md border border-error bg-error-container/20 p-space-sm text-error text-label-sm font-bold uppercase">
+                    [VALIDATION_FAULT] {error}
                 </div>
-            </div>
+            )}
 
-            {/* Step Content */}
-            <div className="min-h-[300px]">
-                <AnimatePresence mode="wait">
-                    <motion.div
-                        key={step}
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        transition={{ duration: 0.2 }}
-                    >
-                        {renderStep()}
-                    </motion.div>
-                </AnimatePresence>
-            </div>
-
-            {/* Navigation Actions */}
-            <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
-                {step === 1 ? (
+            {/* Stepper Action Bar */}
+            <div className="mt-space-lg pt-space-sm border-t border-black/15 flex items-center justify-between">
+                {step > 1 ? (
                     <button
-                        onClick={() => setAuthMode('login')}
-                        className="text-sm font-bold text-gray-500 hover:text-black dark:hover:text-white"
+                        type="button"
+                        onClick={prevStep}
+                        className="border border-black/30 bg-surface px-space-md py-2 font-bold uppercase text-label-md text-on-surface hover:bg-surface-container transition-none cursor-pointer"
                     >
-                        Back to Login
+                        [ &lt;- PREVIOUS_STEP ]
                     </button>
                 ) : (
                     <button
-                        onClick={prevStep}
-                        className="flex items-center gap-1 text-sm font-bold text-gray-500 hover:text-black dark:hover:text-white"
+                        type="button"
+                        onClick={() => setAuthMode('login')}
+                        className="text-secondary text-label-sm font-bold uppercase hover:underline cursor-pointer"
                     >
-                        <ChevronLeft className="w-4 h-4" /> Back
+                        [ CANCEL ]
                     </button>
                 )}
 
-                <Button
+                <button
+                    type="button"
                     onClick={handleNext}
-                    disabled={(step === 1 && !role) || isLoading}
-                    className="px-8 py-3 !bg-black dark:!bg-white !text-white dark:!text-black min-w-[140px]"
+                    disabled={isLoading}
+                    className="bg-primary-container text-on-primary px-space-lg py-2 font-bold uppercase text-label-md border border-primary-container hover:bg-primary transition-none cursor-pointer shadow-[2px_2px_0px_#191C1D] disabled:opacity-50"
                 >
-                    {isLoading ? 'Creating...' : step === 4 ? 'Create Account' : 'Continue'}
-                    {!isLoading && <ChevronRight className="w-4 h-4 ml-1" />}
-                </Button>
+                    <span>
+                        {isLoading
+                            ? '[ COMMITTING_DOSSIER... ]'
+                            : step === 4
+                            ? '[ INITIALIZE_ACCOUNT -> ]'
+                            : '[ PROCEED_NEXT_STEP -> ]'}
+                    </span>
+                </button>
             </div>
         </div>
     );

@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useAuthStore } from '../../store/authStore';
-import Button from '../ui/Button';
-import Input from '../ui/Input';
-import { Mail, Lock, User, Github, Linkedin, ArrowRight } from 'lucide-react';
 
 const LoginForm = () => {
     const { setAuthMode, login } = useAuthStore();
@@ -19,113 +15,128 @@ const LoginForm = () => {
         setError(null);
         try {
             const user = await login(formData.email, formData.password);
-            // Redirect based on role
+            // Redirect based on role and onboarding status
             if (user.role === 'student') {
-                navigate('/student/dashboard');
+                if (user.onboarding_stage !== undefined && user.onboarding_stage < 2) {
+                    navigate('/student/onboarding');
+                } else {
+                    navigate('/student/dashboard');
+                }
             } else if (user.role === 'client') {
-                navigate('/client/dashboard');
+                if (user.onboarding_stage !== undefined && user.onboarding_stage < 2) {
+                    navigate('/client/onboarding');
+                } else {
+                    navigate('/client/dashboard');
+                }
             } else {
-                // Fallback or admin
                 navigate('/');
             }
         } catch (err) {
-            setError(err.message || 'Login failed. Please check your credentials.');
+            setError(err.message || 'Authentication failed. Please verify credentials.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="w-full">
-            <div className="text-center mb-8">
-                <h2 className="text-3xl font-black text-black dark:text-white mb-2">Welcome Back</h2>
-                <p className="text-gray-500 dark:text-gray-400">Enter your credentials to access your account</p>
+        <div className="w-full border border-black/20 bg-surface-container-lowest p-space-lg shadow-[4px_4px_0px_#1D52B8] font-mono">
+            {/* Title Strip */}
+            <div className="border-b border-black/15 pb-space-sm mb-space-md">
+                <div className="flex items-center gap-2 font-bold uppercase text-headline-sm text-on-surface">
+                    <span className="text-primary-container font-bold">+</span>
+                    <span>[ IDENTITY_AUTHENTICATION // CREDENTIAL_ENTRY ]</span>
+                </div>
+                <p className="text-body-sm text-secondary mt-1">
+                    Enter cryptographic credentials to access verified candidate or recruiter telemetry console.
+                </p>
             </div>
 
-            {/* Tab Switcher */}
-            <div className="flex p-1 bg-gray-100 dark:bg-gray-800 rounded-xl mb-8 relative">
-                <div className="absolute inset-0 p-1 flex">
-                    <motion.div
-                        layoutId="tab"
-                        className="w-1/2 bg-white dark:bg-gray-700 rounded-lg shadow-sm"
+            {/* Mode Switcher Rail */}
+            <div className="flex border border-black/20 mb-space-md bg-surface-container">
+                <button
+                    type="button"
+                    className="flex-1 py-2 text-label-md font-bold uppercase transition-none bg-primary-container text-on-primary border-r border-black/20"
+                >
+                    [ SIGN_IN ]
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setAuthMode('register')}
+                    className="flex-1 py-2 text-label-md font-bold uppercase text-on-surface-variant hover:bg-surface-container-high transition-none cursor-pointer"
+                >
+                    [ REGISTER_NEW_ACCOUNT ]
+                </button>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-space-md">
+                <div>
+                    <label className="block text-label-sm uppercase font-bold text-outline mb-1">
+                        EMAIL_ADDRESS_SPECIFICATION *
+                    </label>
+                    <input
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="candidate@example.com or recruiter@example.com"
+                        className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
                     />
                 </div>
-                <button className="flex-1 relative z-10 py-2.5 text-sm font-bold text-black dark:text-white">Login</button>
-                <button
-                    onClick={() => setAuthMode('register')}
-                    className="flex-1 relative z-10 py-2.5 text-sm font-medium text-gray-500 hover:text-black dark:hover:text-white transition-colors"
-                >
-                    Sign Up
-                </button>
-            </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <Input
-                    label="Email Address"
-                    type="email"
-                    name="email"
-                    icon={Mail}
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-
-                <Input
-                    label="Password"
-                    type="password"
-                    name="password"
-                    icon={Lock}
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                />
-
-                <div className="flex items-center justify-between text-sm">
-                    <label className="flex items-center gap-2 cursor-pointer group">
-                        <input type="checkbox" className="w-4 h-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500" />
-                        <span className="text-gray-500 group-hover:text-black dark:group-hover:text-white transition-colors">Remember me</span>
+                <div>
+                    <label className="block text-label-sm uppercase font-bold text-outline mb-1">
+                        PASSWORD_CREDENTIAL *
                     </label>
-                    <a href="#" className="font-bold text-blue-500 hover:underline">Forgot Password?</a>
+                    <input
+                        type="password"
+                        required
+                        value={formData.password}
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        placeholder="••••••••••••"
+                        className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none text-body-md font-mono"
+                    />
                 </div>
 
-                <Button
-                    className="w-full text-lg py-4 flex items-center justify-center gap-2"
-                    disabled={loading}
-                >
-                    {loading ? 'Signing in...' : 'Sign In'}
-                    {!loading && <ArrowRight className="w-5 h-5" />}
-                </Button>
-
+                <div className="flex items-center justify-between text-label-sm text-secondary pt-1">
+                    <label className="flex items-center gap-2 cursor-pointer select-none">
+                        <input
+                            type="checkbox"
+                            defaultChecked
+                            className="w-4 h-4 border border-black/30 rounded-none accent-primary-container cursor-pointer"
+                        />
+                        <span>PERSIST_SESSION_LOCAL</span>
+                    </label>
+                    <span className="text-primary-container font-bold border border-primary-container/20 px-1 py-0.2 bg-primary-fixed/20">
+                        256-BIT_ENCRYPTED
+                    </span>
+                </div>
 
                 {error && (
-                    <motion.p
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-red-500 text-sm font-medium text-center"
-                    >
-                        {error}
-                    </motion.p>
+                    <div className="border border-error bg-error-container/20 p-space-sm text-error text-label-sm font-bold uppercase">
+                        [AUTHENTICATION_FAULT] {error}
+                    </div>
                 )}
+
+                <div className="pt-2">
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-primary-container text-on-primary py-2.5 px-space-md font-bold uppercase text-label-md border border-primary-container hover:bg-primary transition-none cursor-pointer flex items-center justify-center gap-2 shadow-[2px_2px_0px_#191C1D] disabled:opacity-50"
+                    >
+                        <span>
+                            {loading ? '[ VERIFYING_CREDENTIALS... ]' : '[ EMIT_AUTHENTICATION_TOKEN -> ]'}
+                        </span>
+                    </button>
+                </div>
             </form>
 
-            <div className="relative my-8">
-                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200 dark:border-gray-800"></div></div>
-                <div className="relative flex justify-center text-sm"><span className="px-4 bg-light-canvas dark:bg-dark-canvas text-gray-500 font-medium">Or continue with</span></div>
+            {/* Quick Demo Credentials Footer */}
+            <div className="mt-space-md pt-space-xs border-t border-black/10 flex flex-wrap items-center justify-between gap-1 text-[10px] text-secondary">
+                <span>DEMO_CANDIDATE: student@example.com / Password123!</span>
+                <span>DEMO_RECRUITER: recruiter@example.com / Password123!</span>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-                <button className="flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-bold text-black dark:text-white">
-                    <Github className="w-5 h-5" />
-                    Github
-                </button>
-                <button className="flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-bold text-black dark:text-white">
-                    <Linkedin className="w-5 h-5 text-blue-600" />
-                    LinkedIn
-                </button>
-            </div>
-
-            <p className="mt-8 text-center text-gray-500">
-                Don't have an account? <button onClick={() => setAuthMode('register')} className="font-bold text-blue-500 hover:underline">Create Account</button>
-            </p>
-        </div >
+        </div>
     );
 };
 
