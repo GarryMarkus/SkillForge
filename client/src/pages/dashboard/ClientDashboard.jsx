@@ -190,7 +190,7 @@ const ClientDashboard = () => {
     };
 
     const handleIssueOffer = (candidate) => {
-        alert(`[OFFER_DISPATCH] Cryptographic job offer dispatched to candidate ${candidate.candidate_name} (${candidate.email}).`);
+        alert(`Job offer invitation sent to candidate ${candidate.candidate_name} (${candidate.email}).`);
     };
 
     const handleExportCSV = () => {
@@ -214,7 +214,7 @@ const ClientDashboard = () => {
         return true;
     });
 
-    const companyName = profile?.company_name || user?.email?.split('@')[0]?.toUpperCase() || 'NEXUS_INFRASTRUCTURE_INC';
+    const companyName = profile?.company_name || user?.email?.split('@')[0] || 'SkillForge Partner';
     const totalApplicantsCount = (jobs.length * 14) + applicants.length;
     const requiredSkillsList = selectedJob?.skills_required 
         ? selectedJob.skills_required.split(',').map(s => s.trim().toUpperCase())
