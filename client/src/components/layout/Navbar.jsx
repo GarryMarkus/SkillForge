@@ -23,7 +23,7 @@ const Navbar = () => {
                         <span className="text-primary-container font-bold">+</span>
                         <span>SKILLFORGE</span>
                     </Link>
-                    <span className="font-label-sm text-label-sm border border-primary-container/30 bg-primary-fixed/30 px-space-xs py-0.5 text-primary-container font-bold hidden sm:inline-block">
+                    <span className="text-xs border border-primary-container/30 bg-primary-fixed/30 px-2 py-0.5 text-primary-container font-bold hidden sm:inline-block">
                         [ SYSTEM STATUS: ACTIVE ]
                     </span>
                 </div>
@@ -32,19 +32,19 @@ const Navbar = () => {
                     <nav className="hidden md:flex items-center gap-space-lg">
                         <a 
                             href="#CapabilitiesRow" 
-                            className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
+                            className="text-xs uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
                         >
                             VERIFICATION
                         </a>
                         <a 
                             href="#BlueprintSection" 
-                            className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
+                            className="text-xs uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
                         >
                             PROCTORING
                         </a>
                         <a 
                             href="#PersonaSplitSection" 
-                            className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
+                            className="text-xs uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
                         >
                             MATCH_ENGINE
                         </a>
@@ -52,13 +52,13 @@ const Navbar = () => {
                             <>
                                 <Link 
                                     to={dashboardPath}
-                                    className="font-label-md text-label-md uppercase text-primary-container font-bold hover:underline"
+                                    className="text-xs uppercase text-primary-container font-bold hover:underline"
                                 >
                                     CONSOLE
                                 </Link>
                                 <button
                                     onClick={handleLogout}
-                                    className="font-label-md text-label-md uppercase text-red-600 hover:text-white hover:bg-red-600 px-2 py-0.5 border border-red-300 transition-none cursor-pointer font-bold"
+                                    className="text-xs uppercase text-red-600 hover:text-white hover:bg-red-600 px-2 py-0.5 border border-red-300 transition-none cursor-pointer font-bold"
                                 >
                                     LOGOUT
                                 </button>
@@ -66,7 +66,7 @@ const Navbar = () => {
                         ) : (
                             <Link 
                                 to="/auth" 
-                                className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-on-surface transition-colors font-bold"
+                                className="text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors font-bold"
                             >
                                 LOGIN
                             </Link>
@@ -75,7 +75,7 @@ const Navbar = () => {
 
                     <Link
                         to={isAuthenticated ? "/student/assessment" : "/auth"}
-                        className="inline-flex items-center justify-center font-label-md text-label-md bg-primary-container text-white border border-primary-container px-space-md py-2 uppercase hover:bg-black transition-none font-bold"
+                        className="inline-flex items-center justify-center text-xs sm:text-sm bg-primary-container text-white border border-primary-container px-4 py-2 uppercase hover:bg-black transition-none font-bold"
                     >
                         [ START ASSESSMENT ]
                     </Link>

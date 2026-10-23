@@ -11,7 +11,7 @@ const MatchedPositionsGrid = ({
     const hasApplied = (jobId) => myApplications.some(app => app.job === jobId || app.job_id === jobId);
 
     const filteredJobs = jobs.filter(job => {
-        const matchScore = job.match || 90;
+        const matchScore = typeof job.match === 'number' ? Math.round(job.match) : 90;
         if (filterMode === 'MATCH_85') return matchScore >= 85;
         if (filterMode === 'APPLIED') return hasApplied(job.id);
         return true;
@@ -84,7 +84,7 @@ const MatchedPositionsGrid = ({
                         ) : (
                             filteredJobs.map(job => {
                                 const applied = hasApplied(job.id);
-                                const matchPercent = job.match ? Math.round(job.match) : 92;
+                                const matchPercent = typeof job.match === 'number' ? Math.round(job.match) : 92;
                                 return (
                                     <tr key={job.id} className="hover:bg-surface-container-low transition-none">
                                         <td className="p-3.5 sm:p-4 border-r border-black/15 font-bold text-canvas-blueprint whitespace-nowrap text-sm sm:text-base">

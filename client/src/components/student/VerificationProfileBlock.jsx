@@ -39,7 +39,7 @@ const VerificationProfileBlock = ({ profile, recommendation, candidateName }) =>
                             <div>
                                 <div className="text-xs uppercase text-outline font-bold tracking-wider mb-1">RESUME INGESTION</div>
                                 <div className="text-canvas-blueprint font-bold">
-                                    {profile?.resume ? 'PARSED [VERIFIED ✓]' : 'NO_RESUME_PARSED [PENDING]'}
+                                    {(profile?.resume || profile?.resume_text) ? 'PARSED [VERIFIED ✓]' : 'NO_RESUME_PARSED [PENDING]'}
                                 </div>
                             </div>
                         </div>
