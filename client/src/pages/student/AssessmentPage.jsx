@@ -2,7 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import ProctorWrapper from '../../components/assessment/ProctorWrapper';
-import api from '../../lib/api';
+import AssessmentHeader from '../../components/assessment/AssessmentHeader';
+import QuestionWorkspace from '../../components/assessment/QuestionWorkspace';
+import OptionsMatrix from '../../components/assessment/OptionsMatrix';
+import ProctorTelemetryPanel from '../../components/assessment/ProctorTelemetryPanel';
+import api from '../../api/client';
 
 const DEFAULT_SAMPLE_QUESTIONS = [
     {
@@ -65,7 +69,7 @@ const DEFAULT_SAMPLE_QUESTIONS = [
         options: [
             "Wrap the heavy filter and state update in React startTransition and useDeferredValue.",
             "Replace all state hooks with window.localStorage getters executed inside requestAnimationFrame.",
-            "Convert the React application to synchronous synchronous XMLHttpRequest polling.",
+            "Convert the React application to synchronous XMLHttpRequest polling.",
             "Mount multiple duplicate root React trees on the document body."
         ],
         correct_index: 0
@@ -228,7 +232,8 @@ const AssessmentPage = () => {
     const logEvent = async (eventType) => {
         if (!sessionId) return;
         try {
-            await api.post('/proctor/events/', {
+            // Dispatches to both /proctor/event/ and /proctor/events/
+            await api.post('/proctor/event/', {
                 session_id: sessionId,
                 event_type: eventType,
                 confidence: 1.0
@@ -253,9 +258,9 @@ const AssessmentPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-surface font-mono flex flex-col items-center justify-center p-8 text-on-surface">
-                <div className="border border-black/20 bg-surface-container-lowest p-space-xl shadow-[4px_4px_0px_#1D52B8] max-w-md w-full text-center">
-                    <span className="w-3 h-3 bg-primary inline-block animate-pulse mb-3"></span>
+            <div className="min-h-screen bg-canvas-light font-mono flex flex-col items-center justify-center p-8 text-ink-primary">
+                <div className="border border-cad bg-surface-container-lowest p-space-xl shadow-[4px_4px_0px_#1D52B8] max-w-md w-full text-center">
+                    <span className="w-3 h-3 bg-canvas-blueprint inline-block animate-pulse mb-3"></span>
                     <h2 className="font-headline-sm text-headline-sm uppercase font-bold tracking-tight mb-2">
                         INITIALIZING HARDWARE PROCTOR RUNNER
                     </h2>
@@ -270,10 +275,10 @@ const AssessmentPage = () => {
     // Pre-Exam Initialization Staging View
     if (!examStarted) {
         return (
-            <div className="min-h-screen bg-surface font-mono text-on-surface flex flex-col items-center justify-center p-4 sm:p-8 select-none">
-                <div className="max-w-3xl w-full border border-black/25 bg-surface-container-lowest p-space-lg md:p-space-xl shadow-[6px_6px_0px_#191C1D]">
-                    <div className="border-b border-black/15 pb-space-sm mb-space-md flex flex-wrap items-center justify-between gap-2">
-                        <span className="font-label-sm text-label-sm text-primary uppercase font-bold tracking-wider">
+            <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex flex-col items-center justify-center p-4 sm:p-8 select-none">
+                <div className="max-w-3xl w-full border border-cad bg-surface-container-lowest p-space-lg md:p-space-xl shadow-[6px_6px_0px_#191C1D]">
+                    <div className="border-b border-cad pb-space-sm mb-space-md flex flex-wrap items-center justify-between gap-2">
+                        <span className="font-label-sm text-label-sm text-canvas-blueprint uppercase font-bold tracking-wider">
                             [ HARDWARE_STAGING_INITIALIZATION // KERNEL_LOCK_v4 ]
                         </span>
                         <span className="font-label-sm text-label-sm text-outline">
@@ -281,7 +286,7 @@ const AssessmentPage = () => {
                         </span>
                     </div>
 
-                    <h1 className="font-headline-lg text-headline-lg uppercase font-bold tracking-tight text-on-surface mb-2">
+                    <h1 className="font-headline-lg text-headline-lg uppercase font-bold tracking-tight text-ink-primary mb-2">
                         PHASE 2: EMPIRICAL CODE &amp; ARCHITECTURE ASSESSMENT
                     </h1>
                     <p className="font-body-md text-body-md text-on-surface-variant mb-space-lg leading-relaxed">
@@ -289,36 +294,36 @@ const AssessmentPage = () => {
                     </p>
 
                     {/* Security Requirements Checklist */}
-                    <div className="border border-black/20 bg-surface-container-low p-space-md mb-space-lg space-y-space-xs font-label-md text-label-md">
+                    <div className="border border-cad bg-surface-container-low p-space-md mb-space-lg space-y-space-xs font-label-md text-label-md">
                         <div className="flex items-center gap-2">
-                            <span className="text-primary font-bold">[✓]</span>
+                            <span className="text-canvas-blueprint font-bold">[✓]</span>
                             <span>OPTICAL CAMERA FEED: Active face tracking and gaze telemetry</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="text-primary font-bold">[✓]</span>
+                            <span className="text-canvas-blueprint font-bold">[✓]</span>
                             <span>KERNEL FULLSCREEN LOCK: Window escape registers a 15-point risk penalty</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="text-primary font-bold">[✓]</span>
+                            <span className="text-canvas-blueprint font-bold">[✓]</span>
                             <span>ZERO-CLIPBOARD POLICY: Copy/Paste and browser inspection disabled</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span className="text-primary font-bold">[✓]</span>
+                            <span className="text-canvas-blueprint font-bold">[✓]</span>
                             <span>AUTOMATIC TERMINATION: Risk score limit capped strictly at 50 points</span>
                         </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-space-md pt-space-sm border-t border-black/15">
+                    <div className="flex flex-wrap items-center justify-between gap-space-md pt-space-sm border-t border-cad">
                         <button
                             onClick={() => navigate('/student/dashboard')}
-                            className="px-space-md py-2.5 border border-black/30 font-label-md text-label-md uppercase hover:bg-black hover:text-white transition-none cursor-pointer"
+                            className="px-space-md py-2.5 border border-cad font-label-md text-label-md uppercase hover:bg-ink-primary hover:text-white transition-none cursor-pointer"
                         >
                             [ ABORT_RETURN_TO_CONSOLE ]
                         </button>
 
                         <button
                             onClick={startTest}
-                            className="bg-primary text-on-primary px-space-xl py-2.5 font-label-md text-label-md uppercase tracking-wider font-bold border border-primary hover:bg-surface hover:text-primary transition-none shadow-[3px_3px_0px_#191C1D] cursor-pointer"
+                            className="bg-canvas-blueprint text-white px-space-xl py-2.5 font-label-md text-label-md uppercase tracking-wider font-bold border border-canvas-blueprint hover:bg-surface-container-lowest hover:text-canvas-blueprint transition-none shadow-[3px_3px_0px_#191C1D] cursor-pointer"
                         >
                             [ INITIALIZE_PROCTORED_SESSION -&gt; ]
                         </button>
@@ -330,8 +335,6 @@ const AssessmentPage = () => {
 
     const q = questions[currentQuestion] || DEFAULT_SAMPLE_QUESTIONS[0];
     const selectedAnswerIdx = answers[currentQuestion];
-    const riskPercentage = Math.round((riskScore / 50) * 10);
-    const riskBars = "■".repeat(riskPercentage) + "░".repeat(Math.max(0, 10 - riskPercentage));
 
     return (
         <ProctorWrapper 
@@ -340,404 +343,83 @@ const AssessmentPage = () => {
             onFaceDetectedChange={setFaceDetected}
             onLogEvent={(msg) => addAuditLog(msg, "warn")}
         >
-            <div className="bg-surface font-mono text-on-surface antialiased select-none min-h-screen flex flex-col">
-                {/* APPLICATION HEADER (#AssessmentHeader) */}
-                <header className="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest border-b border-on-surface/20 select-none" id="AssessmentHeader">
-                    <div className="h-14 w-full px-4 lg:px-6 flex items-center justify-between gap-4 font-body-md">
-                        <div className="flex items-center gap-3">
-                            <span className="inline-block w-2 h-2 bg-primary"></span>
-                            <span className="font-label-md text-label-md text-on-surface uppercase tracking-wider font-bold truncate">
-                                SKILLFORGE // PROCTOR_RUNNER_v2.4
-                            </span>
-                            <span className="font-label-sm text-label-sm text-on-surface-variant font-bold hidden md:inline-block">
-                                [EXAM_ID: SF-2026-DISTRIBUTED-09]
-                            </span>
-                        </div>
+            {({ webcamNode }) => (
+                <div className="bg-canvas-light font-mono text-ink-primary antialiased select-none min-h-screen flex flex-col">
+                    {/* Minimalist Top Console Bar */}
+                    <AssessmentHeader
+                        examId="SF-2026-DISTRIBUTED-09"
+                        currentQuestion={currentQuestion}
+                        totalQuestions={questions.length}
+                        formattedTime={formatTime(timeLeft)}
+                        onAbort={() => {
+                            if (window.confirm("Abort assessment? Incomplete examination will be logged.")) {
+                                navigate('/student/dashboard');
+                            }
+                        }}
+                    />
 
-                        <div className="flex items-center gap-2 sm:gap-4">
-                            <div className="px-2.5 py-1 bg-surface-container border border-on-surface/20 font-label-md text-label-md whitespace-nowrap">
-                                <span className="text-on-surface-variant">QUESTION:</span>{" "}
-                                <span className="text-primary font-bold">
-                                    [ {String(currentQuestion + 1).padStart(2, '0')} / {String(questions.length).padStart(2, '0')} ]
-                                </span>
-                            </div>
-                            <div className="px-3 py-1 bg-on-surface text-surface-container-lowest border border-on-surface font-label-md text-label-md flex items-center gap-1.5 shadow-[2px_2px_0px_#1D52B8] whitespace-nowrap">
-                                <span className="inline-block w-1.5 h-1.5 bg-error animate-ping"></span>
-                                <span className="hidden sm:inline">TIME_REMAINING:</span>
-                                <span className="font-headline-sm text-headline-sm text-surface-container-lowest tracking-tight">
-                                    {formatTime(timeLeft)}
-                                </span>
-                            </div>
-                        </div>
+                    {/* MAIN COCKPIT: 70/30 ENGINEERING SPLIT GRID */}
+                    <main className="w-full pt-16 bg-canvas-light min-h-screen flex-1 flex flex-col justify-between">
+                        <div className="w-full p-3 sm:p-4 lg:p-6 grid grid-cols-12 gap-4 lg:gap-6 bg-canvas-light flex-1">
 
-                        <div className="flex items-center gap-2 font-label-sm text-label-sm">
-                            <div className="hidden md:flex items-center gap-1 px-2 py-0.5 border border-on-surface/25 bg-surface-container-low font-bold text-on-surface">
-                                <span>[FULLSCREEN_LOCK: ENFORCED]</span>
-                            </div>
-                            <button
-                                onClick={() => {
-                                    if (window.confirm("Abort assessment? Incomplete examination will be logged.")) {
-                                        navigate('/student/dashboard');
-                                    }
-                                }}
-                                className="px-2.5 py-1 border border-error bg-error-container text-on-error-container font-label-sm text-label-sm hover:bg-error hover:text-on-error uppercase transition-none font-bold cursor-pointer"
-                                type="button"
-                            >
-                                [ TERMINATE_TEST_ABORT ]
-                            </button>
-                        </div>
-                    </div>
-                </header>
+                            {/* A. LEFT COLUMN: EXAMINATION & SOLUTION CANVAS (Cols 1-8 / 70%) */}
+                            <div className="col-span-12 lg:col-span-8 flex flex-col gap-4" id="QuestionWorkspace">
+                                <QuestionWorkspace 
+                                    question={q}
+                                    questionIndex={currentQuestion}
+                                />
 
-                {/* MAIN COCKPIT: 70/30 ENGINEERING SPLIT GRID */}
-                <main className="w-full pt-16 bg-surface min-h-screen flex-1 flex flex-col justify-between">
-                    <div className="w-full p-3 sm:p-4 lg:p-6 grid grid-cols-12 gap-4 lg:gap-6 bg-surface flex-1">
-
-                        {/* A. LEFT COLUMN: EXAMINATION & SOLUTION CANVAS (Cols 1-8) */}
-                        <div className="col-span-12 lg:col-span-8 flex flex-col gap-4" id="QuestionWorkspace">
-                            {/* QUESTION SPECIFICATION CONTAINER */}
-                            <div className="relative bg-surface-container-lowest border border-on-surface/20 p-5 shadow-[4px_4px_0px_#191C1D]">
-                                {/* Corner Tick Crosshairs */}
-                                <span className="absolute -top-1.5 -left-1.5 font-label-sm text-label-sm text-on-surface select-none font-bold">+</span>
-                                <span className="absolute -top-1.5 -right-1.5 font-label-sm text-label-sm text-on-surface select-none font-bold">+</span>
-                                <span className="absolute -bottom-1.5 -left-1.5 font-label-sm text-label-sm text-on-surface select-none font-bold">+</span>
-                                <span className="absolute -bottom-1.5 -right-1.5 font-label-sm text-label-sm text-on-surface select-none font-bold">+</span>
-
-                                {/* Question Header Block */}
-                                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-on-surface/15 pb-3">
-                                    <span className="font-label-md text-label-md text-primary font-bold tracking-wider">
-                                        [ SECTION_{String(currentQuestion + 1).padStart(2, '0')} // {q.section || 'SYSTEM_CONCURRENCY_&_INDEXING'} ]
-                                    </span>
-                                    <div className="flex items-center gap-2 font-label-sm text-label-sm text-on-surface-variant">
-                                        <span>WEIGHT: [ {q.weight || '25 PTS'} ]</span>
-                                        <span>//</span>
-                                        <span>COGNITIVE_TAXONOMY: {q.taxonomy || 'SYNTHESIS'}</span>
-                                    </div>
-                                </div>
-
-                                {/* Problem Scenario Meta */}
-                                <div className="pt-4 pb-2">
-                                    <h1 className="font-headline-sm text-headline-sm text-on-surface uppercase tracking-tight font-bold">
-                                        {q.title || q.question || q.text}
-                                    </h1>
-                                    <p className="mt-2.5 font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                                        {q.description || 'Analyze the technical scenario and select the architecturally optimal resolution vector.'}
-                                    </p>
-                                </div>
-
-                                {/* CODE SNIPPET PANEL (#CodeSnippetBox) */}
-                                {q.code_snippet && (
-                                    <div className="mt-4 bg-[#0A0A0A] text-[#EDEEEF] border border-on-surface/40 p-0 font-body-sm text-body-sm shadow-[2px_2px_0px_#1D52B8]" id="CodeSnippetBox">
-                                        <div className="bg-[#191C1D] text-[#EDEEEF] px-3 py-1.5 border-b border-[#3F4141] flex items-center justify-between font-label-sm text-label-sm">
-                                            <div className="flex items-center gap-2">
-                                                <span className="w-2 h-2 bg-primary-fixed inline-block"></span>
-                                                <span>[TERMINAL // PYTHON_RUNTIME_ENV_3.11]</span>
-                                            </div>
-                                            <div className="flex items-center gap-1.5 text-on-surface-variant">
-                                                <span className="px-1 border border-[#3F4141] text-[#EDEEEF]">[-]</span>
-                                                <span className="px-1 border border-[#3F4141] text-[#EDEEEF]">[□]</span>
-                                                <span className="px-1 border border-[#BA1A1A] text-[#BA1A1A]">[X]</span>
-                                            </div>
-                                        </div>
-                                        <div className="p-4 overflow-x-auto text-left leading-relaxed">
-                                            <pre className="font-mono text-body-md text-[#EDEEEF] m-0 whitespace-pre">
-                                                {q.code_snippet}
-                                            </pre>
-                                        </div>
-                                        <div className="bg-[#141617] px-3 py-1 border-t border-[#3F4141] flex items-center justify-between text-[#737784] font-label-sm text-label-sm">
-                                            <span>AST_TOKEN_AUDIT: PARSED_CLEAN // STATIC_ANALYSIS_HASH: 0x9f4e22a</span>
-                                            <span className="text-primary-fixed-dim">[ENCODING: UTF-8]</span>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* MULTIPLE-CHOICE ANSWER SELECTOR PANEL (#OptionsMatrix) */}
-                                <div className="mt-6 flex flex-col gap-3" id="OptionsMatrix">
-                                    <div className="flex items-center justify-between">
-                                        <span className="font-label-sm text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">
-                                            [ PROPOSED_ARCHITECTURAL_CORRECTIONS (SELECT EXACTLY ONE) ]
-                                        </span>
-                                        <span className="font-label-sm text-label-sm text-on-surface-variant">DETERMINISTIC_EVAL: ON</span>
-                                    </div>
-
-                                    {(q.options || []).map((option, idx) => {
-                                        const isSelected = selectedAnswerIdx === idx;
-                                        const letter = String.fromCharCode(65 + idx);
-
-                                        return (
-                                            <label
-                                                key={idx}
-                                                onClick={() => handleAnswerSelect(idx)}
-                                                className={`cursor-pointer transition-none p-3.5 flex items-start gap-3 select-none ${
-                                                    isSelected
-                                                        ? 'border border-primary bg-primary text-on-primary shadow-[3px_3px_0px_#001847]'
-                                                        : 'border border-on-surface/25 bg-surface-container-low hover:bg-surface-container'
-                                                }`}
-                                            >
-                                                <div className={`font-label-md text-label-md font-bold px-1.5 py-0.5 ${
-                                                    isSelected
-                                                        ? 'bg-surface-container-lowest text-primary'
-                                                        : 'bg-surface-container-lowest border border-on-surface/40 text-on-surface'
-                                                }`}>
-                                                    {isSelected ? '[X]' : '[   ]'}
-                                                </div>
-                                                <div className={`flex-1 font-body-md text-body-md ${isSelected ? 'text-on-primary font-bold' : 'text-on-surface'}`}>
-                                                    <span className="font-bold">{letter} //</span> {option}
-                                                </div>
-                                            </label>
-                                        );
-                                    })}
-                                </div>
-
-                                {/* Bottom Navigation & Submission Rail */}
-                                <div className="mt-6 pt-4 border-t border-on-surface/20 flex flex-wrap justify-between items-center gap-3">
-                                    <button
-                                        onClick={handlePrevQuestion}
-                                        disabled={currentQuestion === 0}
-                                        className="px-4 py-2 border border-on-surface/40 bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container disabled:opacity-30 transition-none font-bold uppercase cursor-pointer"
-                                        type="button"
-                                    >
-                                        [ &lt;- PREVIOUS_QUESTION ]
-                                    </button>
-
-                                    <div className="flex items-center gap-2.5">
-                                        <button
-                                            onClick={handleClearSelection}
-                                            className="px-3.5 py-2 border border-on-surface/30 bg-surface-container text-on-surface-variant font-label-md text-label-md hover:text-on-surface hover:bg-surface-container-high transition-none uppercase cursor-pointer"
-                                            type="button"
-                                        >
-                                            [ CLEAR_SELECTION ]
-                                        </button>
-                                        <button
-                                            onClick={handleNextQuestion}
-                                            className="px-5 py-2.5 bg-primary text-on-primary border border-primary font-label-md text-label-md hover:bg-primary-container shadow-[3px_3px_0px_#191C1D] transition-none font-bold uppercase tracking-wider cursor-pointer"
-                                            type="button"
-                                        >
-                                            {currentQuestion === questions.length - 1 ? '[ SUBMIT_EXAMINATION -> ]' : '[ COMMIT_ANSWER_&_NEXT -> ]'}
-                                        </button>
-                                    </div>
-                                </div>
+                                <OptionsMatrix 
+                                    options={q.options || []}
+                                    selectedOptionIdx={selectedAnswerIdx}
+                                    onSelectOption={handleAnswerSelect}
+                                    onPrevQuestion={handlePrevQuestion}
+                                    onNextQuestion={handleNextQuestion}
+                                    onClearSelection={handleClearSelection}
+                                    isFirstQuestion={currentQuestion === 0}
+                                    isLastQuestion={currentQuestion === questions.length - 1}
+                                />
                             </div>
 
-                            {/* DIAGNOSTIC FOOTER NOTELET */}
-                            <div className="p-3 bg-surface-container border border-on-surface/15 flex flex-wrap items-center justify-between font-label-sm text-label-sm text-on-surface-variant gap-2">
-                                <div>NODE_HASH: SHA256:d8c3b17e4 // SCRATCHPAD_SLOT: SECURE_VOLATILE_RAM</div>
-                                <div className="font-bold text-on-surface">ACTIVE_INPUT_CARRIER: MOUSE_EVENT_V1</div>
-                            </div>
-                        </div>
-
-                        {/* B. RIGHT COLUMN: PROCTOR TELEMETRY & HARDWARE SUPERVISION (Cols 9-12) */}
-                        <div className="col-span-12 lg:col-span-4 flex flex-col gap-4" id="ProctorTelemetryPanel">
-                            {/* TOP BLUEPRINT SECURITY FEED (Cobalt Cad Box) */}
-                            <div className="bg-primary text-on-primary border border-primary p-4 shadow-[4px_4px_0px_#191C1D] relative">
-                                <span className="absolute top-1 left-1 font-label-sm text-label-sm text-on-primary/60">┌</span>
-                                <span className="absolute top-1 right-1 font-label-sm text-label-sm text-on-primary/60">┐</span>
-                                <span className="absolute bottom-1 left-1 font-label-sm text-label-sm text-on-primary/60">└</span>
-                                <span className="absolute bottom-1 right-1 font-label-sm text-label-sm text-on-primary/60">┘</span>
-
-                                <div className="flex items-center justify-between border-b border-on-primary/30 pb-2 mb-3">
-                                    <span className="font-label-sm text-label-sm tracking-wider font-bold uppercase text-on-primary">
-                                        [ HARDWARE_TELEMETRY // OPTICAL_FACE_VERIFICATION ]
-                                    </span>
-                                    <span className={`w-2 h-2 inline-block ${faceDetected ? 'bg-[#69db7c] animate-pulse' : 'bg-error'}`}></span>
-                                </div>
-
-                                {/* Live Camera Viewport Mockup / HUD */}
-                                <div className="relative w-full aspect-video bg-[#0E2C66] border border-on-primary/40 overflow-hidden flex items-center justify-center" id="proctor-optical-viewport">
-                                    {/* CAD Crosshair Grid Background */}
-                                    <svg className="absolute inset-0 w-full h-full opacity-25 text-on-primary" xmlns="http://www.w3.org/2000/svg">
-                                        <defs>
-                                            <pattern height="24" id="grid-pattern" patternUnits="userSpaceOnUse" width="24">
-                                                <path d="M 24 0 L 0 0 0 24" fill="none" stroke="currentColor" strokeWidth="0.5"></path>
-                                            </pattern>
-                                        </defs>
-                                        <rect fill="url(#grid-pattern)" height="100%" width="100%"></rect>
-                                        <line stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.75" x1="50%" x2="50%" y1="0" y2="100%"></line>
-                                        <line stroke="currentColor" strokeDasharray="2 2" strokeWidth="0.75" x1="0" x2="100%" y1="50%" y2="50%"></line>
-                                    </svg>
-
-                                    {/* CAD Scanning Line Effect */}
-                                    <div className="absolute inset-x-0 h-0.5 bg-[#69db7c]/80 shadow-[0_0_8px_#69db7c] animate-[bounce_3s_infinite]"></div>
-
-                                    {/* Precision Crosshairs */}
-                                    <div className="absolute top-2 left-2 text-[10px] font-mono text-on-primary/80">+ [00, 00]</div>
-                                    <div className="absolute top-2 right-2 text-[10px] font-mono text-on-primary/80">+ [640, 00]</div>
-                                    <div className="absolute bottom-2 left-2 text-[10px] font-mono text-on-primary/80">+ [00, 480]</div>
-                                    <div className="absolute bottom-2 right-2 text-[10px] font-mono text-on-primary/80">+ [640, 480]</div>
-
-                                    {/* Face Wireframe Vector Simulation */}
-                                    <div className="relative w-28 h-36 border-2 border-[#69db7c] flex flex-col justify-between p-1 z-10 bg-[#69db7c]/5">
-                                        <div className="flex justify-between items-start">
-                                            <span className="text-[8px] font-mono bg-on-primary text-primary px-0.5 font-bold">[X:142 Y:088 W:120 H:150]</span>
-                                            <span className={`text-[8px] font-mono font-bold ${faceDetected ? 'text-[#69db7c]' : 'text-error'}`}>
-                                                {faceDetected ? 'LOCKED' : 'SEARCHING'}
-                                            </span>
-                                        </div>
-                                        <div className="w-full h-16 flex items-center justify-center opacity-80">
-                                            <svg className="w-16 h-20 text-[#69db7c] stroke-current fill-none stroke-[1.2]" viewBox="0 0 100 120">
-                                                <ellipse cx="50" cy="55" rx="35" ry="45" strokeDasharray="2 2"></ellipse>
-                                                <circle cx="36" cy="46" r="3"></circle>
-                                                <circle cx="64" cy="46" r="3"></circle>
-                                                <line strokeWidth="0.5" x1="28" x2="72" y1="46" y2="46"></line>
-                                                <path d="M 50 48 L 47 64 L 53 64"></path>
-                                                <line x1="38" x2="62" y1="78" y2="78"></line>
-                                                <line stroke="#ff8787" strokeWidth="2" x1="50" x2="52" y1="52" y2="50"></line>
-                                            </svg>
-                                        </div>
-                                        <div className="text-[8px] font-mono text-right text-on-primary">
-                                            CONF: {faceDetected ? '98.2%' : '14.0%'}
-                                        </div>
-                                    </div>
-
-                                    <div className="absolute bottom-2 left-3 bg-[#001847]/80 px-2 py-0.5 border border-on-primary/30 text-[9px] font-mono">
-                                        TARGET_HASH: CANDIDATE_094
-                                    </div>
-                                </div>
-
-                                {/* Camera Diagnostic Tag Stream */}
-                                <div className="mt-3 pt-2 border-t border-on-primary/20 space-y-1 font-label-sm text-label-sm text-on-primary">
-                                    <div className="flex justify-between">
-                                        <span className="text-on-primary/70">OPTICAL_FEED:</span>
-                                        <span className="font-bold text-[#69db7c]">ACTIVE [64x48px_CANVAS]</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-on-primary/70">FACE_DETECTED:</span>
-                                        <span className={`font-bold ${faceDetected ? 'text-[#69db7c]' : 'text-error'}`}>
-                                            {faceDetected ? 'TRUE [CONFIDENCE: 98.2%]' : 'FALSE [SEARCHING]'}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-on-primary/70">SKIN_TONE_HEURISTIC:</span>
-                                        <span>STABLE</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-on-primary/70">MULTIPLE_FACES:</span>
-                                        <span className="font-bold text-[#69db7c]">NONE</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-on-primary/70">GAZE_VECTOR:</span>
-                                        <span>(0.02, -0.01) [NORMAL]</span>
-                                    </div>
-                                </div>
+                            {/* B. RIGHT COLUMN: PROCTOR TELEMETRY & HARDWARE SUPERVISION (Cols 9-12 / 30%) */}
+                            <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
+                                <ProctorTelemetryPanel 
+                                    faceDetected={faceDetected}
+                                    riskScore={riskScore}
+                                    tabSwitches={tabSwitches}
+                                    audioSpikes={audioSpikes}
+                                    headRotation={headRotation}
+                                    auditLogs={auditLogs}
+                                    webcamNode={webcamNode}
+                                />
                             </div>
 
-                            {/* ANTI-CHEAT HEURISTIC ENGINE STATUS CARD */}
-                            <div className="p-4 border border-on-surface/20 bg-surface-container-lowest shadow-[4px_4px_0px_#191C1D]">
-                                <div className="border-b border-on-surface/15 pb-2 flex items-center justify-between">
-                                    <span className="font-label-md text-label-md font-bold uppercase text-on-surface">
-                                        [ PROCTOR_RISK_ACCUMULATOR ]
-                                    </span>
-                                    <span className="font-label-sm text-label-sm text-on-surface-variant">LIMIT: 50_PTS</span>
-                                </div>
+                        </div>
 
-                                <div className="mt-3">
-                                    <div className="flex justify-between items-baseline font-label-md text-label-md">
-                                        <span className="text-on-surface-variant">CURRENT_RISK_SCORE:</span>
-                                        <span className={`font-headline-sm text-headline-sm font-bold ${riskScore > 30 ? 'text-error' : 'text-on-surface'}`}>
-                                            [ {String(riskScore).padStart(2, '0')} / 50 ]
-                                        </span>
-                                    </div>
-
-                                    {/* ASCII Visual Gauge */}
-                                    <div className="mt-1.5 p-2 bg-surface-container border border-on-surface/20 font-headline-sm text-headline-sm tracking-widest text-primary flex items-center justify-between">
-                                        <span className="tracking-widest">[{riskBars}]</span>
-                                        <span className={`font-label-sm text-label-sm px-1.5 py-0.5 border font-bold ${
-                                            riskScore > 30
-                                                ? 'bg-error-container text-on-error-container border-error'
-                                                : 'bg-surface-container-lowest border-primary text-primary'
-                                        }`}>
-                                            STATUS: {riskScore > 30 ? 'CRITICAL' : 'SAFE'}
-                                        </span>
-                                    </div>
-                                    <div className="mt-2 text-[10px] text-error font-bold leading-tight uppercase">
-                                        * POLICY: AUTOMATIC_DISQUALIFICATION_AT_50_POINTS
-                                    </div>
-                                </div>
-
-                                {/* Hardware Counters */}
-                                <div className="mt-4 pt-3 border-t border-on-surface/10 grid grid-cols-3 gap-2 text-center">
-                                    <div className="p-2 border border-on-surface/15 bg-surface-container-low">
-                                        <div className="font-label-sm text-label-sm text-on-surface-variant">TAB_SWITCH</div>
-                                        <div className="font-headline-sm text-headline-sm text-on-surface font-bold">
-                                            {String(tabSwitches).padStart(2, '0')}
-                                        </div>
-                                    </div>
-                                    <div className="p-2 border border-on-surface/15 bg-surface-container-low">
-                                        <div className="font-label-sm text-label-sm text-on-surface-variant">AUDIO_SPIKE</div>
-                                        <div className="font-headline-sm text-headline-sm text-on-surface font-bold">
-                                            {String(audioSpikes).padStart(2, '0')}
-                                        </div>
-                                    </div>
-                                    <div className="p-2 border border-on-surface/15 bg-surface-container-low">
-                                        <div className="font-label-sm text-label-sm text-on-surface-variant">HEAD_ROT</div>
-                                        <div className="font-headline-sm text-headline-sm text-on-surface font-bold">{headRotation}</div>
-                                    </div>
-                                </div>
+                        {/* TECHNICAL SYSTEM FOOTER RUNNER */}
+                        <div className="w-full bg-surface-container-high border-t border-cad px-4 lg:px-6 py-2 flex flex-wrap items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+                            <div>
+                                EXAM_INSTANCE: <span className="font-bold text-ink-primary">SF-NODE-092.41A</span> | PROCTOR_KERNEL_VERSION: <span className="font-bold text-ink-primary">4.19.8-LOCKED</span>
                             </div>
-
-                            {/* SECURITY EVENT LOG STREAM (#SecurityAuditList) */}
-                            <div className="p-4 border border-on-surface/20 bg-surface-container-lowest shadow-[4px_4px_0px_#191C1D] flex-1 flex flex-col justify-between" id="SecurityAuditList">
-                                <div>
-                                    <div className="border-b border-on-surface/15 pb-2 flex items-center justify-between">
-                                        <span className="font-label-md text-label-md font-bold uppercase text-on-surface">
-                                            [ HARDWARE_AUDIT_LOG_STREAM ]
-                                        </span>
-                                        <span className="font-label-sm text-label-sm text-primary font-bold">[REALTIME]</span>
-                                    </div>
-
-                                    <div className="mt-3 overflow-hidden">
-                                        <div className="space-y-1.5 font-label-sm text-label-sm">
-                                            {auditLogs.map((log, i) => (
-                                                <div 
-                                                    key={i} 
-                                                    className={`py-1 border-b border-on-surface/10 flex items-center justify-between ${
-                                                        log.type === 'warn' 
-                                                            ? 'bg-error-container text-on-error-container px-1 font-bold' 
-                                                            : 'text-on-surface-variant'
-                                                    }`}
-                                                >
-                                                    <span>{log.time}</span>
-                                                    <span className={log.type === 'warn' ? 'text-on-error-container' : 'text-on-surface'}>
-                                                        {log.text}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-4 pt-2 border-t border-on-surface/15 text-[10px] text-on-surface-variant font-mono flex items-center gap-1">
-                                    <span className="text-primary font-bold">VERIFIER:</span>
-                                    <span>HW_SEC_ENCLAVE_SIGNED // 0x48bb701c9</span>
-                                </div>
+                            <div className="flex items-center gap-4">
+                                <span>HARDWARE_TOKEN: <code className="text-canvas-blueprint font-bold">BLAKE3_HASH_8F92BC</code></span>
+                                <span>LATENCY: 14ms [DIRECT_SOCKET]</span>
                             </div>
                         </div>
+                    </main>
 
-                    </div>
-
-                    {/* TECHNICAL SYSTEM FOOTER RUNNER */}
-                    <div className="w-full bg-surface-container-high border-t border-on-surface/20 px-4 lg:px-6 py-2 flex flex-wrap items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
-                        <div>
-                            EXAM_INSTANCE: <span className="font-bold text-on-surface">SF-NODE-092.41A</span> | PROCTOR_KERNEL_VERSION: <span className="font-bold text-on-surface">4.19.8-LOCKED</span>
+                    <footer className="w-full bg-surface-container-low border-t border-cad py-space-sm select-none">
+                        <div className="w-full px-margin flex flex-col md:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant">
+                            <div>REGISTRATION SPEC // NODE: US-EAST-04 // PROCTOR INTEGRITY LEVEL: DETERMINISTIC_V4</div>
+                            <div className="flex flex-wrap items-center gap-space-md">
+                                <span>STATUS: RECORDING_ACTIVE</span>
+                                <span>ENCRYPTION: AES-256-GCM</span>
+                                <span>© {new Date().getFullYear()} SKILLFORGE ALGORITHMIC EVALUATION CORP.</span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <span>HARDWARE_TOKEN: <code className="text-primary font-bold">BLAKE3_HASH_8F92BC</code></span>
-                            <span>LATENCY: 14ms [DIRECT_SOCKET]</span>
-                        </div>
-                    </div>
-                </main>
-
-                <footer className="w-full bg-surface-container-low border-t border-on-surface/20 py-space-sm select-none">
-                    <div className="w-full px-margin flex flex-col md:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant">
-                        <div>REGISTRATION SPEC // NODE: US-EAST-04 // PROCTOR INTEGRITY LEVEL: DETERMINISTIC_V4</div>
-                        <div className="flex flex-wrap items-center gap-space-md">
-                            <span>STATUS: RECORDING_ACTIVE</span>
-                            <span>ENCRYPTION: AES-256-GCM</span>
-                            <span>© {new Date().getFullYear()} SKILLFORGE ALGORITHMIC EVALUATION CORP.</span>
-                        </div>
-                    </div>
-                </footer>
-            </div>
+                    </footer>
+                </div>
+            )}
         </ProctorWrapper>
     );
 };

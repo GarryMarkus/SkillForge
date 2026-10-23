@@ -12,7 +12,7 @@ const ProctorWrapper = ({
     const [warnings, setWarnings] = useState(0);
     const [isFullScreen, setIsFullScreen] = useState(true);
     const [isArmed, setIsArmed] = useState(false);
-    const [noFaceWarning, setNoFaceWarning] = useState(false);
+    const [, setNoFaceWarning] = useState(false);
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
     const noFaceCountRef = useRef(0);
@@ -36,7 +36,7 @@ const ProctorWrapper = ({
         });
     }, [onWarning, onDisqualify, onLogEvent]);
 
-    // Face detection using simple brightness & skin-tone heuristics
+    // Face detection using simple brightness & skin-tone heuristics on low-res canvas
     const checkForFace = useCallback(() => {
         if (!webcamRef.current || !isArmed) return;
 
@@ -183,6 +183,15 @@ const ProctorWrapper = ({
         };
     }, []);
 
+    const webcamNode = (
+        <Webcam
+            ref={webcamRef}
+            audio={false}
+            className="w-full h-full object-cover"
+            screenshotFormat="image/jpeg"
+        />
+    );
+
     if (warnings >= 3) {
         return (
             <div className="fixed inset-0 bg-[#BA1A1A] text-white flex flex-col items-center justify-center z-[100] font-mono p-6 text-center select-none">
@@ -208,29 +217,11 @@ const ProctorWrapper = ({
     }
 
     return (
-        <div className="relative min-h-screen bg-surface text-on-surface font-mono select-none">
+        <div className="relative min-h-screen bg-canvas-light text-ink-primary font-mono select-none">
             {/* Standalone webcam if requested */}
             {showStandaloneWebcam && (
-                <div className={`fixed bottom-4 right-4 w-48 h-36 bg-black border-2 ${noFaceWarning ? 'border-error animate-pulse' : 'border-primary'} z-50 pointer-events-none`}>
-                    <Webcam
-                        ref={webcamRef}
-                        audio={false}
-                        className="w-full h-full object-cover"
-                        screenshotFormat="image/jpeg"
-                    />
-                </div>
-            )}
-
-            {/* Hidden persistent webcam element used for optical face checking if not standalone */}
-            {!showStandaloneWebcam && (
-                <div className="fixed -top-[9999px] -left-[9999px] pointer-events-none opacity-0">
-                    <Webcam
-                        ref={webcamRef}
-                        audio={false}
-                        width={128}
-                        height={96}
-                        screenshotFormat="image/jpeg"
-                    />
+                <div className="fixed bottom-4 right-4 w-48 h-36 bg-black border-2 border-primary z-50 pointer-events-none">
+                    {webcamNode}
                 </div>
             )}
 
@@ -257,7 +248,7 @@ const ProctorWrapper = ({
                 </div>
             )}
 
-            {children}
+            {typeof children === 'function' ? children({ webcamNode, isArmed, warnings, isFullScreen }) : children}
         </div>
     );
 };
