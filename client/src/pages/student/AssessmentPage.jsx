@@ -95,10 +95,10 @@ const AssessmentPage = () => {
     const [audioSpikes] = useState(0);
     const [headRotation] = useState("1.4°");
     const [auditLogs, setAuditLogs] = useState([
-        { time: "11:02:14", text: "SESSION_INITIALIZED_FULLSCREEN", type: "info" },
-        { time: "11:05:40", text: "OPTICAL_HEURISTIC_PASS_FACE_LOCKED", type: "info" },
-        { time: "11:12:08", text: "RE-ACQUIRED_PRIMARY_GAZE", type: "info" },
-        { time: "11:15:30", text: "WINDOW_FOCUS_CONFIRMED", type: "info" }
+        { time: "11:02:14", text: "SESSION INITIALIZED (FULLSCREEN)", type: "info" },
+        { time: "11:05:40", text: "FACE LOCK CONFIRMED", type: "info" },
+        { time: "11:12:08", text: "PRIMARY GAZE ACQUIRED", type: "info" },
+        { time: "11:15:30", text: "WINDOW FOCUS VERIFIED", type: "info" }
     ]);
 
     const addAuditLog = (text, type = "info") => {
@@ -151,7 +151,7 @@ const AssessmentPage = () => {
         } catch (e) {
             console.error("Submit failed", e);
         } finally {
-            alert("[ASSESSMENT_COMPLETE] Credential evaluation verified. Emitting telemetry to candidate console.");
+            alert("[ASSESSMENT COMPLETE] Credential evaluation verified. Emitting telemetry to candidate console.");
             navigate('/student/dashboard');
         }
     }, [questions, answers, attemptId, sessionId, navigate]);
@@ -203,7 +203,7 @@ const AssessmentPage = () => {
             }
         }
         setExamStarted(true);
-        addAuditLog("HARDWARE_OPTICAL_FEED_SYNCHRONIZED", "info");
+        addAuditLog("OPTICAL FEED SYNCHRONIZED", "info");
     };
 
     const handleAnswerSelect = (optionIdx) => {
@@ -235,7 +235,6 @@ const AssessmentPage = () => {
     const logEvent = async (eventType) => {
         if (!sessionId) return;
         try {
-            // Dispatches to both /proctor/event/ and /proctor/events/
             const res = await api.post('/proctor/event/', {
                 session_id: sessionId,
                 event_type: eventType,
@@ -247,7 +246,7 @@ const AssessmentPage = () => {
                     setRiskScore(data.risk);
                 }
                 if (data.flagged) {
-                    addAuditLog("PROCTOR_KERNEL_ALERT: SESSION_FLAGGED", "error");
+                    addAuditLog("PROCTOR ALERT: SESSION FLAGGED", "error");
                 }
             }
         } catch (e) {
@@ -257,27 +256,27 @@ const AssessmentPage = () => {
 
     const handleDisqualify = () => {
         logEvent("disqualified");
-        alert("[SECURITY_VIOLATION] Hardware locked threshold reached. Terminating session.");
+        alert("[SECURITY VIOLATION] Hardware locked threshold reached. Terminating session.");
         navigate('/student/dashboard');
     };
 
     const handleWarning = (msg) => {
         setRiskScore(prev => Math.min(50, prev + 15));
         if (msg.includes("TAB")) setTabSwitches(prev => prev + 1);
-        addAuditLog(`SECURITY_WARNING: ${msg}`, "warn");
+        addAuditLog(`SECURITY WARNING: ${msg}`, "warn");
         logEvent("violation_warning");
     };
 
     if (loading) {
         return (
             <div className="min-h-screen bg-canvas-light font-mono flex flex-col items-center justify-center p-8 text-ink-primary">
-                <div className="border border-cad bg-surface-container-lowest p-space-xl shadow-[4px_4px_0px_#1D52B8] max-w-md w-full text-center">
-                    <span className="w-3 h-3 bg-canvas-blueprint inline-block animate-pulse mb-3"></span>
-                    <h2 className="font-headline-sm text-headline-sm uppercase font-bold tracking-tight mb-2">
-                        INITIALIZING HARDWARE PROCTOR RUNNER
+                <div className="border border-black/20 bg-surface-container-lowest p-8 shadow-[4px_4px_0px_#1D52B8] max-w-md w-full text-center">
+                    <span className="w-3 h-3 bg-canvas-blueprint inline-block animate-pulse mb-4"></span>
+                    <h2 className="text-lg uppercase font-bold tracking-tight mb-2">
+                        INITIALIZING HARDWARE PROCTOR ENCLAVE
                     </h2>
-                    <p className="font-label-sm text-label-sm text-outline">
-                        ESTABLISHING DETERMINISTIC ENCLAVE // LOADING QUESTION AST MATRIX...
+                    <p className="text-xs text-outline">
+                        ESTABLISHING DETERMINISTIC SECURE RUNNER...
                     </p>
                 </div>
             </div>
@@ -288,56 +287,56 @@ const AssessmentPage = () => {
     if (!examStarted) {
         return (
             <div className="min-h-screen bg-canvas-light font-mono text-ink-primary flex flex-col items-center justify-center p-4 sm:p-8 select-none">
-                <div className="max-w-3xl w-full border border-cad bg-surface-container-lowest p-space-lg md:p-space-xl shadow-[6px_6px_0px_#191C1D]">
-                    <div className="border-b border-cad pb-space-sm mb-space-md flex flex-wrap items-center justify-between gap-2">
-                        <span className="font-label-sm text-label-sm text-canvas-blueprint uppercase font-bold tracking-wider">
-                            [ HARDWARE_STAGING_INITIALIZATION // KERNEL_LOCK_v4 ]
+                <div className="max-w-3xl w-full border border-black/20 bg-surface-container-lowest p-6 sm:p-10 shadow-[6px_6px_0px_#0A0A0A]">
+                    <div className="border-b border-black/15 pb-3 mb-6 flex flex-wrap items-center justify-between gap-2">
+                        <span className="text-xs text-canvas-blueprint uppercase font-bold tracking-wider">
+                            [ HARDWARE STAGING INITIALIZATION ]
                         </span>
-                        <span className="font-label-sm text-label-sm text-outline">
-                            EST_DURATION: 30_MINUTES
+                        <span className="text-xs text-outline font-bold">
+                            ESTIMATED DURATION: 30 MINUTES
                         </span>
                     </div>
 
-                    <h1 className="font-headline-lg text-headline-lg uppercase font-bold tracking-tight text-ink-primary mb-2">
-                        PHASE 2: EMPIRICAL CODE &amp; ARCHITECTURE ASSESSMENT
+                    <h1 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-ink-primary mb-3">
+                        EMPIRICAL CODE &amp; ARCHITECTURE ASSESSMENT
                     </h1>
-                    <p className="font-body-md text-body-md text-on-surface-variant mb-space-lg leading-relaxed">
-                        You are initializing a hardware-supervised examination. Performance scores and integrity audit logs will be cryptographically anchored to your candidate telemetry dossier.
+                    <p className="text-sm sm:text-base text-on-surface-variant mb-8 leading-relaxed">
+                        You are initializing a hardware-supervised examination. Performance metrics and integrity audit logs will be cryptographically anchored to your verified candidate telemetry dossier.
                     </p>
 
                     {/* Security Requirements Checklist */}
-                    <div className="border border-cad bg-surface-container-low p-space-md mb-space-lg space-y-space-xs font-label-md text-label-md">
-                        <div className="flex items-center gap-2">
-                            <span className="text-canvas-blueprint font-bold">[✓]</span>
-                            <span>OPTICAL CAMERA FEED: Active face tracking and gaze telemetry</span>
+                    <div className="border border-black/15 bg-surface-container-low p-6 mb-8 space-y-3.5 text-xs sm:text-sm">
+                        <div className="flex items-start gap-3">
+                            <span className="text-canvas-blueprint font-bold shrink-0">[✓]</span>
+                            <span><strong>OPTICAL CAMERA SUPERVISION:</strong> Active face tracking and gaze telemetry enforced continuously.</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-canvas-blueprint font-bold">[✓]</span>
-                            <span>KERNEL FULLSCREEN LOCK: Window escape registers a 15-point risk penalty</span>
+                        <div className="flex items-start gap-3">
+                            <span className="text-canvas-blueprint font-bold shrink-0">[✓]</span>
+                            <span><strong>FULLSCREEN WORKSPACE LOCK:</strong> Tab escape or window blur registers an immediate 15-point risk penalty.</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-canvas-blueprint font-bold">[✓]</span>
-                            <span>ZERO-CLIPBOARD POLICY: Copy/Paste and browser inspection disabled</span>
+                        <div className="flex items-start gap-3">
+                            <span className="text-canvas-blueprint font-bold shrink-0">[✓]</span>
+                            <span><strong>ZERO CLIPBOARD POLICY:</strong> Copy, paste, and developer console inspection are strictly disabled.</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className="text-canvas-blueprint font-bold">[✓]</span>
-                            <span>AUTOMATIC TERMINATION: Risk score limit capped strictly at 50 points</span>
+                        <div className="flex items-start gap-3">
+                            <span className="text-canvas-blueprint font-bold shrink-0">[✓]</span>
+                            <span><strong>AUTOMATIC DISQUALIFICATION:</strong> Total accumulated risk is capped strictly at 50 points.</span>
                         </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-space-md pt-space-sm border-t border-cad">
+                    <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-black/15">
                         <button
                             onClick={() => navigate('/student/dashboard')}
-                            className="px-space-md py-2.5 border border-cad font-label-md text-label-md uppercase hover:bg-ink-primary hover:text-white transition-none cursor-pointer"
+                            className="px-6 py-4 border border-black/20 text-xs sm:text-sm font-bold uppercase hover:bg-black/5 transition-none cursor-pointer"
                         >
-                            [ ABORT_RETURN_TO_CONSOLE ]
+                            [ CANCEL // RETURN TO CONSOLE ]
                         </button>
 
                         <button
                             onClick={startTest}
-                            className="bg-canvas-blueprint text-white px-space-xl py-2.5 font-label-md text-label-md uppercase tracking-wider font-bold border border-canvas-blueprint hover:bg-surface-container-lowest hover:text-canvas-blueprint transition-none shadow-[3px_3px_0px_#191C1D] cursor-pointer"
+                            className="bg-canvas-blueprint text-white px-8 py-4 text-xs sm:text-sm uppercase tracking-wider font-bold border border-canvas-blueprint hover:bg-primary-hover transition-none shadow-[3px_3px_0px_#0A0A0A] cursor-pointer"
                         >
-                            [ INITIALIZE_PROCTORED_SESSION -&gt; ]
+                            [ INITIALIZE PROCTORED SESSION → ]
                         </button>
                     </div>
                 </div>
@@ -372,10 +371,10 @@ const AssessmentPage = () => {
 
                     {/* MAIN COCKPIT: 70/30 ENGINEERING SPLIT GRID */}
                     <main className="w-full pt-16 bg-canvas-light min-h-screen flex-1 flex flex-col justify-between">
-                        <div className="w-full p-3 sm:p-4 lg:p-6 grid grid-cols-12 gap-4 lg:gap-6 bg-canvas-light flex-1">
+                        <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-12 gap-6 bg-canvas-light flex-1">
 
-                            {/* A. LEFT COLUMN: EXAMINATION & SOLUTION CANVAS (Cols 1-8 / 70%) */}
-                            <div className="col-span-12 lg:col-span-8 flex flex-col gap-4" id="QuestionWorkspace">
+                            {/* A. LEFT COLUMN: EXAMINATION & SOLUTION CANVAS (Cols 1-8 / 66%) */}
+                            <div className="col-span-12 lg:col-span-8 flex flex-col gap-6" id="QuestionWorkspace">
                                 <QuestionWorkspace 
                                     question={q}
                                     questionIndex={currentQuestion}
@@ -393,8 +392,8 @@ const AssessmentPage = () => {
                                 />
                             </div>
 
-                            {/* B. RIGHT COLUMN: PROCTOR TELEMETRY & HARDWARE SUPERVISION (Cols 9-12 / 30%) */}
-                            <div className="col-span-12 lg:col-span-4 flex flex-col gap-4">
+                            {/* B. RIGHT COLUMN: PROCTOR TELEMETRY & HARDWARE SUPERVISION (Cols 9-12 / 33%) */}
+                            <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
                                 <ProctorTelemetryPanel 
                                     faceDetected={faceDetected}
                                     riskScore={riskScore}
@@ -409,27 +408,21 @@ const AssessmentPage = () => {
                         </div>
 
                         {/* TECHNICAL SYSTEM FOOTER RUNNER */}
-                        <div className="w-full bg-surface-container-high border-t border-cad px-4 lg:px-6 py-2 flex flex-wrap items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
-                            <div>
-                                EXAM_INSTANCE: <span className="font-bold text-ink-primary">SF-NODE-092.41A</span> | PROCTOR_KERNEL_VERSION: <span className="font-bold text-ink-primary">4.19.8-LOCKED</span>
+                        <div className="w-full bg-surface-container-low border-t border-black/15 px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between text-xs text-on-surface-variant font-mono">
+                            <div className="flex items-center gap-2">
+                                <span className="font-bold text-ink-primary">EXAM INSTANCE:</span>
+                                <span>SF-NODE-092.41A</span>
+                                <span className="text-black/20">|</span>
+                                <span className="font-bold text-ink-primary">PROCTOR RUNNER:</span>
+                                <span>LOCKED v4.2</span>
                             </div>
                             <div className="flex items-center gap-4">
-                                <span>HARDWARE_TOKEN: <code className="text-canvas-blueprint font-bold">BLAKE3_HASH_8F92BC</code></span>
-                                <span>LATENCY: 14ms [DIRECT_SOCKET]</span>
+                                <span className="hidden sm:inline">LATENCY: 14ms</span>
+                                <span className="text-black/20 hidden sm:inline">|</span>
+                                <span className="text-canvas-blueprint font-bold">[ SYSTEM INTEGRITY: ACTIVE ]</span>
                             </div>
                         </div>
                     </main>
-
-                    <footer className="w-full bg-surface-container-low border-t border-cad py-space-sm select-none">
-                        <div className="w-full px-margin flex flex-col md:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant">
-                            <div>REGISTRATION SPEC // NODE: US-EAST-04 // PROCTOR INTEGRITY LEVEL: DETERMINISTIC_V4</div>
-                            <div className="flex flex-wrap items-center gap-space-md">
-                                <span>STATUS: RECORDING_ACTIVE</span>
-                                <span>ENCRYPTION: AES-256-GCM</span>
-                                <span>© {new Date().getFullYear()} SKILLFORGE ALGORITHMIC EVALUATION CORP.</span>
-                            </div>
-                        </div>
-                    </footer>
                 </div>
             )}
         </ProctorWrapper>

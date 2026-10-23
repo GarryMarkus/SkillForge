@@ -11,14 +11,14 @@ const OptionsMatrix = ({
     isLastQuestion
 }) => {
     return (
-        <div className="font-mono flex flex-col gap-4 select-none">
+        <div className="font-mono flex flex-col gap-4 select-none" id="OptionsMatrix">
             {/* Multiple-Choice Answer Selector Panel */}
-            <div className="flex flex-col gap-3" id="OptionsMatrix">
-                <div className="flex items-center justify-between">
-                    <span className="font-label-sm text-label-sm text-on-surface-variant font-bold uppercase tracking-wider">
-                        [ PROPOSED_ARCHITECTURAL_CORRECTIONS (SELECT EXACTLY ONE) ]
+            <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between pb-1 border-b border-black/10">
+                    <span className="text-xs text-on-surface-variant font-bold uppercase tracking-wider">
+                        [ PROPOSED RESOLUTION VECTORS (SELECT ONE) ]
                     </span>
-                    <span className="font-label-sm text-label-sm text-on-surface-variant">DETERMINISTIC_EVAL: ON</span>
+                    <span className="text-xs text-outline font-bold">DETERMINISTIC EVALUATION</span>
                 </div>
 
                 {options.map((option, idx) => {
@@ -26,63 +26,58 @@ const OptionsMatrix = ({
                     const letter = String.fromCharCode(65 + idx);
 
                     return (
-                        <label
+                        <button
                             key={idx}
+                            type="button"
                             onClick={() => onSelectOption(idx)}
-                            className={`cursor-pointer transition-none p-3.5 flex items-start gap-3 select-none ${
+                            className={`w-full text-left cursor-pointer transition-none p-4 sm:p-5 flex items-start gap-4 select-none ${
                                 isSelected
-                                    ? 'border border-canvas-blueprint bg-canvas-blueprint text-white shadow-[3px_3px_0px_#001847]'
-                                    : 'border border-on-surface/25 bg-surface-container-low hover:bg-surface-container text-ink-primary'
+                                    ? 'border-2 border-canvas-blueprint bg-canvas-blueprint text-white shadow-[4px_4px_0px_#001847]'
+                                    : 'border border-black/20 bg-surface-container-low hover:border-black/50 hover:bg-surface-container text-ink-primary'
                             }`}
                         >
-                            <div className={`font-label-md text-label-md font-bold px-1.5 py-0.5 ${
+                            <div className={`font-bold px-2 py-0.5 text-xs sm:text-sm shrink-0 uppercase border ${
                                 isSelected
-                                    ? 'bg-surface-container-lowest text-canvas-blueprint'
-                                    : 'bg-surface-container-lowest border border-on-surface/40 text-ink-primary'
+                                    ? 'bg-white text-canvas-blueprint border-white'
+                                    : 'bg-surface-container-lowest border-black/20 text-ink-primary'
                             }`}>
-                                {isSelected ? '[X]' : '[   ]'}
+                                [ {letter} ]
                             </div>
-                            <div className={`flex-1 font-body-md text-body-md ${isSelected ? 'text-white font-bold' : 'text-ink-primary'}`}>
-                                <span className="font-bold">{letter} //</span> {option}
+                            <div className={`flex-1 text-sm sm:text-base leading-relaxed ${isSelected ? 'text-white font-bold' : 'text-ink-primary font-medium'}`}>
+                                {option}
                             </div>
-                        </label>
+                        </button>
                     );
                 })}
             </div>
 
             {/* Bottom Navigation & Submission Rail */}
-            <div className="mt-2 pt-4 border-t border-on-surface/20 flex flex-wrap justify-between items-center gap-3">
+            <div className="mt-2 pt-4 border-t border-black/15 flex flex-wrap justify-between items-center gap-3">
                 <button
                     onClick={onPrevQuestion}
                     disabled={isFirstQuestion}
-                    className="px-4 py-2 border border-on-surface/40 bg-surface-container-lowest text-ink-primary font-label-md text-label-md hover:bg-surface-container disabled:opacity-30 transition-none font-bold uppercase cursor-pointer"
+                    className="px-5 py-3 border border-black/30 bg-surface-container-lowest text-ink-primary text-xs uppercase hover:bg-black hover:text-white disabled:opacity-30 transition-none font-bold cursor-pointer"
                     type="button"
                 >
-                    [ &lt;- PREVIOUS_QUESTION ]
+                    [ &lt;- PREV QUESTION ]
                 </button>
 
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-3">
                     <button
                         onClick={onClearSelection}
-                        className="px-3.5 py-2 border border-on-surface/30 bg-surface-container text-on-surface-variant font-label-md text-label-md hover:text-ink-primary hover:bg-surface-container-high transition-none uppercase cursor-pointer"
+                        className="px-4 py-3 border border-black/20 bg-surface-container text-on-surface-variant text-xs hover:text-ink-primary hover:bg-black/10 transition-none uppercase cursor-pointer font-bold"
                         type="button"
                     >
-                        [ CLEAR_SELECTION ]
+                        [ CLEAR ]
                     </button>
                     <button
                         onClick={onNextQuestion}
-                        className="px-5 py-2.5 bg-canvas-blueprint text-white border border-canvas-blueprint font-label-md text-label-md hover:bg-primary shadow-[3px_3px_0px_#191C1D] transition-none font-bold uppercase tracking-wider cursor-pointer"
+                        className="px-6 py-3 bg-canvas-blueprint text-white border-2 border-canvas-blueprint text-xs sm:text-sm hover:bg-black shadow-[3px_3px_0px_#0A0A0A] transition-none font-bold uppercase tracking-wider cursor-pointer"
                         type="button"
                     >
-                        {isLastQuestion ? '[ SUBMIT_EXAMINATION -> ]' : '[ COMMIT_ANSWER_&_NEXT -> ]'}
+                        {isLastQuestion ? '[ SUBMIT EVALUATION → ]' : '[ COMMIT & NEXT → ]'}
                     </button>
                 </div>
-            </div>
-
-            {/* Diagnostic Footer Notelet */}
-            <div className="p-3 bg-surface-container border border-on-surface/15 flex flex-wrap items-center justify-between font-label-sm text-label-sm text-on-surface-variant gap-2 mt-2">
-                <div>NODE_HASH: SHA256:d8c3b17e4 // SCRATCHPAD_SLOT: SECURE_VOLATILE_RAM</div>
-                <div className="font-bold text-ink-primary">ACTIVE_INPUT_CARRIER: MOUSE_EVENT_V1</div>
             </div>
         </div>
     );
