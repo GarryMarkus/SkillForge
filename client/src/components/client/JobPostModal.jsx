@@ -1,8 +1,4 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Target, Sparkles } from 'lucide-react';
-import Button from '../ui/Button';
-import Input from '../ui/Input';
 import api from '../../lib/api';
 
 const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
@@ -14,8 +10,10 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
         budget_type: 'fixed',
         budget_amount: '',
         skills_required: '',
-        min_skill_score: 500 // Default score
+        min_skill_score: 80
     });
+
+    if (!isOpen) return null;
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,185 +24,176 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
         setLoading(true);
         try {
             const response = await api.post('/project/create/', formData);
-
             if (response.ok) {
                 const newJob = await response.json();
                 onJobCreated(newJob);
                 onClose();
             } else {
-                console.error('Failed to post job');
-                alert('Failed to post job. Please try again.');
+                const err = await response.json().catch(() => ({}));
+                alert(`[DEPLOYMENT_ERROR] ${err.error || 'Failed to deploy requisition specification.'}`);
             }
         } catch (error) {
             console.error('Error posting job:', error);
-            alert('Error posting job. Check console.');
+            alert('[DEPLOYMENT_ERROR] Network fault encountered while emitting job specification.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <AnimatePresence>
-            {isOpen && (
-                <>
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-none font-mono select-none">
+            <div className="bg-surface-container-lowest border border-black/30 w-full max-w-2xl shadow-[6px_6px_0px_#1D52B8] max-h-[92vh] flex flex-col overflow-hidden">
+                {/* Modal Title Rail */}
+                <div className="px-space-md py-space-sm bg-surface-container border-b border-black/20 flex items-center justify-between">
+                    <div className="flex items-center gap-space-xs font-label-md text-label-md font-bold uppercase text-on-surface">
+                        <span className="text-primary-container font-bold">+</span>
+                        <span>[ REQUISITION_DEPLOYMENT_CONSOLE // SPEC_ENTRY ]</span>
+                    </div>
+                    <button
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 overflow-y-auto cursor-pointer"
-                    />
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 50 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 50 }}
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+                        className="px-2 py-0.5 border border-black/20 hover:bg-black hover:text-white text-label-sm font-label-sm uppercase transition-none cursor-pointer"
                     >
-                        <div className="bg-white dark:bg-dark-card w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden pointer-events-auto flex flex-col max-h-[90vh]">
-                            {/* Header */}
-                            <div className="p-8 border-b border-gray-100 dark:border-gray-800 flex justify-between items-start bg-light-canvas dark:bg-dark-canvas">
-                                <div>
-                                    <h2 className="text-3xl font-black text-black dark:text-white flex items-center gap-2">
-                                        Post a New Project <Sparkles className="w-6 h-6 text-orange-500" />
-                                    </h2>
-                                    <p className="font-script text-gray-500 mt-1">Found the perfect talent yet?</p>
-                                </div>
-                                <button
-                                    onClick={onClose}
-                                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
-                                >
-                                    <X className="w-6 h-6" />
-                                </button>
-                            </div>
+                        [ESC]
+                    </button>
+                </div>
 
-                            {/* Form - Scrollable */}
-                            <div className="overflow-y-auto p-8 space-y-6 bg-white dark:bg-dark-card">
-                                <form id="jobForm" onSubmit={handleSubmit} className="space-y-6">
-                                    <Input
-                                        label="Project Title"
-                                        name="title"
-                                        value={formData.title}
-                                        onChange={handleChange}
-                                        placeholder="e.g. Build a Fintech Dashboard"
-                                        required
-                                    />
+                {/* Modal Body */}
+                <form onSubmit={handleSubmit} className="p-space-lg overflow-y-auto space-y-space-md flex-1">
+                    <div>
+                        <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                            TARGET_DESIGNATION_TITLE *
+                        </label>
+                        <input
+                            name="title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            placeholder="e.g. SR. SYSTEMS ENGINEER // DISTRIBUTED_BACKEND"
+                            required
+                            className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md"
+                        />
+                    </div>
 
-                                    <div className="grid grid-cols-2 gap-6">
-                                        <div>
-                                            <label className="block text-sm font-bold mb-2 ml-1">Category</label>
-                                            <select
-                                                name="category"
-                                                value={formData.category}
-                                                onChange={handleChange}
-                                                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-black dark:focus:border-white focus:ring-0 transition-all font-bold appearance-none"
-                                            >
-                                                <option>Web Development</option>
-                                                <option>Mobile App</option>
-                                                <option>AI/ML</option>
-                                                <option>Design</option>
-                                                <option>Data Science</option>
-                                            </select>
-                                        </div>
-                                        <Input
-                                            label="Skills Required"
-                                            name="skills_required"
-                                            value={formData.skills_required}
-                                            onChange={handleChange}
-                                            placeholder="React, Node.js, Python"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-bold mb-2 ml-1">Description</label>
-                                        <textarea
-                                            name="description"
-                                            value={formData.description}
-                                            onChange={handleChange}
-                                            rows="4"
-                                            className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 focus:border-black dark:focus:border-white focus:ring-0 transition-all resize-none font-medium"
-                                            placeholder="Describe the project scope..."
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-6">
-                                        <div>
-                                            <label className="block text-sm font-bold mb-2 ml-1">Budget Type</label>
-                                            <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-xl">
-                                                {['fixed', 'hourly'].map((type) => (
-                                                    <button
-                                                        key={type}
-                                                        type="button"
-                                                        onClick={() => setFormData({ ...formData, budget_type: type })}
-                                                        className={`flex-1 py-2 rounded-lg text-sm font-bold capitalize transition-all ${formData.budget_type === type
-                                                                ? 'bg-white dark:bg-gray-700 text-black dark:text-white shadow-sm'
-                                                                : 'text-gray-500'
-                                                            }`}
-                                                    >
-                                                        {type}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div className="relative">
-                                            <Input
-                                                label="Amount ($)"
-                                                name="budget_amount"
-                                                type="number"
-                                                value={formData.budget_amount}
-                                                onChange={handleChange}
-                                                placeholder="1000"
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Skill Score Slider */}
-                                    <div className="bg-orange-50 dark:bg-orange-900/10 p-6 rounded-2xl border-2 border-orange-100 dark:border-orange-900/20">
-                                        <div className="flex justify-between items-center mb-4">
-                                            <label className="flex items-center gap-2 font-bold text-orange-900 dark:text-orange-100">
-                                                <Target className="w-5 h-5" /> Minimum Skill Score
-                                            </label>
-                                            <span className="text-2xl font-black text-orange-500">{formData.min_skill_score}</span>
-                                        </div>
-                                        <input
-                                            type="range"
-                                            min="0"
-                                            max="1000"
-                                            step="10"
-                                            value={formData.min_skill_score}
-                                            onChange={(e) => setFormData({ ...formData, min_skill_score: parseInt(e.target.value) })}
-                                            className="w-full h-2 bg-orange-200 rounded-lg appearance-none cursor-pointer accent-orange-500"
-                                        />
-                                        <p className="text-xs text-orange-700 dark:text-orange-300 mt-2 font-mono">
-                                            Only students with a verified SkillForge score above {formData.min_skill_score} can apply.
-                                        </p>
-                                    </div>
-                                </form>
-                            </div>
-
-                            {/* Footer */}
-                            <div className="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 flex justify-end gap-4">
-                                <button
-                                    onClick={onClose}
-                                    className="font-bold text-gray-500 hover:text-black dark:hover:text-white px-4"
-                                >
-                                    Cancel
-                                </button>
-                                <Button
-                                    onClick={() => document.getElementById('jobForm').requestSubmit()}
-                                    className="px-8 shadow-lg hover:shadow-xl hover:-translate-y-1"
-                                    disabled={loading}
-                                >
-                                    {loading ? 'Publishing...' : 'Post Project'}
-                                </Button>
-                            </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                        <div>
+                            <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                                DOMAIN_CATEGORY
+                            </label>
+                            <select
+                                name="category"
+                                value={formData.category}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md uppercase"
+                            >
+                                <option value="Web Development">Web Development</option>
+                                <option value="Backend Systems">Backend Systems</option>
+                                <option value="Machine Learning">Machine Learning</option>
+                                <option value="Cloud Architecture">Cloud Architecture</option>
+                                <option value="Security / Forensic">Security / Forensic</option>
+                            </select>
                         </div>
-                    </motion.div>
-                </>
-            )}
-        </AnimatePresence>
+
+                        <div>
+                            <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                                ANNUAL_COMPENSATION_BUDGET ($USD) *
+                            </label>
+                            <input
+                                type="number"
+                                name="budget_amount"
+                                value={formData.budget_amount}
+                                onChange={handleChange}
+                                placeholder="120000"
+                                required
+                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                        <div>
+                            <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                                MINIMUM_EMPIRICAL_THRESHOLD (0-100)
+                            </label>
+                            <input
+                                type="number"
+                                name="min_skill_score"
+                                min="1"
+                                max="100"
+                                value={formData.min_skill_score}
+                                onChange={handleChange}
+                                placeholder="80"
+                                required
+                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                                BUDGET_CONTRACT_STRUCTURE
+                            </label>
+                            <select
+                                name="budget_type"
+                                value={formData.budget_type}
+                                onChange={handleChange}
+                                className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md uppercase"
+                            >
+                                <option value="fixed">Fixed Salary Specification</option>
+                                <option value="hourly">Hourly Contract Rate</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                            REQUIRED_TECHNICAL_STACK (COMMA_SEPARATED) *
+                        </label>
+                        <input
+                            name="skills_required"
+                            value={formData.skills_required}
+                            onChange={handleChange}
+                            placeholder="Python, FastAPI, Redis, Docker, PostgreSQL"
+                            required
+                            className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md"
+                        />
+                        <span className="text-[10px] text-on-surface-variant block mt-1">
+                            Used directly by Scikit-Learn TF-IDF vectorizer to calculate cosine similarity fit.
+                        </span>
+                    </div>
+
+                    <div>
+                        <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                            DETAILED_ENGINEERING_REQUISITION_SPECIFICATION *
+                        </label>
+                        <textarea
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            rows="4"
+                            placeholder="Architectural mandates, concurrency requirements, expected protocol standards (IEEE, NIST)..."
+                            required
+                            className="w-full px-3 py-2 bg-surface border border-black/25 focus:border-primary focus:outline-none font-body-md text-body-md resize-none"
+                        />
+                    </div>
+
+                    {/* Bottom CTA Bar */}
+                    <div className="pt-space-md border-t border-black/15 flex items-center justify-between">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="px-space-md py-2 border border-black/30 font-label-md text-label-md uppercase hover:bg-black hover:text-white transition-none cursor-pointer"
+                        >
+                            [ CANCEL ]
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="bg-primary text-on-primary px-space-lg py-2 font-label-md text-label-md uppercase font-bold border border-primary hover:bg-surface hover:text-primary transition-none shadow-[2px_2px_0px_#191C1D] cursor-pointer disabled:opacity-50"
+                        >
+                            {loading ? '[ EMITTING_SPEC... ]' : '[ DEPLOY_REQUISITION_TO_INDEX -> ]'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 };
 

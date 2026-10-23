@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import { Building, MapPin, Globe, Briefcase, ArrowRight } from 'lucide-react';
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
 import api from '../../lib/api';
 
 const ClientOnboarding = () => {
@@ -12,7 +8,6 @@ const ClientOnboarding = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    // Using snake_case keys to match backend Serializer exactly
     const [profile, setProfile] = useState({
         company_name: '',
         industry: '',
@@ -49,7 +44,6 @@ const ClientOnboarding = () => {
         e.preventDefault();
         setIsLoading(true);
 
-        // Determine Mode: Onboarding (PUT) or Update (PATCH)
         const isUpdate = user?.onboarding_stage && user.onboarding_stage >= 2;
         const path = isUpdate
             ? '/accounts/profile/update/'
@@ -67,84 +61,123 @@ const ClientOnboarding = () => {
             } else {
                 const err = await response.json();
                 console.error("Failed to update profile", err);
-                alert("Update failed. Check console for details.");
+                alert("[VALIDATION_ERROR] Failed to update client telemetry: " + JSON.stringify(err));
             }
         } catch (error) {
             console.error("Error submitting form", error);
+            alert("[NETWORK_FAULT] Failed to transmit client entity details.");
         } finally {
             setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-light-canvas dark:bg-dark-canvas p-6 flex items-center justify-center">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-3xl w-full"
-            >
-                <header className="mb-12 text-center">
-                    <h1 className="text-5xl md:text-6xl font-black mb-4 tracking-tighter text-black dark:text-white">
-                        Welcome to the Forge <span className="text-orange-500">⚒️</span>
-                    </h1>
-                    <p className="font-script text-2xl text-gray-500 dark:text-gray-400 rotate-2">
-                        Let's set up your HQ, {user?.name || 'Partner'}!
-                    </p>
-                </header>
+        <div className="min-h-screen bg-surface font-mono text-on-surface p-4 sm:p-8 flex items-center justify-center selection:bg-primary-container selection:text-on-primary">
+            <div className="max-w-3xl w-full">
+                {/* Header Track */}
+                <div className="border border-black/20 bg-surface-container-lowest p-space-md mb-space-md flex flex-wrap items-center justify-between gap-2 shadow-[2px_2px_0px_#1D52B8]">
+                    <div className="flex items-center gap-space-xs font-label-md text-label-md font-bold uppercase text-primary">
+                        <span>[+]</span>
+                        <span>[ ENTERPRISE_ENTITY_REGISTRATION // CAD_SPEC_CLIENT_01 ]</span>
+                    </div>
+                    <div className="font-label-sm text-label-sm text-outline">
+                        STATUS: ONBOARDING_FLOW
+                    </div>
+                </div>
 
-                <div className="bg-white dark:bg-dark-card border-4 border-black dark:border-gray-700 rounded-[3rem] p-8 md:p-12 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] dark:shadow-none relative overflow-hidden">
-                    {/* Decorative Background */}
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-100 dark:bg-yellow-900/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-10" />
+                {/* Main Form Box */}
+                <div className="bg-surface-container-lowest border border-black/25 p-space-lg md:p-space-xl shadow-[4px_4px_0px_#191C1D]">
+                    <div className="border-b border-black/15 pb-space-md mb-space-lg">
+                        <h1 className="font-headline-lg text-headline-lg uppercase tracking-tight text-on-surface font-bold">
+                            RECRUITER ENTERPRISE PROVISIONING
+                        </h1>
+                        <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+                            Register your corporate engineering entity to deploy high-concurrency talent requisitions and inspect cryptographic proctor dossiers.
+                        </p>
+                    </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Input
-                                label="Company Name"
-                                name="company_name"
-                                value={profile.company_name}
-                                onChange={handleChange}
-                                icon={Building}
-                                placeholder="e.g. Acme Corp"
-                                required
-                            />
-                            <Input
-                                label="Industry"
-                                name="industry"
-                                value={profile.industry}
-                                onChange={handleChange}
-                                icon={Briefcase}
-                                placeholder="e.g. Fintech, EdTech"
-                            />
+                    <form onSubmit={handleSubmit} className="space-y-space-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                            <div>
+                                <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                                    ENTERPRISE_LEGAL_ENTITY_NAME *
+                                </label>
+                                <input
+                                    name="company_name"
+                                    value={profile.company_name}
+                                    onChange={handleChange}
+                                    placeholder="e.g. Nexus Infrastructure Systems Corp."
+                                    required
+                                    className="w-full px-3 py-2 bg-surface border border-black/20 focus:border-primary focus:outline-none font-body-md text-body-md"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                                    PRIMARY_INDUSTRY_VERTICAL *
+                                </label>
+                                <input
+                                    name="industry"
+                                    value={profile.industry}
+                                    onChange={handleChange}
+                                    placeholder="e.g. Cloud Infrastructure / FinTech"
+                                    required
+                                    className="w-full px-3 py-2 bg-surface border border-black/20 focus:border-primary focus:outline-none font-body-md text-body-md"
+                                />
+                            </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Input
-                                label="Website"
-                                name="website"
-                                value={profile.website}
-                                onChange={handleChange}
-                                icon={Globe}
-                                placeholder="https://..."
-                            />
-                            <Input
-                                label="Location / Address"
-                                name="address"
-                                value={profile.address}
-                                onChange={handleChange}
-                                icon={MapPin}
-                                placeholder="City, Country"
-                            />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+                            <div>
+                                <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                                    CORPORATE_WEBSITE_DOMAIN *
+                                </label>
+                                <input
+                                    name="website"
+                                    value={profile.website}
+                                    onChange={handleChange}
+                                    placeholder="https://nexusinfra.io"
+                                    required
+                                    className="w-full px-3 py-2 bg-surface border border-black/20 focus:border-primary focus:outline-none font-body-md text-body-md"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block font-label-sm text-label-sm uppercase font-bold text-outline mb-1">
+                                    HEADQUARTERS_LOCATION / TIMEZONE *
+                                </label>
+                                <input
+                                    name="address"
+                                    value={profile.address}
+                                    onChange={handleChange}
+                                    placeholder="San Francisco, CA (UTC-7)"
+                                    required
+                                    className="w-full px-3 py-2 bg-surface border border-black/20 focus:border-primary focus:outline-none font-body-md text-body-md"
+                                />
+                            </div>
                         </div>
 
-                        <div className="pt-4 flex justify-end">
-                            <Button className="px-10 py-4 text-xl flex items-center gap-2 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none">
-                                {isLoading ? 'Forging Profile...' : 'Complete Setup'}
-                                {!isLoading && <ArrowRight />}
-                            </Button>
+                        {/* CTA Rail */}
+                        <div className="pt-space-md border-t border-black/15 flex flex-wrap items-center justify-between gap-space-md">
+                            <button
+                                type="button"
+                                onClick={() => navigate('/client/dashboard')}
+                                className="px-space-md py-2 border border-black/30 font-label-md text-label-md uppercase hover:bg-black hover:text-white transition-none cursor-pointer"
+                            >
+                                [ BYPASS_RETURN_TO_DASHBOARD ]
+                            </button>
+
+                            <button
+                                type="submit"
+                                disabled={isLoading}
+                                className="bg-primary text-on-primary px-space-xl py-2.5 font-label-md text-label-md uppercase tracking-wider font-bold border border-primary hover:bg-surface hover:text-primary transition-none cursor-pointer disabled:opacity-50"
+                            >
+                                {isLoading ? '[ PROVISIONING_ENTITY... ]' : '[ INITIALIZE_ENTERPRISE_PIPELINE -> ]'}
+                            </button>
                         </div>
                     </form>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 };
