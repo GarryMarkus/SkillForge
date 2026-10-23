@@ -47,8 +47,23 @@ class AllJobsAPI(APIView):
     Returns open job postings.
     For student users, computes TF-IDF cosine similarity against their verified profile
     and appends a percentage 'match' score (0-100%).
+    Also allows authenticated clients to dispatch new job postings via POST.
     """
     permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        if getattr(request.user, "role", None) != "client":
+            return Response({"error": "Only recruiters can create jobs"}, status=status.HTTP_403_FORBIDDEN)
+        try:
+            client_profile = request.user.client_profile
+        except ClientProfile.DoesNotExist:
+            return Response({"error": "Client profile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = JobPostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(client=client_profile)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
         jobs = list(

@@ -26,7 +26,7 @@ function App() {
         <Route
           path="/student/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['student']}>
               <RoleGuard requiredRole="student">
                 <StudentDashboard />
               </RoleGuard>
@@ -36,7 +36,7 @@ function App() {
         <Route
           path="/student/onboarding"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['student']}>
               <RoleGuard requiredRole="student">
                 <StudentOnboarding />
               </RoleGuard>
@@ -46,7 +46,7 @@ function App() {
         <Route
           path="/student/assessment"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['student']}>
               <RoleGuard requiredRole="student">
                 <AssessmentPage />
               </RoleGuard>
@@ -56,7 +56,7 @@ function App() {
         <Route
           path="/student/personality-test"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['student']}>
               <RoleGuard requiredRole="student">
                 <PersonalityTest />
               </RoleGuard>
@@ -66,7 +66,7 @@ function App() {
         <Route
           path="/student/upskill"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['student']}>
               <RoleGuard requiredRole="student">
                 <UpskillPage />
               </RoleGuard>
@@ -78,7 +78,7 @@ function App() {
         <Route
           path="/client/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['client']}>
               <RoleGuard requiredRole="client">
                 <ClientDashboard />
               </RoleGuard>
@@ -88,7 +88,7 @@ function App() {
         <Route
           path="/client/onboarding"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['client']}>
               <RoleGuard requiredRole="client">
                 <ClientOnboarding />
               </RoleGuard>

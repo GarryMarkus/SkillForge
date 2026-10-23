@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import api from '../../lib/api';
+import client from '../../api/client';
 
 import ClientHeader from '../../components/client/ClientHeader';
-import ClientTelemetryRibbon from '../../components/client/ClientTelemetryRibbon';
 import RequisitionActionBar from '../../components/client/RequisitionActionBar';
-import DeployedRequisitionsTable from '../../components/client/DeployedRequisitionsTable';
+import ActiveJobsTableBlock from '../../components/client/ActiveJobsTableBlock';
 import ApplicantRankingsGrid from '../../components/client/ApplicantRankingsGrid';
 import RequisitionBlueprintCard from '../../components/client/RequisitionBlueprintCard';
 import CandidateDossierModal from '../../components/client/CandidateDossierModal';
-import JobPostModal from '../../components/client/JobPostModal';
+import JobPostModal from '../../components/modals/JobPostModal';
 import ClientFooter from '../../components/client/ClientFooter';
 
 const DEFAULT_SAMPLE_APPLICANTS = [
@@ -91,7 +90,7 @@ const ClientDashboard = () => {
 
     const fetchProfile = useCallback(async () => {
         try {
-            const response = await api.get('/accounts/profile/');
+            const response = await client.get('/accounts/profile/');
             if (response.ok) {
                 const data = await response.json();
                 setProfile(data);
@@ -104,29 +103,29 @@ const ClientDashboard = () => {
     const fetchApplicantsForJob = useCallback(async (job) => {
         if (!job) return;
         try {
-            const response = await api.get(`/project/applicants/${job.id}/`);
+            const response = await client.get(`/project/applicants/${job.id}/`);
             if (response.ok) {
                 const data = await response.json();
                 if (Array.isArray(data) && data.length > 0) {
                     const formatted = data.map((app, i) => ({
                         id: app.id,
                         rank: `#${String(i + 1).padStart(2, '0')}`,
-                        cosine_sim: app.match_score ? (app.match_score * 100).toFixed(1) : 94.2,
-                        candidate_name: app.student_name || app.student_email?.split('@')[0]?.toUpperCase() || `APPLICANT_${app.id}`,
+                        cosine_sim: app.match ? app.match.toFixed(1) : 94.2,
+                        candidate_name: app.name || app.email?.split('@')[0]?.toUpperCase() || `APPLICANT_${app.id}`,
                         candidate_ref: `SF-APP-${app.id}`,
                         role_label: "Engineering Candidate",
                         hash: `hash_${app.id}..77b2`,
                         region: "GLOBAL (VERIFIED)",
                         pdf_parsed: true,
-                        github_repos: "AUDITED",
+                        github_repos: app.github_url ? "LINKED" : "AUDITED",
                         tags: job.skills_required ? job.skills_required.split(',').map(s => s.trim()) : ["PYTHON", "DJANGO"],
                         proctor_score: "98%",
                         proctor_flags: "ZERO_CHEATING_FLAGS",
                         cam_status: "SYNCHRONIZED (1080P)",
                         stars: "★★★★★",
                         rating_num: "4.7 / 5.0",
-                        email: app.student_email || "candidate@example.com",
-                        status: app.status || "pending"
+                        email: app.email || "candidate@example.com",
+                        status: "pending"
                     }));
                     setApplicants(formatted);
                 } else {
@@ -143,7 +142,7 @@ const ClientDashboard = () => {
 
     const fetchJobs = useCallback(async () => {
         try {
-            const response = await api.get('/project/my-jobs/');
+            const response = await client.get('/project/my-jobs/');
             if (response.ok) {
                 const data = await response.json();
                 const jobList = Array.isArray(data) ? data : [];
@@ -217,27 +216,20 @@ const ClientDashboard = () => {
 
     return (
         <div className="bg-background text-on-surface font-mono antialiased selection:bg-primary-container selection:text-on-primary min-h-screen flex flex-col">
-            {/* Top Navigation & Module Index Header */}
+            {/* Top Enterprise Console Header with Integrated Metric Ribbon */}
             <ClientHeader
                 companyName={companyName}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 jobsCount={jobs.length}
-                applicantsCount={displayedApplicants.length}
+                totalApplicantsCount={totalApplicantsCount}
+                verifiedTalentIndex="96.2%"
+                timeToShortlist="1.4_DAYS"
                 onLogout={handleLogout}
             />
 
             {/* Main Console Workspace */}
-            <main className="w-full pt-28 bg-background min-h-screen flex-1">
-                {/* Telemetry Strip & Ribbon */}
-                <ClientTelemetryRibbon
-                    companyName={companyName}
-                    jobsCount={jobs.length}
-                    totalApplicantsCount={totalApplicantsCount}
-                    verifiedTalentIndex="96.2%"
-                    timeToShortlist="1.4_DAYS"
-                />
-
+            <main className="w-full pt-56 sm:pt-52 bg-background min-h-screen flex-1">
                 {/* Requisition Deployment Action Bar */}
                 <RequisitionActionBar
                     onDeployClick={() => setIsModalOpen(true)}
@@ -245,10 +237,10 @@ const ClientDashboard = () => {
                     lastRunTimestamp="2026-10-24 18:42:01"
                 />
 
-                {/* Workplane Grid */}
+                {/* Main Workplane Grid */}
                 <div className="w-full px-margin py-space-lg flex flex-col gap-space-xl">
                     {/* Active Deployed Jobs Table Block */}
-                    <DeployedRequisitionsTable
+                    <ActiveJobsTableBlock
                         jobs={jobs}
                         selectedJob={selectedJob}
                         onSelectJob={handleSelectJob}
@@ -276,7 +268,7 @@ const ClientDashboard = () => {
                         />
                     </div>
 
-                    {/* Technical Ground & Footer Information Strip */}
+                    {/* Technical Ground & Coordinates Information Strip */}
                     <ClientFooter />
                 </div>
             </main>
