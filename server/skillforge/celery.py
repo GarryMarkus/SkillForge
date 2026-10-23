@@ -1,5 +1,8 @@
+import logging
 import os
 from celery import Celery
+
+logger = logging.getLogger(__name__)
 
 # Set default Django settings module for 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "skillforge.settings")
@@ -18,4 +21,4 @@ app.autodiscover_tasks()
 
 @app.task(bind=True, ignore_result=True)
 def debug_task(self):
-    print(f"Request: {self.request!r}")
+    logger.debug("Request: %r", self.request)

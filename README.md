@@ -31,6 +31,7 @@
 - [Quick Start Guide](#-quick-start-guide)
   - [Backend Setup (`server/`)](#1-backend-setup-server)
   - [Frontend Setup (`client/`)](#2-frontend-setup-client)
+  - [Docker Deployment (`docker compose`)](#3-docker-deployment-docker-compose)
 - [Environment Configuration](#-environment-configuration)
 - [Architecture & Key Subsystems](#-architecture--key-subsystems)
   - [Centralized API Client](#centralized-api-client)
@@ -145,6 +146,17 @@ npm run dev
 ```
 Frontend will be live at `http://localhost:5173`.
 
+### 3. Docker Deployment (`docker compose`)
+
+Run the complete production-grade containerized environment (Redis, Django backend, Celery worker, and Nginx frontend) with a single command:
+
+```bash
+docker compose up --build
+```
+- **Frontend SPA**: `http://localhost:5173`
+- **Backend REST API**: `http://localhost:8000/api/`
+- **Redis Queue**: `localhost:6379`
+
 ---
 
 ## 🔧 Environment Configuration
@@ -158,10 +170,12 @@ VITE_API_BASE_URL=http://localhost:8000/api
 
 ### Backend (`server/.env.example`)
 ```env
-SECRET_KEY=your-django-secret-key-change-in-production
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
-GEMINI_API_KEY=your-gemini-api-key-here
+DJANGO_SECRET_KEY=django-insecure-replace-with-a-secure-random-key-in-production
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+REDIS_URL=redis://localhost:6379/0
+GEMINI_API_KEY=your_gemini_api_key_here
 GITHUB_TOKEN=optional-github-token-to-avoid-rate-limits
 ```
 

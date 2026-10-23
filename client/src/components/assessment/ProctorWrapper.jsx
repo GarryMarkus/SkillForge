@@ -143,7 +143,9 @@ const ProctorWrapper = ({
         const elem = document.documentElement;
         const requestFS = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.mozRequestFullScreen || elem.msRequestFullscreen;
         if (requestFS) {
-            requestFS.call(elem).catch((err) => console.log(err));
+            requestFS.call(elem).catch((err) => {
+                console.warn('[ProctorWrapper] Fullscreen request bypassed:', err);
+            });
         }
     };
 

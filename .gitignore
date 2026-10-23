@@ -16,6 +16,7 @@ venv.bak/
 
 # Django
 media/
+server/media/
 staticfiles/
 
 # React / Node
