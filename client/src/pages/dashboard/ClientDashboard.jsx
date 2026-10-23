@@ -221,7 +221,7 @@ const ClientDashboard = () => {
         : ["PYTHON", "FASTAPI", "DOCKER", "KUBERNETES", "POSTGRESQL_INDEXING", "REDIS"];
 
     return (
-        <div className="bg-background text-on-surface font-mono antialiased selection:bg-primary-container selection:text-on-primary min-h-screen flex flex-col">
+        <div className="bg-canvas-light text-ink-primary font-mono antialiased select-none min-h-screen flex flex-col">
             {/* Top Enterprise Console Header with Integrated Metric Ribbon */}
             <ClientHeader
                 companyName={companyName}
@@ -230,53 +230,55 @@ const ClientDashboard = () => {
                 jobsCount={jobs.length}
                 totalApplicantsCount={totalApplicantsCount}
                 verifiedTalentIndex="96.2%"
-                timeToShortlist="1.4_DAYS"
+                timeToShortlist="1.4 DAYS"
                 onLogout={handleLogout}
             />
 
             {/* Main Console Workspace */}
-            <main className="w-full pt-56 sm:pt-52 bg-background min-h-screen flex-1">
-                {/* Requisition Deployment Action Bar */}
-                <RequisitionActionBar
-                    onDeployClick={() => setIsModalOpen(true)}
-                    onExportCSV={handleExportCSV}
-                    lastRunTimestamp="2026-10-24 18:42:01"
-                />
-
-                {/* Main Workplane Grid */}
-                <div className="w-full px-margin py-space-lg flex flex-col gap-space-xl">
-                    {/* Active Deployed Jobs Table Block */}
-                    <ActiveJobsTableBlock
-                        jobs={jobs}
-                        selectedJob={selectedJob}
-                        onSelectJob={handleSelectJob}
+            <main className="w-full pt-52 sm:pt-48 bg-canvas-light min-h-screen flex-1 flex flex-col justify-between">
+                <div>
+                    {/* Requisition Deployment Action Bar */}
+                    <RequisitionActionBar
                         onDeployClick={() => setIsModalOpen(true)}
+                        onExportCSV={handleExportCSV}
+                        lastRunTimestamp="2026-10-24 18:42:01"
                     />
 
-                    {/* Two-Column Engineering Split */}
-                    <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
-                        {/* Left Column: Applicant Rankings Grid (8 Cols) */}
-                        <ApplicantRankingsGrid
+                    {/* Main Workplane Grid */}
+                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+                        {/* Active Deployed Jobs Table Block */}
+                        <ActiveJobsTableBlock
+                            jobs={jobs}
                             selectedJob={selectedJob}
-                            applicants={displayedApplicants}
-                            filterMode={filterMode}
-                            setFilterMode={setFilterMode}
-                            onInspectCandidate={setInspectingCandidate}
-                            onIssueOffer={handleIssueOffer}
+                            onSelectJob={handleSelectJob}
+                            onDeployClick={() => setIsModalOpen(true)}
                         />
 
-                        {/* Right Column: Technical Blueprint Specification Card (4 Cols) */}
-                        <RequisitionBlueprintCard
-                            skillsList={requiredSkillsList}
-                            onRecalibrate={() => setIsModalOpen(true)}
-                            onCloneSpec={() => setIsModalOpen(true)}
-                            timestamp="2026-10-24 18:42:01 UTC"
-                        />
+                        {/* Two-Column Engineering Split */}
+                        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                            {/* Left Column: Applicant Rankings Grid (8 Cols) */}
+                            <ApplicantRankingsGrid
+                                selectedJob={selectedJob}
+                                applicants={displayedApplicants}
+                                filterMode={filterMode}
+                                setFilterMode={setFilterMode}
+                                onInspectCandidate={setInspectingCandidate}
+                                onIssueOffer={handleIssueOffer}
+                            />
+
+                            {/* Right Column: Technical Blueprint Specification Card (4 Cols) */}
+                            <RequisitionBlueprintCard
+                                skillsList={requiredSkillsList}
+                                onRecalibrate={() => setIsModalOpen(true)}
+                                onCloneSpec={() => setIsModalOpen(true)}
+                                timestamp="2026-10-24 18:42:01 UTC"
+                            />
+                        </div>
                     </div>
-
-                    {/* Technical Ground & Coordinates Information Strip */}
-                    <ClientFooter />
                 </div>
+
+                {/* Technical Ground & Coordinates Information Strip */}
+                <ClientFooter />
             </main>
 
             {/* Candidate Dossier Inspection Modal */}

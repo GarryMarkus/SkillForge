@@ -8,36 +8,30 @@ const RequisitionBlueprintCard = ({
 }) => {
     return (
         <section
-            className="lg:col-span-4 bg-primary-container text-on-primary border border-primary p-0 relative shadow-none"
+            className="lg:col-span-4 bg-canvas-blueprint text-white border border-primary p-6 sm:p-8 shadow-[4px_4px_0px_#0A0A0A] flex flex-col font-mono select-none"
             id="RequisitionBlueprintCard"
         >
-            {/* Blueprint Corner Crosshairs */}
-            <div className="absolute top-1 left-1 text-on-primary/40 font-mono text-[10px] pointer-events-none select-none">+</div>
-            <div className="absolute top-1 right-1 text-on-primary/40 font-mono text-[10px] pointer-events-none select-none">+</div>
-            <div className="absolute bottom-1 left-1 text-on-primary/40 font-mono text-[10px] pointer-events-none select-none">+</div>
-            <div className="absolute bottom-1 right-1 text-on-primary/40 font-mono text-[10px] pointer-events-none select-none">+</div>
-
             {/* Blueprint Section Header */}
-            <div className="w-full border-b border-white/20 px-space-md py-space-sm bg-primary/40 flex items-center justify-between">
-                <div className="font-headline-sm text-headline-sm text-on-primary uppercase tracking-tight flex items-center gap-1 font-bold">
-                    <span>[ SYSTEM_REQUISITION_SPEC ]</span>
+            <div className="w-full border-b border-white/20 pb-3 mb-5 flex items-center justify-between">
+                <div className="text-xs uppercase tracking-wider font-bold text-white">
+                    [ REQUISITION SPECIFICATION ]
                 </div>
-                <span className="text-label-sm font-label-sm text-on-primary/70 border border-white/30 px-1 py-0.5 font-bold">
-                    [SCHEMATIC: CAD_902]
+                <span className="text-[11px] text-white/90 border border-white/30 px-2 py-0.5 bg-white/10 font-bold">
+                    ACTIVE
                 </span>
             </div>
 
             {/* Blueprint Body */}
-            <div className="p-space-md flex flex-col gap-space-md font-body-sm text-body-sm">
+            <div className="flex flex-col gap-5 text-xs">
                 {/* Target Model Vector */}
                 <div>
-                    <div className="text-label-sm font-label-sm uppercase text-on-primary/75 tracking-wider mb-space-xs font-bold">
-                        // TF-IDF_TARGET_VECTOR
+                    <div className="text-[11px] uppercase text-white/80 tracking-wider mb-2 font-bold">
+                        // TARGET SKILL VECTOR
                     </div>
-                    <div className="p-space-sm bg-primary/50 border border-white/20 text-on-primary flex flex-wrap gap-1.5 font-label-sm text-label-sm">
+                    <div className="p-3 bg-white/10 border border-white/20 text-white flex flex-wrap gap-1.5">
                         {skillsList.map((skill, i) => (
-                            <span key={i} className="border border-white/40 px-1.5 py-0.5 bg-white/10 font-bold">
-                                [{skill}]
+                            <span key={i} className="border border-white/40 px-2 py-1 bg-white/10 font-bold text-[11px]">
+                                {skill}
                             </span>
                         ))}
                     </div>
@@ -45,65 +39,63 @@ const RequisitionBlueprintCard = ({
 
                 {/* Heuristic Policy Enforcement Box */}
                 <div>
-                    <div className="text-label-sm font-label-sm uppercase text-on-primary/75 tracking-wider mb-space-xs font-bold">
-                        // HEURISTIC_POLICY_RULES
+                    <div className="text-[11px] uppercase text-white/80 tracking-wider mb-2 font-bold">
+                        // POLICY ENFORCEMENT RULES
                     </div>
-                    <div className="border border-white/30 bg-primary/30 p-space-sm flex flex-col gap-1.5">
+                    <div className="border border-white/30 bg-white/10 p-3.5 space-y-2">
                         <div className="flex items-start gap-2">
-                            <span className="text-error-container font-bold text-label-md font-label-md">!</span>
-                            <span className="text-label-sm font-label-sm text-on-primary leading-tight uppercase font-bold">
-                                APPLICANTS WITH PROCTOR_RISK &gt;= 50 EXCLUDED AUTOMATICALLY
+                            <span className="text-amber-300 font-bold">!</span>
+                            <span className="text-[11px] text-white leading-tight uppercase font-bold">
+                                APPLICANTS WITH PROCTOR RISK &gt;= 50 EXCLUDED AUTOMATICALLY
                             </span>
                         </div>
                         <div className="h-[1px] w-full bg-white/15 my-1"></div>
-                        <div className="text-[10px] text-on-primary/80 leading-normal">
-                            DISCORD_HOOK: DISPATCHED ON COSINE &gt;= 0.95<br />
-                            PROCTOR_RESOLUTION: HARD_ENFORCED (CAMERA + AUDIO + TAB_LOCK)
+                        <div className="text-[11px] text-white/80 leading-relaxed">
+                            AUTONOMOUS SHORTLIST ON COSINE MATCH &gt;= 85%<br />
+                            HARDWARE PROCTORING: WEBCAM + AUDIO + WINDOW LOCK
                         </div>
                     </div>
                 </div>
 
                 {/* Architectural Parameters Spec Sheet */}
-                <div className="border border-white/25 bg-primary/60 p-space-sm">
-                    <div className="text-label-sm font-label-sm font-bold text-on-primary uppercase border-b border-white/20 pb-1 mb-2">
-                        ARCHITECTURAL_PARAMETERS
+                <div className="border border-white/25 bg-white/10 p-3.5">
+                    <div className="text-[11px] font-bold text-white uppercase border-b border-white/20 pb-1.5 mb-2.5">
+                        ARCHITECTURAL PARAMETERS
                     </div>
-                    <dl className="grid grid-cols-2 gap-y-1.5 text-label-sm font-label-sm text-on-primary/90">
-                        <dt className="text-on-primary/60">ALGO_ENGINE:</dt>
-                        <dd className="text-right font-bold">SCIPY_TFIDF_V3</dd>
-                        <dt className="text-on-primary/60">COSINE_TOLERANCE:</dt>
+                    <dl className="grid grid-cols-2 gap-y-1.5 text-xs text-white/90">
+                        <dt className="text-white/70">MATCH ENGINE:</dt>
+                        <dd className="text-right font-bold">SCIPY TF-IDF</dd>
+                        <dt className="text-white/70">COSINE TOLERANCE:</dt>
                         <dd className="text-right font-bold">0.05</dd>
-                        <dt className="text-on-primary/60">HASH_INTEGRITY:</dt>
-                        <dd className="text-right font-bold">BLAKE3_HARDENED</dd>
-                        <dt className="text-on-primary/60">SCHEMA_REVISION:</dt>
-                        <dd className="text-right font-bold">REV: 2026.4</dd>
-                        <dt className="text-on-primary/60">AUDIT_LOCK:</dt>
-                        <dd className="text-right font-bold text-primary-fixed">ENABLED (WORM)</dd>
+                        <dt className="text-white/70">AUDIT LOCK:</dt>
+                        <dd className="text-right font-bold text-green-300">ENFORCED</dd>
+                        <dt className="text-white/70">SCHEMA REVISION:</dt>
+                        <dd className="text-right font-bold">2026.4</dd>
                     </dl>
                 </div>
 
                 {/* Blueprint Execution Actions */}
-                <div className="pt-space-xs flex flex-col gap-2">
+                <div className="pt-2 flex flex-col gap-2.5">
                     <button
                         onClick={onRecalibrate}
-                        className="w-full bg-surface-container-lowest text-primary-container font-label-md text-label-md py-space-xs px-space-md border border-surface-container-lowest hover:bg-surface hover:text-primary uppercase transition-none cursor-pointer text-center font-bold"
+                        className="w-full bg-white text-canvas-blueprint text-xs py-3 px-4 border border-white hover:bg-white/90 uppercase transition-none cursor-pointer text-center font-bold"
                         type="button"
                     >
-                        [ RE-CALIBRATE_VECTOR_WEIGHTS ]
+                        [ RE-CALIBRATE VECTOR WEIGHTS ]
                     </button>
                     <button
                         onClick={onCloneSpec}
-                        className="w-full bg-transparent text-on-primary font-label-sm text-label-sm py-1 px-space-md border border-white/40 hover:bg-white/10 uppercase transition-none cursor-pointer text-center font-bold"
+                        className="w-full bg-transparent text-white text-xs py-2.5 px-4 border border-white/40 hover:bg-white/10 uppercase transition-none cursor-pointer text-center font-bold"
                         type="button"
                     >
-                        [ CLONE_SPECIFICATION_CARD ]
+                        [ CLONE SPECIFICATION CARD ]
                     </button>
                 </div>
             </div>
 
             {/* Card Base Coordinate Stamp */}
-            <div className="w-full bg-primary/80 border-t border-white/20 px-space-md py-1 flex items-center justify-between text-[9px] text-on-primary/70">
-                <span>LAYER: SEC_REQUISITION // MAT: 0x489F</span>
+            <div className="mt-5 pt-3 border-t border-white/20 flex items-center justify-between text-[11px] text-white/70">
+                <span>SPEC: REQUISITION MATRIX</span>
                 <span>STAMP: {timestamp}</span>
             </div>
         </section>

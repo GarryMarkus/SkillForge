@@ -10,92 +10,92 @@ const ApplicantRankingsGrid = ({
 }) => {
     const jobTitle = selectedJob?.title
         ? selectedJob.title.toUpperCase()
-        : 'SR. SYSTEMS ENGINEER // DISTRIBUTED_BACKEND';
+        : 'SR. SYSTEMS ENGINEER // DISTRIBUTED BACKEND';
 
     return (
         <section
-            className="lg:col-span-8 border border-black/20 bg-surface-container-lowest flex flex-col"
+            className="lg:col-span-8 border border-black/20 bg-surface-container-lowest shadow-[4px_4px_0px_#0A0A0A] flex flex-col font-mono select-none"
             id="ApplicantRankingsGrid"
         >
             {/* Header Strip */}
-            <div className="w-full bg-surface-container px-space-md py-space-xs border-b border-black/20 flex flex-wrap items-center justify-between gap-y-1">
-                <div className="flex items-center gap-space-sm">
-                    <span className="text-primary-container font-bold">+</span>
-                    <span className="font-headline-sm text-headline-sm uppercase text-on-surface tracking-tight font-bold">
-                        [ APPLICANT_POOL_RANKINGS // FILTERED_BY_COSINE_SIMILARITY ]
+            <div className="w-full bg-surface-container px-4 sm:px-6 py-3 border-b border-black/20 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                    <span className="text-canvas-blueprint font-bold text-base">+</span>
+                    <span className="text-sm font-bold uppercase text-ink-primary tracking-tight">
+                        [ APPLICANT POOL RANKINGS // COSINE SIMILARITY SORT ]
                     </span>
                 </div>
-                <span className="text-label-sm font-label-sm text-secondary border border-black/15 px-space-xs py-0.5 bg-surface font-bold">
-                    [SYS_REF: TFIDF_MAT_L2]
+                <span className="text-xs text-on-surface-variant border border-black/15 px-2 py-0.5 bg-surface font-bold">
+                    [ ALGORITHMIC AUDIT ]
                 </span>
             </div>
 
             {/* Active Context Subhead & Filters */}
-            <div className="w-full px-space-md py-space-sm bg-surface-container-low border-b border-black/15 flex flex-wrap items-center justify-between gap-space-sm">
-                <div className="flex items-center gap-2 text-label-md font-label-md">
-                    <span className="text-primary-container font-bold">INSPECTING:</span>
-                    <span className="bg-surface px-space-xs py-0.5 border border-black/15 font-bold text-on-surface">
+            <div className="w-full px-4 sm:px-6 py-3 bg-surface-container-low border-b border-black/15 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-xs font-bold">
+                    <span className="text-canvas-blueprint">REQUISITION:</span>
+                    <span className="bg-surface px-2 py-0.5 border border-black/15 text-ink-primary">
                         {jobTitle}
                     </span>
                 </div>
 
                 {/* Filter Selectors */}
-                <div className="flex items-center gap-1 flex-wrap text-label-sm font-label-sm">
-                    <span className="text-secondary pr-1 font-bold">FILTERS:</span>
+                <div className="flex items-center gap-1.5 flex-wrap text-xs">
+                    <span className="text-on-surface-variant font-bold pr-1">FILTERS:</span>
                     <button
                         onClick={() => setFilterMode('COSINE_DESC')}
-                        className={`px-space-xs py-0.5 uppercase cursor-pointer border transition-none font-bold ${
+                        className={`px-2.5 py-1 uppercase cursor-pointer border transition-none font-bold ${
                             filterMode === 'COSINE_DESC'
-                                ? 'bg-primary-container text-on-primary border-primary-container'
-                                : 'bg-surface text-on-surface border-black/20 hover:bg-surface-container'
+                                ? 'bg-canvas-blueprint text-white border-canvas-blueprint'
+                                : 'bg-surface text-ink-primary border-black/20 hover:bg-surface-container'
                         }`}
                         type="button"
                     >
-                        [SORT: COSINE_MATCH_DESC]
+                        [ MATCH % DESC ]
                     </button>
                     <button
                         onClick={() => setFilterMode('TRUST_90')}
-                        className={`px-space-xs py-0.5 uppercase cursor-pointer border transition-none font-bold ${
+                        className={`px-2.5 py-1 uppercase cursor-pointer border transition-none font-bold ${
                             filterMode === 'TRUST_90'
-                                ? 'bg-primary-container text-on-primary border-primary-container'
-                                : 'bg-surface text-on-surface border-black/20 hover:bg-surface-container'
+                                ? 'bg-canvas-blueprint text-white border-canvas-blueprint'
+                                : 'bg-surface text-ink-primary border-black/20 hover:bg-surface-container'
                         }`}
                         type="button"
                     >
-                        [TRUST_SCORE &gt; 90]
+                        [ SCORE &gt; 90 ]
                     </button>
                     <button
                         onClick={() => setFilterMode('ZERO_FLAG')}
-                        className={`px-space-xs py-0.5 uppercase cursor-pointer border transition-none font-bold ${
+                        className={`px-2.5 py-1 uppercase cursor-pointer border transition-none font-bold ${
                             filterMode === 'ZERO_FLAG'
-                                ? 'bg-primary-container text-on-primary border-primary-container'
-                                : 'bg-surface text-on-surface border-black/20 hover:bg-surface-container'
+                                ? 'bg-canvas-blueprint text-white border-canvas-blueprint'
+                                : 'bg-surface text-ink-primary border-black/20 hover:bg-surface-container'
                         }`}
                         type="button"
                     >
-                        [ZERO_FLAG_ONLY]
+                        [ ZERO FLAGS ]
                     </button>
                 </div>
             </div>
 
             {/* Candidates Diagnostic Table */}
             <div className="w-full overflow-x-auto">
-                <table className="w-full border-collapse text-left font-body-sm text-body-sm">
+                <table className="w-full border-collapse text-left text-xs sm:text-sm">
                     <thead>
-                        <tr className="bg-surface-container border-b border-black/15 font-label-sm text-label-sm text-secondary uppercase">
-                            <th className="p-space-sm border-r border-black/15 w-12 text-center font-bold">RANK</th>
-                            <th className="p-space-sm border-r border-black/15 w-32 font-bold">COSINE_SIM</th>
-                            <th className="p-space-sm border-r border-black/15 font-bold">CANDIDATE_DOSSIER</th>
-                            <th className="p-space-sm border-r border-black/15 font-bold">VERIFICATION &amp; TELEMETRY</th>
-                            <th className="p-space-sm border-r border-black/15 font-bold">PROCTOR_INTEGRITY</th>
-                            <th className="p-space-sm border-r border-black/15 text-center font-bold">RATING</th>
-                            <th className="p-space-sm text-right font-bold">DISPOSITION</th>
+                        <tr className="bg-surface-container border-b border-black/15 text-xs text-on-surface-variant uppercase font-bold">
+                            <th className="py-3 px-3 border-r border-black/15 w-12 text-center">RANK</th>
+                            <th className="py-3 px-4 border-r border-black/15 w-32">COSINE MATCH</th>
+                            <th className="py-3 px-4 border-r border-black/15">CANDIDATE DOSSIER</th>
+                            <th className="py-3 px-4 border-r border-black/15">VERIFIED SKILLS</th>
+                            <th className="py-3 px-4 border-r border-black/15">PROCTOR INTEGRITY</th>
+                            <th className="py-3 px-3 border-r border-black/15 text-center">RATING</th>
+                            <th className="py-3 px-4 text-right">ACTIONS</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-black/10">
                         {applicants.length === 0 ? (
                             <tr>
-                                <td colSpan="7" className="p-space-md text-center text-outline italic">
+                                <td colSpan="7" className="py-8 px-4 text-center text-outline">
                                     NO CANDIDATES MATCHING CURRENT HEURISTIC FILTER SET.
                                 </td>
                             </tr>
@@ -107,94 +107,98 @@ const ApplicantRankingsGrid = ({
                                 return (
                                     <tr key={candidate.id || idx} className="hover:bg-surface-container-low transition-none">
                                         <td
-                                            className={`p-space-sm border-r border-black/15 text-center font-bold font-headline-sm text-headline-sm ${
-                                                isTopRank ? 'text-primary-container' : 'text-on-surface'
+                                            className={`py-4 px-3 border-r border-black/15 text-center font-bold text-base ${
+                                                isTopRank ? 'text-canvas-blueprint' : 'text-ink-primary'
                                             }`}
                                         >
                                             {rankDisplay}
                                         </td>
-                                        <td className="p-space-sm border-r border-black/15">
+                                        <td className="py-4 px-4 border-r border-black/15">
                                             <div
-                                                className={`font-headline-sm text-headline-sm font-bold leading-none ${
-                                                    isTopRank ? 'text-primary-container' : 'text-on-surface'
+                                                className={`text-lg font-bold leading-none ${
+                                                    isTopRank ? 'text-canvas-blueprint' : 'text-ink-primary'
                                                 }`}
                                             >
                                                 {candidate.cosine_sim}%
                                             </div>
-                                            <div className="text-label-sm font-label-sm text-secondary mt-1">
-                                                [COSINE_MATCH]
+                                            <div className="text-[11px] text-outline font-bold mt-1">
+                                                COSINE MATCH
                                             </div>
                                             {/* Inline Spark Bar Meter */}
-                                            <div className="w-full bg-surface-container h-1 mt-1">
+                                            <div className="w-full bg-surface-container h-1.5 mt-1.5 border border-black/10">
                                                 <div
-                                                    className={`h-1 ${
+                                                    className={`h-full ${
                                                         isTopRank
-                                                            ? 'bg-primary-container'
+                                                            ? 'bg-canvas-blueprint'
                                                             : idx === 1
-                                                            ? 'bg-tertiary-container'
+                                                            ? 'bg-blue-400'
                                                             : 'bg-outline'
                                                     }`}
                                                     style={{ width: `${Math.min(100, parseFloat(candidate.cosine_sim) || 85)}%` }}
                                                 />
                                             </div>
                                         </td>
-                                        <td className="p-space-sm border-r border-black/15">
-                                            <div className="font-bold text-on-surface text-body-md font-body-md uppercase">
-                                                {candidate.candidate_name}{' '}
-                                                <span className="text-label-sm font-label-sm text-primary-container border border-primary-container/30 px-1 py-0.5 ml-1">
+                                        <td className="py-4 px-4 border-r border-black/15">
+                                            <div className="font-bold text-ink-primary text-sm sm:text-base uppercase">
+                                                {candidate.candidate_name}
+                                                <span className="text-xs text-canvas-blueprint border border-canvas-blueprint/30 px-1.5 py-0.5 ml-2 font-bold">
                                                     [{candidate.candidate_ref || `SF-${100 + idx}`}]
                                                 </span>
                                             </div>
-                                            <div className="text-label-sm font-label-sm text-secondary">
+                                            <div className="text-xs text-on-surface-variant mt-0.5 font-mono">
                                                 {candidate.role_label || 'Full-Stack Systems Engineer (Exp: 5+ yrs)'}
                                             </div>
-                                            <div className="text-label-sm font-label-sm text-on-surface-variant mt-1">
-                                                HASH: {candidate.hash || '9a4f..77b2'} // REGION: {candidate.region || 'US-EAST (VERIFIED)'}
+                                            <div className="text-[11px] text-outline mt-0.5 font-mono">
+                                                REGION: {candidate.region || 'US-EAST (VERIFIED)'}
                                             </div>
                                         </td>
-                                        <td className="p-space-sm border-r border-black/15 text-label-sm font-label-sm">
-                                            <div className="text-on-surface font-bold">PDF_PARSED ✓</div>
-                                            <div className="text-on-surface-variant mt-0.5">
-                                                GITHUB: {candidate.github_repos || '32_REPOS'}
+                                        <td className="py-4 px-4 border-r border-black/15 text-xs">
+                                            <div className="text-ink-primary font-bold">PDF PARSED ✓</div>
+                                            <div className="text-on-surface-variant font-mono mt-0.5">
+                                                GITHUB: {candidate.github_repos || 'AUDITED'}
                                             </div>
-                                            <div className="text-primary-container font-bold mt-0.5">
-                                                [{candidate.tags ? candidate.tags.slice(0, 3).join(', ') : 'PYTHON, DJANGO'}]
-                                            </div>
-                                        </td>
-                                        <td className="p-space-sm border-r border-black/15">
-                                            <div className="inline-block border border-primary-container/30 bg-primary-fixed/30 px-space-xs py-0.5 text-label-sm font-label-sm font-bold text-primary-container">
-                                                PROCTOR_SCORE: {candidate.proctor_score || '98%'}
-                                            </div>
-                                            <div className="text-label-sm font-label-sm text-on-surface mt-1">
-                                                [{candidate.proctor_flags || 'ZERO_CHEATING_FLAGS'}]
-                                            </div>
-                                            <div className="text-label-sm font-label-sm text-secondary">
-                                                CAM: {candidate.cam_status || 'SYNCHRONIZED (1080P)'}
+                                            <div className="flex flex-wrap gap-1 mt-1">
+                                                {(candidate.tags ? candidate.tags.slice(0, 3) : ['PYTHON', 'DJANGO']).map((t, ti) => (
+                                                    <span key={ti} className="border border-canvas-blueprint/30 bg-blue-50 text-canvas-blueprint font-bold px-1.5 py-0.2 text-[10px]">
+                                                        {t}
+                                                    </span>
+                                                ))}
                                             </div>
                                         </td>
-                                        <td className="p-space-sm border-r border-black/15 text-center">
-                                            <div className="text-primary-container text-body-md font-body-md font-bold">
+                                        <td className="py-4 px-4 border-r border-black/15 font-mono">
+                                            <div className="inline-block border border-canvas-blueprint/30 bg-blue-50 px-2 py-0.5 text-xs font-bold text-canvas-blueprint">
+                                                PROCTOR: {candidate.proctor_score || '98%'}
+                                            </div>
+                                            <div className="text-xs text-ink-primary font-bold mt-1">
+                                                {candidate.proctor_flags || 'ZERO CHEATING FLAGS'}
+                                            </div>
+                                            <div className="text-[11px] text-outline mt-0.5">
+                                                CAM: {candidate.cam_status || 'VERIFIED (1080P)'}
+                                            </div>
+                                        </td>
+                                        <td className="py-4 px-3 border-r border-black/15 text-center">
+                                            <div className="text-canvas-blueprint text-sm font-bold">
                                                 {candidate.stars || '★★★★★'}
                                             </div>
-                                            <div className="text-label-sm font-label-sm text-secondary mt-0.5">
+                                            <div className="text-[11px] text-outline font-bold mt-0.5">
                                                 ({candidate.rating_num || '4.8 / 5.0'})
                                             </div>
                                         </td>
-                                        <td className="p-space-sm text-right align-middle">
-                                            <div className="flex flex-col items-end gap-1">
+                                        <td className="py-4 px-4 text-right align-middle">
+                                            <div className="flex flex-col items-end gap-1.5">
                                                 <button
                                                     onClick={() => onIssueOffer(candidate)}
-                                                    className="bg-primary-container text-on-primary font-label-sm text-label-sm px-space-sm py-1 border border-primary-container hover:bg-primary uppercase transition-none cursor-pointer w-full text-center font-bold"
+                                                    className="bg-canvas-blueprint text-white text-xs px-3 py-1.5 border border-canvas-blueprint hover:bg-primary-hover uppercase transition-none cursor-pointer w-full text-center font-bold"
                                                     type="button"
                                                 >
-                                                    [ ISSUE_OFFER_INVITE ]
+                                                    [ ISSUE OFFER ]
                                                 </button>
                                                 <button
                                                     onClick={() => onInspectCandidate(candidate)}
-                                                    className="bg-surface text-on-surface font-label-sm text-label-sm px-space-sm py-1 border border-black/20 hover:bg-surface-container uppercase transition-none cursor-pointer w-full text-center font-bold"
+                                                    className="bg-surface text-ink-primary text-xs px-3 py-1.5 border border-black/20 hover:bg-surface-container uppercase transition-none cursor-pointer w-full text-center font-bold"
                                                     type="button"
                                                 >
-                                                    [ INSPECT_DOSSIER ]
+                                                    [ INSPECT DOSSIER ]
                                                 </button>
                                             </div>
                                         </td>
@@ -207,20 +211,12 @@ const ApplicantRankingsGrid = ({
             </div>
 
             {/* Applicant Ranking Panel Footer */}
-            <div className="w-full bg-surface-container-low px-space-md py-space-xs border-t border-black/15 flex flex-wrap items-center justify-between text-label-sm font-label-sm text-secondary">
+            <div className="w-full bg-surface-container-low px-4 sm:px-6 py-2.5 border-t border-black/15 flex flex-wrap items-center justify-between text-xs text-on-surface-variant">
                 <div>
-                    TOTAL_RANKED: {applicants.length} DOSSIERS AUDITED // COSINE_CUTOFF: 0.700
+                    TOTAL RANKED: {applicants.length} AUDITED CANDIDATES
                 </div>
-                <div className="flex items-center gap-space-sm">
-                    <span>SHOWING TOP {applicants.length}</span>
-                    <span className="text-black/30">|</span>
-                    <button
-                        onClick={() => alert('[TELEMETRY_ENGINE] Additional batches loaded into active working buffer.')}
-                        className="text-primary-container font-bold hover:underline cursor-pointer uppercase"
-                        type="button"
-                    >
-                        [ LOAD_NEXT_BATCH_10 -&gt; ]
-                    </button>
+                <div className="flex items-center gap-2">
+                    <span className="text-canvas-blueprint font-bold">[ ENCLAVE VERIFIED ]</span>
                 </div>
             </div>
         </section>
