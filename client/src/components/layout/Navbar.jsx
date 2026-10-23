@@ -15,35 +15,36 @@ const Navbar = () => {
     const dashboardPath = user?.role === 'client' ? '/client/dashboard' : '/student/dashboard';
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-outline-variant/30 select-none">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-black/15 select-none font-mono">
             {/* Top Primary CAD Header */}
-            <div className="h-14 max-w-7xl mx-auto px-margin flex items-center justify-between border-b border-outline-variant/20">
+            <div className="h-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                 <div className="flex items-center gap-space-md">
-                    <Link to="/" className="font-headline-sm text-headline-sm tracking-tight text-primary-container uppercase hover:opacity-80 transition-opacity">
-                        SKILLFORGE
+                    <Link to="/" className="font-headline-sm text-headline-sm tracking-tight text-primary-container uppercase font-bold hover:opacity-80 transition-opacity flex items-center gap-1.5">
+                        <span className="text-primary-container font-bold">+</span>
+                        <span>SKILLFORGE</span>
                     </Link>
-                    <span className="font-label-sm text-label-sm border border-outline-variant/40 px-space-xs py-0.5 text-on-surface-variant hidden sm:inline-block">
-                        [SYS_STATUS: NOMINAL]
+                    <span className="font-label-sm text-label-sm border border-primary-container/30 bg-primary-fixed/30 px-space-xs py-0.5 text-primary-container font-bold hidden sm:inline-block">
+                        [ SYSTEM STATUS: ACTIVE ]
                     </span>
                 </div>
 
-                <div className="flex items-center gap-space-lg">
+                <div className="flex items-center gap-space-md sm:gap-space-lg">
                     <nav className="hidden md:flex items-center gap-space-lg">
                         <a 
                             href="#CapabilitiesRow" 
-                            className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-primary-container transition-colors"
+                            className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
                         >
                             VERIFICATION
                         </a>
                         <a 
                             href="#BlueprintSection" 
-                            className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-primary-container transition-colors"
+                            className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
                         >
                             PROCTORING
                         </a>
                         <a 
                             href="#PersonaSplitSection" 
-                            className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-primary-container transition-colors"
+                            className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-primary-container transition-colors font-bold"
                         >
                             MATCH_ENGINE
                         </a>
@@ -57,7 +58,7 @@ const Navbar = () => {
                                 </Link>
                                 <button
                                     onClick={handleLogout}
-                                    className="font-label-md text-label-md uppercase text-error hover:text-on-error hover:bg-error px-1.5 py-0.5 border border-error/40 transition-colors"
+                                    className="font-label-md text-label-md uppercase text-red-600 hover:text-white hover:bg-red-600 px-2 py-0.5 border border-red-300 transition-none cursor-pointer font-bold"
                                 >
                                     LOGOUT
                                 </button>
@@ -65,7 +66,7 @@ const Navbar = () => {
                         ) : (
                             <Link 
                                 to="/auth" 
-                                className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-on-surface transition-colors"
+                                className="font-label-md text-label-md uppercase text-on-surface-variant hover:text-on-surface transition-colors font-bold"
                             >
                                 LOGIN
                             </Link>
@@ -74,24 +75,24 @@ const Navbar = () => {
 
                     <Link
                         to={isAuthenticated ? "/student/assessment" : "/auth"}
-                        className="inline-flex items-center justify-center font-label-md text-label-md bg-primary-container text-on-primary border border-primary-container px-space-md py-1.5 uppercase hover:bg-primary hover:text-on-primary transition-colors"
+                        className="inline-flex items-center justify-center font-label-md text-label-md bg-primary-container text-white border border-primary-container px-space-md py-2 uppercase hover:bg-black transition-none font-bold"
                     >
-                        START_ASSESSMENT
+                        [ START ASSESSMENT ]
                     </Link>
 
                     {isAuthenticated ? (
                         <Link 
                             to={dashboardPath}
                             title={user?.email || 'User Profile'}
-                            className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary hover:ring-2 hover:ring-primary-container transition-all"
+                            className="w-8 h-8 rounded-none bg-primary-container flex items-center justify-center text-white hover:bg-black transition-none font-bold text-xs"
                         >
-                            <span className="material-symbols-outlined text-[18px]">person</span>
+                            {user?.role === 'client' ? 'EP' : 'CD'}
                         </Link>
                     ) : (
                         <Link 
                             to="/auth" 
                             title="Account Authentication"
-                            className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-on-primary transition-all"
+                            className="w-8 h-8 rounded-none bg-surface-container-high border border-black/20 flex items-center justify-center text-on-surface-variant hover:bg-black hover:text-white transition-none"
                         >
                             <span className="material-symbols-outlined text-[18px]">login</span>
                         </Link>
@@ -100,7 +101,7 @@ const Navbar = () => {
                     {/* Mobile menu trigger */}
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="md:hidden p-1 border border-outline-variant/40 text-on-surface"
+                        className="md:hidden p-1 border border-black/20 text-on-surface cursor-pointer"
                         aria-label="Toggle navigation menu"
                     >
                         <span className="material-symbols-outlined text-[20px]">
@@ -110,39 +111,27 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Sub-bar: Technical Coordinates */}
-            <div className="h-7 max-w-7xl mx-auto px-margin flex items-center justify-between bg-surface-container-low/50">
-                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center gap-space-xs truncate">
-                    <span className="text-outline">COORDINATE:</span>
-                    <span className="truncate">ROOT &gt; PLATFORM &gt; TALENT_VERIFICATION_ENGINE</span>
-                </div>
-                <div className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:flex items-center gap-space-md shrink-0">
-                    <span className="text-outline">GRID: 12-COL DRAFTING</span>
-                    <span>[X:01 Y:01]</span>
-                </div>
-            </div>
-
             {/* Mobile Dropdown */}
             {mobileMenuOpen && (
-                <div className="md:hidden bg-surface-container-lowest border-b border-outline-variant/40 p-space-md flex flex-col gap-space-sm font-label-md text-label-md">
+                <div className="md:hidden bg-surface-container-lowest border-b border-black/20 p-space-md flex flex-col gap-space-sm font-label-md text-label-md">
                     <a 
                         href="#CapabilitiesRow" 
                         onClick={() => setMobileMenuOpen(false)}
-                        className="py-1 uppercase text-on-surface-variant hover:text-primary-container"
+                        className="py-1 uppercase text-on-surface-variant hover:text-primary-container font-bold"
                     >
                         &gt; VERIFICATION
                     </a>
                     <a 
                         href="#BlueprintSection" 
                         onClick={() => setMobileMenuOpen(false)}
-                        className="py-1 uppercase text-on-surface-variant hover:text-primary-container"
+                        className="py-1 uppercase text-on-surface-variant hover:text-primary-container font-bold"
                     >
                         &gt; PROCTORING
                     </a>
                     <a 
                         href="#PersonaSplitSection" 
                         onClick={() => setMobileMenuOpen(false)}
-                        className="py-1 uppercase text-on-surface-variant hover:text-primary-container"
+                        className="py-1 uppercase text-on-surface-variant hover:text-primary-container font-bold"
                     >
                         &gt; MATCH_ENGINE
                     </a>
@@ -160,7 +149,7 @@ const Navbar = () => {
                                     setMobileMenuOpen(false);
                                     handleLogout();
                                 }}
-                                className="text-left py-1 uppercase text-error"
+                                className="text-left py-1 uppercase text-red-600 font-bold"
                             >
                                 &gt; LOGOUT
                             </button>
@@ -169,7 +158,7 @@ const Navbar = () => {
                         <Link 
                             to="/auth" 
                             onClick={() => setMobileMenuOpen(false)}
-                            className="py-1 uppercase text-on-surface-variant"
+                            className="py-1 uppercase text-on-surface-variant font-bold"
                         >
                             &gt; LOGIN / REGISTER
                         </Link>
