@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from verification.services import generate_partial_report
+from verification.tasks import generate_partial_report_task
 from .models import StudentProfile, ClientProfile
 from .serializers import (
     RegisterSerializer,
@@ -103,9 +103,9 @@ class OnboardingAPI(APIView):
 
         if user.role == "student":
             try:
-                generate_partial_report(user.id)
-            except Exception:
-                logger.exception("Async-safe partial report generation encountered error")
+                generate_partial_report_task.delay(user.id)
+            except Exception as async_err:
+                logger.warning("Could not dispatch Celery task for partial report: %s", async_err)
 
         user.onboarding_stage = 2
         user.verified = True
@@ -113,6 +113,7 @@ class OnboardingAPI(APIView):
 
         return Response({
             "message": "Onboarding completed successfully",
+            "onboarding_stage": user.onboarding_stage,
             "profile": serializer.data
         }, status=status.HTTP_200_OK)
 
@@ -164,11 +165,11 @@ class ProfileUpdateAPI(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        if user.role == "student":
+        if user.role == "student" and ("resume" in request.data or "github_url" in request.data):
             try:
-                generate_partial_report(user.id)
-            except Exception:
-                logger.exception("Partial report regeneration encountered error")
+                generate_partial_report_task.delay(user.id)
+            except Exception as async_err:
+                logger.warning("Could not dispatch Celery task for partial report update: %s", async_err)
 
         return Response({
             "message": "Profile updated",

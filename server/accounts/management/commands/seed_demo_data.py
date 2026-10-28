@@ -72,6 +72,18 @@ class Command(BaseCommand):
                 "personality_score": 88.0,
                 "skill_test_score": 92.5,
                 "report_summary": {
+                    "stage": "verified",
+                    "final": {
+                        "star_rating": 4.8,
+                        "strengths": [
+                            "Deep proficiency with Django ORM and REST Framework",
+                            "Modern React architecture and component optimization",
+                            "Reliable proactive communication and team collaboration"
+                        ],
+                        "weaknesses": ["In-Memory Caching and Distributed Tracing"],
+                        "recommended_tags": ["Python", "Django", "React", "Docker"],
+                        "composite_grade": "A+"
+                    },
                     "strengths": [
                         "Deep proficiency with Django ORM and REST Framework",
                         "Modern React architecture and component optimization",
