@@ -93,9 +93,12 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                             >
                                 <option value="Web Development">Web Development</option>
                                 <option value="Backend Systems">Backend Systems</option>
-                                <option value="Machine Learning">Machine Learning</option>
                                 <option value="Cloud Architecture">Cloud Architecture</option>
-                                <option value="Security / Forensic">Security & DevOps</option>
+                                <option value="Machine Learning">Machine Learning</option>
+                                <option value="Security & DevOps">Security & DevOps</option>
+                                <option value="Mobile App">Mobile App</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Other">Other</option>
                             </select>
                         </div>
 

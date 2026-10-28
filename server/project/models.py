@@ -4,10 +4,14 @@ from accounts.models import ClientProfile
 class JobPost(models.Model):
     CATEGORY_CHOICES = [
         ('Web Development', 'Web Development'),
-        ('Mobile App', 'Mobile App'),
+        ('Backend Systems', 'Backend Systems'),
+        ('Cloud Architecture', 'Cloud Architecture'),
+        ('Machine Learning', 'Machine Learning'),
         ('AI/ML', 'AI/ML'),
-        ('Design', 'Design'),
+        ('Security & DevOps', 'Security & DevOps'),
+        ('Mobile App', 'Mobile App'),
         ('Data Science', 'Data Science'),
+        ('Design', 'Design'),
         ('Other', 'Other'),
     ]
 
