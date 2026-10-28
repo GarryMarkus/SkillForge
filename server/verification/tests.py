@@ -128,3 +128,27 @@ class CeleryTaskQueueTests(TestCase):
         )
         self.assertIn("# Docker Guide", module_schema.content)
 
+    def test_answer_normalization_and_scoring(self):
+        """Test is_answer_correct handles index, letter, and text inputs across variations."""
+        from verification.services import is_answer_correct
+
+        question = {
+            "question": "What is Python?",
+            "options": ["Animal", "Programming Language", "Car", "Country"],
+            "correct_answer": "B"
+        }
+
+        # Candidate passed index 1 (corresponding to B)
+        self.assertTrue(is_answer_correct(1, question))
+        # Candidate passed letter "B"
+        self.assertTrue(is_answer_correct("B", question))
+        # Candidate passed lowercase letter "b"
+        self.assertTrue(is_answer_correct("b", question))
+        # Candidate passed exact option text
+        self.assertTrue(is_answer_correct("Programming Language", question))
+        # Incorrect choices
+        self.assertFalse(is_answer_correct(0, question))
+        self.assertFalse(is_answer_correct("A", question))
+        self.assertFalse(is_answer_correct("Car", question))
+        self.assertFalse(is_answer_correct(None, question))
+

@@ -149,6 +149,92 @@ def generate_skill_test_for_student(student_id: int, category_id: int | None = N
         raise
 
 
+def is_answer_correct(candidate_ans, question: dict) -> bool:
+    """
+    Resiliently evaluates whether a candidate's answer matches the question's correct answer.
+    Supports:
+    - Zero-based integer or string index (0 -> A, 1 -> B, etc.)
+    - Option letter ('A', 'B', 'C', 'D' case-insensitive)
+    - Full text of the option matching question option text
+    """
+    if candidate_ans is None or not isinstance(question, dict):
+        return False
+
+    raw_correct = question.get("correct_answer") or question.get("correct_option") or question.get("correct_index")
+    options = question.get("options")
+    if not isinstance(options, list):
+        options = [
+            question.get("option_a", ""),
+            question.get("option_b", ""),
+            question.get("option_c", ""),
+            question.get("option_d", ""),
+        ]
+
+    letter_to_idx = {"A": 0, "B": 1, "C": 2, "D": 3}
+    idx_to_letter = {0: "A", 1: "B", 2: "C", 3: "D"}
+
+    # 1. Determine correct letter and correct index
+    correct_idx = None
+    correct_letter = None
+
+    if isinstance(raw_correct, int) and 0 <= raw_correct < len(options):
+        correct_idx = raw_correct
+        correct_letter = idx_to_letter.get(correct_idx)
+    elif isinstance(raw_correct, str):
+        cleaned_correct = raw_correct.strip().upper()
+        if cleaned_correct in letter_to_idx:
+            correct_letter = cleaned_correct
+            correct_idx = letter_to_idx[cleaned_correct]
+        else:
+            try:
+                num = int(cleaned_correct)
+                if 0 <= num < len(options):
+                    correct_idx = num
+                    correct_letter = idx_to_letter.get(num)
+            except ValueError:
+                for idx, opt in enumerate(options):
+                    if str(opt).strip().lower() == raw_correct.strip().lower():
+                        correct_idx = idx
+                        correct_letter = idx_to_letter.get(idx)
+                        break
+
+    # 2. Determine candidate's selected index and letter
+    cand_idx = None
+    cand_letter = None
+
+    if isinstance(candidate_ans, int) and 0 <= candidate_ans < len(options):
+        cand_idx = candidate_ans
+        cand_letter = idx_to_letter.get(cand_idx)
+    elif isinstance(candidate_ans, str):
+        cleaned_cand = candidate_ans.strip().upper()
+        if cleaned_cand in letter_to_idx:
+            cand_letter = cleaned_cand
+            cand_idx = letter_to_idx[cleaned_cand]
+        else:
+            try:
+                num = int(cleaned_cand)
+                if 0 <= num < len(options):
+                    cand_idx = num
+                    cand_letter = idx_to_letter.get(num)
+            except ValueError:
+                for idx, opt in enumerate(options):
+                    if str(opt).strip().lower() == candidate_ans.strip().lower():
+                        cand_idx = idx
+                        cand_letter = idx_to_letter.get(idx)
+                        break
+
+    # Check for match
+    if correct_idx is not None and cand_idx is not None and correct_idx == cand_idx:
+        return True
+    if correct_letter is not None and cand_letter is not None and correct_letter == cand_letter:
+        return True
+    if isinstance(candidate_ans, str) and isinstance(raw_correct, str):
+        if candidate_ans.strip().lower() == raw_correct.strip().lower():
+            return True
+
+    return False
+
+
 def submit_skill_test(student_id: int, attempt_id: int, answers: list):
     """
     Evaluate candidate assessment answers, verify proctoring integrity, compute score percentage,
@@ -171,7 +257,8 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
 
         correct = 0
         for i, question in enumerate(attempt.generated_questions):
-            if i < len(answers) and answers[i] == question.get("correct_answer"):
+            cand_ans = answers[i] if i < len(answers) else None
+            if is_answer_correct(cand_ans, question):
                 correct += 1
 
         total = attempt.total_questions
@@ -202,7 +289,7 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
                 "recommended_tags": ["Intermediate" if passed else "Beginner"]
             }
 
-        # Multi-table atomic commit: Attempt + Report
+        # Multi-table atomic commit: Attempt + Report + StudentProfile rating
         with transaction.atomic():
             attempt.submitted_answers = answers
             attempt.score = correct
@@ -218,6 +305,12 @@ def submit_skill_test(student_id: int, attempt_id: int, answers: list):
             report.report_summary["final"] = final_dict
             report.report_summary["stage"] = "verified" if passed else "needs_improvement"
             report.save()
+
+            # Synchronize profile star rating
+            profile = getattr(user, "student_profile", None)
+            if profile:
+                profile.rating = round(float(final_dict.get("star_rating", 4.0)), 1)
+                profile.save(update_fields=["rating"])
 
         return {
             "status": "completed",
