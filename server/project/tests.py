@@ -158,3 +158,47 @@ class ProjectAPITests(TestCase):
         self.assertEqual(len(res_apps.data), 1)
         self.assertEqual(res_apps.data[0]["job_title"], "Full-Stack Python Engineer")
         self.assertEqual(res_apps.data[0]["company_name"], "CloudScale Systems")
+
+    def test_recruiter_can_update_application_status(self):
+        """Test recruiter can update applicant status to accepted or rejected."""
+        job = JobPost.objects.create(
+            client=self.client_profile,
+            title="Senior DevOps Engineer",
+            category="Security & DevOps",
+            description="Kubernetes & CI/CD",
+            budget_type="fixed",
+            budget_amount=7000.00,
+            skills_required="Docker, Linux, AWS",
+            min_skill_score=70,
+            status="open"
+        )
+        app = JobApplication.objects.create(job=job, student=self.student_profile, status="pending")
+
+        # 1. Recruiter updates application status to accepted
+        self.client.force_authenticate(user=self.recruiter)
+        res = self.client.patch(
+            f"/api/project/applications/{app.id}/status/",
+            {"status": "accepted"},
+            format="json"
+        )
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data["status"], "accepted")
+        app.refresh_from_db()
+        self.assertEqual(app.status, "accepted")
+
+        # 2. Reject invalid status choice
+        res_bad = self.client.patch(
+            f"/api/project/applications/{app.id}/status/",
+            {"status": "invalid_choice"},
+            format="json"
+        )
+        self.assertEqual(res_bad.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # 3. Student user forbidden from updating status
+        self.client.force_authenticate(user=self.student)
+        res_forbidden = self.client.patch(
+            f"/api/project/applications/{app.id}/status/",
+            {"status": "rejected"},
+            format="json"
+        )
+        self.assertEqual(res_forbidden.status_code, status.HTTP_403_FORBIDDEN)

@@ -183,19 +183,25 @@ class MyApplicationsAPI(APIView):
 class JobApplicantsAPI(APIView):
     """
     Returns all candidate applicants for a recruiter's job posting,
-    ranked descending by TF-IDF profile match score.
+    ranked descending by TF-IDF profile match score, enriched with
+    verified test scores, proctor integrity, and application status.
     """
     permission_classes = [IsAuthenticated, IsClientUser]
 
     def get(self, request, job_id):
         try:
-            job = JobPost.objects.select_related("client")\
-                                 .prefetch_related("applications__student__user")\
-                                 .get(id=job_id, client=request.user.client_profile)
+            job = (
+                JobPost.objects.select_related("client")
+                .prefetch_related(
+                    "applications__student__user__skill_attempts__proctor_session",
+                    "applications__student__report",
+                )
+                .get(id=job_id, client=request.user.client_profile)
+            )
         except JobPost.DoesNotExist:
             return Response({"error": "Job not found"}, status=status.HTTP_404_NOT_FOUND)
 
-        applications = job.applications.all()
+        applications = list(job.applications.select_related("student__user", "student__report").order_by("-applied_at"))
         if not applications:
             return Response([], status=status.HTTP_200_OK)
 
@@ -205,7 +211,7 @@ class JobApplicantsAPI(APIView):
 
         for app in applications:
             s = app.student
-            students.append(s)
+            students.append((s, app))
             text = " ".join([
                 s.skills or "",
                 s.education or "",
@@ -218,17 +224,79 @@ class JobApplicantsAPI(APIView):
         scores = cosine_similarity(vectors[0:1], vectors[1:]).flatten()
 
         results = []
-        for student, score in zip(students, scores):
+        for (student, app), score in zip(students, scores):
+            report = getattr(student, "report", None)
+            skill_score = report.skill_test_score if report else float(student.rating or 0.0)
+
+            star_rating = float(student.rating or 4.0)
+            if report and report.report_summary:
+                final_summary = report.report_summary.get("final") or {}
+                if isinstance(final_summary, dict) and "star_rating" in final_summary:
+                    try:
+                        star_rating = float(final_summary["star_rating"])
+                    except (ValueError, TypeError):
+                        pass
+
+            # Proctor status
+            recent_attempt = (
+                student.user.skill_attempts
+                .select_related("proctor_session")
+                .order_by("-created_at")
+                .first()
+            )
+            is_flagged = bool(recent_attempt.proctor_session.is_flagged) if recent_attempt and recent_attempt.proctor_session else False
+            risk_score = recent_attempt.proctor_session.risk_score if recent_attempt and recent_attempt.proctor_session else 0
+
             results.append({
                 "id": student.id,
+                "application_id": app.id,
+                "status": app.status,
+                "applied_at": app.applied_at,
                 "name": student.full_name,
                 "email": student.user.email,
                 "education": student.education,
                 "skills": student.skills,
                 "experience_level": student.experience_level,
                 "github_url": student.github_url,
+                "skill_score": round(float(skill_score), 1),
+                "star_rating": round(float(star_rating), 1),
+                "is_flagged": is_flagged,
+                "risk_score": risk_score,
                 "match": round(float(score) * 100, 2)
             })
 
         results.sort(key=lambda x: x["match"], reverse=True)
         return Response(results, status=status.HTTP_200_OK)
+
+
+class ApplicationStatusUpdateAPI(APIView):
+    """
+    Allows the posting recruiter to update candidate application status (e.g. accepted, rejected, pending).
+    """
+    permission_classes = [IsAuthenticated, IsClientUser]
+
+    def patch(self, request, application_id):
+        new_status = request.data.get("status")
+        if new_status not in ["pending", "accepted", "rejected"]:
+            return Response(
+                {"error": "Invalid status. Allowed choices: 'pending', 'accepted', 'rejected'"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            client_profile = request.user.client_profile
+            application = JobApplication.objects.select_related("job__client").get(
+                id=application_id,
+                job__client=client_profile
+            )
+        except JobApplication.DoesNotExist:
+            return Response({"error": "Application not found or unauthorized"}, status=status.HTTP_404_NOT_FOUND)
+
+        application.status = new_status
+        application.save(update_fields=["status"])
+
+        return Response({
+            "message": f"Application status updated to '{new_status}' successfully",
+            "application_id": application.id,
+            "status": application.status
+        }, status=status.HTTP_200_OK)
