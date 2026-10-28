@@ -113,26 +113,31 @@ const ClientDashboard = () => {
             if (response.ok) {
                 const data = await response.json();
                 if (Array.isArray(data) && data.length > 0) {
-                    const formatted = data.map((app, i) => ({
-                        id: app.id,
-                        rank: `#${String(i + 1).padStart(2, '0')}`,
-                        cosine_sim: app.match ? app.match.toFixed(1) : 94.2,
-                        candidate_name: app.name || app.email?.split('@')[0]?.toUpperCase() || `APPLICANT_${app.id}`,
-                        candidate_ref: `SF-APP-${app.id}`,
-                        role_label: "Engineering Candidate",
-                        hash: `hash_${app.id}..77b2`,
-                        region: "GLOBAL (VERIFIED)",
-                        pdf_parsed: true,
-                        github_repos: app.github_url ? "LINKED" : "AUDITED",
-                        tags: job.skills_required ? job.skills_required.split(',').map(s => s.trim()) : ["PYTHON", "DJANGO"],
-                        proctor_score: "98%",
-                        proctor_flags: "ZERO_CHEATING_FLAGS",
-                        cam_status: "SYNCHRONIZED (1080P)",
-                        stars: "★★★★★",
-                        rating_num: "4.7 / 5.0",
-                        email: app.email || "candidate@example.com",
-                        status: "pending"
-                    }));
+                    const formatted = data.map((app, i) => {
+                        const starsCount = Math.min(5, Math.max(1, Math.round(app.star_rating || 4.5)));
+                        const starsStr = "★".repeat(starsCount) + "☆".repeat(5 - starsCount);
+                        return {
+                            id: app.id,
+                            application_id: app.application_id,
+                            rank: `#${String(i + 1).padStart(2, '0')}`,
+                            cosine_sim: typeof app.match === 'number' ? app.match.toFixed(1) : 94.2,
+                            candidate_name: app.name || app.email?.split('@')[0]?.toUpperCase() || `APPLICANT_${app.id}`,
+                            candidate_ref: `SF-APP-${app.application_id || app.id}`,
+                            role_label: app.experience_level ? `${app.experience_level} Software Engineer` : "Engineering Candidate",
+                            hash: `hash_${app.id}..77b2`,
+                            region: "VERIFIED CANDIDATE",
+                            pdf_parsed: true,
+                            github_repos: app.github_url ? "LINKED" : "AUDITED",
+                            tags: app.skills ? app.skills.split(',').map(s => s.trim()) : (job.skills_required ? job.skills_required.split(',').map(s => s.trim()) : ["PYTHON", "DJANGO"]),
+                            proctor_score: app.skill_score ? `${app.skill_score}%` : "98%",
+                            proctor_flags: app.is_flagged ? "SECURITY_FLAGGED" : "ZERO_CHEATING_FLAGS",
+                            cam_status: app.is_flagged ? "RISK_ELEVATED" : "SYNCHRONIZED (1080P)",
+                            stars: starsStr,
+                            rating_num: `${app.star_rating || 4.5} / 5.0`,
+                            email: app.email || "candidate@example.com",
+                            status: app.status || "pending"
+                        };
+                    });
                     setApplicants(formatted);
                 } else {
                     setApplicants(DEFAULT_SAMPLE_APPLICANTS);
@@ -189,7 +194,21 @@ const ClientDashboard = () => {
         navigate('/');
     };
 
-    const handleIssueOffer = (candidate) => {
+    const handleIssueOffer = async (candidate) => {
+        if (candidate.application_id) {
+            try {
+                const res = await client.patch(`/project/applications/${candidate.application_id}/status/`, {
+                    status: 'accepted'
+                });
+                if (res.ok) {
+                    setApplicants(prev => prev.map(a => a.id === candidate.id ? { ...a, status: 'accepted' } : a));
+                    alert(`Job offer extended to ${candidate.candidate_name}! Application status updated to Accepted.`);
+                    return;
+                }
+            } catch (err) {
+                console.error('Failed to update status', err);
+            }
+        }
         alert(`Job offer invitation sent to candidate ${candidate.candidate_name} (${candidate.email}).`);
     };
 

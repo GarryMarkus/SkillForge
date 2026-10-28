@@ -120,9 +120,14 @@ const ApplicantRankingsGrid = ({
                                 </button>
                                 <button
                                     onClick={() => onIssueOffer(cand)}
-                                    className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                                    disabled={cand.status === 'accepted'}
+                                    className={`px-4 py-2 rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer ${
+                                        cand.status === 'accepted'
+                                            ? 'bg-emerald-600 text-white cursor-default'
+                                            : 'bg-blue-600 hover:bg-blue-700 text-white'
+                                    }`}
                                 >
-                                    Fast-Track Offer
+                                    {cand.status === 'accepted' ? '✓ Offer Extended' : 'Fast-Track Offer'}
                                 </button>
                             </div>
                         </div>

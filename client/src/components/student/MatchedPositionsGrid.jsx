@@ -89,7 +89,9 @@ const MatchedPositionsGrid = ({
                             </tr>
                         ) : (
                             filteredJobs.map((job) => {
-                                const applied = hasApplied(job.id);
+                                const userApp = myApplications.find(app => app.job === job.id || app.job_id === job.id);
+                                const applied = Boolean(userApp);
+                                const appStatus = userApp?.status;
                                 const matchScore = typeof job.match === 'number' ? Math.round(job.match) : 92;
                                 const isApplying = applyingTo === job.id;
 
@@ -115,10 +117,21 @@ const MatchedPositionsGrid = ({
                                         </td>
                                         <td className="py-4 px-5 text-right whitespace-nowrap">
                                             {applied ? (
-                                                <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 px-3 py-1.5 rounded-lg bg-emerald-50">
-                                                    <span className="material-symbols-outlined text-[16px]">check</span>
-                                                    Applied
-                                                </span>
+                                                appStatus === 'accepted' ? (
+                                                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200">
+                                                        <span className="material-symbols-outlined text-[16px]">celebration</span>
+                                                        Offer Extended
+                                                    </span>
+                                                ) : appStatus === 'rejected' ? (
+                                                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 px-3 py-1.5 rounded-lg bg-gray-100">
+                                                        Closed
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200">
+                                                        <span className="material-symbols-outlined text-[16px]">hourglass_top</span>
+                                                        Under Review
+                                                    </span>
+                                                )
                                             ) : (
                                                 <button
                                                     onClick={() => onApply(job.id)}

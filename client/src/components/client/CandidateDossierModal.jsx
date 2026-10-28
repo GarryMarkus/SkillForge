@@ -104,9 +104,14 @@ const CandidateDossierModal = ({
                                 onIssueOffer(candidate);
                                 onClose();
                             }}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer"
+                            disabled={candidate.status === 'accepted'}
+                            className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer ${
+                                candidate.status === 'accepted'
+                                    ? 'bg-emerald-600 text-white cursor-default'
+                                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                            }`}
                         >
-                            Shortlist Candidate →
+                            {candidate.status === 'accepted' ? '✓ Offer Extended' : 'Shortlist Candidate →'}
                         </button>
                     </div>
                 </div>
