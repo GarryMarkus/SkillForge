@@ -22,12 +22,13 @@ class GenerateSkillTestAPI(APIView):
     """
     Generate dynamic assessment questions tailored to candidate strengths using Gemini LLM.
     Dispatches Celery background worker and returns 202 Accepted with task_id.
+    Falls back gracefully to synchronous generation if Celery worker/broker is unavailable.
     """
     permission_classes = [IsAuthenticated, IsStudentUser]
 
     def post(self, request):
+        category_id = request.data.get("category_id")
         try:
-            category_id = request.data.get("category_id")
             task = generate_skill_test_task.delay(request.user.id, category_id)
 
             return Response({
@@ -37,11 +38,24 @@ class GenerateSkillTestAPI(APIView):
             }, status=status.HTTP_202_ACCEPTED)
 
         except Exception as exc:
-            logger.exception("Failed to dispatch skill test generation task: %s", exc)
-            return Response(
-                {"error": "Failed to queue test generation. Ensure Celery broker is running."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            logger.warning("Could not dispatch Celery task (%s). Falling back to direct generation.", exc)
+            try:
+                attempt = generate_skill_test_for_student(request.user.id, category_id)
+                return Response({
+                    "attempt_id": attempt.id,
+                    "session_id": attempt.proctor_session.id if attempt.proctor_session else None,
+                    "category": attempt.category.name,
+                    "total_questions": attempt.total_questions,
+                    "questions": attempt.generated_questions,
+                    "status": "COMPLETED",
+                    "message": "Assessment generated directly."
+                }, status=status.HTTP_200_OK)
+            except Exception as direct_exc:
+                logger.exception("Direct test generation failed: %s", direct_exc)
+                return Response(
+                    {"error": "Failed to generate assessment. Please check AI service configuration."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
 
 
 class SubmitSkillTestAPI(APIView):

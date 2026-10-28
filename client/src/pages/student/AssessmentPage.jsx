@@ -108,6 +108,7 @@ const AssessmentPage = () => {
     };
 
     useEffect(() => {
+        let isMounted = true;
         const initExam = async () => {
             if (!tokens?.access) {
                 setQuestions(DEFAULT_SAMPLE_QUESTIONS);
@@ -118,24 +119,87 @@ const AssessmentPage = () => {
                 const response = await api.post('/verification/generate-test/', { category_id: 1 });
                 if (response.ok) {
                     const data = await response.json();
-                    setAttemptId(data.attempt_id);
-                    setSessionId(data.session_id);
-                    if (data.questions && data.questions.length > 0) {
-                        setQuestions(data.questions);
-                    } else {
+
+                    // If attempt returned synchronously
+                    if (data.attempt_id) {
+                        if (isMounted) {
+                            setAttemptId(data.attempt_id);
+                            setSessionId(data.session_id);
+                            setQuestions(data.questions?.length > 0 ? data.questions : DEFAULT_SAMPLE_QUESTIONS);
+                            setLoading(false);
+                        }
+                        return;
+                    }
+
+                    // If task was queued asynchronously in Celery
+                    if (data.task_id) {
+                        let retries = 0;
+                        const maxRetries = 30;
+
+                        const pollTaskStatus = async () => {
+                            if (!isMounted) return;
+                            try {
+                                const statusRes = await api.get(`/verification/tasks/${data.task_id}/status/`);
+                                if (statusRes.ok) {
+                                    const statusData = await statusRes.json();
+                                    if (statusData.status === 'SUCCESS' && statusData.result) {
+                                        const res = statusData.result;
+                                        if (isMounted) {
+                                            setAttemptId(res.attempt_id);
+                                            setSessionId(res.session_id);
+                                            setQuestions(res.questions?.length > 0 ? res.questions : DEFAULT_SAMPLE_QUESTIONS);
+                                            setLoading(false);
+                                        }
+                                        return;
+                                    }
+                                    if (statusData.status === 'FAILURE' || statusData.status === 'REVOKED') {
+                                        console.warn('Test generation task failed:', statusData.error);
+                                        if (isMounted) {
+                                            setQuestions(DEFAULT_SAMPLE_QUESTIONS);
+                                            setLoading(false);
+                                        }
+                                        return;
+                                    }
+                                }
+                            } catch (pollErr) {
+                                console.warn('Error polling test task status:', pollErr);
+                            }
+
+                            retries += 1;
+                            if (retries < maxRetries && isMounted) {
+                                setTimeout(pollTaskStatus, 1200);
+                            } else if (isMounted) {
+                                setQuestions(DEFAULT_SAMPLE_QUESTIONS);
+                                setLoading(false);
+                            }
+                        };
+
+                        pollTaskStatus();
+                        return;
+                    }
+
+                    if (isMounted) {
                         setQuestions(DEFAULT_SAMPLE_QUESTIONS);
+                        setLoading(false);
                     }
                 } else {
-                    setQuestions(DEFAULT_SAMPLE_QUESTIONS);
+                    if (isMounted) {
+                        setQuestions(DEFAULT_SAMPLE_QUESTIONS);
+                        setLoading(false);
+                    }
                 }
             } catch (e) {
-                console.error(e);
-                setQuestions(DEFAULT_SAMPLE_QUESTIONS);
-            } finally {
-                setLoading(false);
+                console.error('Test initialization error:', e);
+                if (isMounted) {
+                    setQuestions(DEFAULT_SAMPLE_QUESTIONS);
+                    setLoading(false);
+                }
             }
         };
         initExam();
+        return () => {
+            isMounted = false;
+        };
     }, [tokens]);
 
     // Cleanly exit fullscreen on component unmount
@@ -153,10 +217,12 @@ const AssessmentPage = () => {
             if (sessionId) {
                 await api.post('/proctor/end/', { session_id: sessionId }).catch(() => {});
             }
-            await api.post('/verification/submit-test/', {
-                attempt_id: attemptId,
-                answers: answersList
-            });
+            if (attemptId) {
+                await api.post('/verification/submit-test/', {
+                    attempt_id: attemptId,
+                    answers: answersList
+                });
+            }
         } catch (e) {
             console.error("Submit failed", e);
         } finally {
