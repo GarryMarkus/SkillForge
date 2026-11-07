@@ -4,6 +4,68 @@ This document provides an exhaustive, multi-tier architectural specification of 
 
 ---
 
+## High-Level System Overview
+
+The executive system context diagram below provides a clean, presentation-ready overview of the SkillForge platform architecture. It abstracts away low-level implementation details to focus on primary user personas, subsystem boundaries, persistent data stores, and third-party integrations.
+
+```mermaid
+flowchart TB
+
+    subgraph CLIENT_TIER ["1. Presentation and Client Tier"]
+        STUDENT_USER["Candidate / Student<br/>Browser / Desktop Interface<br/>Skill verification, AI assessments, upskilling"]
+        RECRUITER_USER["Recruiter / Employer<br/>Browser / Management Console<br/>Requisitions, candidate ranking, proctor audits"]
+        CLIENT_SPA["Web Client Application<br/>React 19 / Vite / Tailwind CSS / Zustand<br/>Single Page Application - Port 5173 or 80"]
+    end
+
+    subgraph GATEWAY_TIER ["2. Gateway and Security Layer"]
+        REVERSE_PROXY["Reverse Proxy and Web Server<br/>Nginx Container<br/>Static asset hosting and SPA fallback routing"]
+        API_GATEWAY["API Gateway and Security Middleware<br/>Django / CORS Headers / DRF SimpleJWT<br/>RBAC role shields, token rotation, CSRF and XSS filters"]
+    end
+
+    subgraph CORE_TIER ["3. Core Application Services Tier"]
+        BACKEND_API["Backend Application Server<br/>Django 5.2 / Django REST Framework<br/>Auth, exam proctoring, matching, upskilling APIs"]
+        TASK_WORKER["Asynchronous Task Workers<br/>Celery 5.5 Distributed Worker Pool<br/>PDF parsing, LLM test synthesis, module generation"]
+    end
+
+    subgraph DATA_TIER ["4. Persistence and Caching Tier"]
+        PRIMARY_DB["Primary Relational Database<br/>SQLite 3 (Dev) / PostgreSQL (Prod)<br/>Users, profiles, requisitions, exam sessions, reports"]
+        CACHE_QUEUE["Message Broker and Result Backend<br/>Redis 7 - Port 6379<br/>Celery task queue, ephemeral task results, caching"]
+        BLOB_STORAGE["Document and Media Storage<br/>Filesystem Storage<br/>Sanitized PDF resumes and extraction artifacts"]
+    end
+
+    subgraph EXTERNAL_TIER ["5. External Services and Cloud Integrations"]
+        GEMINI_AI["Generative AI Cloud Platform<br/>Google Gemini 2.5 Flash API (LangChain)<br/>Dynamic test generation, scoring, upskill curricula"]
+        GITHUB_SVC["Developer Ecosystem Platform<br/>GitHub REST API v3<br/>Public repository scraping, commit metrics, language telemetry"]
+    end
+
+    STUDENT_USER -->|HTTPS and DOM Interaction| CLIENT_SPA
+    RECRUITER_USER -->|HTTPS and DOM Interaction| CLIENT_SPA
+    CLIENT_SPA -->|HTTPS REST JSON with Bearer JWT| REVERSE_PROXY
+    REVERSE_PROXY -->|HTTP Reverse Proxy Routing| API_GATEWAY
+    API_GATEWAY -->|Validated Request Dispatch| BACKEND_API
+
+    BACKEND_API -->|ORM SQL Transactions| PRIMARY_DB
+    BACKEND_API -->|Task Delegation and Enqueue| CACHE_QUEUE
+    CACHE_QUEUE -->|Task Message Delivery| TASK_WORKER
+
+    TASK_WORKER -->|Atomic State Updates| PRIMARY_DB
+    TASK_WORKER -->|Sanitized File IO Operations| BLOB_STORAGE
+    TASK_WORKER -->|HTTPS LangChain Prompt Inference| GEMINI_AI
+    TASK_WORKER -->|HTTPS Profile and Repository Scraping| GITHUB_SVC
+
+    CLIENT_SPA -->|HTTP Polling for Background Task Status| BACKEND_API
+```
+
+### Executive Summary & System Topology
+
+**Architectural Pattern:** SkillForge implements a **Decoupled Single Page Application (SPA) + Asynchronous REST Monolith** architectural pattern. The client presentation tier operates as a fully autonomous React 19 application, while domain modeling, business logic, relational data integrity, and API contracts are governed centrally by a Django 5.2 and Django REST Framework application server. To ensure compute-intensive operations—such as multi-stage PDF resume parsing, GitHub repository scraping, psychometric scoring, and generative AI test synthesis—never block synchronous HTTP request/response worker threads, the architecture enforces an **Asynchronous Task Delegation** pattern powered by a distributed Celery 5.5 worker cluster and a Redis 7 in-memory message broker.
+
+**Primary Request Lifecycle:** User interactions originate from Candidate (Student) and Recruiter (Client) browser sessions. All incoming HTTP traffic passes through an Nginx reverse proxy serving compiled static assets and routing API requests (`/api/*`) through Django security and CORS middlewares. Identity and role-based access control (RBAC) are verified via stateless DRF SimpleJWT bearer tokens. For low-latency transactional interactions (authentication, profile updates, real-time proctor telemetry events, and job requisition management), the application server interacts directly with the relational database. When long-running AI workflows are initiated, the API enqueues an asynchronous task in Redis, immediately returning an HTTP `202 Accepted` response with a tracking task ID. The client polls the task status endpoint via a custom React hook (`useTaskStatus`) until the background worker completes processing, validates payloads via Pydantic schemas, and commits the final verification dossier atomically to the database.
+
+**Technology Stack Choices & Tradeoffs:** The platform's technologies are chosen to guarantee developer velocity, operational reliability, and tamper-evident skill verification. **React 19, Vite, Tailwind CSS, and Zustand** deliver a reactive, high-performance interface with predictable global state management and low-level hardware camera integration for exam proctoring. **Django 5.2, Django REST Framework, and SimpleJWT** provide transactional safety, automated relational migrations, and defense-in-depth file inspection (`%PDF-` magic-byte verification). In-memory **Redis 7** provides low-latency task brokering for **Celery 5.5**, while **Scikit-learn (TF-IDF Vectorization & Cosine Similarity)** powers fast, deterministic on-premise candidate-to-job matching without third-party vendor lock-in. Finally, **Google Gemini 2.5 Flash orchestrated via LangChain** enables cost-effective, high-speed adaptive assessment synthesis and psychometric-calibrated educational upskilling.
+
+---
+
 ## 1. Unified Architecture Canvas
 
 The diagram below encapsulates the entire SkillForge platform within a single unified Mermaid flowchart (`flowchart TB`). It maps every infrastructure tier, domain model, controller, service, asynchronous background worker, security boundary, and data pipeline across the repository.
