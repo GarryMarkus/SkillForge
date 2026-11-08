@@ -17,15 +17,25 @@ const MatchedPositionsGrid = ({
         return true;
     });
 
+    const getMatchBadgeStyle = (score) => {
+        if (score >= 85) {
+            return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+        }
+        if (score >= 70) {
+            return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+        }
+        return 'bg-zinc-800 text-zinc-400 border-zinc-700/60';
+    };
+
     return (
-        <section className="bg-white rounded-2xl border border-gray-100 flex flex-col font-sans shadow-sm overflow-hidden" id="MatchedPositionsGrid">
+        <section className="rounded-xl bg-[#121318] border border-white/[0.08] flex flex-col font-sans shadow-sm overflow-hidden" id="MatchedPositionsGrid">
             {/* Header & Filter Controls */}
-            <div className="p-5 sm:p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="p-5 sm:p-6 border-b border-white/[0.06] flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h3 className="font-bold text-lg text-gray-900 tracking-tight">
+                    <h3 className="font-semibold text-base sm:text-lg text-white tracking-tight">
                         Matched Engineering Roles
                     </h3>
-                    <p className="text-xs text-gray-500 mt-0.5">
+                    <p className="text-xs text-zinc-400 mt-0.5">
                         Opportunities matched directly to your verified technical strengths
                     </p>
                 </div>
@@ -34,21 +44,21 @@ const MatchedPositionsGrid = ({
                 <div className="flex items-center gap-2 text-xs">
                     <button
                         onClick={() => setFilterMode('ALL')}
-                        className={`px-3.5 py-1.5 rounded-full font-semibold cursor-pointer transition-all ${
+                        className={`px-3 py-1.5 rounded-lg font-medium cursor-pointer transition-all ${
                             filterMode === 'ALL' 
-                                ? 'bg-blue-600 text-white shadow-xs' 
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-zinc-800 text-white shadow-xs border border-zinc-700' 
+                                : 'bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-white border border-zinc-800'
                         }`}
                         type="button"
                     >
-                        All Roles
+                        All Roles ({jobs.length})
                     </button>
                     <button
                         onClick={() => setFilterMode('MATCH_85')}
-                        className={`px-3.5 py-1.5 rounded-full font-semibold cursor-pointer transition-all ${
+                        className={`px-3 py-1.5 rounded-lg font-medium cursor-pointer transition-all ${
                             filterMode === 'MATCH_85' 
-                                ? 'bg-blue-600 text-white shadow-xs' 
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-zinc-800 text-white shadow-xs border border-zinc-700' 
+                                : 'bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-white border border-zinc-800'
                         }`}
                         type="button"
                     >
@@ -56,10 +66,10 @@ const MatchedPositionsGrid = ({
                     </button>
                     <button
                         onClick={() => setFilterMode('APPLIED')}
-                        className={`px-3.5 py-1.5 rounded-full font-semibold cursor-pointer transition-all ${
+                        className={`px-3 py-1.5 rounded-lg font-medium cursor-pointer transition-all ${
                             filterMode === 'APPLIED' 
-                                ? 'bg-blue-600 text-white shadow-xs' 
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-zinc-800 text-white shadow-xs border border-zinc-700' 
+                                : 'bg-zinc-900/60 text-zinc-400 hover:bg-zinc-800 hover:text-white border border-zinc-800'
                         }`}
                         type="button"
                     >
@@ -68,86 +78,97 @@ const MatchedPositionsGrid = ({
                 </div>
             </div>
 
-            {/* Clean Modern Data Table */}
-            <div className="w-full overflow-x-auto">
-                <table className="w-full text-left border-collapse text-sm">
-                    <thead>
-                        <tr className="bg-gray-50/70 text-xs text-gray-500 uppercase border-b border-gray-100 font-semibold">
-                            <th className="py-3 px-5">Match Fit</th>
-                            <th className="py-3 px-5">Role &amp; Company</th>
-                            <th className="py-3 px-5">Category</th>
-                            <th className="py-3 px-5">Compensation</th>
-                            <th className="py-3 px-5 text-right">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100 text-gray-900">
-                        {filteredJobs.length === 0 ? (
-                            <tr>
-                                <td colSpan="5" className="py-12 px-5 text-center text-gray-400">
-                                    No open roles match the current filter selection.
-                                </td>
-                            </tr>
-                        ) : (
-                            filteredJobs.map((job) => {
-                                const userApp = myApplications.find(app => app.job === job.id || app.job_id === job.id);
-                                const applied = Boolean(userApp);
-                                const appStatus = userApp?.status;
-                                const matchScore = typeof job.match === 'number' ? Math.round(job.match) : 92;
-                                const isApplying = applyingTo === job.id;
+            {/* High-Density Card Tiles Grid */}
+            <div className="p-5 sm:p-6">
+                {filteredJobs.length === 0 ? (
+                    <div className="py-12 text-center text-zinc-500 text-sm">
+                        No open roles match the current filter selection.
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {filteredJobs.map((job) => {
+                            const userApp = myApplications.find(app => app.job === job.id || app.job_id === job.id);
+                            const applied = Boolean(userApp);
+                            const appStatus = userApp?.status;
+                            const matchScore = typeof job.match === 'number' ? Math.round(job.match) : 92;
+                            const isApplying = applyingTo === job.id;
+                            const stackTags = job.skills || job.tags || ['Python', 'System Architecture', 'PostgreSQL'];
 
-                                return (
-                                    <tr key={job.id} className="hover:bg-gray-50/60 transition-colors">
-                                        <td className="py-4 px-5 whitespace-nowrap">
-                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-bold text-xs">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                {matchScore}% Fit
+                            return (
+                                <div
+                                    key={job.id}
+                                    className="p-5 rounded-lg bg-[#181A22] border border-white/[0.06] hover:border-zinc-700 transition-colors flex flex-col justify-between gap-4"
+                                >
+                                    <div className="space-y-3">
+                                        {/* Top Row: Match Score & Category */}
+                                        <div className="flex items-center justify-between gap-2">
+                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getMatchBadgeStyle(matchScore)}`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full ${matchScore >= 85 ? 'bg-emerald-400' : 'bg-blue-400'}`} />
+                                                {matchScore}% Match
                                             </span>
-                                        </td>
-                                        <td className="py-4 px-5">
-                                            <div className="font-bold text-gray-900">{job.title}</div>
-                                            <div className="text-xs text-gray-500">{job.company_name || 'Tech Partner Team'}</div>
-                                        </td>
-                                        <td className="py-4 px-5 text-gray-600 text-xs">
-                                            <span className="px-2 py-0.5 rounded-md bg-gray-100 font-medium">
-                                                {job.category || 'Software Engineering'}
+                                            <span className="text-[11px] font-medium text-zinc-400">
+                                                ${Number(job.budget_amount || 135000).toLocaleString()} / yr
                                             </span>
-                                        </td>
-                                        <td className="py-4 px-5 whitespace-nowrap font-semibold text-gray-900">
-                                            ${Number(job.budget_amount || 135000).toLocaleString()} <span className="text-xs text-gray-400 font-normal">/ yr</span>
-                                        </td>
-                                        <td className="py-4 px-5 text-right whitespace-nowrap">
-                                            {applied ? (
-                                                appStatus === 'accepted' ? (
-                                                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200">
-                                                        <span className="material-symbols-outlined text-[16px]">celebration</span>
-                                                        Offer Extended
-                                                    </span>
-                                                ) : appStatus === 'rejected' ? (
-                                                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 px-3 py-1.5 rounded-lg bg-gray-100">
-                                                        Closed
-                                                    </span>
-                                                ) : (
-                                                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-200">
-                                                        <span className="material-symbols-outlined text-[16px]">hourglass_top</span>
-                                                        Under Review
-                                                    </span>
-                                                )
-                                            ) : (
-                                                <button
-                                                    onClick={() => onApply(job.id)}
-                                                    disabled={isApplying}
-                                                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                                        </div>
+
+                                        {/* Role & Company Details */}
+                                        <div>
+                                            <h4 className="font-semibold text-white text-base tracking-tight truncate">
+                                                {job.title}
+                                            </h4>
+                                            <p className="text-xs text-zinc-400 mt-0.5">
+                                                {job.company_name || 'Technology Partner'}
+                                            </p>
+                                        </div>
+
+                                        {/* Stack Tags */}
+                                        <div className="flex flex-wrap gap-1.5 pt-1">
+                                            {stackTags.slice(0, 3).map((tag, tIdx) => (
+                                                <span
+                                                    key={tIdx}
+                                                    className="px-2 py-0.5 rounded text-[11px] bg-zinc-900 text-zinc-300 border border-zinc-800"
                                                 >
-                                                    {isApplying ? 'Submitting...' : 'Apply with Profile'}
-                                                </button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                );
-                            })
-                        )}
-                    </tbody>
-                </table>
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Action Button */}
+                                    <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between">
+                                        <span className="text-[11px] text-zinc-500">
+                                            {job.location || 'Remote / Hybrid'}
+                                        </span>
+
+                                        {applied ? (
+                                            appStatus === 'accepted' ? (
+                                                <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-400 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20">
+                                                    Offer Extended
+                                                </span>
+                                            ) : appStatus === 'rejected' ? (
+                                                <span className="text-xs font-medium text-zinc-500 px-2.5 py-1 rounded-md bg-zinc-800">
+                                                    Closed
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-1 text-xs font-medium text-blue-400 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20">
+                                                    Under Review
+                                                </span>
+                                            )
+                                        ) : (
+                                            <button
+                                                onClick={() => onApply(job.id)}
+                                                disabled={isApplying}
+                                                className="px-3.5 py-1.5 bg-white hover:bg-zinc-200 text-zinc-950 font-medium rounded-lg text-xs transition-colors cursor-pointer disabled:opacity-50"
+                                            >
+                                                {isApplying ? 'Applying...' : 'Quick Apply'}
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </section>
     );

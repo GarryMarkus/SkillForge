@@ -129,7 +129,7 @@ const StudentDashboard = () => {
     const candidateName = profile?.full_name || user?.full_name || user?.email?.split('@')[0] || 'Candidate';
 
     return (
-        <div className="bg-[#FAFAFA] font-sans text-gray-900 antialiased min-h-screen">
+        <div className="bg-[#09090B] font-sans text-zinc-100 antialiased min-h-screen">
             {/* Sidebar Navigation */}
             <StudentSidebar sidebarCollapsed={sidebarCollapsed} />
 
@@ -144,18 +144,18 @@ const StudentDashboard = () => {
                 />
 
                 {/* Main Body */}
-                <main className="w-full pt-20 sm:pt-24 min-h-[calc(100vh-2rem)] bg-[#FAFAFA] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 font-sans">
+                <main className="w-full pt-20 sm:pt-24 min-h-[calc(100vh-2rem)] bg-[#09090B] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 font-sans">
                     <div className="flex flex-col gap-8 w-full max-w-[1400px] mx-auto">
 
                         {/* Top Multi-Tab Navigation Bar */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-2">
+                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setActiveTab('overview')}
                                     className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 ${
                                         activeTab === 'overview'
-                                            ? 'bg-blue-600 text-white shadow-sm'
-                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                            ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
+                                            : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
                                     }`}
                                 >
                                     <span className="material-symbols-outlined text-[18px]">person</span>
@@ -165,13 +165,13 @@ const StudentDashboard = () => {
                                     onClick={() => setActiveTab('jobs')}
                                     className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 ${
                                         activeTab === 'jobs'
-                                            ? 'bg-blue-600 text-white shadow-sm'
-                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                            ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
+                                            : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
                                     }`}
                                 >
                                     <span className="material-symbols-outlined text-[18px]">work</span>
                                     <span>Job Matches</span>
-                                    <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-bold ml-1">
+                                    <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-semibold ml-1">
                                         {jobs.length}
                                     </span>
                                 </button>
@@ -179,8 +179,8 @@ const StudentDashboard = () => {
                                     onClick={() => setActiveTab('learning')}
                                     className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 ${
                                         activeTab === 'learning'
-                                            ? 'bg-blue-600 text-white shadow-sm'
-                                            : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                                            ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
+                                            : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
                                     }`}
                                 >
                                     <span className="material-symbols-outlined text-[18px]">school</span>
@@ -190,7 +190,7 @@ const StudentDashboard = () => {
 
                             <button
                                 onClick={() => navigate('/student/assessment')}
-                                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer transition-colors"
+                                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-xl text-xs sm:text-sm font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer transition-colors"
                             >
                                 <span className="material-symbols-outlined text-[18px]">play_circle</span>
                                 <span>Take New Assessment</span>
@@ -204,6 +204,7 @@ const StudentDashboard = () => {
                                     profile={profile}
                                     recommendation={recommendation}
                                     candidateName={candidateName}
+                                    onViewFullMetrics={() => navigate('/student/assessment')}
                                 />
 
                                 <ActionControlStrip 
@@ -213,32 +214,32 @@ const StudentDashboard = () => {
                                 />
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-3">
+                                    <div className="bg-[#121318] rounded-2xl border border-white/[0.08] p-6 shadow-sm space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <h4 className="font-bold text-gray-900 text-base">Top Matching Opportunities</h4>
+                                            <h4 className="font-semibold text-white text-base">Top Matching Opportunities</h4>
                                             <button 
                                                 onClick={() => setActiveTab('jobs')}
-                                                className="text-xs font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
+                                                className="text-xs font-semibold text-blue-400 hover:text-blue-300 cursor-pointer"
                                             >
                                                 View All →
                                             </button>
                                         </div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-zinc-400">
                                             You have {jobs.length} open roles matching your verified skill set.
                                         </p>
                                     </div>
 
-                                    <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-3">
+                                    <div className="bg-[#121318] rounded-2xl border border-white/[0.08] p-6 shadow-sm space-y-3">
                                         <div className="flex items-center justify-between">
-                                            <h4 className="font-bold text-gray-900 text-base">Workplace Personality Radar</h4>
+                                            <h4 className="font-semibold text-white text-base">Workplace Personality Radar</h4>
                                             <button 
                                                 onClick={() => navigate('/student/personality-test')}
-                                                className="text-xs font-semibold text-blue-600 hover:text-blue-700 cursor-pointer"
+                                                className="text-xs font-semibold text-blue-400 hover:text-blue-300 cursor-pointer"
                                             >
                                                 View Insights →
                                             </button>
                                         </div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-zinc-400">
                                             Understand your team collaboration and architectural problem-solving style.
                                         </p>
                                     </div>
@@ -273,10 +274,10 @@ const StudentDashboard = () => {
                 </main>
 
                 {/* Clean Simplified Footer */}
-                <footer className="w-full border-t border-gray-100 bg-white text-xs text-gray-500 font-sans py-4">
+                <footer className="w-full border-t border-white/[0.08] bg-[#09090B] text-xs text-zinc-500 font-sans py-4">
                     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
                         <div>SkillForge Candidate Hub © {new Date().getFullYear()}</div>
-                        <div className="flex items-center gap-2 text-emerald-600 font-medium">
+                        <div className="flex items-center gap-2 text-emerald-400 font-medium">
                             <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                             <span>Evaluation Enclave Active &amp; Secure</span>
                         </div>

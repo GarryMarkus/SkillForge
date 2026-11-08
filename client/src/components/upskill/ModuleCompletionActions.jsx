@@ -40,21 +40,21 @@ const ModuleCompletionActions = ({
 
     return (
         <section
-            className="w-full bg-white p-6 rounded-2xl border border-gray-200 flex flex-wrap items-center justify-between gap-4 font-sans select-none shadow-sm"
+            className="w-full bg-[#121318] p-6 rounded-2xl border border-white/[0.08] flex flex-wrap items-center justify-between gap-4 font-sans select-none shadow-sm"
             id="ModuleCompletionActions"
         >
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2 text-xs">
-                    <span className="font-semibold text-gray-500">Status:</span>
-                    <span className={`px-2.5 py-0.5 rounded-full font-semibold text-xs ${
+                    <span className="font-medium text-zinc-400">Status:</span>
+                    <span className={`px-2.5 py-0.5 rounded-full font-medium text-xs ${
                         isCompleted
-                            ? 'bg-green-50 text-green-700 border border-green-200'
-                            : 'bg-blue-50 text-blue-700 border border-blue-200'
+                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                            : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
                     }`}>
                         {isCompleted ? 'Completed' : 'In Progress'}
                     </span>
                 </div>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-zinc-400">
                     Completing this module unlocks assessment verification for this skill
                 </div>
             </div>
@@ -62,7 +62,7 @@ const ModuleCompletionActions = ({
             <div className="flex items-center gap-3 flex-wrap">
                 <button
                     onClick={onGenerateNewClick}
-                    className="bg-gray-100 text-gray-700 text-xs sm:text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-gray-200 transition-colors cursor-pointer flex items-center gap-1.5"
+                    className="bg-white/[0.06] hover:bg-white/[0.1] text-zinc-200 border border-white/[0.08] text-xs sm:text-sm font-medium px-5 py-2.5 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5"
                     type="button"
                 >
                     <span>+ New Topic</span>
@@ -71,7 +71,7 @@ const ModuleCompletionActions = ({
                 <button
                     onClick={handleMarkCompleteAndRetest}
                     disabled={submitting}
-                    className="bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors shadow-sm cursor-pointer flex items-center gap-2 disabled:opacity-50"
+                    className="bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors shadow-sm cursor-pointer flex items-center gap-2 disabled:opacity-50"
                     type="button"
                 >
                     <span>

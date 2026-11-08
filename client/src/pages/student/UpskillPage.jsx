@@ -124,7 +124,7 @@ const UpskillPage = () => {
     const moduleRef = currentModule ? `Module ${currentModule.id}` : 'Module 1';
 
     return (
-        <div className="bg-[#FAFAFA] text-gray-900 font-sans antialiased min-h-screen flex flex-col">
+        <div className="bg-[#09090B] text-zinc-100 font-sans antialiased min-h-screen flex flex-col">
             {/* Top Navigation */}
             <UpskillHeader
                 moduleRef={moduleRef}
@@ -136,20 +136,20 @@ const UpskillPage = () => {
             <main className="w-full pt-20 sm:pt-24 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 flex-1 flex flex-col gap-6">
                 {/* Generation Drawer */}
                 {showGenerator && (
-                    <section className="w-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-                        <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                    <section className="w-full rounded-2xl border border-white/[0.08] bg-[#121318] p-6 shadow-sm">
+                        <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
                             <div>
-                                <h3 className="text-sm font-semibold text-gray-900">
+                                <h3 className="text-sm font-semibold text-white">
                                     Generate New Learning Guide
                                 </h3>
-                                <p className="text-xs text-gray-500">
-                                    Our AI creates an interactive guide tailored to your skill gaps
+                                <p className="text-xs text-zinc-400">
+                                    Our evaluation enclave creates an interactive guide tailored to your skill gaps
                                 </p>
                             </div>
                             {modules.length > 0 && (
                                 <button
                                     onClick={() => setShowGenerator(false)}
-                                    className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100 text-sm font-semibold transition-colors"
+                                    className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/[0.06] text-sm font-semibold transition-colors"
                                     aria-label="Close"
                                 >
                                     ✕
@@ -164,31 +164,31 @@ const UpskillPage = () => {
                                 onChange={(e) => setTopicInput(e.target.value)}
                                 placeholder="Enter topic: e.g. Docker Containerization, PostgreSQL Indexing, Concurrency..."
                                 disabled={isGenerating}
-                                className="flex-1 px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                                className="flex-1 px-4 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-sm text-white placeholder:text-zinc-500 transition-colors"
                             />
                             <button
                                 type="submit"
                                 disabled={isGenerating}
-                                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm cursor-pointer whitespace-nowrap disabled:opacity-50"
+                                className="bg-white hover:bg-zinc-200 text-zinc-950 px-6 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm cursor-pointer whitespace-nowrap disabled:opacity-50"
                             >
                                 {isGenerating ? 'Generating Guide...' : '+ Generate Guide →'}
                             </button>
                         </form>
 
                         {errorMessage && (
-                            <p className="mt-2 text-red-600 text-xs font-medium">
+                            <p className="mt-2 text-rose-400 text-xs font-medium">
                                 {errorMessage}
                             </p>
                         )}
 
-                        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                            <span className="font-semibold text-gray-700">Recommended Topics:</span>
+                        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-zinc-400">
+                            <span className="font-medium text-zinc-300">Recommended Topics:</span>
                             {['Docker & Containers', 'PostgreSQL Query Optimization', 'FastAPI Concurrency', 'Redis In-Memory Caching'].map((s) => (
                                 <button
                                     key={s}
                                     type="button"
                                     onClick={() => setTopicInput(s)}
-                                    className="px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium transition-colors cursor-pointer"
+                                    className="px-3 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 border border-white/[0.08] text-xs font-medium transition-colors cursor-pointer"
                                 >
                                     {s}
                                 </button>
@@ -200,22 +200,22 @@ const UpskillPage = () => {
                 {/* Two-Column Layout */}
                 <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     {/* Left Column: Modules List (3 Cols) */}
-                    <aside className="lg:col-span-3 rounded-2xl border border-gray-200 bg-white shadow-sm flex flex-col select-none overflow-hidden">
-                        <div className="w-full bg-gray-50 px-4 py-3.5 border-b border-gray-200 flex items-center justify-between">
-                            <span className="font-semibold text-xs text-gray-900">
+                    <aside className="lg:col-span-3 rounded-2xl border border-white/[0.08] bg-[#121318] shadow-sm flex flex-col select-none overflow-hidden">
+                        <div className="w-full bg-[#181A22] px-4 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
+                            <span className="font-semibold text-xs text-white">
                                 My Modules ({modules.length})
                             </span>
                             <button
                                 onClick={() => setShowGenerator(prev => !prev)}
-                                className="text-blue-600 text-xs font-semibold hover:underline"
+                                className="text-blue-400 text-xs font-semibold hover:text-blue-300"
                             >
                                 + New
                             </button>
                         </div>
 
-                        <div className="divide-y divide-gray-100 max-h-[600px] overflow-y-auto">
+                        <div className="divide-y divide-white/[0.04] max-h-[600px] overflow-y-auto">
                             {modules.length === 0 ? (
-                                <div className="p-5 text-center text-gray-400 text-xs">
+                                <div className="p-5 text-center text-zinc-500 text-xs">
                                     No guides generated yet. Click "+ New" to create one.
                                 </div>
                             ) : (
@@ -229,23 +229,23 @@ const UpskillPage = () => {
                                             onClick={() => handleSelectModule(mod)}
                                             className={`w-full text-left p-4 transition-colors cursor-pointer flex flex-col gap-1.5 ${
                                                 isSelected
-                                                    ? 'bg-blue-50/70 border-l-4 border-l-blue-600'
-                                                    : 'hover:bg-gray-50'
+                                                    ? 'bg-white/[0.04] border-l-2 border-l-blue-500'
+                                                    : 'hover:bg-white/[0.02]'
                                             }`}
                                         >
-                                            <div className="flex items-center justify-between gap-1 text-xs font-semibold text-gray-900">
+                                            <div className="flex items-center justify-between gap-1 text-xs font-medium text-white">
                                                 <span className="truncate">
                                                     {idx + 1}. {mod.topic}
                                                 </span>
-                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
                                                     isModCompleted
-                                                        ? 'bg-green-50 text-green-700 border border-green-200'
-                                                        : 'bg-gray-100 text-gray-500'
+                                                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                                        : 'bg-white/[0.04] text-zinc-400 border border-white/[0.08]'
                                                 }`}>
                                                     {isModCompleted ? 'Done' : 'Active'}
                                                 </span>
                                             </div>
-                                            <div className="flex items-center justify-between text-[11px] text-gray-500">
+                                            <div className="flex items-center justify-between text-[11px] text-zinc-400">
                                                 <span>Level: {mod.level || 'Mid'}</span>
                                                 <span>{new Date(mod.created_at).toLocaleDateString()}</span>
                                             </div>
@@ -259,22 +259,22 @@ const UpskillPage = () => {
                     {/* Right Column: Active Module View (9 Cols) */}
                     <div className="lg:col-span-9 flex flex-col gap-6">
                         {isGenerating ? (
-                            <div className="w-full rounded-2xl border-2 border-dashed border-blue-300 bg-white p-12 flex flex-col items-center justify-center text-center gap-4">
-                                <div className="w-10 h-10 border-3 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-full rounded-2xl border border-dashed border-blue-500/30 bg-[#121318] p-12 flex flex-col items-center justify-center text-center gap-4">
+                                <div className="w-10 h-10 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                                 <div className="space-y-1">
-                                    <h3 className="font-semibold text-base text-gray-900">
-                                        Generating Curriculum Guide
+                                    <h3 className="font-semibold text-base text-white">
+                                        Synthesizing Curriculum Guide
                                     </h3>
-                                    <p className="text-xs text-gray-500">
-                                        Synthesizing explanations, real-world examples, and best practices...
+                                    <p className="text-xs text-zinc-400">
+                                        Assembling real-world architectural scenarios, edge-case analysis, and code specs...
                                     </p>
                                 </div>
-                                <div className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
+                                <div className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-medium">
                                     Topic: {topicInput || 'Technical Guide'}
                                 </div>
                             </div>
                         ) : loading ? (
-                            <div className="w-full rounded-2xl border border-gray-200 bg-white p-12 text-center text-gray-400 text-sm">
+                            <div className="w-full rounded-2xl border border-white/[0.08] bg-[#121318] p-12 text-center text-zinc-500 text-sm">
                                 Loading learning modules...
                             </div>
                         ) : currentModule ? (
@@ -301,16 +301,16 @@ const UpskillPage = () => {
                                 />
                             </>
                         ) : (
-                            <div className="w-full rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center flex flex-col items-center justify-center gap-3">
-                                <h3 className="font-semibold text-base text-gray-900">
+                            <div className="w-full rounded-2xl border border-dashed border-white/[0.1] bg-[#121318] p-12 text-center flex flex-col items-center justify-center gap-3">
+                                <h3 className="font-semibold text-base text-white">
                                     No Learning Guide Selected
                                 </h3>
-                                <p className="text-xs text-gray-500 max-w-sm leading-relaxed">
+                                <p className="text-xs text-zinc-400 max-w-sm leading-relaxed">
                                     Select a guide from the sidebar or generate a new topic tailored to your target skills.
                                 </p>
                                 <button
                                     onClick={() => setShowGenerator(true)}
-                                    className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+                                    className="mt-2 bg-white hover:bg-zinc-200 text-zinc-950 px-6 py-2.5 rounded-xl font-semibold text-xs transition-colors shadow-sm cursor-pointer"
                                 >
                                     + Generate New Guide
                                 </button>
