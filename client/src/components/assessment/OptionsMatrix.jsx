@@ -15,10 +15,10 @@ const OptionsMatrix = ({
             {/* Multiple-Choice Answer Selector Panel */}
             <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between pb-1">
-                    <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider">
+                    <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider">
                         Select the Best Solution
                     </span>
-                    <span className="text-xs text-gray-400">Single Choice</span>
+                    <span className="text-xs text-zinc-500 font-mono">Single Choice</span>
                 </div>
 
                 {options.map((option, idx) => {
@@ -32,18 +32,18 @@ const OptionsMatrix = ({
                             onClick={() => onSelectOption(idx)}
                             className={`w-full text-left cursor-pointer p-4 sm:p-5 rounded-2xl flex items-start gap-4 transition-all ${
                                 isSelected
-                                    ? 'border-2 border-blue-600 bg-blue-50/40 text-blue-950 shadow-sm'
-                                    : 'border border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/60 text-gray-800'
+                                    ? 'border border-blue-500 bg-blue-500/10 text-white shadow-sm'
+                                    : 'border border-white/[0.08] bg-[#121318] hover:border-white/[0.15] hover:bg-white/[0.02] text-zinc-300'
                             }`}
                         >
-                            <div className={`w-8 h-8 rounded-xl font-bold text-sm shrink-0 flex items-center justify-center transition-colors ${
+                            <div className={`w-8 h-8 rounded-xl font-semibold text-sm shrink-0 flex items-center justify-center transition-colors ${
                                 isSelected
                                     ? 'bg-blue-600 text-white shadow-xs'
-                                    : 'bg-gray-100 text-gray-700'
+                                    : 'bg-white/[0.06] text-zinc-300 border border-white/[0.08]'
                             }`}>
                                 {letter}
                             </div>
-                            <div className={`flex-1 text-sm sm:text-base leading-relaxed ${isSelected ? 'font-semibold text-blue-950' : 'font-medium text-gray-800'}`}>
+                            <div className={`flex-1 text-sm sm:text-base leading-relaxed ${isSelected ? 'font-medium text-white' : 'font-normal text-zinc-300'}`}>
                                 {option}
                             </div>
                         </button>
@@ -52,11 +52,11 @@ const OptionsMatrix = ({
             </div>
 
             {/* Bottom Navigation Controls */}
-            <div className="mt-2 pt-4 border-t border-gray-100 flex flex-wrap justify-between items-center gap-3">
+            <div className="mt-2 pt-4 border-t border-white/[0.08] flex flex-wrap justify-between items-center gap-3">
                 <button
                     onClick={onPrevQuestion}
                     disabled={isFirstQuestion}
-                    className="px-5 py-2.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-700 text-xs sm:text-sm font-semibold disabled:opacity-40 transition-colors cursor-pointer"
+                    className="px-5 py-2.5 rounded-xl border border-white/[0.08] hover:bg-white/[0.04] text-zinc-300 text-xs sm:text-sm font-medium disabled:opacity-30 transition-colors cursor-pointer"
                     type="button"
                 >
                     ← Previous Question
@@ -66,7 +66,7 @@ const OptionsMatrix = ({
                     {selectedOptionIdx !== null && selectedOptionIdx !== undefined && (
                         <button
                             onClick={onClearSelection}
-                            className="px-4 py-2.5 rounded-xl text-gray-500 hover:text-gray-800 hover:bg-gray-100 text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+                            className="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.04] text-xs sm:text-sm font-medium transition-colors cursor-pointer"
                             type="button"
                         >
                             Clear Selection
@@ -74,7 +74,7 @@ const OptionsMatrix = ({
                     )}
                     <button
                         onClick={onNextQuestion}
-                        className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold shadow-sm hover:shadow transition-all cursor-pointer flex items-center gap-1.5"
+                        className="px-6 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 text-xs sm:text-sm font-semibold shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
                         type="button"
                     >
                         <span>{isLastQuestion ? 'Submit Assessment' : 'Next Question'}</span>
