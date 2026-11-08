@@ -7,102 +7,94 @@ import { useAuthStore } from '../store/authStore';
 const candidateSteps = [
     {
         step: '01',
-        title: 'Create Your Profile & Share Your Work',
-        tagline: 'Simple, fast setup in under two minutes',
-        description: 'Upload your existing resume or connect your GitHub profile. SkillForge automatically highlights your actual projects, real experience, and key strengths without any buzzwords.',
+        title: 'Initialize Profile & Ingest Codebase Telemetry',
+        tagline: '[ intake & artifact parsing ]',
+        description: 'Upload your resume document or link your GitHub profile. SkillForge extracts demonstrated technical abilities, verified project footprints, and core systems strengths without keyword noise.',
         highlights: [
-            'No lengthy questionnaires or repetitive form fields',
-            'Automatic extraction of your real projects and technologies',
-            'Your data remains private and securely controlled by you'
-        ],
-        icon: 'person_add'
+            'Zero manual questionnaire forms or repetitive profile fields',
+            'Automatic extraction of demonstrated repositories and technologies',
+            'All data encrypted and isolated under zero third-party leakage protocol'
+        ]
     },
     {
         step: '02',
-        title: 'Take a Short, Practical Evaluation',
-        tagline: '20-minute real-world technical assessment',
-        description: 'Demonstrate how you think and solve problems through hands-on technical scenarios. No trick questions or algorithmic puzzles that have nothing to do with everyday work.',
+        title: 'Complete Timed Practical Evaluation',
+        tagline: '[ empirical sandbox assessment ]',
+        description: 'Demonstrate architectural reasoning and practical debugging under realistic, sandboxed conditions. Focused scenarios evaluate genuine problem-solving rather than academic trivia.',
         highlights: [
-            'Convenient online session you can take anytime from home',
-            'Fair, unbiased grading powered by objective skill rubrics',
-            'Respectful, lightweight camera verification to ensure fairness'
-        ],
-        icon: 'task_alt'
+            '20-minute focused sandbox session available on-demand',
+            'Standardized scoring rubrics benchmarked against real production systems',
+            'Lightweight optical and environment proctoring to guarantee integrity'
+        ]
     },
     {
         step: '03',
-        title: 'Earn Your Verified Skill Profile',
-        tagline: 'Transparent proof of what you can build',
-        description: 'Receive an authenticated Skill Report showing your real technical strengths, verified percentiles, and personalized insights for continuous career growth.',
+        title: 'Receive Cryptographic Verification Dossier',
+        tagline: '[ authenticated competence report ]',
+        description: 'Receive an authenticated candidate dossier indexing verified technical strengths, benchmark percentiles, and actionable growth rubrics.',
         highlights: [
-            'Shareable verification link you can showcase on LinkedIn or your portfolio',
-            'Clear breakdown of your strengths and areas to grow',
-            'Never expires, with free options to re-test anytime'
-        ],
-        icon: 'verified'
+            'Shareable verification dossier URL for recruiters and hiring managers',
+            'Granular breakdown of architectural competencies and focus areas',
+            'Permanent accreditation with on-demand reassessment options'
+        ]
     },
     {
         step: '04',
-        title: 'Get Discovered by Great Teams',
-        tagline: 'Skip the endless resume screening queue',
-        description: 'Verified candidates are matched directly to hiring managers looking for their exact abilities. Employers reach out with direct interview invitations based on real competence.',
+        title: 'Direct Matching With Engineering Teams',
+        tagline: '[ pipeline bypass & direct outreach ]',
+        description: 'Verified candidates match directly to engineering requisitions seeking their verified abilities. Hiring managers reach out with interview invites based on verified ability.',
         highlights: [
-            'Direct introductions to companies hiring right now',
-            'Transparent compensation ranges posted upfront',
-            'Zero bias based on background, school name, or resume formatting'
-        ],
-        icon: 'handshake'
+            'Direct introductions to teams with active engineering requisitions',
+            'Transparent compensation and stack specifications displayed upfront',
+            'Zero resume screening bias or pedigree filters'
+        ]
     }
 ];
 
 const employerSteps = [
     {
         step: '01',
-        title: 'Define Your Role Requirements',
-        tagline: 'Specify the skills your team actually needs',
-        description: 'Create a role specification in minutes. Highlight the technologies, technical depth, and compensation packages your team provides.',
+        title: 'Publish Role Criteria & Verification Standards',
+        tagline: '[ requisition specification ]',
+        description: 'Define engineering requirements in minutes. Specify technical competencies, architectural depth, minimum benchmark thresholds, and compensation packages.',
         highlights: [
-            'Pre-configured templates for engineering, data, and design roles',
-            'Customizable skill benchmarks tailored to your engineering stack',
-            'Instant synchronization with your existing ATS if needed'
-        ],
-        icon: 'post_add'
+            'Pre-configured templates for backend, frontend, systems, and MLOps roles',
+            'Customizable benchmark cutoffs tailored to your engineering stack',
+            'Real-time webhook and export synchronization'
+        ]
     },
     {
         step: '02',
-        title: 'Receive Pre-Evaluated Candidates',
-        tagline: 'Zero resume fluff, pure verified competence',
-        description: 'SkillForge compares your role requirements directly against candidates who have demonstrated proven mastery in proctored technical evaluations.',
+        title: 'Access Pre-Evaluated Engineering Pipeline',
+        tagline: '[ zero keyword fluff ]',
+        description: 'SkillForge compares your role criteria directly against candidates who have proven competence in proctored technical evaluations.',
         highlights: [
-            'Every candidate in your pipeline has proven hands-on abilities',
-            'No time wasted filtering through hundreds of inflated resumes',
-            'Objective competency scores benchmarked across industry peers'
-        ],
-        icon: 'group'
+            'Every candidate in the pipeline has verified code execution telemetry',
+            'Zero time lost parsing through inflated resume claims',
+            'Objective competency scores benchmarked against industry percentiles'
+        ]
     },
     {
         step: '03',
-        title: 'Review Comprehensive Skill Dossiers',
-        tagline: 'Full visibility before the first conversation',
-        description: 'Examine detailed reports including code quality reviews, proctor integrity confirmation, and past problem-solving benchmarks before spending engineering hours on interviews.',
+        title: 'Inspect Technical Candidate Dossiers',
+        tagline: '[ transparent evidence before interview ]',
+        description: 'Review audited code snippets, evaluation rubrics, proctor integrity logs, and problem-solving benchmarks before committing senior engineering hours to interviews.',
         highlights: [
-            'Direct access to evaluated code snippets and logic breakdowns',
-            'Proctor integrity audit with zero cheating tolerance',
-            'Holistic overview of technical depth and communication clarity'
-        ],
-        icon: 'description'
+            'Direct access to evaluated code implementations and reasoning breakdowns',
+            'Proctor integrity audits with zero cheating flags',
+            'Holistic overview of system architecture and execution depth'
+        ]
     },
     {
         step: '04',
-        title: 'Hire Faster with Total Confidence',
-        tagline: 'Cut your time-to-hire by over 60%',
-        description: 'Move straight to final-stage cultural and team-fit conversations. Make competitive offers knowing candidates have already proven their ability to deliver.',
+        title: 'Hire With Calibrated Confidence',
+        tagline: '[ 60% reduction in time-to-hire ]',
+        description: 'Bypass preliminary phone screens and move straight to team-fit conversations. Extend competitive offers knowing candidates have proven ability.',
         highlights: [
-            'Reduce interviewing fatigue across your engineering staff',
-            'Significantly higher offer acceptance and retention rates',
-            'Backed by SkillForge quality and satisfaction guarantee'
-        ],
-        icon: 'rocket_launch'
+            'Eliminates repetitive screening loops across engineering staff',
+            'Higher candidate engagement and offer acceptance rates',
+            'Standardized empirical evaluation framework'
+        ]
     }
 ];
 
@@ -132,88 +124,83 @@ const HowItWorksPage = () => {
     const steps = activeTab === 'candidates' ? candidateSteps : employerSteps;
 
     return (
-        <div className="min-h-screen bg-[#09090B] text-zinc-100 font-sans flex flex-col selection:bg-blue-500/20 selection:text-blue-300">
+        <div className="min-h-screen bg-[#050505] text-[#ededed] font-mono flex flex-col selection:bg-white/20 selection:text-white">
             <Navbar />
 
-            <main className="flex-1 pt-28 pb-20">
+            <main className="flex-1 pt-24 pb-20 font-mono">
                 {/* Hero Header Section */}
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs sm:text-sm font-medium mb-6">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                        Simple, Fair &amp; Transparent
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-12">
+                    <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-sm bg-[#0b0b0c] text-[#888888] border border-white/10 text-xs font-mono mb-4">
+                        [ protocol : workflow ]
                     </div>
                     
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-[1.15] mb-6">
-                        How SkillForge Works
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-white tracking-tight leading-[1.15] mb-4">
+                        How SkillForge Operates
                     </h1>
                     
-                    <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-                        We connect talented people with forward-thinking companies through fair, practical skill verification instead of resume screening guesswork.
+                    <p className="text-xs sm:text-sm text-[#888888] max-w-2xl mx-auto leading-relaxed">
+                        Connecting engineering talent and hiring teams through empirical skill verification — eliminating keyword guesswork and resume bias.
                     </p>
 
-                    {/* Pill Tab Switcher */}
-                    <div className="inline-flex p-1.5 rounded-full bg-[#121318] border border-white/[0.08] mt-10 shadow-sm">
+                    {/* Tab Switcher */}
+                    <div className="inline-flex p-1 rounded-md bg-[#0b0b0c] border border-white/10 mt-8">
                         <button
                             onClick={() => setActiveTab('candidates')}
-                            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all cursor-pointer ${
+                            className={`px-4 py-1.5 rounded-sm text-xs font-mono transition-all cursor-pointer ${
                                 activeTab === 'candidates'
-                                    ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
-                                    : 'text-zinc-400 hover:text-white'
+                                    ? 'bg-[#111113] text-white border border-white/20 shadow-sm'
+                                    : 'text-[#737373] hover:text-white'
                             }`}
                         >
-                            For Job Seekers
+                            [01: For Candidates]
                         </button>
                         <button
                             onClick={() => setActiveTab('employers')}
-                            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all cursor-pointer ${
+                            className={`px-4 py-1.5 rounded-sm text-xs font-mono transition-all cursor-pointer ${
                                 activeTab === 'employers'
-                                    ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
-                                    : 'text-zinc-400 hover:text-white'
+                                    ? 'bg-[#111113] text-white border border-white/20 shadow-sm'
+                                    : 'text-[#737373] hover:text-white'
                             }`}
                         >
-                            For Hiring Teams
+                            [02: For Hiring Teams]
                         </button>
                     </div>
                 </div>
 
                 {/* Steps Timeline Grid */}
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
                     {steps.map((item) => (
                         <div
                             key={item.step}
-                            className="bg-[#121318] rounded-2xl border border-white/[0.08] shadow-sm p-6 sm:p-10 flex flex-col md:flex-row gap-6 sm:gap-10 items-start text-white"
+                            className="bg-[#0b0b0c] rounded-md border border-white/10 p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start text-[#ededed]"
                         >
-                            {/* Step Badge & Icon */}
-                            <div className="shrink-0 flex items-center md:flex-col gap-4">
-                                <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-xl">
-                                    <span className="material-symbols-outlined text-2xl">
-                                        {item.icon}
-                                    </span>
+                            {/* Step Badge */}
+                            <div className="shrink-0 flex items-center md:flex-col gap-2">
+                                <div className="w-10 h-10 rounded-sm bg-[#111113] text-[#ededed] border border-white/20 flex items-center justify-center font-bold text-sm font-mono">
+                                    {item.step}
                                 </div>
-                                <span className="text-xs font-mono uppercase tracking-wider text-zinc-500">
-                                    Step {item.step}
+                                <span className="text-[10px] font-mono uppercase tracking-wider text-[#555555]">
+                                    stage
                                 </span>
                             </div>
 
                             {/* Content Body */}
-                            <div className="flex-1 space-y-3">
-                                <div className="text-xs font-medium uppercase tracking-wider text-blue-400">
+                            <div className="flex-1 space-y-2">
+                                <div className="text-[11px] font-mono text-[#737373] uppercase tracking-wider">
                                     {item.tagline}
                                 </div>
-                                <h3 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
+                                <h3 className="text-base sm:text-lg font-bold font-display text-white tracking-tight">
                                     {item.title}
                                 </h3>
-                                <p className="text-base sm:text-lg text-zinc-300 leading-relaxed">
+                                <p className="text-xs text-[#888888] leading-relaxed">
                                     {item.description}
                                 </p>
 
                                 {/* Highlights List */}
-                                <div className="pt-3 space-y-2">
+                                <div className="pt-2 space-y-1.5 text-xs text-[#737373]">
                                     {item.highlights.map((h, hIdx) => (
-                                        <div key={hIdx} className="flex items-start gap-2.5 text-sm text-zinc-400">
-                                            <span className="material-symbols-outlined text-emerald-400 text-[18px] shrink-0 mt-0.5">
-                                                check_circle
-                                            </span>
+                                        <div key={hIdx} className="flex items-start gap-2">
+                                            <span className="text-white font-mono">-</span>
                                             <span>{h}</span>
                                         </div>
                                     ))}
@@ -224,39 +211,39 @@ const HowItWorksPage = () => {
                 </div>
 
                 {/* Bottom Call to Action Card */}
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24">
-                    <div className="bg-[#121318] rounded-3xl border border-white/[0.08] border-t-white/[0.15] text-white p-8 sm:p-14 text-center shadow-xl space-y-6">
-                        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
+                    <div className="bg-[#0b0b0c] rounded-md border border-white/10 text-white p-8 sm:p-10 text-center space-y-4">
+                        <h2 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white">
                             {activeTab === 'candidates' 
-                                ? 'Ready to prove your skills and get hired?'
-                                : 'Ready to build a verified engineering team?'}
+                                ? 'Verify competence. Get discovered.'
+                                : 'Source verified engineering talent.'}
                         </h2>
-                        <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+                        <p className="text-[#888888] text-xs max-w-xl mx-auto leading-relaxed">
                             {activeTab === 'candidates'
-                                ? 'Join developers and technical specialists who have verified their ability and connected with top engineering teams.'
-                                : 'Stop reading through hundreds of exaggerated resumes. Start meeting candidates with proven, verified competence today.'}
+                                ? 'Join developers who have verified their ability and connected directly with hiring teams.'
+                                : 'Eliminate resume screening bottlenecks. Connect with engineers benchmarked on real code today.'}
                         </p>
-                        <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                             {activeTab === 'candidates' ? (
                                 <button
                                     onClick={handleCandidateStart}
-                                    className="w-full sm:w-auto px-8 py-3.5 bg-white text-zinc-950 font-semibold rounded-xl hover:bg-zinc-200 transition-colors shadow-md cursor-pointer"
+                                    className="w-full sm:w-auto px-6 py-2.5 bg-[#111113] hover:bg-[#1a1a1d] text-white font-mono text-xs font-semibold rounded-md border border-white/20 transition-colors shadow-sm cursor-pointer"
                                 >
-                                    Start Free Assessment
+                                    [ Start Free Assessment ↗ ]
                                 </button>
                             ) : (
                                 <button
                                     onClick={handleEmployerStart}
-                                    className="w-full sm:w-auto px-8 py-3.5 bg-white text-zinc-950 font-semibold rounded-xl hover:bg-zinc-200 transition-colors shadow-md cursor-pointer"
+                                    className="w-full sm:w-auto px-6 py-2.5 bg-[#111113] hover:bg-[#1a1a1d] text-white font-mono text-xs font-semibold rounded-md border border-white/20 transition-colors shadow-sm cursor-pointer"
                                 >
-                                    Create Employer Account
+                                    [ Create Employer Account ↗ ]
                                 </button>
                             )}
                             <Link
                                 to="/"
-                                className="w-full sm:w-auto px-6 py-3.5 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 font-medium rounded-xl border border-white/[0.08] transition-colors text-center"
+                                className="w-full sm:w-auto px-5 py-2.5 bg-[#050505] hover:bg-[#111113] text-[#888888] hover:text-white text-xs font-mono rounded-md border border-white/10 transition-colors text-center"
                             >
-                                Back to Homepage
+                                &larr; Return to Home
                             </Link>
                         </div>
                     </div>

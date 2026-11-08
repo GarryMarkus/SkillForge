@@ -128,14 +128,14 @@ const PersonalityTest = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#09090B] font-sans text-zinc-100 flex items-center justify-center p-4">
-                <div className="rounded-2xl border border-white/[0.08] bg-[#121318] p-8 shadow-sm text-center max-w-sm w-full space-y-3">
-                    <div className="w-8 h-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin mx-auto"></div>
-                    <div className="font-semibold text-sm text-white">
-                        Loading Assessment
+            <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] flex items-center justify-center p-4">
+                <div className="rounded-md border border-white/10 bg-[#0b0b0c] p-8 text-center max-w-sm w-full space-y-3 font-mono">
+                    <div className="text-xs text-[#888888] font-mono">[loading : questions]</div>
+                    <div className="font-semibold text-xs text-white">
+                        Preparing Psychometric Engine
                     </div>
-                    <div className="text-xs text-zinc-400">
-                        Preparing your questions...
+                    <div className="text-[11px] text-[#737373]">
+                        Retrieving question set...
                     </div>
                 </div>
             </div>
@@ -144,7 +144,7 @@ const PersonalityTest = () => {
 
     if (result) {
         return (
-            <div className="min-h-screen bg-[#09090B] font-sans text-zinc-100 p-4 sm:p-8 flex items-center justify-center">
+            <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] p-4 sm:p-8 flex items-center justify-center">
                 <PersonalityResultCard
                     result={result}
                     onProceed={() => navigate('/student/dashboard')}
@@ -155,7 +155,7 @@ const PersonalityTest = () => {
 
     if (!started) {
         return (
-            <div className="min-h-screen bg-[#09090B] font-sans text-zinc-100 p-4 sm:p-8 flex items-center justify-center">
+            <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] p-4 sm:p-8 flex items-center justify-center">
                 <PersonalityIntroCard
                     onStart={handleStart}
                     onReturn={() => navigate('/student/dashboard')}
@@ -169,7 +169,7 @@ const PersonalityTest = () => {
     const canSubmit = Object.keys(answers).length > 0;
 
     return (
-        <div className="min-h-screen bg-[#09090B] font-sans text-zinc-100 flex flex-col select-none">
+        <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] flex flex-col select-none">
             <PersonalityHeader
                 currentIndex={currentIndex}
                 totalQuestions={questions.length}
@@ -177,9 +177,9 @@ const PersonalityTest = () => {
                 onAbort={handleAbort}
             />
 
-            <main className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+            <main className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 font-mono">
                 {error && (
-                    <div className="mb-6 rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-rose-400 text-xs font-medium">
+                    <div className="mb-4 rounded-md border border-rose-500/20 bg-rose-500/10 p-3 text-rose-300 text-xs">
                         {error}
                     </div>
                 )}

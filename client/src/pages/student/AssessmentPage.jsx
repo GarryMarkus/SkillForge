@@ -344,14 +344,14 @@ const AssessmentPage = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#09090B] font-sans flex flex-col items-center justify-center p-8 text-zinc-100">
-                <div className="border border-white/[0.08] bg-[#121318] rounded-2xl p-8 shadow-sm max-w-md w-full text-center space-y-3">
-                    <span className="w-3 h-3 bg-blue-500 rounded-full inline-block animate-pulse"></span>
-                    <h2 className="text-lg font-semibold text-white">
-                        Preparing Your Assessment Session
+            <div className="min-h-screen bg-[#050505] font-mono flex flex-col items-center justify-center p-8 text-[#ededed]">
+                <div className="border border-white/10 bg-[#0b0b0c] rounded-md p-8 max-w-md w-full text-center space-y-3">
+                    <div className="text-xs text-[#888888] font-mono">[initializing : assessment enclave]</div>
+                    <h2 className="text-sm font-semibold text-white font-mono">
+                        Preparing Practical Assessment
                     </h2>
-                    <p className="text-xs text-zinc-400">
-                        Loading problem scenarios and setting up secure workspace...
+                    <p className="text-xs text-[#737373]">
+                        Compiling problem scenarios and verifying runtime environment...
                     </p>
                 </div>
             </div>
@@ -361,56 +361,55 @@ const AssessmentPage = () => {
     // Pre-Exam Initialization Staging View
     if (!examStarted) {
         return (
-            <div className="min-h-screen bg-[#09090B] font-sans text-zinc-100 flex flex-col items-center justify-center p-4 sm:p-8">
-                <div className="max-w-2xl w-full bg-[#121318] border border-white/[0.08] rounded-3xl p-8 sm:p-12 shadow-2xl space-y-8">
-                    <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
-                        <span className="text-xs text-blue-400 uppercase font-semibold tracking-wider">
-                            SkillForge Assessment Guide
+            <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] flex flex-col items-center justify-center p-4 sm:p-8">
+                <div className="max-w-2xl w-full bg-[#0b0b0c] border border-white/10 rounded-md p-8 sm:p-10 shadow-2xl space-y-6">
+                    <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                        <span className="text-[11px] text-[#737373] uppercase tracking-wider font-mono">
+                            [ skillforge : assessment briefing ]
                         </span>
-                        <span className="text-xs text-zinc-400 font-mono">
-                            Duration: ~20-30 Minutes
+                        <span className="text-xs text-[#555555] font-mono">
+                            duration: ~20 mins
                         </span>
                     </div>
 
-                    <div className="space-y-3">
-                        <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
-                            Practical Technical Assessment
+                    <div className="space-y-2">
+                        <h1 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
+                            Practical Engineering Evaluation
                         </h1>
-                        <p className="text-sm sm:text-base text-zinc-400 leading-relaxed">
-                            Welcome! This practical assessment evaluates real-world problem-solving, architectural reasoning, and technical depth in a fair, standardized environment.
+                        <p className="text-xs text-[#888888] leading-relaxed">
+                            Evaluates real-world architectural reasoning, debugging heuristics, and systems depth under standardized, distraction-free conditions.
                         </p>
                     </div>
 
                     {/* Guidelines Card */}
-                    <div className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-6 space-y-3.5 text-sm text-zinc-300">
-                        <div className="flex items-start gap-3">
-                            <span className="material-symbols-outlined text-blue-400 text-[20px] shrink-0 mt-0.5">videocam</span>
-                            <span><strong className="text-white">Camera Verification:</strong> Keep your camera connected so our lightweight proctoring can confirm test integrity.</span>
+                    <div className="rounded-md bg-[#050505] border border-white/10 p-5 space-y-3 text-xs text-[#888888]">
+                        <div className="flex items-start gap-2.5">
+                            <span className="text-white font-mono">[01]</span>
+                            <span><strong className="text-white font-mono">Camera Integrity:</strong> Keep optical feed active so the enclave can verify test integrity.</span>
                         </div>
-                        <div className="flex items-start gap-3">
-                            <span className="material-symbols-outlined text-blue-400 text-[20px] shrink-0 mt-0.5">tab</span>
-                            <span><strong className="text-white">Focused Workspace:</strong> Please keep this tab active and focused throughout your session.</span>
+                        <div className="flex items-start gap-2.5">
+                            <span className="text-white font-mono">[02]</span>
+                            <span><strong className="text-white font-mono">Window Lock:</strong> Maintain active tab focus throughout the duration of the evaluation session.</span>
                         </div>
-                        <div className="flex items-start gap-3">
-                            <span className="material-symbols-outlined text-blue-400 text-[20px] shrink-0 mt-0.5">verified</span>
-                            <span><strong className="text-white">Immediate Results:</strong> Your verified score and personalized skill feedback will be ready right after completion.</span>
+                        <div className="flex items-start gap-2.5">
+                            <span className="text-white font-mono">[03]</span>
+                            <span><strong className="text-white font-mono">Instant Verification:</strong> Scoring rubrics and rubric feedback are computed immediately upon completion.</span>
                         </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/[0.08]">
+                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/[0.06]">
                         <button
                             onClick={() => navigate('/student/dashboard')}
-                            className="px-6 py-3 rounded-xl border border-white/[0.08] text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] transition-colors cursor-pointer"
+                            className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
                         >
-                            Return to Dashboard
+                            &larr; Return to Dashboard
                         </button>
 
                         <button
                             onClick={startTest}
-                            className="bg-white hover:bg-zinc-200 text-zinc-950 px-8 py-3.5 rounded-xl text-sm font-semibold shadow-sm transition-all cursor-pointer flex items-center gap-2"
+                            className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-6 py-2.5 rounded-md text-xs font-mono shadow-sm transition-all cursor-pointer flex items-center gap-2"
                         >
-                            <span>Begin Assessment</span>
-                            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                            <span>[ Begin Assessment ↗ ]</span>
                         </button>
                     </div>
                 </div>
@@ -429,7 +428,7 @@ const AssessmentPage = () => {
             onLogEvent={(msg) => addAuditLog(msg, "warn")}
         >
             {({ webcamNode }) => (
-                <div className="bg-[#09090B] font-sans text-zinc-100 antialiased min-h-screen flex flex-col">
+                <div className="bg-[#050505] font-mono text-[#ededed] antialiased min-h-screen flex flex-col">
                     {/* Minimalist Top Console Bar */}
                     <AssessmentHeader
                         examId="SF-2026-09"
@@ -444,8 +443,8 @@ const AssessmentPage = () => {
                     />
 
                     {/* Main Evaluation Split Grid */}
-                    <main className="w-full pt-18 bg-[#09090B] min-h-screen flex-1 flex flex-col justify-between">
-                        <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-12 gap-6 bg-[#09090B] flex-1">
+                    <main className="w-full pt-16 bg-[#050505] min-h-screen flex-1 flex flex-col justify-between">
+                        <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-12 gap-6 bg-[#050505] flex-1">
 
                             {/* Left Column: Question & Answers Canvas (Cols 1-8 / 66%) */}
                             <div className="col-span-12 lg:col-span-8 flex flex-col gap-6" id="QuestionWorkspace">
@@ -482,15 +481,14 @@ const AssessmentPage = () => {
                         </div>
 
                         {/* Clean System Footer */}
-                        <div className="w-full bg-[#09090B] border-t border-white/[0.08] px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between text-xs text-zinc-500 font-sans">
+                        <div className="w-full bg-[#050505] border-t border-white/[0.06] px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between text-xs text-[#555555] font-mono">
                             <div className="flex items-center gap-2">
-                                <span className="font-semibold text-zinc-300">Evaluation Session Active</span>
-                                <span className="text-zinc-600">·</span>
-                                <span>Session ID: SF-2026-09</span>
+                                <span className="text-[#888888]">[session: SF-2026-09]</span>
+                                <span className="text-[#444444]">&bull;</span>
+                                <span>evaluation enclave active</span>
                             </div>
-                            <div className="flex items-center gap-2 text-emerald-400 font-medium">
-                                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                <span>Verified &amp; Secure Session</span>
+                            <div className="text-[11px] text-[#737373]">
+                                [secure stream confirmed]
                             </div>
                         </div>
                     </main>

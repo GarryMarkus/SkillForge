@@ -11,14 +11,14 @@ const OptionsMatrix = ({
     isLastQuestion
 }) => {
     return (
-        <div className="font-sans flex flex-col gap-5 select-none" id="OptionsMatrix">
+        <div className="font-mono flex flex-col gap-4 select-none" id="OptionsMatrix">
             {/* Multiple-Choice Answer Selector Panel */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2.5">
                 <div className="flex items-center justify-between pb-1">
-                    <span className="text-xs text-zinc-400 font-medium uppercase tracking-wider">
-                        Select the Best Solution
+                    <span className="text-xs text-[#737373] font-medium uppercase tracking-wider">
+                        [ Candidate Solutions ]
                     </span>
-                    <span className="text-xs text-zinc-500 font-mono">Single Choice</span>
+                    <span className="text-xs text-[#555555] font-mono">single choice</span>
                 </div>
 
                 {options.map((option, idx) => {
@@ -30,20 +30,20 @@ const OptionsMatrix = ({
                             key={idx}
                             type="button"
                             onClick={() => onSelectOption(idx)}
-                            className={`w-full text-left cursor-pointer p-4 sm:p-5 rounded-2xl flex items-start gap-4 transition-all ${
+                            className={`w-full text-left cursor-pointer p-4 rounded-md flex items-start gap-3.5 transition-all font-mono ${
                                 isSelected
-                                    ? 'border border-blue-500 bg-blue-500/10 text-white shadow-sm'
-                                    : 'border border-white/[0.08] bg-[#121318] hover:border-white/[0.15] hover:bg-white/[0.02] text-zinc-300'
+                                    ? 'border border-white/40 bg-[#121214] text-white shadow-sm'
+                                    : 'border border-white/10 bg-[#0b0b0c] hover:border-white/20 text-[#888888] hover:text-[#ededed]'
                             }`}
                         >
-                            <div className={`w-8 h-8 rounded-xl font-semibold text-sm shrink-0 flex items-center justify-center transition-colors ${
+                            <div className={`w-7 h-7 rounded-sm font-mono text-xs font-semibold shrink-0 flex items-center justify-center transition-colors ${
                                 isSelected
-                                    ? 'bg-blue-600 text-white shadow-xs'
-                                    : 'bg-white/[0.06] text-zinc-300 border border-white/[0.08]'
+                                    ? 'bg-[#111113] text-white border border-white/30'
+                                    : 'bg-[#050505] text-[#737373] border border-white/10'
                             }`}>
-                                {letter}
+                                [{letter}]
                             </div>
-                            <div className={`flex-1 text-sm sm:text-base leading-relaxed ${isSelected ? 'font-medium text-white' : 'font-normal text-zinc-300'}`}>
+                            <div className={`flex-1 text-xs sm:text-sm leading-relaxed ${isSelected ? 'font-medium text-white' : 'font-normal'}`}>
                                 {option}
                             </div>
                         </button>
@@ -52,33 +52,32 @@ const OptionsMatrix = ({
             </div>
 
             {/* Bottom Navigation Controls */}
-            <div className="mt-2 pt-4 border-t border-white/[0.08] flex flex-wrap justify-between items-center gap-3">
+            <div className="mt-2 pt-4 border-t border-white/[0.06] flex flex-wrap justify-between items-center gap-3">
                 <button
                     onClick={onPrevQuestion}
                     disabled={isFirstQuestion}
-                    className="px-5 py-2.5 rounded-xl border border-white/[0.08] hover:bg-white/[0.04] text-zinc-300 text-xs sm:text-sm font-medium disabled:opacity-30 transition-colors cursor-pointer"
+                    className="px-4 py-2 rounded-md border border-white/10 hover:border-white/20 text-[#888888] hover:text-white text-xs font-mono disabled:opacity-30 transition-colors cursor-pointer"
                     type="button"
                 >
-                    ← Previous Question
+                    &larr; Previous Question
                 </button>
 
                 <div className="flex items-center gap-3">
                     {selectedOptionIdx !== null && selectedOptionIdx !== undefined && (
                         <button
                             onClick={onClearSelection}
-                            className="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.04] text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+                            className="px-3 py-2 text-[#737373] hover:text-white text-xs font-mono transition-colors cursor-pointer"
                             type="button"
                         >
-                            Clear Selection
+                            [Clear Selection]
                         </button>
                     )}
                     <button
                         onClick={onNextQuestion}
-                        className="px-6 py-2.5 rounded-xl bg-white hover:bg-zinc-200 text-zinc-950 text-xs sm:text-sm font-semibold shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                        className="px-5 py-2 rounded-md bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 text-xs font-mono shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
                         type="button"
                     >
-                        <span>{isLastQuestion ? 'Submit Assessment' : 'Next Question'}</span>
-                        <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                        <span>{isLastQuestion ? '[ Submit Assessment ↗ ]' : '[ Next Question &rarr; ]'}</span>
                     </button>
                 </div>
             </div>
