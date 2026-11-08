@@ -1,10 +1,18 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import CardNav from './CardNav';
 import { useAuthStore } from '../../store/authStore';
 
+/**
+ * Navbar
+ * SkillForge navigation header powered by the modular CardNav system.
+ * Incorporates Courier Prime brand typography, Consolas metadata,
+ * and expandable card panels for verification, proctoring, and platform workflows.
+ */
 const Navbar = () => {
     const { isAuthenticated, user, logout } = useAuthStore();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogout = () => {
         logout();
@@ -13,81 +21,103 @@ const Navbar = () => {
 
     const dashboardPath = user?.role === 'client' ? '/client/dashboard' : '/student/dashboard';
 
+    const navItems = [
+        {
+            label: 'Verification',
+            description: 'Empirical skill evaluation and anti-cheat diagnostic testing.',
+            links: [
+                { label: 'Evaluation Engine', href: '/how-it-works' },
+                { label: 'Skill Dossier', href: '/how-it-works#dossier' },
+                { label: 'Sample Assessment', href: '/student/assessment' },
+            ],
+        },
+        {
+            label: 'Proctoring',
+            description: 'Tamper-evident hardware telemetry and browser security.',
+            links: [
+                { label: 'Hardware Telemetry', href: '/how-it-works#proctoring' },
+                { label: 'Integrity Scoring', href: '/how-it-works#scoring' },
+                { label: 'Audit Trail Logs', href: '/how-it-works#audit' },
+            ],
+        },
+        {
+            label: 'Platform',
+            description: 'Candidate upskilling curricula and enterprise requisitions.',
+            links: [
+                { label: 'For Candidates', href: '/auth?role=student' },
+                { label: 'For Employers', href: '/auth?role=client' },
+                { label: 'Command Deck', href: '/client/dashboard' },
+            ],
+        },
+    ];
+
+    const logoNode = (
+        <Link to="/" className="flex items-center gap-2 group">
+            <span className="font-display font-bold text-[#f5f5f5] text-base tracking-tight group-hover:text-white transition-colors">
+                SkillForge
+            </span>
+            <span className="text-[11px] text-[#666666] font-mono">
+                v2.5
+            </span>
+        </Link>
+    );
+
+    const secondaryCtaNode = isAuthenticated ? (
+        <div className="flex items-center gap-2">
+            <Link
+                to={dashboardPath}
+                className="card-nav__secondary-cta"
+            >
+                Dashboard
+            </Link>
+            <button
+                type="button"
+                onClick={handleLogout}
+                className="text-xs text-[#737373] hover:text-[#f5f5f5] transition-colors px-1.5 py-1 cursor-pointer font-mono"
+                title="Sign out"
+            >
+                Sign Out
+            </button>
+        </div>
+    ) : (
+        <Link
+            to="/auth"
+            className="card-nav__secondary-cta"
+        >
+            Sign In
+        </Link>
+    );
+
+    const ctaNode = isAuthenticated ? (
+        <Link
+            to="/student/assessment"
+            className="card-nav__cta"
+        >
+            <span>Assessment</span>
+            <span>↗</span>
+        </Link>
+    ) : (
+        <Link
+            to="/auth"
+            className="card-nav__cta"
+        >
+            <span>Start Assessment</span>
+            <span>↗</span>
+        </Link>
+    );
+
     return (
-        <header className="sticky top-0 left-0 right-0 z-50 w-full bg-[#050505]/90 backdrop-blur-sm border-b border-white/[0.06] font-mono select-none">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-4">
-                {/* Left: Brand Identity */}
-                <div className="flex items-center gap-3">
-                    <Link to="/" className="flex items-center gap-2 group">
-                        <span className="font-display font-bold text-white text-base tracking-tight group-hover:text-[#ededed] transition-colors">
-                            SkillForge
-                        </span>
-                        <span className="text-[11px] text-[#666666] font-mono">
-                            v2.5
-                        </span>
-                    </Link>
-                </div>
-
-                {/* Center: Minimalist Monotone Navigation Links */}
-                <nav className="hidden md:flex items-center gap-6 text-xs text-[#888888]">
-                    <Link to="/how-it-works" className="hover:text-[#f5f5f5] transition-colors">
-                        How It Works
-                    </Link>
-                    <a href="/#CapabilitiesRow" className="hover:text-[#f5f5f5] transition-colors">
-                        Verification
-                    </a>
-                    <a href="/#BlueprintSection" className="hover:text-[#f5f5f5] transition-colors">
-                        Proctoring
-                    </a>
-                    <a href="/#PersonaSplitSection" className="hover:text-[#f5f5f5] transition-colors">
-                        For Employers
-                    </a>
-                </nav>
-
-                {/* Right: Actions */}
-                <div className="flex items-center gap-3 text-xs">
-                    {isAuthenticated ? (
-                        <>
-                            <Link
-                                to={dashboardPath}
-                                className="text-[#888888] hover:text-[#f5f5f5] transition-colors px-2 py-1"
-                            >
-                                Dashboard
-                            </Link>
-                            <Link
-                                to="/student/assessment"
-                                className="bg-[#111113] hover:bg-[#1a1a1d] text-[#f5f5f5] border border-white/10 px-3 py-1.5 rounded-md transition-colors flex items-center gap-1"
-                            >
-                                <span>Assessment</span>
-                                <span className="text-[#888888]">↗</span>
-                            </Link>
-                            <button
-                                type="button"
-                                onClick={handleLogout}
-                                className="text-[#666666] hover:text-[#ededed] transition-colors px-1"
-                                title="Sign out"
-                            >
-                                Sign Out
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            <Link
-                                to="/auth"
-                                className="text-[#888888] hover:text-[#f5f5f5] transition-colors px-2 py-1"
-                            >
-                                Sign In
-                            </Link>
-                            <Link
-                                to="/auth"
-                                className="bg-[#111113] hover:bg-[#1a1a1d] text-[#f5f5f5] border border-white/10 px-3 py-1.5 rounded-md transition-colors flex items-center gap-1"
-                            >
-                                <span>Start Assessment</span>
-                                <span className="text-[#888888]">↗</span>
-                            </Link>
-                        </>
-                    )}
-                </div>
+        <header className="sticky top-0 left-0 right-0 z-50 w-full pt-3 pb-2 px-4 sm:px-6 lg:px-8 bg-[#050505]/80 backdrop-blur-md transition-colors">
+            <div className="max-w-7xl mx-auto flex justify-center">
+                <CardNav
+                    cards={navItems}
+                    logo={logoNode}
+                    cta={ctaNode}
+                    secondaryCta={secondaryCtaNode}
+                    maxWidth={1280}
+                    linkComponent={Link}
+                    routeKey={location.pathname}
+                />
             </div>
         </header>
     );
