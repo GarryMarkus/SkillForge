@@ -3,26 +3,26 @@ import React from 'react';
 const workflowSteps = [
     {
         num: '01',
-        title: 'Intake & Code Analysis',
-        detail: 'Connect GitHub or upload project sources. AST parsers evaluate real repositories and actual commit depth.',
+        title: 'Profile & Code Intake',
+        detail: 'Connect GitHub or upload project sources. Automated analysis inspects commit history, repositories, and architecture.',
         badge: 'Minutes'
     },
     {
         num: '02',
-        title: 'Practical Assessment',
-        detail: 'Complete a focused 20-minute sandboxed engineering challenge modeled on production systems.',
+        title: 'Technical Assessment',
+        detail: 'Complete a focused 20-minute sandboxed evaluation modeled on real-world engineering challenges.',
         badge: '20 Mins'
     },
     {
         num: '03',
         title: 'Verified Skill Score',
-        detail: 'Receive a cryptographically signed skill passport with granular percentile performance metrics.',
+        detail: 'Receive an authenticated technical score breakdown with transparent percentile rankings and feedback.',
         badge: 'Instant'
     },
     {
         num: '04',
-        title: 'Direct Team Dispatch',
-        detail: 'Skip screening rounds and advance directly to final engineering interviews with hiring partners.',
+        title: 'Direct Dispatch',
+        detail: 'Skip repetitive screening rounds and advance directly to final team interviews with hiring partners.',
         badge: 'Direct'
     }
 ];
@@ -52,47 +52,41 @@ const comparisons = [
 
 const BlueprintSpecSection = () => {
     return (
-        <section className="w-full font-sans py-8 mb-16" id="BlueprintSection">
-            <div className="bg-[#090B10]/95 rounded-3xl border border-white/[0.08] p-8 sm:p-12 lg:p-16 shadow-[0_8px_32px_rgba(0,0,0,0.7)] backdrop-blur-xl flex flex-col gap-12 relative overflow-hidden">
-                {/* Subtle Radial Glow in Blueprint Card */}
-                <div
-                    className="pointer-events-none absolute top-0 right-0 w-80 h-80 bg-cyanAccent/[0.06] rounded-full blur-[100px]"
-                    aria-hidden="true"
-                />
-
+        <section className="w-full font-sans py-4 mb-12" id="BlueprintSection">
+            <div className="bg-[#121318] rounded-2xl border border-white/[0.08] p-6 sm:p-10 lg:p-12 shadow-lg flex flex-col gap-10 relative overflow-hidden">
                 {/* Header */}
-                <div className="text-center max-w-2xl mx-auto space-y-3 relative z-10">
-                    <span className="text-xs font-mono uppercase tracking-wider text-cyanAccent bg-cyanAccent/10 border border-cyanAccent/30 px-3.5 py-1 rounded-full inline-block shadow-[0_0_12px_rgba(0,240,255,0.15)]">
+                <div className="text-center max-w-2xl mx-auto space-y-2">
+                    <span className="text-xs uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full inline-block font-medium">
                         Transparent Evaluation Flow
                     </span>
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-[#F8FAFC] tracking-tight">
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">
                         How We Replace Resume Guesswork
                     </h2>
-                    <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-sans">
+                    <p className="text-sm sm:text-base text-zinc-400 leading-relaxed">
                         A seamless, human-centric evaluation journey engineered to be fair, respectful, and crystal-clear.
                     </p>
                 </div>
 
                 {/* 4 Steps Horizontal Flow */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {workflowSteps.map((s) => (
                         <div
                             key={s.num}
-                            className="bg-[#0F121B]/90 rounded-2xl p-6 sm:p-7 border border-white/[0.08] flex flex-col justify-between space-y-4 hover:border-cyanAccent/40 hover:bg-[#131722] hover:shadow-[0_4px_24px_rgba(0,240,255,0.12)] transition-all group"
+                            className="bg-[#181A22] rounded-xl p-5 border border-white/[0.06] flex flex-col justify-between space-y-3 hover:border-zinc-700 transition-colors"
                         >
                             <div className="flex items-center justify-between">
-                                <span className="w-9 h-9 rounded-xl bg-cyanAccent/15 border border-cyanAccent/30 text-cyanAccent font-mono font-bold text-sm flex items-center justify-center shadow-[0_0_10px_rgba(0,240,255,0.2)]">
+                                <span className="w-7 h-7 rounded-md bg-zinc-800 text-zinc-200 font-semibold text-xs flex items-center justify-center">
                                     {s.num}
                                 </span>
-                                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-white/[0.04] border border-white/[0.08] text-slate-300">
+                                <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400">
                                     {s.badge}
                                 </span>
                             </div>
-                            <div className="space-y-2">
-                                <h3 className="font-display font-bold text-white text-base sm:text-lg">
+                            <div className="space-y-1.5">
+                                <h3 className="font-semibold text-white text-base">
                                     {s.title}
                                 </h3>
-                                <p className="text-sm text-slate-300 leading-relaxed font-sans">
+                                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
                                     {s.detail}
                                 </p>
                             </div>
@@ -101,9 +95,9 @@ const BlueprintSpecSection = () => {
                 </div>
 
                 {/* Modern Comparison Table */}
-                <div className="mt-4 pt-8 border-t border-white/[0.08] relative z-10">
-                    <div className="mb-6 text-center">
-                        <h3 className="text-xl sm:text-2xl font-display font-bold text-white">
+                <div className="mt-2 pt-6 border-t border-white/[0.06]">
+                    <div className="mb-5 text-center">
+                        <h3 className="text-lg sm:text-xl font-bold text-white">
                             Traditional Hiring vs SkillForge
                         </h3>
                     </div>
@@ -111,27 +105,27 @@ const BlueprintSpecSection = () => {
                     <div className="overflow-x-auto rounded-xl border border-white/[0.08]">
                         <table className="w-full text-left border-collapse text-sm">
                             <thead>
-                                <tr className="border-b border-white/[0.08] bg-[#0C0E14] text-xs font-mono uppercase tracking-wider text-slate-400">
-                                    <th className="py-3.5 px-5 font-semibold">Evaluation Aspect</th>
-                                    <th className="py-3.5 px-5 font-semibold text-slate-400">Traditional Job Boards</th>
-                                    <th className="py-3.5 px-5 font-semibold text-cyanAccent">The SkillForge Way</th>
+                                <tr className="border-b border-white/[0.08] bg-[#181A22] text-xs uppercase tracking-wider text-zinc-400">
+                                    <th className="py-3 px-4 font-semibold">Evaluation Aspect</th>
+                                    <th className="py-3 px-4 font-semibold text-zinc-400">Traditional Job Boards</th>
+                                    <th className="py-3 px-4 font-semibold text-blue-400">The SkillForge Way</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-white/[0.06] bg-[#090B10]">
+                            <tbody className="divide-y divide-white/[0.06] bg-[#121318]">
                                 {comparisons.map((c, i) => (
-                                    <tr key={i} className="hover:bg-white/[0.02] transition-colors">
-                                        <td className="py-4 px-5 font-semibold text-slate-200 whitespace-nowrap">
+                                    <tr key={i} className="hover:bg-white/[0.015] transition-colors">
+                                        <td className="py-3.5 px-4 font-medium text-zinc-200 whitespace-nowrap">
                                             {c.aspect}
                                         </td>
-                                        <td className="py-4 px-5 text-slate-400">
+                                        <td className="py-3.5 px-4 text-zinc-400">
                                             <div className="flex items-center gap-2">
-                                                <span className="material-symbols-outlined text-rose-400 text-[18px]">close</span>
+                                                <span className="material-symbols-outlined text-rose-400 text-[16px]">close</span>
                                                 <span>{c.traditional}</span>
                                             </div>
                                         </td>
-                                        <td className="py-4 px-5 font-medium text-slate-100 bg-cyanAccent/[0.03] border-x border-cyanAccent/15">
-                                            <div className="flex items-center gap-2 text-cyan-200">
-                                                <span className="material-symbols-outlined text-emerald-400 text-[18px]">check_circle</span>
+                                        <td className="py-3.5 px-4 font-medium text-white bg-blue-500/[0.03] border-x border-blue-500/10">
+                                            <div className="flex items-center gap-2 text-zinc-200">
+                                                <span className="material-symbols-outlined text-emerald-400 text-[16px]">check_circle</span>
                                                 <span>{c.skillforge}</span>
                                             </div>
                                         </td>

@@ -1,134 +1,123 @@
 import React from 'react';
-import SpotlightCard from '../ui/animations/SpotlightCard';
 
 const PersonaSplitSection = ({ onSelectCandidateRole, onSelectRecruiterRole }) => {
     return (
-        <section className="w-full font-sans pb-16 mb-12" id="PersonaSplitSection">
-            <div className="flex flex-col gap-10">
+        <section className="w-full font-sans pb-12 mb-10" id="PersonaSplitSection">
+            <div className="flex flex-col gap-8">
                 {/* Section Header */}
-                <div className="text-center max-w-2xl mx-auto space-y-3">
-                    <span className="text-xs font-mono uppercase tracking-wider text-cyanAccent bg-cyanAccent/10 border border-cyanAccent/30 px-3.5 py-1 rounded-full inline-block shadow-[0_0_12px_rgba(0,240,255,0.15)]">
+                <div className="text-center max-w-2xl mx-auto space-y-2">
+                    <span className="text-xs uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full inline-block font-medium">
                         Designed for Both Sides
                     </span>
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-[#F8FAFC] tracking-tight">
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">
                         Built for Engineers and Hiring Teams
                     </h2>
-                    <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-sans">
-                        Whether you are proving your real capabilities or assembling elite engineering squads, SkillForge accelerates the path.
+                    <p className="text-sm sm:text-base text-zinc-400 leading-relaxed">
+                        Whether you are demonstrating your technical capabilities or assembling an engineering team, SkillForge streamlines the path.
                     </p>
                 </div>
 
                 {/* 2-Column Split Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
                     {/* For Candidates Card */}
-                    <SpotlightCard
-                        spotlightColor="rgba(0, 240, 255, 0.18)"
-                        borderColor="rgba(0, 240, 255, 0.45)"
-                        bgClassName="bg-[#0C0E14]/90"
-                        className="p-8 sm:p-10 flex flex-col justify-between gap-8 border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
-                    >
-                        <div className="space-y-6">
-                            <div className="space-y-2 border-b border-white/[0.08] pb-5">
-                                <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyanAccent">
-                                    For Candidates &amp; Developers
+                    <div className="p-7 sm:p-8 rounded-xl bg-[#121318] border border-white/[0.08] flex flex-col justify-between gap-6 shadow-sm">
+                        <div className="space-y-5">
+                            <div className="space-y-1.5 border-b border-white/[0.06] pb-4">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-blue-400">
+                                    For Candidates &amp; Engineers
                                 </span>
-                                <h3 className="text-2xl font-display font-bold text-white tracking-tight">
+                                <h3 className="text-xl font-bold text-white tracking-tight">
                                     Showcase Your True Ability
                                 </h3>
-                                <p className="text-sm text-slate-300 leading-relaxed font-sans">
-                                    Never let an automated resume filter block your career again. Let your actual work do the talking.
+                                <p className="text-sm text-zinc-400 leading-relaxed">
+                                    Never let an automated resume filter block your career again. Let your actual code and problem-solving do the talking.
                                 </p>
                             </div>
 
-                            <div className="space-y-3.5 text-sm text-slate-300 leading-relaxed font-sans">
-                                <div className="flex items-start gap-3">
-                                    <span className="material-symbols-outlined text-emerald-400 text-[20px] shrink-0 mt-0.5">
+                            <div className="space-y-3 text-sm text-zinc-300 leading-relaxed">
+                                <div className="flex items-start gap-2.5">
+                                    <span className="material-symbols-outlined text-emerald-400 text-[18px] shrink-0 mt-0.5">
                                         check_circle
                                     </span>
-                                    <span>Receive an authenticated Skill Certificate you can share anywhere.</span>
+                                    <span>Receive an authenticated technical skill credential you can share anywhere.</span>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="material-symbols-outlined text-emerald-400 text-[20px] shrink-0 mt-0.5">
+                                <div className="flex items-start gap-2.5">
+                                    <span className="material-symbols-outlined text-emerald-400 text-[18px] shrink-0 mt-0.5">
                                         check_circle
                                     </span>
-                                    <span>Access personalized learning paths to target and master specific skill gaps.</span>
+                                    <span>Access personalized learning paths to target and master specific technical gaps.</span>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="material-symbols-outlined text-emerald-400 text-[20px] shrink-0 mt-0.5">
+                                <div className="flex items-start gap-2.5">
+                                    <span className="material-symbols-outlined text-emerald-400 text-[18px] shrink-0 mt-0.5">
                                         check_circle
                                     </span>
-                                    <span>Connect directly with hiring managers seeking your exact tech stack.</span>
+                                    <span>Connect directly with engineering managers seeking your exact tech stack.</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="pt-6 border-t border-white/[0.08]">
+                        <div className="pt-4 border-t border-white/[0.06]">
                             <button
                                 onClick={onSelectCandidateRole}
-                                className="w-full bg-gradient-to-r from-cyanAccent to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 text-slate-950 font-display font-bold text-base py-3.5 px-6 rounded-xl shadow-[0_0_20px_rgba(0,240,255,0.25)] hover:shadow-[0_0_30px_rgba(0,240,255,0.45)] transition-all cursor-pointer flex items-center justify-center gap-2 group active:scale-[0.99]"
+                                className="w-full bg-white text-zinc-950 hover:bg-zinc-100 font-semibold text-sm py-3 px-5 rounded-lg shadow-sm transition-colors cursor-pointer flex items-center justify-center gap-2 group active:scale-[0.99]"
                             >
                                 <span>Get Verified as a Developer</span>
-                                <span className="material-symbols-outlined text-[18px] transform transition-transform group-hover:translate-x-1">
+                                <span className="material-symbols-outlined text-[16px] transform transition-transform group-hover:translate-x-1">
                                     arrow_forward
                                 </span>
                             </button>
                         </div>
-                    </SpotlightCard>
+                    </div>
 
                     {/* For Employers Card */}
-                    <SpotlightCard
-                        spotlightColor="rgba(16, 185, 129, 0.18)"
-                        borderColor="rgba(16, 185, 129, 0.45)"
-                        bgClassName="bg-[#0C0E14]/90"
-                        className="p-8 sm:p-10 flex flex-col justify-between gap-8 border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
-                    >
-                        <div className="space-y-6">
-                            <div className="space-y-2 border-b border-white/[0.08] pb-5">
-                                <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400">
+                    <div className="p-7 sm:p-8 rounded-xl bg-[#121318] border border-white/[0.08] flex flex-col justify-between gap-6 shadow-sm">
+                        <div className="space-y-5">
+                            <div className="space-y-1.5 border-b border-white/[0.06] pb-4">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
                                     For Recruiters &amp; Engineering Leads
                                 </span>
-                                <h3 className="text-2xl font-display font-bold text-white tracking-tight">
+                                <h3 className="text-xl font-bold text-white tracking-tight">
                                     Hire Proven Engineers Fast
                                 </h3>
-                                <p className="text-sm text-slate-300 leading-relaxed font-sans">
+                                <p className="text-sm text-zinc-400 leading-relaxed">
                                     Cut through inflated resumes. Review pre-evaluated talent with verified code samples and proven ratings.
                                 </p>
                             </div>
 
-                            <div className="space-y-3.5 text-sm text-slate-300 leading-relaxed font-sans">
-                                <div className="flex items-start gap-3">
-                                    <span className="material-symbols-outlined text-emerald-400 text-[20px] shrink-0 mt-0.5">
+                            <div className="space-y-3 text-sm text-zinc-300 leading-relaxed">
+                                <div className="flex items-start gap-2.5">
+                                    <span className="material-symbols-outlined text-emerald-400 text-[18px] shrink-0 mt-0.5">
                                         check_circle
                                     </span>
                                     <span>Browse curated candidate profiles with clear technical competencies.</span>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="material-symbols-outlined text-emerald-400 text-[20px] shrink-0 mt-0.5">
+                                <div className="flex items-start gap-2.5">
+                                    <span className="material-symbols-outlined text-emerald-400 text-[18px] shrink-0 mt-0.5">
                                         check_circle
                                     </span>
-                                    <span>Cut screening time by over 70% with standardized practical scores.</span>
+                                    <span>Cut initial screening time by over 70% with standardized practical scores.</span>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="material-symbols-outlined text-emerald-400 text-[20px] shrink-0 mt-0.5">
+                                <div className="flex items-start gap-2.5">
+                                    <span className="material-symbols-outlined text-emerald-400 text-[18px] shrink-0 mt-0.5">
                                         check_circle
                                     </span>
-                                    <span>Make confident offers backed by transparent behavioral rubrics.</span>
+                                    <span>Make confident offers backed by transparent engineering rubrics.</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="pt-6 border-t border-white/[0.08]">
+                        <div className="pt-4 border-t border-white/[0.06]">
                             <button
                                 onClick={onSelectRecruiterRole}
-                                className="w-full bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/[0.12] hover:border-emerald-400/50 font-display font-bold text-base py-3.5 px-6 rounded-xl shadow-sm hover:shadow-[0_0_20px_rgba(16,185,129,0.2)] transition-all cursor-pointer flex items-center justify-center gap-2 group active:scale-[0.99] backdrop-blur-md"
+                                className="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-200 hover:text-white border border-zinc-700/80 font-semibold text-sm py-3 px-5 rounded-lg transition-colors cursor-pointer flex items-center justify-center gap-2 group active:scale-[0.99]"
                             >
                                 <span>Access Recruiter Deck</span>
-                                <span className="material-symbols-outlined text-[18px] text-emerald-400 transform transition-transform group-hover:translate-x-1">
+                                <span className="material-symbols-outlined text-[16px] text-zinc-400 group-hover:text-white transform transition-transform group-hover:translate-x-1">
                                     arrow_forward
                                 </span>
                             </button>
                         </div>
-                    </SpotlightCard>
+                    </div>
                 </div>
             </div>
         </section>

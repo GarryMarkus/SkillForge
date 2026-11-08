@@ -1,88 +1,84 @@
 import React from 'react';
-import SpotlightCard from '../ui/animations/SpotlightCard';
 
 const pillars = [
     {
-        icon: 'account_tree',
-        title: 'Smart Resume & Project Analysis',
-        summary: 'Automated evaluation of real experience, project history, and hands-on code contributions.',
+        icon: 'code',
+        title: 'Real Project & Repository Analysis',
+        summary: 'Automated evaluation of production experience, commit depth, and architectural quality.',
         points: [
-            'Analyzes actual code depth and architectural structure rather than resume buzzwords.',
-            'Highlights genuine project contributions so quality work speaks for itself.',
-            'Ensures non-traditional backgrounds get fair, objective consideration.'
+            'Analyzes code depth and modularity rather than keyword scraping.',
+            'Highlights genuine project contributions and engineering practices.',
+            'Ensures candidates from any background receive fair evaluation.'
         ],
-        tag: 'Profile Ingestion'
+        tag: 'Ingestion'
     },
     {
         icon: 'verified_user',
-        title: 'Fair & Secure Online Evaluations',
-        summary: 'Practical 20-minute problem-solving scenarios modeled after real workplace engineering.',
+        title: 'Standardized Technical Evaluations',
+        summary: 'Practical 20-minute problem-solving scenarios modeled on real engineering systems.',
         points: [
-            'Lightweight browser check ensures fairness and integrity for all test takers.',
-            'Clear, realistic questions with instant objective scoring rubrics.',
-            'Detailed feedback provided so you understand where you shine and how to grow.'
+            'Lightweight browser check ensures test integrity and focus.',
+            'Clear, realistic challenges with objective automated scoring.',
+            'Actionable feedback provided on technical strengths and growth areas.'
         ],
-        tag: 'Skill Verification'
+        tag: 'Verification'
     },
     {
         icon: 'hub',
-        title: 'Direct, Bias-Free Job Matching',
-        summary: 'Connect directly with hiring managers who value demonstrated ability over prestige pedigrees.',
+        title: 'Direct, Merit-Based Job Matching',
+        summary: 'Direct introductions to hiring teams seeking demonstrated technical competence.',
         points: [
-            'Replaces keyword filtering with genuine semantic alignment to active team needs.',
-            'Employers view verified skill profiles with upfront salary benchmarks.',
-            'Fast-track directly to final interviews with zero resume screening delays.'
+            'Replaces keyword filtering with semantic alignment to team stacks.',
+            'Employers review authenticated skill profiles and salary expectations.',
+            'Fast-track directly to final interview stages without screening delays.'
         ],
-        tag: 'Career Dispatch'
+        tag: 'Matching'
     }
 ];
 
 const CapabilitiesGrid = () => {
     return (
-        <section className="w-full font-sans pb-16 mb-16" id="CapabilitiesRow">
-            <div className="flex flex-col gap-10">
-                {/* Architectural Section Header */}
-                <div className="text-center max-w-2xl mx-auto space-y-3">
-                    <span className="text-xs font-mono uppercase tracking-wider text-cyanAccent bg-cyanAccent/10 border border-cyanAccent/30 px-3.5 py-1 rounded-full inline-block shadow-[0_0_12px_rgba(0,240,255,0.15)]">
+        <section className="w-full font-sans pb-12 mb-12" id="CapabilitiesRow">
+            <div className="flex flex-col gap-8">
+                {/* Section Header */}
+                <div className="text-center max-w-2xl mx-auto space-y-2">
+                    <span className="text-xs uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full inline-block font-medium">
                         Three Pillars of Verification
                     </span>
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-[#F8FAFC] tracking-tight">
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">
                         How SkillForge Evaluates Real Ability
                     </h2>
-                    <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-sans">
-                        Every stage is engineered to be transparent, mathematically objective, and focused strictly on empirical competence.
+                    <p className="text-sm sm:text-base text-zinc-400 leading-relaxed font-sans">
+                        Every stage is engineered to be transparent, mathematically objective, and focused strictly on demonstrated competence.
                     </p>
                 </div>
 
-                {/* 3 Columns SpotlightCard Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                {/* 3 Columns Card Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
                     {pillars.map((pillar, idx) => (
-                        <SpotlightCard
+                        <div
                             key={idx}
-                            spotlightColor="rgba(0, 240, 255, 0.15)"
-                            borderColor="rgba(0, 240, 255, 0.4)"
-                            bgClassName="bg-[#0C0E14]/90"
-                            className="p-8 sm:p-10 flex flex-col justify-between gap-6 border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:-translate-y-1 transition-all duration-300"
+                            className="p-6 sm:p-7 rounded-xl bg-[#121318] border border-white/[0.08] flex flex-col justify-between gap-5 shadow-sm hover:border-zinc-700 transition-colors"
                         >
-                            <div className="space-y-5">
-                                <div className="w-12 h-12 rounded-xl bg-cyanAccent/10 border border-cyanAccent/30 text-cyanAccent flex items-center justify-center font-bold shadow-[0_0_15px_rgba(0,240,255,0.2)]">
-                                    <span className="material-symbols-outlined text-[26px]">
+                            <div className="space-y-4">
+                                <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
+                                    <span className="material-symbols-outlined text-[22px]">
                                         {pillar.icon}
                                     </span>
                                 </div>
 
-                                <h3 className="text-xl font-display font-bold text-white tracking-tight">
+                                <h3 className="text-lg font-semibold text-white tracking-tight">
                                     {pillar.title}
                                 </h3>
 
-                                <p className="text-sm text-slate-300 leading-relaxed font-normal">
+                                <p className="text-sm text-zinc-400 leading-relaxed">
                                     {pillar.summary}
                                 </p>
 
-                                <ul className="text-xs sm:text-sm text-slate-400 space-y-3 pt-2 leading-relaxed">
+                                <ul className="text-xs sm:text-sm text-zinc-400 space-y-2.5 pt-1 leading-relaxed">
                                     {pillar.points.map((pt, pIdx) => (
-                                        <li key={pIdx} className="flex items-start gap-2.5">
-                                            <span className="material-symbols-outlined text-cyanAccent text-[18px] shrink-0 mt-0.5">
+                                        <li key={pIdx} className="flex items-start gap-2">
+                                            <span className="material-symbols-outlined text-emerald-400 text-[16px] shrink-0 mt-0.5">
                                                 check
                                             </span>
                                             <span>{pt}</span>
@@ -91,11 +87,11 @@ const CapabilitiesGrid = () => {
                                 </ul>
                             </div>
 
-                            <div className="pt-5 border-t border-white/[0.08] flex items-center justify-between text-xs font-mono text-slate-400">
-                                <span className="uppercase tracking-wider">{pillar.tag}</span>
-                                <span className="text-cyanAccent font-bold">STAGE 0{idx + 1}</span>
+                            <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-500">
+                                <span className="font-medium uppercase tracking-wide">{pillar.tag}</span>
+                                <span className="text-zinc-300 font-semibold">Pillar 0{idx + 1}</span>
                             </div>
-                        </SpotlightCard>
+                        </div>
                     ))}
                 </div>
             </div>
