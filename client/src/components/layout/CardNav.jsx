@@ -134,9 +134,21 @@ const CardNav = ({
                                     className="card-nav__card"
                                 >
                                     <div className="card-nav__card-header">
-                                        <h3 className="card-nav__label">
-                                            {card.label || card.title}
-                                        </h3>
+                                        {card.href ? (
+                                            <LinkComp
+                                                to={card.href}
+                                                href={card.href}
+                                                className="card-nav__label hover:text-white transition-colors flex items-center justify-between"
+                                                onClick={() => setIsOpen(false)}
+                                            >
+                                                <span>{card.label || card.title}</span>
+                                                <HugeiconsIcon icon={ArrowUpRight01Icon} size={14} strokeWidth={1.5} className="opacity-60" />
+                                            </LinkComp>
+                                        ) : (
+                                            <h3 className="card-nav__label">
+                                                {card.label || card.title}
+                                            </h3>
+                                        )}
                                         {card.description && (
                                             <p className="card-nav__description">
                                                 {card.description}

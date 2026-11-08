@@ -25,28 +25,31 @@ const Navbar = () => {
         {
             label: 'Verification',
             description: 'Empirical skill evaluation and anti-cheat diagnostic testing.',
+            href: '/verification',
             links: [
-                { label: 'Evaluation Engine', href: '/how-it-works' },
-                { label: 'Skill Dossier', href: '/how-it-works#dossier' },
+                { label: 'Evaluation Methodology', href: '/verification' },
+                { label: 'Three Pillars', href: '/verification#pillars' },
                 { label: 'Sample Assessment', href: '/student/assessment' },
             ],
         },
         {
-            label: 'Proctoring',
-            description: 'Tamper-evident hardware telemetry and browser security.',
+            label: 'Protocol',
+            description: 'Tamper-evident verification pipeline and technical specifications.',
+            href: '/protocol',
             links: [
-                { label: 'Hardware Telemetry', href: '/how-it-works#proctoring' },
-                { label: 'Integrity Scoring', href: '/how-it-works#scoring' },
+                { label: 'Workflow Lifecycle', href: '/protocol' },
+                { label: 'Data Specifications', href: '/protocol#specifications' },
                 { label: 'Audit Trail Logs', href: '/how-it-works#audit' },
             ],
         },
         {
-            label: 'Platform',
-            description: 'Candidate upskilling curricula and enterprise requisitions.',
+            label: 'Talent & Teams',
+            description: 'Dual-track candidate credentials and enterprise hiring requisitions.',
+            href: '/talent',
             links: [
-                { label: 'For Candidates', href: '/auth?role=student' },
-                { label: 'For Employers', href: '/auth?role=client' },
-                { label: 'Command Deck', href: '/client/dashboard' },
+                { label: 'Overview', href: '/talent' },
+                { label: 'For Engineers', href: '/talent#engineers' },
+                { label: 'For Hiring Teams', href: '/talent#employers' },
             ],
         },
     ];
@@ -58,9 +61,6 @@ const Navbar = () => {
             </span>
             <span className="font-display font-bold text-[#f5f5f5] text-base tracking-tight group-hover:text-white transition-colors">
                 SkillForge
-            </span>
-            <span className="text-[11px] text-[#666666] font-mono">
-                v2.5
             </span>
         </Link>
     );
