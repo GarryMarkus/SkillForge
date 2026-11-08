@@ -76,7 +76,7 @@ const BlueprintSpecSection = () => {
                         >
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-2 text-xs">
-                                    <span className="font-bold text-white">[{step.num}]</span>
+                                    <span className="font-bold text-white">{step.num}</span>
                                     <span className="text-[#666666] text-[11px]">{step.badge}</span>
                                 </div>
                                 <h3 className="text-sm font-bold text-white">

@@ -8,7 +8,7 @@ const candidateSteps = [
     {
         step: '01',
         title: 'Initialize Profile & Ingest Codebase Telemetry',
-        tagline: '[ intake & artifact parsing ]',
+        tagline: 'Intake & Codebase Parsing',
         description: 'Upload your resume document or link your GitHub profile. SkillForge extracts demonstrated technical abilities, verified project footprints, and core systems strengths without keyword noise.',
         highlights: [
             'Zero manual questionnaire forms or repetitive profile fields',
@@ -19,7 +19,7 @@ const candidateSteps = [
     {
         step: '02',
         title: 'Complete Timed Practical Evaluation',
-        tagline: '[ empirical sandbox assessment ]',
+        tagline: 'Empirical Sandbox Assessment',
         description: 'Demonstrate architectural reasoning and practical debugging under realistic, sandboxed conditions. Focused scenarios evaluate genuine problem-solving rather than academic trivia.',
         highlights: [
             '20-minute focused sandbox session available on-demand',
@@ -30,7 +30,7 @@ const candidateSteps = [
     {
         step: '03',
         title: 'Receive Cryptographic Verification Dossier',
-        tagline: '[ authenticated competence report ]',
+        tagline: 'Authenticated Competence Report',
         description: 'Receive an authenticated candidate dossier indexing verified technical strengths, benchmark percentiles, and actionable growth rubrics.',
         highlights: [
             'Shareable verification dossier URL for recruiters and hiring managers',
@@ -41,7 +41,7 @@ const candidateSteps = [
     {
         step: '04',
         title: 'Direct Matching With Engineering Teams',
-        tagline: '[ pipeline bypass & direct outreach ]',
+        tagline: 'Pipeline Bypass & Direct Outreach',
         description: 'Verified candidates match directly to engineering requisitions seeking their verified abilities. Hiring managers reach out with interview invites based on verified ability.',
         highlights: [
             'Direct introductions to teams with active engineering requisitions',
@@ -55,7 +55,7 @@ const employerSteps = [
     {
         step: '01',
         title: 'Publish Role Criteria & Verification Standards',
-        tagline: '[ requisition specification ]',
+        tagline: 'Requisition Specification',
         description: 'Define engineering requirements in minutes. Specify technical competencies, architectural depth, minimum benchmark thresholds, and compensation packages.',
         highlights: [
             'Pre-configured templates for backend, frontend, systems, and MLOps roles',
@@ -66,7 +66,7 @@ const employerSteps = [
     {
         step: '02',
         title: 'Access Pre-Evaluated Engineering Pipeline',
-        tagline: '[ zero keyword fluff ]',
+        tagline: 'Pre-Evaluated Candidates',
         description: 'SkillForge compares your role criteria directly against candidates who have proven competence in proctored technical evaluations.',
         highlights: [
             'Every candidate in the pipeline has verified code execution telemetry',
@@ -77,7 +77,7 @@ const employerSteps = [
     {
         step: '03',
         title: 'Inspect Technical Candidate Dossiers',
-        tagline: '[ transparent evidence before interview ]',
+        tagline: 'Transparent Evidence Before Interview',
         description: 'Review audited code snippets, evaluation rubrics, proctor integrity logs, and problem-solving benchmarks before committing senior engineering hours to interviews.',
         highlights: [
             'Direct access to evaluated code implementations and reasoning breakdowns',
@@ -88,7 +88,7 @@ const employerSteps = [
     {
         step: '04',
         title: 'Hire With Calibrated Confidence',
-        tagline: '[ 60% reduction in time-to-hire ]',
+        tagline: '60% Reduction in Time-to-Hire',
         description: 'Bypass preliminary phone screens and move straight to team-fit conversations. Extend competitive offers knowing candidates have proven ability.',
         highlights: [
             'Eliminates repetitive screening loops across engineering staff',
@@ -131,7 +131,7 @@ const HowItWorksPage = () => {
                 {/* Hero Header Section */}
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-12">
                     <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-sm bg-[#0b0b0c] text-[#888888] border border-white/10 text-xs font-mono mb-4">
-                        [ protocol : workflow ]
+                        Protocol · Workflow
                     </div>
                     
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-white tracking-tight leading-[1.15] mb-4">
@@ -152,7 +152,7 @@ const HowItWorksPage = () => {
                                     : 'text-[#737373] hover:text-white'
                             }`}
                         >
-                            [01: For Candidates]
+                            For Candidates
                         </button>
                         <button
                             onClick={() => setActiveTab('employers')}
@@ -162,7 +162,7 @@ const HowItWorksPage = () => {
                                     : 'text-[#737373] hover:text-white'
                             }`}
                         >
-                            [02: For Hiring Teams]
+                            For Hiring Teams
                         </button>
                     </div>
                 </div>
@@ -229,14 +229,14 @@ const HowItWorksPage = () => {
                                     onClick={handleCandidateStart}
                                     className="w-full sm:w-auto px-6 py-2.5 bg-[#111113] hover:bg-[#1a1a1d] text-white font-mono text-xs font-semibold rounded-md border border-white/20 transition-colors shadow-sm cursor-pointer"
                                 >
-                                    [ Start Free Assessment ↗ ]
+                                    Start Free Assessment ↗
                                 </button>
                             ) : (
                                 <button
                                     onClick={handleEmployerStart}
                                     className="w-full sm:w-auto px-6 py-2.5 bg-[#111113] hover:bg-[#1a1a1d] text-white font-mono text-xs font-semibold rounded-md border border-white/20 transition-colors shadow-sm cursor-pointer"
                                 >
-                                    [ Create Employer Account ↗ ]
+                                    Create Employer Account ↗
                                 </button>
                             )}
                             <Link

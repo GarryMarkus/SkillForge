@@ -24,7 +24,7 @@ const PersonaSplitSection = ({ onSelectCandidateRole, onSelectRecruiterRole }) =
                         <div className="space-y-4">
                             <div className="space-y-1.5 border-b border-white/[0.06] pb-3">
                                 <span className="text-xs text-[#888888] uppercase tracking-wider">
-                                    [Candidates]
+                                    For Candidates
                                 </span>
                                 <h3 className="text-lg font-bold text-white tracking-tight">
                                     Showcase Your True Ability
@@ -66,7 +66,7 @@ const PersonaSplitSection = ({ onSelectCandidateRole, onSelectRecruiterRole }) =
                         <div className="space-y-4">
                             <div className="space-y-1.5 border-b border-white/[0.06] pb-3">
                                 <span className="text-xs text-[#888888] uppercase tracking-wider">
-                                    [Hiring Teams]
+                                    For Hiring Teams
                                 </span>
                                 <h3 className="text-lg font-bold text-white tracking-tight">
                                     Hire with Empirical Confidence

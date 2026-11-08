@@ -63,7 +63,7 @@ const CapabilitiesGrid = () => {
                             <div className="space-y-4">
                                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 text-xs">
                                     <span className="font-bold text-white">
-                                        [{pillar.num}]
+                                        {pillar.num}
                                     </span>
                                     <span className="text-[#666666] uppercase text-[11px]">
                                         {pillar.tag}

@@ -10,10 +10,10 @@ const HeroSection = ({ onStartAssessment, onPostRequisition }) => {
                 {/* Super-header / Kicker */}
                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                     <span className="text-xs text-[#888888] font-display uppercase tracking-widest">
-                        empirical skill verification protocol
+                        Empirical Skill Verification Protocol
                     </span>
                     <span className="text-xs text-[#555555] font-mono hidden sm:inline-block">
-                        status: active
+                        Status: Active
                     </span>
                 </div>
 
@@ -24,7 +24,7 @@ const HeroSection = ({ onStartAssessment, onPostRequisition }) => {
                         <div className="space-y-4">
                             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight leading-[1.15]">
                                 <span className="block text-[#f5f5f5]">SkillForge</span>
-                                <span className="block text-[#737373]">verifies competence</span>
+                                <span className="block text-[#737373]">Verifies Competence</span>
                             </h1>
 
                             <p className="text-sm sm:text-base text-[#888888] max-w-xl leading-relaxed">
@@ -82,10 +82,10 @@ const HeroSection = ({ onStartAssessment, onPostRequisition }) => {
                             {/* Card Header */}
                             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 text-xs">
                                 <span className="font-display font-bold text-white">
-                                    Verified Dossier
+                                    Candidate Dossier · ID 8F29-ALX
                                 </span>
                                 <span className="text-[#555555]">
-                                    #SF-9842
+                                    Verified Clean
                                 </span>
                             </div>
 
@@ -106,12 +106,12 @@ const HeroSection = ({ onStartAssessment, onPostRequisition }) => {
                                     <span className="text-white font-bold">100th Percentile</span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span>Code Integrity:</span>
-                                    <span className="text-white font-bold">Verified (AST)</span>
+                                    <span>Competence Score:</span>
+                                    <span className="text-white font-bold">98 / 100</span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                    <span>Proctor Status:</span>
-                                    <span className="text-white font-bold">Clean</span>
+                                    <span>Proctor Integrity:</span>
+                                    <span className="text-white font-bold">Verified Clean</span>
                                 </div>
                             </div>
 
@@ -130,7 +130,7 @@ const HeroSection = ({ onStartAssessment, onPostRequisition }) => {
 
                             {/* Timestamp */}
                             <div className="text-[11px] text-[#555555] pt-1">
-                                Authenticated by SkillForge Evaluation Enclave
+                                Authenticated by SkillForge Verification Protocol
                             </div>
                         </div>
                     </div>
