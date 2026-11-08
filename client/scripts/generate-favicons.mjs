@@ -7,19 +7,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const clientPublicDir = path.resolve(__dirname, '../public');
-const svgPath = path.join(clientPublicDir, 'favicon.svg');
 
-// Base SVG content with high-contrast dark theme defaults for raster rendering
+// Vector SVG template for high-contrast dark theme defaults used in raster rendering
 const svgDarkContent = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
     <style>
-      .bg { fill: #09090B; stroke: #27272A; stroke-width: 1.5px; }
-      .glyph { fill: #FFFFFF; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -0.5px; }
+      .bg { fill: #09090B; stroke: #27272A; stroke-width: 2px; }
+      .fg { fill: none; stroke: #FFFFFF; stroke-width: 5.5px; stroke-linecap: round; stroke-linejoin: round; }
     </style>
   </defs>
-  <rect x="1.5" y="1.5" width="61" height="61" rx="14" class="bg" />
-  <text x="32" y="41.5" text-anchor="middle" class="glyph">SF</text>
+  <rect x="2" y="2" width="60" height="60" rx="14" class="bg" />
+  <path d="M28 20 H16 V32 H28 V44 H16" class="fg" />
+  <path d="M37 44 V20 H49 M37 32 H47" class="fg" />
 </svg>
 `.trim();
 
