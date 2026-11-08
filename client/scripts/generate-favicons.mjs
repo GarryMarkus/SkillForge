@@ -8,18 +8,27 @@ const __dirname = path.dirname(__filename);
 
 const clientPublicDir = path.resolve(__dirname, '../public');
 
-// Vector SVG template for high-contrast dark theme defaults used in raster rendering
+// Vector SVG template matching the exact Navbar SF developer chip element
 const svgDarkContent = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
     <style>
-      .bg { fill: #09090B; stroke: #27272A; stroke-width: 2px; }
-      .fg { fill: none; stroke: #FFFFFF; stroke-width: 5.5px; stroke-linecap: round; stroke-linejoin: round; }
+      .chip-bg {
+        fill: #111113;
+        stroke: rgba(255, 255, 255, 0.2);
+        stroke-width: 2.5px;
+      }
+      .chip-text {
+        fill: #F5F5F5;
+        font-family: Consolas, "Courier Prime", -apple-system, BlinkMacSystemFont, "Segoe UI", monospace;
+        font-weight: 700;
+        font-size: 34px;
+        letter-spacing: -1px;
+      }
     </style>
   </defs>
-  <rect x="2" y="2" width="60" height="60" rx="14" class="bg" />
-  <path d="M28 20 H16 V32 H28 V44 H16" class="fg" />
-  <path d="M37 44 V20 H49 M37 32 H47" class="fg" />
+  <rect x="2" y="2" width="60" height="60" rx="10" class="chip-bg" />
+  <text x="32" y="34.5" text-anchor="middle" dominant-baseline="central" class="chip-text">SF</text>
 </svg>
 `.trim();
 
