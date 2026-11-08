@@ -20,7 +20,7 @@ const candidateSteps = [
     {
         step: '02',
         title: 'Take a Short, Practical Evaluation',
-        tagline: 'Friendly 20-minute real-world assessment',
+        tagline: '20-minute real-world technical assessment',
         description: 'Demonstrate how you think and solve problems through hands-on technical scenarios. No trick questions or algorithmic puzzles that have nothing to do with everyday work.',
         highlights: [
             'Convenient online session you can take anytime from home',
@@ -132,43 +132,43 @@ const HowItWorksPage = () => {
     const steps = activeTab === 'candidates' ? candidateSteps : employerSteps;
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] text-gray-900 font-sans flex flex-col selection:bg-blue-100 selection:text-blue-900">
+        <div className="min-h-screen bg-[#09090B] text-zinc-100 font-sans flex flex-col selection:bg-blue-500/20 selection:text-blue-300">
             <Navbar />
 
             <main className="flex-1 pt-28 pb-20">
                 {/* Hero Header Section */}
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs sm:text-sm font-semibold mb-6">
-                        <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs sm:text-sm font-medium mb-6">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                         Simple, Fair &amp; Transparent
                     </div>
                     
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-950 tracking-tight leading-[1.15] mb-6">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-[1.15] mb-6">
                         How SkillForge Works
                     </h1>
                     
-                    <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
                         We connect talented people with forward-thinking companies through fair, practical skill verification instead of resume screening guesswork.
                     </p>
 
-                    {/* Clean Pill Tab Switcher */}
-                    <div className="inline-flex p-1.5 rounded-full bg-gray-100 border border-gray-200 mt-10 shadow-sm">
+                    {/* Pill Tab Switcher */}
+                    <div className="inline-flex p-1.5 rounded-full bg-[#121318] border border-white/[0.08] mt-10 shadow-sm">
                         <button
                             onClick={() => setActiveTab('candidates')}
-                            className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer ${
+                            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all cursor-pointer ${
                                 activeTab === 'candidates'
-                                    ? 'bg-white text-gray-950 shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-900'
+                                    ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
+                                    : 'text-zinc-400 hover:text-white'
                             }`}
                         >
                             For Job Seekers
                         </button>
                         <button
                             onClick={() => setActiveTab('employers')}
-                            className={`px-6 py-2.5 rounded-full text-sm font-semibold transition-all cursor-pointer ${
+                            className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all cursor-pointer ${
                                 activeTab === 'employers'
-                                    ? 'bg-white text-gray-950 shadow-sm'
-                                    : 'text-gray-500 hover:text-gray-900'
+                                    ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
+                                    : 'text-zinc-400 hover:text-white'
                             }`}
                         >
                             For Hiring Teams
@@ -181,37 +181,37 @@ const HowItWorksPage = () => {
                     {steps.map((item) => (
                         <div
                             key={item.step}
-                            className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow p-6 sm:p-10 flex flex-col md:flex-row gap-6 sm:gap-10 items-start"
+                            className="bg-[#121318] rounded-2xl border border-white/[0.08] shadow-sm p-6 sm:p-10 flex flex-col md:flex-row gap-6 sm:gap-10 items-start text-white"
                         >
                             {/* Step Badge & Icon */}
                             <div className="shrink-0 flex items-center md:flex-col gap-4">
-                                <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xl shadow-inner">
+                                <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-xl">
                                     <span className="material-symbols-outlined text-2xl">
                                         {item.icon}
                                     </span>
                                 </div>
-                                <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                                <span className="text-xs font-mono uppercase tracking-wider text-zinc-500">
                                     Step {item.step}
                                 </span>
                             </div>
 
                             {/* Content Body */}
                             <div className="flex-1 space-y-3">
-                                <div className="text-xs font-semibold uppercase tracking-wider text-blue-600">
+                                <div className="text-xs font-medium uppercase tracking-wider text-blue-400">
                                     {item.tagline}
                                 </div>
-                                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">
+                                <h3 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
                                     {item.title}
                                 </h3>
-                                <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
+                                <p className="text-base sm:text-lg text-zinc-300 leading-relaxed">
                                     {item.description}
                                 </p>
 
                                 {/* Highlights List */}
                                 <div className="pt-3 space-y-2">
                                     {item.highlights.map((h, hIdx) => (
-                                        <div key={hIdx} className="flex items-start gap-2.5 text-sm text-gray-700">
-                                            <span className="material-symbols-outlined text-emerald-600 text-[18px] shrink-0 mt-0.5">
+                                        <div key={hIdx} className="flex items-start gap-2.5 text-sm text-zinc-400">
+                                            <span className="material-symbols-outlined text-emerald-400 text-[18px] shrink-0 mt-0.5">
                                                 check_circle
                                             </span>
                                             <span>{h}</span>
@@ -225,36 +225,36 @@ const HowItWorksPage = () => {
 
                 {/* Bottom Call to Action Card */}
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24">
-                    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-3xl p-8 sm:p-14 text-center shadow-xl space-y-6">
-                        <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                    <div className="bg-[#121318] rounded-3xl border border-white/[0.08] border-t-white/[0.15] text-white p-8 sm:p-14 text-center shadow-xl space-y-6">
+                        <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
                             {activeTab === 'candidates' 
                                 ? 'Ready to prove your skills and get hired?'
                                 : 'Ready to build a verified engineering team?'}
                         </h2>
-                        <p className="text-blue-100 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+                        <p className="text-zinc-400 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
                             {activeTab === 'candidates'
-                                ? 'Join thousands of developers and professionals who have proven their ability and connected with top tech companies.'
+                                ? 'Join developers and technical specialists who have verified their ability and connected with top engineering teams.'
                                 : 'Stop reading through hundreds of exaggerated resumes. Start meeting candidates with proven, verified competence today.'}
                         </p>
                         <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
                             {activeTab === 'candidates' ? (
                                 <button
                                     onClick={handleCandidateStart}
-                                    className="w-full sm:w-auto px-8 py-3.5 bg-white text-blue-600 font-bold rounded-xl hover:bg-gray-50 transition-colors shadow-md cursor-pointer"
+                                    className="w-full sm:w-auto px-8 py-3.5 bg-white text-zinc-950 font-semibold rounded-xl hover:bg-zinc-200 transition-colors shadow-md cursor-pointer"
                                 >
                                     Start Free Assessment
                                 </button>
                             ) : (
                                 <button
                                     onClick={handleEmployerStart}
-                                    className="w-full sm:w-auto px-8 py-3.5 bg-white text-blue-600 font-bold rounded-xl hover:bg-gray-50 transition-colors shadow-md cursor-pointer"
+                                    className="w-full sm:w-auto px-8 py-3.5 bg-white text-zinc-950 font-semibold rounded-xl hover:bg-zinc-200 transition-colors shadow-md cursor-pointer"
                                 >
                                     Create Employer Account
                                 </button>
                             )}
                             <Link
                                 to="/"
-                                className="w-full sm:w-auto px-6 py-3.5 bg-blue-700/60 hover:bg-blue-700 text-white font-semibold rounded-xl border border-white/20 transition-colors text-center"
+                                className="w-full sm:w-auto px-6 py-3.5 bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 font-medium rounded-xl border border-white/[0.08] transition-colors text-center"
                             >
                                 Back to Homepage
                             </Link>

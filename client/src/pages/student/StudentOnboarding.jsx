@@ -118,22 +118,22 @@ const StudentOnboarding = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#FAFAFA] font-sans text-gray-900 flex flex-col select-none">
+        <div className="min-h-screen bg-[#09090B] font-sans text-zinc-100 flex flex-col select-none">
             {/* Top Navigation */}
             <StudentOnboardingHeader candidateEmail={user?.email || 'candidate@skillforge.io'} />
 
             {/* Main Content */}
             <main className="w-full max-w-4xl mx-auto p-4 sm:p-8 flex-1 flex flex-col gap-6">
-                <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-10 shadow-sm">
+                <div className="bg-[#121318] rounded-2xl border border-white/[0.08] p-6 sm:p-10 shadow-sm text-white">
                     {/* Section Header */}
-                    <div className="border-b border-gray-100 pb-5 mb-6">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-blue-600 block mb-1">
+                    <div className="border-b border-white/[0.08] pb-5 mb-6">
+                        <span className="text-xs font-semibold uppercase tracking-wider text-blue-400 block mb-1">
                             Candidate Profile Setup
                         </span>
-                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 mb-2">
+                        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white mb-2">
                             Build Your Verified Profile
                         </h1>
-                        <p className="text-sm text-gray-500 leading-relaxed">
+                        <p className="text-sm text-zinc-400 leading-relaxed">
                             Share your background and upload your resume. We'll automatically identify your core skills to match you with top job opportunities.
                         </p>
                     </div>
@@ -142,8 +142,8 @@ const StudentOnboarding = () => {
                         {/* Name & Education */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                                    Full Name <span className="text-red-500">*</span>
+                                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                                    Full Name <span className="text-rose-400">*</span>
                                 </label>
                                 <input
                                     name="full_name"
@@ -151,13 +151,13 @@ const StudentOnboarding = () => {
                                     onChange={handleChange}
                                     placeholder="e.g. Alex Vance"
                                     required
-                                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-sm text-white placeholder:text-zinc-500 transition-colors"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                                    Highest Degree / Credential <span className="text-red-500">*</span>
+                                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                                    Highest Degree / Credential <span className="text-rose-400">*</span>
                                 </label>
                                 <input
                                     name="education"
@@ -165,7 +165,7 @@ const StudentOnboarding = () => {
                                     onChange={handleChange}
                                     placeholder="e.g. B.S. in Computer Science"
                                     required
-                                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-sm text-white placeholder:text-zinc-500 transition-colors"
                                 />
                             </div>
                         </div>
@@ -173,14 +173,14 @@ const StudentOnboarding = () => {
                         {/* Experience Level & GitHub */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                                     Experience Level
                                 </label>
                                 <select
                                     name="experience_level"
                                     value={formData.experience_level}
                                     onChange={handleChange}
-                                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-sm text-white transition-colors cursor-pointer"
                                 >
                                     <option value="Beginner">Beginner (0–1 years)</option>
                                     <option value="Intermediate">Intermediate (2–4 years)</option>
@@ -189,7 +189,7 @@ const StudentOnboarding = () => {
                             </div>
 
                             <div>
-                                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                                     GitHub or Portfolio URL
                                 </label>
                                 <input
@@ -197,14 +197,14 @@ const StudentOnboarding = () => {
                                     value={formData.github_url}
                                     onChange={handleChange}
                                     placeholder="https://github.com/alexvance"
-                                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-sm text-white placeholder:text-zinc-500 transition-colors"
                                 />
                             </div>
                         </div>
 
                         {/* Bio */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                                 Short Biography / Summary
                             </label>
                             <textarea
@@ -213,7 +213,7 @@ const StudentOnboarding = () => {
                                 onChange={handleChange}
                                 rows="3"
                                 placeholder="Tell us about your technical focus, projects you've worked on, and what you enjoy building..."
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors resize-none"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-sm text-white placeholder:text-zinc-500 transition-colors resize-none"
                             />
                         </div>
 
@@ -237,17 +237,17 @@ const StudentOnboarding = () => {
                         />
 
                         {error && (
-                            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 text-xs font-medium">
+                            <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-rose-400 text-xs font-medium">
                                 {error}
                             </div>
                         )}
 
                         {/* Actions */}
-                        <div className="pt-6 border-t border-gray-100 flex flex-wrap items-center justify-between gap-4">
+                        <div className="pt-6 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-4">
                             <button
                                 type="button"
                                 onClick={() => navigate('/student/dashboard')}
-                                className="px-6 py-2.5 rounded-xl border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                                className="px-6 py-2.5 rounded-xl border border-white/[0.08] text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] transition-colors cursor-pointer"
                             >
                                 Skip for Now
                             </button>
@@ -255,7 +255,7 @@ const StudentOnboarding = () => {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
+                                className="bg-white hover:bg-zinc-200 text-zinc-950 px-8 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                             >
                                 {isLoading ? 'Saving Profile...' : 'Save Profile & Continue →'}
                             </button>
