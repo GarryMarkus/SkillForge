@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { ArrowUpRight01Icon, Menu01Icon, Cancel01Icon } from '@hugeicons/core-free-icons';
+import { ArrowUpRight01Icon } from '@hugeicons/core-free-icons';
 import './CardNav.css';
 
 /**
@@ -93,7 +93,7 @@ const CardNav = ({
                     {secondaryCta && <div className="hidden sm:flex items-center">{secondaryCta}</div>}
                     {cta && <div>{cta}</div>}
 
-                    {/* Menu Toggle Button */}
+                    {/* Menu Toggle Button with morph animation and locked width */}
                     <button
                         type="button"
                         onClick={() => setIsOpen((prev) => !prev)}
@@ -101,13 +101,28 @@ const CardNav = ({
                         aria-expanded={isOpen}
                         aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
                     >
-                        <HugeiconsIcon
-                            icon={isOpen ? Cancel01Icon : Menu01Icon}
-                            size={16}
-                            strokeWidth={1.5}
-                        />
+                        {/* Hamburger to Cross Morph Icon */}
+                        <span className="relative w-3.5 h-3.5 flex flex-col justify-center items-center gap-[3px] overflow-hidden" aria-hidden="true">
+                            <motion.span
+                                animate={isOpen ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }}
+                                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                                className="w-3.5 h-[1.5px] bg-[#f5f5f5] rounded-full block origin-center"
+                            />
+                            <motion.span
+                                animate={isOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+                                transition={{ duration: 0.15 }}
+                                className="w-3.5 h-[1.5px] bg-[#f5f5f5] rounded-full block origin-center"
+                            />
+                            <motion.span
+                                animate={isOpen ? { rotate: -45, y: -4.5 } : { rotate: 0, y: 0 }}
+                                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                                className="w-3.5 h-[1.5px] bg-[#f5f5f5] rounded-full block origin-center"
+                            />
+                        </span>
                         {menuLabel && (
-                            <span>{isOpen ? 'Close' : 'Menu'}</span>
+                            <span className="w-9 text-left font-mono text-xs select-none">
+                                {isOpen ? 'Close' : 'Menu'}
+                            </span>
                         )}
                     </button>
                 </div>
