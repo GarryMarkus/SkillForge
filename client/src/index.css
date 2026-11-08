@@ -3,10 +3,94 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    background-color: #FAFAFA;
-    color: #111827;
-    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    @apply antialiased text-gray-900;
+  :root {
+    color-scheme: dark;
   }
+
+  body {
+    background-color: #07080B;
+    color: #F8FAFC;
+    font-family: 'Geist', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply antialiased;
+  }
+
+  /* Sleek Obsidian Scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #07080B;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #171B26;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #23293A;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #171B26 #07080B;
+  }
+}
+
+/* CAD Blueprint Grid & Dot Utilities */
+.bg-cad-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.bg-cad-grid-lg {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.bg-cad-grid-cyan {
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.bg-cad-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-cad-dots-cyan {
+  background-image: radial-gradient(rgba(0, 240, 255, 0.16) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Blueprint Radial Masks */
+.radial-mask-subtle {
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, #000 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 20%, #000 60%, transparent 100%);
+}
+
+.radial-mask-center {
+  mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+}
+
+/* Crosshair registration marks */
+.cad-crosshair {
+  position: relative;
+}
+
+.cad-crosshair::before,
+.cad-crosshair::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
 }

@@ -19,6 +19,18 @@ export default {
     },
     extend: {
       colors: {
+        blueprint: {
+          950: '#07080B',
+          900: '#0C0E14',
+          850: '#11141C',
+          800: '#171B26',
+          700: '#23293A',
+          border: 'rgba(255, 255, 255, 0.08)',
+        },
+        cyanAccent: {
+          DEFAULT: '#00F0FF',
+          glow: 'rgba(0, 240, 255, 0.15)',
+        },
         'canvas-light': '#F8F9FA',
         'canvas-blueprint': '#1D52B8',
         'ink-primary': '#0A0A0A',
@@ -74,8 +86,8 @@ export default {
         'error-container': '#ffdad6',
         'on-error': '#ffffff',
         'on-error-container': '#93000a',
-        background: '#f8f9fa',
-        'on-background': '#191c1d',
+        background: '#07080B',
+        'on-background': '#F8FAFC',
       },
       spacing: {
         'space-xs': '0.25rem',
@@ -103,33 +115,62 @@ export default {
         'label-sm': ['9px', { lineHeight: '12px', letterSpacing: '0.10em', fontWeight: '700' }],
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'Consolas', 'monospace'],
+        display: ['"Space Grotesk"', 'sans-serif'],
+        sans: ['"Geist"', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
+      },
+      keyframes: {
+        'border-beam': {
+          '100%': {
+            'offset-distance': '100%',
+          },
+        },
+        'shimmer': {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
+        'pulse-slow': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.4' },
+        },
+        'grid-shift': {
+          '0%': { transform: 'translate(0, 0)' },
+          '100%': { transform: 'translate(32px, 32px)' },
+        },
+      },
+      animation: {
+        'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
+        'shimmer': 'shimmer 8s linear infinite',
+        'pulse-slow': 'pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'grid-shift': 'grid-shift 20s linear infinite',
       },
       typography: (theme) => ({
         DEFAULT: {
           css: {
             maxWidth: 'none',
-            color: theme('colors.gray.700'),
+            color: theme('colors.gray.300'),
             h1: {
               fontWeight: '700',
               fontSize: '1.75rem',
               marginTop: '1.5rem',
               marginBottom: '1rem',
-              borderBottom: `1px solid rgba(0, 0, 0, 0.15)`,
+              borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
               paddingBottom: '0.5rem',
+              color: '#F8FAFC',
             },
             h2: {
               fontWeight: '700',
               fontSize: '1.4rem',
               marginTop: '1.5rem',
               marginBottom: '0.75rem',
+              color: '#F8FAFC',
             },
             h3: {
               fontWeight: '700',
               fontSize: '1.15rem',
               marginTop: '1.25rem',
               marginBottom: '0.5rem',
+              color: '#F8FAFC',
             },
             p: {
               marginTop: '0.75rem',
@@ -137,12 +178,13 @@ export default {
               lineHeight: '1.7',
             },
             code: {
-              backgroundColor: '#F8F9FA',
+              backgroundColor: '#11141C',
               padding: '0.2rem 0.4rem',
               borderRadius: '2px',
-              border: '1px solid rgba(0, 0, 0, 0.15)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               fontWeight: '500',
               fontSize: '0.875em',
+              color: '#00F0FF',
             },
             'code::before': {
               content: '""',
@@ -151,10 +193,11 @@ export default {
               content: '""',
             },
             pre: {
-              backgroundColor: '#0A0A0A',
-              color: '#F8F9FA',
+              backgroundColor: '#07080B',
+              color: '#F8FAFC',
               padding: '1rem',
-              borderRadius: '2px',
+              borderRadius: '4px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
               overflow: 'auto',
             },
           },
