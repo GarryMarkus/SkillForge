@@ -115,7 +115,7 @@ export default {
         sans: ['Consolas', '"Courier Prime"', 'monospace'],
         mono: ['Consolas', '"Courier Prime"', 'monospace'],
       },
-      typography: (theme) => ({
+      typography: (_theme) => ({
         DEFAULT: {
           css: {
             maxWidth: 'none',
