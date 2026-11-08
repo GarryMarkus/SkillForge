@@ -1,0 +1,232 @@
+/* CardNav.css - Monochrome Theme for SkillForge */
+:root {
+  --cn-panel: rgba(14, 14, 17, 0.85);
+  --cn-solid: #0e0e11;
+  --cn-edge: rgba(255, 255, 255, 0.08);
+  --cn-highlight: rgba(255, 255, 255, 0.05);
+  --cn-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.9);
+  --cn-text: #f5f5f5;
+  --cn-muted: #737373;
+  --cn-hover: rgba(255, 255, 255, 0.04);
+  --cn-ring: rgba(255, 255, 255, 0.25);
+  --cn-tile: #121215;
+  --cn-tile-rim: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.7);
+  --cn-cta: #f5f5f5;
+  --cn-cta-ink: #050505;
+  --cn-cta-hover: brightness(0.92);
+  --cn-radius: 8px;
+}
+
+.card-nav {
+  position: relative;
+  width: 100%;
+  font-family: Consolas, "Courier Prime", monospace;
+  color: var(--cn-text);
+  box-sizing: border-box;
+}
+
+.card-nav__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.625rem 1.25rem;
+  background-color: var(--cn-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--cn-edge);
+  border-radius: var(--cn-radius);
+  box-shadow: var(--cn-shadow);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  z-index: 50;
+  position: relative;
+}
+
+.card-nav__left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.card-nav__logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  font-family: "Courier Prime", Consolas, monospace;
+  font-weight: 700;
+  color: var(--cn-text);
+}
+
+.card-nav__right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.card-nav__menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  background-color: var(--cn-tile);
+  border: 1px solid var(--cn-edge);
+  border-radius: calc(var(--cn-radius) - 2px);
+  color: var(--cn-text);
+  font-family: Consolas, "Courier Prime", monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.card-nav__menu:hover {
+  background-color: var(--cn-hover);
+  border-color: var(--cn-ring);
+  color: #ffffff;
+}
+
+.card-nav__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  background-color: var(--cn-cta);
+  color: var(--cn-cta-ink);
+  border: 1px solid transparent;
+  border-radius: calc(var(--cn-radius) - 2px);
+  font-family: Consolas, "Courier Prime", monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.15s ease;
+}
+
+.card-nav__cta:hover {
+  filter: var(--cn-cta-hover);
+}
+
+.card-nav__secondary-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background-color: transparent;
+  color: var(--cn-muted);
+  border: 1px solid var(--cn-edge);
+  border-radius: calc(var(--cn-radius) - 2px);
+  font-family: Consolas, "Courier Prime", monospace;
+  font-size: 0.75rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.card-nav__secondary-cta:hover {
+  color: var(--cn-text);
+  border-color: var(--cn-ring);
+  background-color: var(--cn-hover);
+}
+
+/* Panel & Cards */
+.card-nav__panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  z-index: 40;
+}
+
+.card-nav__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.75rem;
+  padding: 0.875rem;
+  background-color: var(--cn-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--cn-edge);
+  border-radius: var(--cn-radius);
+  box-shadow: var(--cn-shadow);
+}
+
+.card-nav__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.25rem;
+  background-color: var(--cn-tile);
+  border: 1px solid var(--cn-edge);
+  border-radius: calc(var(--cn-radius) - 2px);
+  box-shadow: var(--cn-tile-rim);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.card-nav__card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.card-nav__card-header {
+  margin-bottom: 1rem;
+}
+
+.card-nav__label {
+  font-family: "Courier Prime", Consolas, monospace;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--cn-text);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.375rem;
+}
+
+.card-nav__description {
+  font-family: Consolas, "Courier Prime", monospace;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--cn-muted);
+}
+
+.card-nav__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 1px solid var(--cn-highlight);
+  padding-top: 0.875rem;
+}
+
+.card-nav__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: Consolas, "Courier Prime", monospace;
+  font-size: 0.75rem;
+  color: var(--cn-muted);
+  text-decoration: none;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.card-nav__link:hover {
+  color: var(--cn-text);
+}
+
+.card-nav__link-icon {
+  display: inline-flex;
+  align-items: center;
+  opacity: 0.6;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.card-nav__link:hover .card-nav__link-icon {
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+@media (max-width: 640px) {
+  .card-nav__bar {
+    padding: 0.5rem 0.875rem;
+  }
+  .card-nav__cards {
+    grid-template-columns: 1fr;
+    padding: 0.625rem;
+  }
+}
