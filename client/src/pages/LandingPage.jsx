@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
-import HeroSection from '../components/sections/HeroSection';
+import HeroSection from '../components/sections/hero/HeroSection';
 import CapabilitiesGrid from '../components/sections/CapabilitiesGrid';
 import BlueprintSpecSection from '../components/sections/BlueprintSpecSection';
 import PersonaSplitSection from '../components/sections/PersonaSplitSection';
