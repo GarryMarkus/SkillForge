@@ -9,20 +9,17 @@ const __dirname = path.dirname(__filename);
 const clientPublicDir = path.resolve(__dirname, '../public');
 const svgPath = path.join(clientPublicDir, 'favicon.svg');
 
-// Base SVG content specifically with high-contrast dark theme defaults for raster rendering
+// Base SVG content with high-contrast dark theme defaults for raster rendering
 const svgDarkContent = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
     <style>
       .bg { fill: #09090B; stroke: #27272A; stroke-width: 1.5px; }
-      .glyph { stroke: #FFFFFF; stroke-width: 4.5px; stroke-linecap: round; stroke-linejoin: round; }
-      .accent { fill: #FFFFFF; stroke: #FFFFFF; stroke-width: 4.5px; stroke-linecap: round; }
+      .glyph { fill: #FFFFFF; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -0.5px; }
     </style>
   </defs>
-  <rect x="1.5" y="1.5" width="61" height="61" rx="12" class="bg" />
-  <line x1="17" y1="45" x2="28" y2="19" class="glyph" />
-  <line x1="28" y1="45" x2="39" y2="19" class="glyph" />
-  <line x1="44" y1="44" x2="49" y2="44" class="accent" />
+  <rect x="1.5" y="1.5" width="61" height="61" rx="14" class="bg" />
+  <text x="32" y="41.5" text-anchor="middle" class="glyph">SF</text>
 </svg>
 `.trim();
 
@@ -66,44 +63,39 @@ async function generateFavicons() {
   console.log('[generate-favicons] All favicon assets generated successfully in client/public/!');
 }
 
-/**
- * Packs multiple PNG buffers into a valid Windows ICO format file
- * @param {Array<{ width: number, height: number, buffer: Buffer }>} images
- * @returns {Buffer}
- */
 function assembleIco(images) {
   const count = images.length;
-  const headerLength = 6;
-  const dirEntryLength = 16;
-  const headerAndDirSize = headerLength + count * dirEntryLength;
+  const headerSize = 6;
+  const dirEntrySize = 16;
+  const dirSize = count * dirEntrySize;
 
-  const header = Buffer.alloc(headerLength);
-  header.writeUInt16LE(0, 0); // Reserved. Must always be 0.
-  header.writeUInt16LE(1, 2); // 1 = ICO icon
+  let currentOffset = headerSize + dirSize;
+  const header = Buffer.alloc(headerSize);
+  header.writeUInt16LE(0, 0); // Reserved
+  header.writeUInt16LE(1, 2); // ICO format
   header.writeUInt16LE(count, 4); // Number of images
 
-  let currentOffset = headerAndDirSize;
   const dirEntries = [];
-
   for (const img of images) {
-    const entry = Buffer.alloc(dirEntryLength);
-    entry.writeUInt8(img.width >= 256 ? 0 : img.width, 0); // Width
-    entry.writeUInt8(img.height >= 256 ? 0 : img.height, 1); // Height
-    entry.writeUInt8(0, 2); // Color count (0 = no color palette)
+    const entry = Buffer.alloc(dirEntrySize);
+    entry.writeUInt8(img.width >= 256 ? 0 : img.width, 0);
+    entry.writeUInt8(img.height >= 256 ? 0 : img.height, 1);
+    entry.writeUInt8(0, 2); // Palette colors (0 = no palette)
     entry.writeUInt8(0, 3); // Reserved
-    entry.writeUInt16LE(1, 4); // Color planes (1)
-    entry.writeUInt16LE(32, 6); // Bits per pixel (32bpp)
-    entry.writeUInt32LE(img.buffer.length, 8); // Size of the image data in bytes
-    entry.writeUInt32LE(currentOffset, 12); // Offset of image data from beginning of file
+    entry.writeUInt16LE(1, 4); // Color planes
+    entry.writeUInt16LE(32, 6); // Bits per pixel
+    entry.writeUInt32LE(img.buffer.length, 8); // Image size in bytes
+    entry.writeUInt32LE(currentOffset, 12); // Image offset
 
     dirEntries.push(entry);
     currentOffset += img.buffer.length;
   }
 
-  return Buffer.concat([header, ...dirEntries, ...images.map(img => img.buffer)]);
+  const allBuffers = [header, ...dirEntries, ...images.map(img => img.buffer)];
+  return Buffer.concat(allBuffers);
 }
 
 generateFavicons().catch((err) => {
-  console.error('[generate-favicons] Error generating favicons:', err);
+  console.error('[generate-favicons] Generation error:', err);
   process.exit(1);
 });

@@ -2,23 +2,17 @@
   <defs>
     <style>
       .bg { fill: #09090B; stroke: #27272A; stroke-width: 1.5px; }
-      .glyph { stroke: #FFFFFF; stroke-width: 4.5px; stroke-linecap: round; stroke-linejoin: round; }
-      .accent { fill: #FFFFFF; stroke: #FFFFFF; stroke-width: 4.5px; stroke-linecap: round; }
+      .glyph { fill: #FFFFFF; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-weight: 700; font-size: 26px; letter-spacing: -0.5px; }
       @media (prefers-color-scheme: light) {
         .bg { fill: #F4F4F5; stroke: #D4D4D8; }
-        .glyph { stroke: #09090B; }
-        .accent { fill: #09090B; stroke: #09090B; }
+        .glyph { fill: #09090B; }
       }
     </style>
   </defs>
 
-  <!-- Developer Chip Container -->
-  <rect x="1.5" y="1.5" width="61" height="61" rx="12" class="bg" />
+  <!-- Container -->
+  <rect x="1.5" y="1.5" width="61" height="61" rx="14" class="bg" />
 
-  <!-- Verification Code Slashes '//' -->
-  <line x1="17" y1="45" x2="28" y2="19" class="glyph" />
-  <line x1="28" y1="45" x2="39" y2="19" class="glyph" />
-
-  <!-- Terminal Cursor / Verification Active State -->
-  <line x1="44" y1="44" x2="49" y2="44" class="accent" />
+  <!-- Clean Monogram SF -->
+  <text x="32" y="41.5" text-anchor="middle" class="glyph">SF</text>
 </svg>
