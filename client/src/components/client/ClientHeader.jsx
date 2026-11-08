@@ -22,7 +22,7 @@ const ClientHeader = ({
                         SkillForge Employer Hub
                     </span>
                     <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-sm bg-[#0b0b0c] text-[#888888] border border-white/10 text-[11px] font-mono">
-                        [enclave : active]
+                        Platform Active
                     </span>
                 </div>
 
@@ -37,7 +37,7 @@ const ClientHeader = ({
                         onClick={onLogout}
                         className="px-3 py-1.5 rounded-md border border-white/10 hover:border-rose-500/30 text-[#888888] hover:text-rose-300 text-xs font-mono transition-colors cursor-pointer"
                     >
-                        [logout]
+                        Sign Out
                     </button>
                     <div className="w-7 h-7 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center text-[#f5f5f5] font-mono text-xs font-bold">
                         HR
@@ -57,7 +57,7 @@ const ClientHeader = ({
                                     : 'text-[#737373] hover:text-white'
                             }`}
                         >
-                            [01: Requisitions ({jobsCount})]
+                            Requisitions ({jobsCount})
                         </button>
                         <button
                             onClick={() => setActiveTab('CANDIDATES')}
@@ -67,7 +67,7 @@ const ClientHeader = ({
                                     : 'text-[#737373] hover:text-white'
                             }`}
                         >
-                            [02: Candidate Pipeline ({totalApplicantsCount})]
+                            Candidate Pipeline ({totalApplicantsCount})
                         </button>
                     </nav>
 

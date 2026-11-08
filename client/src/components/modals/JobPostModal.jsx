@@ -49,7 +49,7 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                 <div className="px-5 py-3.5 bg-[#050505] border-b border-white/[0.06] flex items-center justify-between">
                     <div>
                         <h2 className="text-xs font-semibold uppercase tracking-wider text-white">
-                            [ Post New Requisition ]
+                            Post New Requisition
                         </h2>
                         <p className="text-xs text-[#737373] mt-0.5">
                             Define role specification to evaluate against candidate telemetry
@@ -60,7 +60,7 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                         className="text-xs text-[#737373] hover:text-white font-mono cursor-pointer"
                         aria-label="Close"
                     >
-                        [close ✕]
+                        Close ✕
                     </button>
                 </div>
 
@@ -191,14 +191,14 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                             onClick={onClose}
                             className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white transition-colors cursor-pointer"
                         >
-                            [Cancel]
+                            Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
                             className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                         >
-                            {loading ? 'Publishing...' : '[ Publish Requisition ↗ ]'}
+                            {loading ? 'Publishing...' : 'Publish Requisition ↗'}
                         </button>
                     </div>
                 </form>

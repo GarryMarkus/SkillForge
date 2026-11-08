@@ -21,14 +21,14 @@ const StudentHeader = ({
                         className="hidden md:flex p-1.5 rounded-sm border border-white/10 text-[#737373] hover:text-white hover:border-white/20 cursor-pointer transition-colors text-xs font-mono"
                         title="Toggle Navigation Menu"
                     >
-                        <span>{sidebarCollapsed ? '[+]' : '[-]'}</span>
+                        <span>{sidebarCollapsed ? '+' : '−'}</span>
                     </button>
                     <div className="flex items-center gap-2.5">
                         <span className="font-display font-bold text-sm text-white tracking-tight">
                             Candidate Portal
                         </span>
                         <span className="px-2 py-0.5 rounded-sm bg-[#0b0b0c] border border-white/10 text-[#888888] text-[11px] font-mono hidden sm:inline-block">
-                            [profile: verified]
+                            Profile Verified
                         </span>
                     </div>
                 </div>
@@ -44,7 +44,7 @@ const StudentHeader = ({
                         onClick={onLogout}
                         className="px-3 py-1.5 rounded-md border border-white/10 hover:border-rose-500/30 text-[#888888] hover:text-rose-300 text-xs font-mono transition-colors cursor-pointer"
                     >
-                        [logout]
+                        Sign Out
                     </button>
 
                     <button

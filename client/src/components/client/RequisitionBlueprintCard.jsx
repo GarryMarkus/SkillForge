@@ -14,11 +14,11 @@ const RequisitionBlueprintCard = ({
             {/* Header */}
             <div className="w-full border-b border-white/[0.06] pb-3 mb-4 flex items-center justify-between">
                 <div>
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-white">[ Role Criteria ]</h4>
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-white">Role Criteria</h4>
                     <p className="text-xs text-[#737373] mt-0.5">Automated screening criteria</p>
                 </div>
                 <span className="text-[11px] text-[#888888] bg-[#050505] border border-white/10 px-2 py-0.5 rounded-sm">
-                    [active]
+                    Active
                 </span>
             </div>
 
@@ -45,15 +45,15 @@ const RequisitionBlueprintCard = ({
                     </div>
                     <div className="rounded-sm bg-[#050505] p-3 space-y-2 border border-white/10 text-xs text-[#888888]">
                         <div className="flex items-center gap-2">
-                            <span>[✓]</span>
+                            <span className="text-emerald-500 font-mono">✓</span>
                             <span>Min 80% practical assessment benchmark</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span>[✓]</span>
+                            <span className="text-emerald-500 font-mono">✓</span>
                             <span>Supervised proctoring integrity confirmed</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <span>[✓]</span>
+                            <span className="text-emerald-500 font-mono">✓</span>
                             <span>Code AST &amp; GitHub history audited</span>
                         </div>
                     </div>
@@ -65,18 +65,18 @@ const RequisitionBlueprintCard = ({
                         onClick={onRecalibrate}
                         className="w-full py-2 rounded-md bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 text-xs font-mono transition-colors cursor-pointer text-center"
                     >
-                        [Edit Criteria]
+                        Edit Criteria
                     </button>
                     <button
                         onClick={onCloneSpec}
                         className="w-full py-2 rounded-md bg-[#050505] hover:bg-[#111113] text-[#888888] hover:text-white border border-white/10 text-xs font-mono transition-colors cursor-pointer text-center"
                     >
-                        [Duplicate Role Spec]
+                        Duplicate Role Spec
                     </button>
                 </div>
 
                 <div className="text-center text-[11px] text-[#555555] mt-1">
-                    updated: {timestamp}
+                    Updated: {timestamp}
                 </div>
             </div>
         </section>

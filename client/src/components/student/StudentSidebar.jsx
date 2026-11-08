@@ -2,12 +2,12 @@ import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const navItems = [
-    { label: 'Overview', path: '/student/dashboard', marker: '[01]' },
-    { label: 'Take Assessment', path: '/student/assessment', marker: '[02]' },
-    { label: 'Job Matches', path: '/student/dashboard#jobs', marker: '[03]' },
-    { label: 'Learning Paths', path: '/student/upskill', marker: '[04]' },
-    { label: 'Workplace Profile', path: '/student/personality-test', marker: '[05]' },
-    { label: 'Resume & Details', path: '/student/onboarding', marker: '[06]' },
+    { label: 'Overview', path: '/student/dashboard', marker: '01' },
+    { label: 'Take Assessment', path: '/student/assessment', marker: '02' },
+    { label: 'Job Matches', path: '/student/dashboard#jobs', marker: '03' },
+    { label: 'Learning Paths', path: '/student/upskill', marker: '04' },
+    { label: 'Workplace Profile', path: '/student/personality-test', marker: '05' },
+    { label: 'Resume & Details', path: '/student/onboarding', marker: '06' },
 ];
 
 const StudentSidebar = ({ sidebarCollapsed }) => {
@@ -61,11 +61,11 @@ const StudentSidebar = ({ sidebarCollapsed }) => {
             <div className="p-3 border-t border-white/[0.06]">
                 {!sidebarCollapsed ? (
                     <div className="p-2 rounded-md bg-[#050505] border border-white/10 text-[11px] text-[#737373] font-mono text-center">
-                        [enclave : active]
+                        Platform Active
                     </div>
                 ) : (
-                    <div className="flex justify-center text-[11px] text-[#737373]" title="Evaluation Enclave Active">
-                        [•]
+                    <div className="flex justify-center text-[11px] text-emerald-500" title="Platform Active">
+                        •
                     </div>
                 )}
             </div>

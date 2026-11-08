@@ -20,7 +20,7 @@ const ApplicantRankingsGrid = ({
             {/* Header Strip */}
             <div className="w-full px-5 py-3.5 border-b border-white/[0.06] flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h3 className="font-semibold text-white text-xs uppercase tracking-wider">[ Candidate Rankings ]</h3>
+                    <h3 className="font-semibold text-white text-xs uppercase tracking-wider">Candidate Rankings</h3>
                     <p className="text-xs text-[#737373] mt-0.5">Evaluated against verified technical benchmarks</p>
                 </div>
                 <div className="flex items-center gap-2">
@@ -43,7 +43,7 @@ const ApplicantRankingsGrid = ({
                         }`}
                         type="button"
                     >
-                        [Highest Match]
+                        Highest Match
                     </button>
                     <button
                         onClick={() => setFilterMode('TRUST_90')}
@@ -54,7 +54,7 @@ const ApplicantRankingsGrid = ({
                         }`}
                         type="button"
                     >
-                        [&gt;=90% Match]
+                        ≥90% Match
                     </button>
                     <button
                         onClick={() => setFilterMode('ZERO_FLAG')}
@@ -65,7 +65,7 @@ const ApplicantRankingsGrid = ({
                         }`}
                         type="button"
                     >
-                        [Zero Flags]
+                        Zero Flags
                     </button>
                 </div>
             </div>
@@ -91,7 +91,7 @@ const ApplicantRankingsGrid = ({
                                     <div className="flex items-center gap-2">
                                         <h4 className="font-semibold text-white text-sm">{cand.candidate_name}</h4>
                                         <span className="px-2 py-0.5 rounded-sm bg-[#111113] text-[#ededed] border border-white/20 text-xs font-mono">
-                                            [{cand.cosine_sim}% Match]
+                                            {cand.cosine_sim}% Match
                                         </span>
                                     </div>
                                     <p className="text-xs text-[#737373]">{cand.role_label}</p>
@@ -111,13 +111,13 @@ const ApplicantRankingsGrid = ({
                                     onClick={() => onInspectCandidate(cand)}
                                     className="px-3 py-1.5 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
                                 >
-                                    [Inspect Dossier ↗]
+                                    Inspect Dossier ↗
                                 </button>
                                 <button
                                     onClick={() => onIssueOffer(cand)}
                                     className="px-3 py-1.5 rounded-md bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 text-xs font-mono transition-colors cursor-pointer"
                                 >
-                                    {cand.status === 'accepted' ? '[Offer Sent ✓]' : '[Extend Offer ↗]'}
+                                    {cand.status === 'accepted' ? 'Offer Sent ✓' : 'Extend Offer ↗'}
                                 </button>
                             </div>
                         </div>

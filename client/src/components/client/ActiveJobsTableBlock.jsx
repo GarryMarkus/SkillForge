@@ -12,12 +12,12 @@ const ActiveJobsTableBlock = ({
             {/* Header Bar */}
             <div className="w-full px-5 py-3.5 border-b border-white/[0.06] flex items-center justify-between">
                 <div>
-                    <h3 className="font-semibold text-white text-xs uppercase tracking-wider">[ Active Requisitions ]</h3>
+                    <h3 className="font-semibold text-white text-xs uppercase tracking-wider">Active Requisitions</h3>
                     <p className="text-xs text-[#737373] mt-0.5">Select a role to review evaluated candidate rankings</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <span className="px-2.5 py-0.5 rounded-sm bg-[#050505] text-[#888888] border border-white/10 text-xs font-mono">
-                        [<CounterTicker value={jobs.length || 0} duration={0.8} /> Active]
+                        <CounterTicker value={jobs.length || 0} duration={0.8} /> Active
                     </span>
                 </div>
             </div>
@@ -45,7 +45,7 @@ const ActiveJobsTableBlock = ({
                                         onClick={onDeployClick}
                                         className="text-white underline cursor-pointer ml-1"
                                     >
-                                        [+ Post First Opening]
+                                        Post First Opening
                                     </button>
                                 </td>
                             </tr>
@@ -68,7 +68,7 @@ const ActiveJobsTableBlock = ({
                                                 <span>{job.title}</span>
                                                 {isSelected && (
                                                     <span className="text-[10px] bg-[#111113] text-[#ededed] border border-white/20 px-1.5 py-0.2 rounded-sm font-mono">
-                                                        [active]
+                                                        Active
                                                     </span>
                                                 )}
                                             </div>
@@ -80,16 +80,16 @@ const ActiveJobsTableBlock = ({
                                             ${budgetNum} <span className="text-[10px] text-[#555555]">/ yr</span>
                                         </td>
                                         <td className="py-3 px-4 text-[#ededed] font-mono">
-                                            [{job.min_skill_score || 80} / 100]
+                                            {job.min_skill_score || 80} / 100
                                         </td>
                                         <td className="py-3 px-4">
                                             <span className="text-xs font-mono text-[#888888]">
-                                                [<CounterTicker value={applicantCount} duration={0.8} />]
+                                                <CounterTicker value={applicantCount} duration={0.8} />
                                             </span>
                                         </td>
                                         <td className="py-3 px-4">
                                             <span className="text-[11px] font-mono text-[#888888]">
-                                                [Open]
+                                                Open
                                             </span>
                                         </td>
                                         <td className="py-3 px-4 text-right whitespace-nowrap">
@@ -104,7 +104,7 @@ const ActiveJobsTableBlock = ({
                                                         : 'bg-[#050505] text-[#888888] hover:text-white border border-white/10'
                                                 }`}
                                             >
-                                                {isSelected ? '[Selected ✓]' : '[Select ↗]'}
+                                                {isSelected ? 'Selected ✓' : 'Select ↗'}
                                             </button>
                                         </td>
                                     </tr>

@@ -158,7 +158,7 @@ const StudentDashboard = () => {
                                             : 'text-[#737373] hover:text-white hover:border-white/10 border border-transparent'
                                     }`}
                                 >
-                                    <span>[01: Overview]</span>
+                                    <span>Overview</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('jobs')}
@@ -168,7 +168,7 @@ const StudentDashboard = () => {
                                             : 'text-[#737373] hover:text-white hover:border-white/10 border border-transparent'
                                     }`}
                                 >
-                                    <span>[02: Matched Requisitions]</span>
+                                    <span>Matched Requisitions</span>
                                     <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-[#050505] border border-white/10 text-[#888888] font-mono ml-0.5">
                                         {jobs.length}
                                     </span>
@@ -181,7 +181,7 @@ const StudentDashboard = () => {
                                             : 'text-[#737373] hover:text-white hover:border-white/10 border border-transparent'
                                     }`}
                                 >
-                                    <span>[03: Learning Curriculum]</span>
+                                    <span>Learning Curriculum</span>
                                 </button>
                             </div>
 
@@ -189,7 +189,7 @@ const StudentDashboard = () => {
                                 onClick={() => navigate('/student/assessment')}
                                 className="px-3.5 py-1.5 bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 rounded-md text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
                             >
-                                <span>[ + Start Assessment ↗ ]</span>
+                                <span>Start Assessment ↗</span>
                             </button>
                         </div>
 
@@ -212,7 +212,7 @@ const StudentDashboard = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-5 space-y-2">
                                         <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-                                            <h4 className="font-semibold text-white text-xs uppercase tracking-wider">[ Matched Requisitions ]</h4>
+                                            <h4 className="font-semibold text-white text-xs uppercase tracking-wider">Matched Requisitions</h4>
                                             <button 
                                                 onClick={() => setActiveTab('jobs')}
                                                 className="text-xs font-mono text-[#888888] hover:text-white cursor-pointer"
@@ -227,7 +227,7 @@ const StudentDashboard = () => {
 
                                     <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-5 space-y-2">
                                         <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-                                            <h4 className="font-semibold text-white text-xs uppercase tracking-wider">[ Engineering Archetype ]</h4>
+                                            <h4 className="font-semibold text-white text-xs uppercase tracking-wider">Engineering Archetype</h4>
                                             <button 
                                                 onClick={() => navigate('/student/personality-test')}
                                                 className="text-xs font-mono text-[#888888] hover:text-white cursor-pointer"
@@ -274,7 +274,7 @@ const StudentDashboard = () => {
                     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
                         <div>SkillForge Candidate Hub &copy; {new Date().getFullYear()}</div>
                         <div className="text-[11px] text-[#737373]">
-                            [verification enclave: active]
+                            Verification Platform Active
                         </div>
                     </div>
                 </footer>

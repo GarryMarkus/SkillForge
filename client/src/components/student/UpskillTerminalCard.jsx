@@ -5,10 +5,10 @@ const UpskillTerminalCard = ({ onResumeCurriculum }) => {
         <section className="bg-[#0b0b0c] rounded-md border border-white/10 flex flex-col font-mono select-none overflow-hidden" id="UpskillTerminalCard">
             <div className="p-5 sm:p-6 border-b border-white/[0.06] flex flex-wrap items-center justify-between gap-3 bg-[#050505]">
                 <div className="text-xs text-white font-semibold uppercase tracking-wider">
-                    [ Curated Skill Curriculum ]
+                    Curated Skill Curriculum
                 </div>
                 <span className="bg-[#111113] text-[#ededed] border border-white/20 px-2.5 py-0.5 rounded-sm text-xs font-mono">
-                    [active module]
+                    Active Module
                 </span>
             </div>
 
@@ -39,7 +39,7 @@ const UpskillTerminalCard = ({ onResumeCurriculum }) => {
                         className="w-full lg:w-auto bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2.5 rounded-md text-xs font-mono transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                         type="button"
                     >
-                        <span>[ Continue Curriculum ↗ ]</span>
+                        <span>Continue Curriculum ↗</span>
                     </button>
                 </div>
             </div>

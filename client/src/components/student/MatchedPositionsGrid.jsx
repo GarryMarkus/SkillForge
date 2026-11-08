@@ -23,7 +23,7 @@ const MatchedPositionsGrid = ({
             <div className="p-5 sm:p-6 border-b border-white/[0.06] flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h3 className="font-semibold text-base text-white tracking-tight uppercase">
-                        [ matched requisitions ]
+                        Matched Requisitions
                     </h3>
                     <p className="text-xs text-[#737373] mt-0.5">
                         Roles algorithmically aligned with your verified competencies
@@ -41,7 +41,7 @@ const MatchedPositionsGrid = ({
                         }`}
                         type="button"
                     >
-                        [All: {jobs.length}]
+                        All ({jobs.length})
                     </button>
                     <button
                         onClick={() => setFilterMode('MATCH_85')}
@@ -52,7 +52,7 @@ const MatchedPositionsGrid = ({
                         }`}
                         type="button"
                     >
-                        [&gt;=85% Match]
+                        ≥85% Match
                     </button>
                     <button
                         onClick={() => setFilterMode('APPLIED')}
@@ -63,7 +63,7 @@ const MatchedPositionsGrid = ({
                         }`}
                         type="button"
                     >
-                        [Applied: {myApplications.length}]
+                        Applied ({myApplications.length})
                     </button>
                 </div>
             </div>
@@ -93,7 +93,7 @@ const MatchedPositionsGrid = ({
                                         {/* Top Row: Match Score & Category */}
                                         <div className="flex items-center justify-between gap-2">
                                             <span className="inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-mono bg-[#111113] text-[#ededed] border border-white/20">
-                                                [{matchScore}% Match]
+                                                {matchScore}% Match
                                             </span>
                                             <span className="text-[11px] text-[#737373] font-mono">
                                                 ${Number(job.budget_amount || 135000).toLocaleString()} / yr
@@ -132,15 +132,15 @@ const MatchedPositionsGrid = ({
                                         {applied ? (
                                             appStatus === 'accepted' ? (
                                                 <span className="text-xs font-mono text-[#ededed] px-2.5 py-1 rounded-md bg-[#111113] border border-white/20">
-                                                    [Offer Extended]
+                                                    Offer Extended
                                                 </span>
                                             ) : appStatus === 'rejected' ? (
                                                 <span className="text-xs font-mono text-[#555555] px-2.5 py-1 rounded-md bg-[#0b0b0c] border border-white/5">
-                                                    [Closed]
+                                                    Closed
                                                 </span>
                                             ) : (
                                                 <span className="text-xs font-mono text-[#888888] px-2.5 py-1 rounded-md bg-[#0b0b0c] border border-white/10">
-                                                    [Under Review]
+                                                    Under Review
                                                 </span>
                                             )
                                         ) : (
@@ -149,7 +149,7 @@ const MatchedPositionsGrid = ({
                                                 disabled={isApplying}
                                                 className="px-3 py-1.5 bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 font-mono rounded-md text-xs transition-colors cursor-pointer disabled:opacity-50"
                                             >
-                                                {isApplying ? 'Applying...' : '[ Quick Apply ↗ ]'}
+                                                {isApplying ? 'Applying...' : 'Quick Apply ↗'}
                                             </button>
                                         )}
                                     </div>

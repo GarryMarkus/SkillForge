@@ -14,7 +14,7 @@ const CandidateDossierModal = ({
                 <div className="px-5 py-3.5 bg-[#050505] border-b border-white/[0.06] flex items-center justify-between">
                     <div>
                         <h2 className="text-xs font-semibold uppercase tracking-wider text-white">
-                            [ Candidate Dossier ]
+                            Candidate Dossier
                         </h2>
                         <p className="text-xs text-[#737373] mt-0.5">
                             Reference: {candidate.candidate_ref || 'SF-REF'}
@@ -25,7 +25,7 @@ const CandidateDossierModal = ({
                         className="text-xs text-[#737373] hover:text-white font-mono cursor-pointer"
                         aria-label="Close"
                     >
-                        [close ✕]
+                        Close ✕
                     </button>
                 </div>
 
@@ -38,21 +38,21 @@ const CandidateDossierModal = ({
                                 {candidate.candidate_name}
                             </span>
                             <span className="px-2 py-0.5 rounded-sm text-xs font-mono bg-[#111113] text-[#ededed] border border-white/20">
-                                [{candidate.cosine_sim}% Match]
+                                {candidate.cosine_sim}% Match
                             </span>
                         </div>
                         <div className="text-xs text-[#737373]">
                             {candidate.role_label} &bull; {candidate.region}
                         </div>
                         <div className="text-[11px] text-[#555555]">
-                            email: {candidate.email}
+                            Email: {candidate.email}
                         </div>
                     </div>
 
                     {/* Verified Assessment Results */}
                     <div className="p-4 bg-[#050505] rounded-sm border border-white/10 space-y-2.5">
                         <div className="text-[11px] uppercase tracking-wider text-white">
-                            [ proctored evaluation telemetry ]
+                            Proctored Evaluation Telemetry
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                             <div className="bg-[#0b0b0c] p-2.5 rounded-sm border border-white/10">
@@ -69,7 +69,7 @@ const CandidateDossierModal = ({
                             </div>
                             <div className="bg-[#0b0b0c] p-2.5 rounded-sm border border-white/10">
                                 <span className="text-[11px] text-[#555555] block">Peer Calibrated Rating</span>
-                                <strong className="text-white text-xs font-mono">[{candidate.rating_num}]</strong>
+                                <strong className="text-white text-xs font-mono">{candidate.rating_num}</strong>
                             </div>
                         </div>
                     </div>
@@ -77,7 +77,7 @@ const CandidateDossierModal = ({
                     {/* Verified Skills */}
                     <div className="p-4 bg-[#050505] rounded-sm border border-white/10 space-y-2">
                         <div className="text-[11px] uppercase tracking-wider text-white">
-                            [ verified competencies ]
+                            Verified Competencies
                         </div>
                         <div className="flex flex-wrap gap-1.5 text-xs">
                             {(candidate.tags || ["Python", "FastAPI", "Docker"]).map((t, idx) => (
@@ -97,7 +97,7 @@ const CandidateDossierModal = ({
                             onClick={onClose}
                             className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white transition-colors cursor-pointer"
                         >
-                            [Close]
+                            Close
                         </button>
 
                         <button
@@ -107,7 +107,7 @@ const CandidateDossierModal = ({
                             }}
                             className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors cursor-pointer"
                         >
-                            [Extend Interview / Offer ↗]
+                            Extend Interview / Offer ↗
                         </button>
                     </div>
                 </div>

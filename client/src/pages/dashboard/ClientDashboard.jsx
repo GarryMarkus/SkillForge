@@ -17,17 +17,17 @@ const DEFAULT_SAMPLE_APPLICANTS = [
         id: 101,
         rank: "#01",
         cosine_sim: 96.4,
-        candidate_name: "ALEX VANCE",
+        candidate_name: "Alex Vance",
         candidate_ref: "SF-092",
-        role_label: "Full-Stack Systems Engineer (Exp: 7.2 yrs)",
+        role_label: "Full-Stack Systems Engineer (7.2 yrs exp)",
         hash: "9a4f..77b2",
-        region: "US-EAST (VERIFIED)",
+        region: "North America (Remote)",
         pdf_parsed: true,
-        github_repos: "32_REPOS",
-        tags: ["PYTHON", "FASTAPI", "DOCKER"],
+        github_repos: "32 Repos",
+        tags: ["Python", "FastAPI", "Docker"],
         proctor_score: "100%",
-        proctor_flags: "ZERO_CHEATING_FLAGS",
-        cam_status: "SYNCHRONIZED (1080P)",
+        proctor_flags: "Clean Record",
+        cam_status: "HD Feed Active",
         stars: "★★★★★",
         rating_num: "4.8 / 5.0",
         email: "student@example.com",
@@ -37,17 +37,17 @@ const DEFAULT_SAMPLE_APPLICANTS = [
         id: 102,
         rank: "#02",
         cosine_sim: 91.2,
-        candidate_name: "MARCUS CHEN",
+        candidate_name: "Marcus Chen",
         candidate_ref: "SF-141",
-        role_label: "Backend Specialist (Exp: 5.8 yrs)",
+        role_label: "Backend Specialist (5.8 yrs exp)",
         hash: "3c1e..88a9",
-        region: "EU-CENTRAL (VERIFIED)",
+        region: "Europe (Remote)",
         pdf_parsed: true,
-        github_repos: "18_REPOS",
-        tags: ["PYTHON", "DJANGO"],
+        github_repos: "18 Repos",
+        tags: ["Python", "Django"],
         proctor_score: "95%",
-        proctor_flags: "1_WARNING_RESOLVED",
-        cam_status: "AUDIO: MULTI_VOICE_FILTER_OK",
+        proctor_flags: "1 Warning Resolved",
+        cam_status: "Audio Active",
         stars: "★★★★☆",
         rating_num: "4.2 / 5.0",
         email: "marcus.chen@dev.io",
@@ -57,17 +57,17 @@ const DEFAULT_SAMPLE_APPLICANTS = [
         id: 103,
         rank: "#03",
         cosine_sim: 87.6,
-        candidate_name: "ELENA ROSTOVA",
+        candidate_name: "Elena Rostova",
         candidate_ref: "SF-219",
-        role_label: "Distributed Systems Dev (Exp: 4.5 yrs)",
+        role_label: "Distributed Systems Dev (4.5 yrs exp)",
         hash: "77f0..11cb",
-        region: "AP-SOUTHEAST",
+        region: "Asia Pacific (Remote)",
         pdf_parsed: true,
-        github_repos: "44_REPOS",
-        tags: ["PYTHON", "C++", "DOCKER"],
+        github_repos: "44 Repos",
+        tags: ["Python", "C++", "Docker"],
         proctor_score: "98%",
-        proctor_flags: "ZERO_CHEATING_FLAGS",
-        cam_status: "BROWSER_LOCKDOWN: COMPLIANT",
+        proctor_flags: "Clean Record",
+        cam_status: "Full Screen Compliant",
         stars: "★★★★☆",
         rating_num: "4.1 / 5.0",
         email: "elena.rostova@kernel.org",
@@ -229,15 +229,15 @@ const ClientDashboard = () => {
 
     const displayedApplicants = applicants.filter(a => {
         if (filterMode === 'TRUST_90') return parseFloat(a.cosine_sim) >= 90;
-        if (filterMode === 'ZERO_FLAG') return a.proctor_flags?.includes("ZERO");
+        if (filterMode === 'ZERO_FLAG') return a.proctor_flags?.toLowerCase().includes("clean") || a.proctor_flags?.includes("ZERO");
         return true;
     });
 
     const companyName = profile?.company_name || user?.email?.split('@')[0] || 'SkillForge Partner';
     const totalApplicantsCount = (jobs.length * 14) + applicants.length;
     const requiredSkillsList = selectedJob?.skills_required 
-        ? selectedJob.skills_required.split(',').map(s => s.trim().toUpperCase())
-        : ["PYTHON", "FASTAPI", "DOCKER", "KUBERNETES", "POSTGRESQL_INDEXING", "REDIS"];
+        ? selectedJob.skills_required.split(',').map(s => s.trim())
+        : ["Python", "FastAPI", "Docker", "Kubernetes", "PostgreSQL", "Redis"];
 
     return (
         <div className="bg-[#050505] text-[#ededed] font-mono antialiased min-h-screen flex flex-col">
