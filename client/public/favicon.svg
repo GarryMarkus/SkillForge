@@ -1,37 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
     <style>
-      .cad-bg { fill: #1D52B8; }
-      .cad-hairline { stroke: #FFFFFF; stroke-opacity: 0.35; stroke-width: 1; fill: none; }
-      .cad-crosshair { stroke: #FFFFFF; stroke-width: 1.5; stroke-linecap: square; }
-      .cad-frame { stroke: #FFFFFF; stroke-opacity: 0.85; stroke-width: 1; fill: none; }
-      .cad-glyph { fill: none; stroke: #FFFFFF; stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; }
+      .bg { fill: #09090B; stroke: #27272A; stroke-width: 1.5px; }
+      .glyph { stroke: #FFFFFF; stroke-width: 4.5px; stroke-linecap: round; stroke-linejoin: round; }
+      .accent { fill: #FFFFFF; stroke: #FFFFFF; stroke-width: 4.5px; stroke-linecap: round; }
+      @media (prefers-color-scheme: light) {
+        .bg { fill: #F4F4F5; stroke: #D4D4D8; }
+        .glyph { stroke: #09090B; }
+        .accent { fill: #09090B; stroke: #09090B; }
+      }
     </style>
   </defs>
 
-  <!-- Technical Cobalt Blue Canvas -->
-  <rect width="32" height="32" rx="2" class="cad-bg"/>
+  <!-- Developer Chip Container -->
+  <rect x="1.5" y="1.5" width="61" height="61" rx="12" class="bg" />
 
-  <!-- Outer Hairline Blueprint Border -->
-  <rect x="2.5" y="2.5" width="27" height="27" rx="1" class="cad-hairline"/>
+  <!-- Verification Code Slashes '//' -->
+  <line x1="17" y1="45" x2="28" y2="19" class="glyph" />
+  <line x1="28" y1="45" x2="39" y2="19" class="glyph" />
 
-  <!-- Technical Crosshair Hairlines (Cardinal Axes) -->
-  <line x1="16" y1="0" x2="16" y2="5.5" class="cad-crosshair"/>
-  <line x1="16" y1="26.5" x2="16" y2="32" class="cad-crosshair"/>
-  <line x1="0" y1="16" x2="5.5" y2="16" class="cad-crosshair"/>
-  <line x1="26.5" y1="16" x2="32" y2="16" class="cad-crosshair"/>
-
-  <!-- Exposed Center Drafting Square -->
-  <rect x="5.5" y="5.5" width="21" height="21" class="cad-frame"/>
-
-  <!-- Central Technical Crosshair Ticks -->
-  <line x1="16" y1="5.5" x2="16" y2="8" class="cad-crosshair"/>
-  <line x1="16" y1="24" x2="16" y2="26.5" class="cad-crosshair"/>
-  <line x1="14.5" y1="16" x2="17.5" y2="16" class="cad-crosshair"/>
-
-  <!-- Monospace 'SF' Architectural Monogram -->
-  <!-- 'S' Glyph -->
-  <path d="M14 10.5 H9 V15 H14 V21.5 H9" class="cad-glyph"/>
-  <!-- 'F' Glyph -->
-  <path d="M23 10.5 H18 V21.5 M18 15.5 H22" class="cad-glyph"/>
+  <!-- Terminal Cursor / Verification Active State -->
+  <line x1="44" y1="44" x2="49" y2="44" class="accent" />
 </svg>
