@@ -64,11 +64,11 @@ const LeftPanel = () => {
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
                     <div className="bg-[#050505] rounded-md p-3.5 border border-white/10">
-                        <span className="text-[#737373] block mb-1">verified placements</span>
+                        <span className="text-[#737373] block mb-1">Verified Placements</span>
                         <strong className="text-base text-[#f5f5f5] font-bold font-mono">12,400+</strong>
                     </div>
                     <div className="bg-[#050505] rounded-md p-3.5 border border-white/10">
-                        <span className="text-[#737373] block mb-1">precision match</span>
+                        <span className="text-[#737373] block mb-1">Precision Match</span>
                         <strong className="text-base text-[#f5f5f5] font-bold font-mono">96.4%</strong>
                     </div>
                 </div>
@@ -76,7 +76,7 @@ const LeftPanel = () => {
 
             {/* Bottom Note */}
             <div className="text-[11px] text-[#555555] flex items-center gap-1.5">
-                <span>[enc: 256-bit enterprise security]</span>
+                <span>256-Bit Enterprise Security</span>
             </div>
         </div>
     );
