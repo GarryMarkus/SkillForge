@@ -11,48 +11,45 @@ const StudentHeader = ({
 
     return (
         <header 
-            className={`fixed top-0 ${sidebarCollapsed ? 'md:left-16' : 'md:left-60'} left-0 right-0 z-40 bg-[#09090B] border-b border-white/[0.08] font-sans shadow-sm transition-all`} 
+            className={`fixed top-0 ${sidebarCollapsed ? 'md:left-16' : 'md:left-60'} left-0 right-0 z-40 bg-[#050505] border-b border-white/[0.06] font-mono select-none transition-all`} 
             id="AppHeader"
         >
-            <div className="h-16 px-4 sm:px-6 flex items-center justify-between">
+            <div className="h-14 px-4 sm:px-6 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                        className="hidden md:flex p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 cursor-pointer transition-colors"
+                        className="hidden md:flex p-1.5 rounded-sm border border-white/10 text-[#737373] hover:text-white hover:border-white/20 cursor-pointer transition-colors text-xs font-mono"
                         title="Toggle Navigation Menu"
                     >
-                        <span className="material-symbols-outlined text-[20px]">
-                            {sidebarCollapsed ? 'menu_open' : 'menu'}
-                        </span>
+                        <span>{sidebarCollapsed ? '[+]' : '[-]'}</span>
                     </button>
                     <div className="flex items-center gap-2.5">
-                        <span className="font-semibold text-base text-white tracking-tight">
+                        <span className="font-display font-bold text-sm text-white tracking-tight">
                             Candidate Portal
                         </span>
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium hidden sm:inline-flex">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                            Verified Profile
+                        <span className="px-2 py-0.5 rounded-sm bg-[#0b0b0c] border border-white/10 text-[#888888] text-[11px] font-mono hidden sm:inline-block">
+                            [profile: verified]
                         </span>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3 sm:gap-4 text-sm">
-                    <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-medium">
-                        <span className="font-semibold text-white">{candidateName}</span>
-                        <span className="text-zinc-600">·</span>
-                        <span className="text-zinc-400">Software Engineer</span>
+                <div className="flex items-center gap-3 sm:gap-4 text-xs font-mono">
+                    <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-sm bg-[#0b0b0c] border border-white/10 text-[#888888] text-[11px]">
+                        <span className="text-[#f5f5f5] font-semibold">{candidateName}</span>
+                        <span className="text-[#444444]">&bull;</span>
+                        <span className="text-[#737373]">Software Engineer</span>
                     </div>
 
                     <button
                         onClick={onLogout}
-                        className="px-3 py-1.5 rounded-lg border border-zinc-700/80 hover:border-rose-500/40 text-zinc-300 hover:text-rose-400 text-xs font-medium transition-colors cursor-pointer"
+                        className="px-3 py-1.5 rounded-md border border-white/10 hover:border-rose-500/30 text-[#888888] hover:text-rose-300 text-xs font-mono transition-colors cursor-pointer"
                     >
-                        Log Out
+                        [logout]
                     </button>
 
                     <button
                         onClick={() => navigate('/student/onboarding')}
-                        className="w-7 h-7 rounded-md bg-blue-600 flex items-center justify-center text-white font-semibold text-xs cursor-pointer hover:bg-blue-500 transition-colors shadow-sm"
+                        className="w-7 h-7 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center text-[#f5f5f5] font-mono text-xs cursor-pointer hover:border-white/40 transition-colors shadow-sm"
                         title="Update Resume &amp; Profile"
                     >
                         {candidateName.charAt(0).toUpperCase()}

@@ -75,7 +75,7 @@ const UpskillPage = () => {
         if (e) e.preventDefault();
         const trimmed = topicInput.trim();
         if (!trimmed) {
-            setErrorMessage('Please enter a topic you want to learn.');
+            setErrorMessage('Please specify an engineering topic.');
             return;
         }
 
@@ -96,11 +96,11 @@ const UpskillPage = () => {
                 }
             } else {
                 const err = await res.json().catch(() => ({}));
-                setErrorMessage(err.error || 'Failed to generate learning module.');
+                setErrorMessage(err.error || 'Failed to generate curriculum module.');
             }
         } catch (err) {
             console.error('Error generating module', err);
-            setErrorMessage('Network error while generating curriculum.');
+            setErrorMessage('Network error while synthesizing curriculum.');
         } finally {
             setIsGenerating(false);
         }
@@ -121,10 +121,10 @@ const UpskillPage = () => {
 
     const metadata = parseMetadata(currentModule);
     const isCompleted = currentModule ? completedModuleIds.includes(currentModule.id) : false;
-    const moduleRef = currentModule ? `Module ${currentModule.id}` : 'Module 1';
+    const moduleRef = currentModule ? `Module #${currentModule.id}` : 'Module #1';
 
     return (
-        <div className="bg-[#09090B] text-zinc-100 font-sans antialiased min-h-screen flex flex-col">
+        <div className="bg-[#050505] text-[#ededed] font-mono antialiased min-h-screen flex flex-col">
             {/* Top Navigation */}
             <UpskillHeader
                 moduleRef={moduleRef}
@@ -133,26 +133,26 @@ const UpskillPage = () => {
             />
 
             {/* Main Content Workspace */}
-            <main className="w-full pt-20 sm:pt-24 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 flex-1 flex flex-col gap-6">
+            <main className="w-full pt-20 sm:pt-24 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 flex-1 flex flex-col gap-6 font-mono">
                 {/* Generation Drawer */}
                 {showGenerator && (
-                    <section className="w-full rounded-2xl border border-white/[0.08] bg-[#121318] p-6 shadow-sm">
-                        <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
+                    <section className="w-full rounded-md border border-white/10 bg-[#0b0b0c] p-6">
+                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 mb-4">
                             <div>
-                                <h3 className="text-sm font-semibold text-white">
-                                    Generate New Learning Guide
+                                <h3 className="text-xs font-semibold uppercase tracking-wider text-white">
+                                    [ generate learning module ]
                                 </h3>
-                                <p className="text-xs text-zinc-400">
-                                    Our evaluation enclave creates an interactive guide tailored to your skill gaps
+                                <p className="text-xs text-[#737373] mt-0.5">
+                                    Enclave synthesizes targeted architectural walkthroughs for skill focus areas
                                 </p>
                             </div>
                             {modules.length > 0 && (
                                 <button
                                     onClick={() => setShowGenerator(false)}
-                                    className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/[0.06] text-sm font-semibold transition-colors"
+                                    className="text-xs text-[#737373] hover:text-white font-mono cursor-pointer"
                                     aria-label="Close"
                                 >
-                                    ✕
+                                    [close ✕]
                                 </button>
                             )}
                         </div>
@@ -162,33 +162,33 @@ const UpskillPage = () => {
                                 type="text"
                                 value={topicInput}
                                 onChange={(e) => setTopicInput(e.target.value)}
-                                placeholder="Enter topic: e.g. Docker Containerization, PostgreSQL Indexing, Concurrency..."
+                                placeholder="Topic: e.g. Docker Containerization, PostgreSQL Indexing, Concurrency..."
                                 disabled={isGenerating}
-                                className="flex-1 px-4 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-sm text-white placeholder:text-zinc-500 transition-colors"
+                                className="flex-1 px-3.5 py-2 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#444444] transition-colors"
                             />
                             <button
                                 type="submit"
                                 disabled={isGenerating}
-                                className="bg-white hover:bg-zinc-200 text-zinc-950 px-6 py-2.5 rounded-xl font-semibold text-sm transition-colors shadow-sm cursor-pointer whitespace-nowrap disabled:opacity-50"
+                                className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer whitespace-nowrap disabled:opacity-50"
                             >
-                                {isGenerating ? 'Generating Guide...' : '+ Generate Guide →'}
+                                {isGenerating ? 'Synthesizing...' : '[ Generate Module ↗ ]'}
                             </button>
                         </form>
 
                         {errorMessage && (
-                            <p className="mt-2 text-rose-400 text-xs font-medium">
+                            <p className="mt-2 text-rose-300 text-xs">
                                 {errorMessage}
                             </p>
                         )}
 
-                        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-zinc-400">
-                            <span className="font-medium text-zinc-300">Recommended Topics:</span>
+                        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-[#737373]">
+                            <span className="text-[#555555]">Curated topics:</span>
                             {['Docker & Containers', 'PostgreSQL Query Optimization', 'FastAPI Concurrency', 'Redis In-Memory Caching'].map((s) => (
                                 <button
                                     key={s}
                                     type="button"
                                     onClick={() => setTopicInput(s)}
-                                    className="px-3 py-1 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-zinc-300 border border-white/[0.08] text-xs font-medium transition-colors cursor-pointer"
+                                    className="px-2.5 py-1 rounded-sm bg-[#050505] hover:bg-[#111113] text-[#888888] hover:text-white border border-white/10 text-xs font-mono transition-colors cursor-pointer"
                                 >
                                     {s}
                                 </button>
@@ -200,23 +200,23 @@ const UpskillPage = () => {
                 {/* Two-Column Layout */}
                 <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     {/* Left Column: Modules List (3 Cols) */}
-                    <aside className="lg:col-span-3 rounded-2xl border border-white/[0.08] bg-[#121318] shadow-sm flex flex-col select-none overflow-hidden">
-                        <div className="w-full bg-[#181A22] px-4 py-3.5 border-b border-white/[0.08] flex items-center justify-between">
-                            <span className="font-semibold text-xs text-white">
-                                My Modules ({modules.length})
+                    <aside className="lg:col-span-3 rounded-md border border-white/10 bg-[#0b0b0c] flex flex-col select-none overflow-hidden">
+                        <div className="w-full bg-[#050505] px-4 py-3 border-b border-white/[0.06] flex items-center justify-between">
+                            <span className="font-semibold text-xs uppercase tracking-wider text-white">
+                                [ Modules: {modules.length} ]
                             </span>
                             <button
                                 onClick={() => setShowGenerator(prev => !prev)}
-                                className="text-blue-400 text-xs font-semibold hover:text-blue-300"
+                                className="text-xs font-mono text-[#888888] hover:text-white cursor-pointer"
                             >
-                                + New
+                                [+ New]
                             </button>
                         </div>
 
                         <div className="divide-y divide-white/[0.04] max-h-[600px] overflow-y-auto">
                             {modules.length === 0 ? (
-                                <div className="p-5 text-center text-zinc-500 text-xs">
-                                    No guides generated yet. Click "+ New" to create one.
+                                <div className="p-5 text-center text-[#555555] text-xs">
+                                    No guides indexed. Click [+ New] to generate.
                                 </div>
                             ) : (
                                 modules.map((mod, idx) => {
@@ -227,25 +227,21 @@ const UpskillPage = () => {
                                         <button
                                             key={mod.id}
                                             onClick={() => handleSelectModule(mod)}
-                                            className={`w-full text-left p-4 transition-colors cursor-pointer flex flex-col gap-1.5 ${
+                                            className={`w-full text-left p-3.5 transition-colors cursor-pointer flex flex-col gap-1 font-mono ${
                                                 isSelected
-                                                    ? 'bg-white/[0.04] border-l-2 border-l-blue-500'
-                                                    : 'hover:bg-white/[0.02]'
+                                                    ? 'bg-[#111113] border-l-2 border-l-white'
+                                                    : 'hover:bg-[#050505]'
                                             }`}
                                         >
-                                            <div className="flex items-center justify-between gap-1 text-xs font-medium text-white">
+                                            <div className="flex items-center justify-between gap-1 text-xs text-white">
                                                 <span className="truncate">
-                                                    {idx + 1}. {mod.topic}
+                                                    [{String(idx + 1).padStart(2, '0')}] {mod.topic}
                                                 </span>
-                                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                                                    isModCompleted
-                                                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                                        : 'bg-white/[0.04] text-zinc-400 border border-white/[0.08]'
-                                                }`}>
-                                                    {isModCompleted ? 'Done' : 'Active'}
+                                                <span className="text-[10px] text-[#888888] font-mono">
+                                                    {isModCompleted ? '[✓]' : '[-]'}
                                                 </span>
                                             </div>
-                                            <div className="flex items-center justify-between text-[11px] text-zinc-400">
+                                            <div className="flex items-center justify-between text-[11px] text-[#555555]">
                                                 <span>Level: {mod.level || 'Mid'}</span>
                                                 <span>{new Date(mod.created_at).toLocaleDateString()}</span>
                                             </div>
@@ -259,23 +255,25 @@ const UpskillPage = () => {
                     {/* Right Column: Active Module View (9 Cols) */}
                     <div className="lg:col-span-9 flex flex-col gap-6">
                         {isGenerating ? (
-                            <div className="w-full rounded-2xl border border-dashed border-blue-500/30 bg-[#121318] p-12 flex flex-col items-center justify-center text-center gap-4">
-                                <div className="w-10 h-10 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                            <div className="w-full rounded-md border border-dashed border-white/20 bg-[#0b0b0c] p-12 flex flex-col items-center justify-center text-center gap-4">
+                                <div className="text-xs text-[#888888] animate-pulse">
+                                    [synthesizing curriculum guide...]
+                                </div>
                                 <div className="space-y-1">
-                                    <h3 className="font-semibold text-base text-white">
-                                        Synthesizing Curriculum Guide
+                                    <h3 className="font-semibold text-sm text-white">
+                                        Synthesizing Architectural Modules
                                     </h3>
-                                    <p className="text-xs text-zinc-400">
-                                        Assembling real-world architectural scenarios, edge-case analysis, and code specs...
+                                    <p className="text-xs text-[#737373]">
+                                        Assembling real-world scenarios, failure-mode analysis, and code specs...
                                     </p>
                                 </div>
-                                <div className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-medium">
+                                <div className="px-2.5 py-1 rounded-sm bg-[#050505] text-[#888888] border border-white/10 text-xs font-mono">
                                     Topic: {topicInput || 'Technical Guide'}
                                 </div>
                             </div>
                         ) : loading ? (
-                            <div className="w-full rounded-2xl border border-white/[0.08] bg-[#121318] p-12 text-center text-zinc-500 text-sm">
-                                Loading learning modules...
+                            <div className="w-full rounded-md border border-white/10 bg-[#0b0b0c] p-12 text-center text-[#555555] text-xs">
+                                Loading curriculum modules...
                             </div>
                         ) : currentModule ? (
                             <>
@@ -301,18 +299,18 @@ const UpskillPage = () => {
                                 />
                             </>
                         ) : (
-                            <div className="w-full rounded-2xl border border-dashed border-white/[0.1] bg-[#121318] p-12 text-center flex flex-col items-center justify-center gap-3">
-                                <h3 className="font-semibold text-base text-white">
-                                    No Learning Guide Selected
+                            <div className="w-full rounded-md border border-dashed border-white/15 bg-[#0b0b0c] p-12 text-center flex flex-col items-center justify-center gap-3">
+                                <h3 className="font-semibold text-sm text-white">
+                                    No Module Selected
                                 </h3>
-                                <p className="text-xs text-zinc-400 max-w-sm leading-relaxed">
-                                    Select a guide from the sidebar or generate a new topic tailored to your target skills.
+                                <p className="text-xs text-[#737373] max-w-sm leading-relaxed">
+                                    Select a module from the catalog or generate a new topic tailored to your target skills.
                                 </p>
                                 <button
                                     onClick={() => setShowGenerator(true)}
-                                    className="mt-2 bg-white hover:bg-zinc-200 text-zinc-950 px-6 py-2.5 rounded-xl font-semibold text-xs transition-colors shadow-sm cursor-pointer"
+                                    className="mt-2 bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer"
                                 >
-                                    + Generate New Guide
+                                    [+ Generate New Guide]
                                 </button>
                             </div>
                         )}

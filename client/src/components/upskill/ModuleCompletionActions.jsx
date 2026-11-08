@@ -21,7 +21,7 @@ const ModuleCompletionActions = ({
                     onProgressUpdated();
                 }
                 const launchRetest = window.confirm(
-                    'Great job! Module marked as finished.\n\nWould you like to take a technical assessment to test your understanding?'
+                    'Module marked as completed.\n\nProceed to technical evaluation to verify understanding?'
                 );
                 if (launchRetest) {
                     navigate('/student/assessment');
@@ -32,7 +32,7 @@ const ModuleCompletionActions = ({
             }
         } catch (e) {
             console.error('Error completing module', e);
-            alert('A network error occurred while updating your progress.');
+            alert('A network error occurred while updating progress.');
         } finally {
             setSubmitting(false);
         }
@@ -40,46 +40,42 @@ const ModuleCompletionActions = ({
 
     return (
         <section
-            className="w-full bg-[#121318] p-6 rounded-2xl border border-white/[0.08] flex flex-wrap items-center justify-between gap-4 font-sans select-none shadow-sm"
+            className="w-full bg-[#0b0b0c] p-5 sm:p-6 rounded-md border border-white/10 flex flex-wrap items-center justify-between gap-4 font-mono select-none"
             id="ModuleCompletionActions"
         >
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2 text-xs">
-                    <span className="font-medium text-zinc-400">Status:</span>
-                    <span className={`px-2.5 py-0.5 rounded-full font-medium text-xs ${
-                        isCompleted
-                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                            : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                    }`}>
-                        {isCompleted ? 'Completed' : 'In Progress'}
+                    <span className="text-[#555555]">Status:</span>
+                    <span className="px-2 py-0.5 rounded-sm font-mono text-xs bg-[#050505] text-[#888888] border border-white/10">
+                        {isCompleted ? '[completed]' : '[in progress]'}
                     </span>
                 </div>
-                <div className="text-xs text-zinc-400">
-                    Completing this module unlocks assessment verification for this skill
+                <div className="text-xs text-[#737373]">
+                    Completion unlocks empirical assessment verification for this topic
                 </div>
             </div>
 
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2.5 flex-wrap">
                 <button
                     onClick={onGenerateNewClick}
-                    className="bg-white/[0.06] hover:bg-white/[0.1] text-zinc-200 border border-white/[0.08] text-xs sm:text-sm font-medium px-5 py-2.5 rounded-xl transition-colors cursor-pointer flex items-center gap-1.5"
+                    className="bg-[#050505] hover:bg-[#111113] text-[#888888] hover:text-white border border-white/10 text-xs font-mono px-4 py-2 rounded-md transition-colors cursor-pointer"
                     type="button"
                 >
-                    <span>+ New Topic</span>
+                    <span>[+ New Topic]</span>
                 </button>
 
                 <button
                     onClick={handleMarkCompleteAndRetest}
                     disabled={submitting}
-                    className="bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors shadow-sm cursor-pointer flex items-center gap-2 disabled:opacity-50"
+                    className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 text-xs font-mono px-5 py-2 rounded-md transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                     type="button"
                 >
                     <span>
                         {submitting
                             ? 'Saving...'
                             : isCompleted
-                            ? 'Take Assessment Now →'
-                            : 'Mark Complete & Take Quiz →'}
+                            ? '[ Take Assessment ↗ ]'
+                            : '[ Mark Complete & Test ↗ ]'}
                     </span>
                 </button>
             </div>

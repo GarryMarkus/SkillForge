@@ -129,12 +129,12 @@ const StudentDashboard = () => {
     const candidateName = profile?.full_name || user?.full_name || user?.email?.split('@')[0] || 'Candidate';
 
     return (
-        <div className="bg-[#09090B] font-sans text-zinc-100 antialiased min-h-screen">
+        <div className="bg-[#050505] font-mono text-[#ededed] antialiased min-h-screen">
             {/* Sidebar Navigation */}
             <StudentSidebar sidebarCollapsed={sidebarCollapsed} />
 
             {/* Main Content Wrapper */}
-            <div className={`transition-all duration-200 ${sidebarCollapsed ? 'md:pl-18' : 'md:pl-64'}`}>
+            <div className={`transition-all duration-200 ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-60'}`}>
                 {/* Header */}
                 <StudentHeader 
                     candidateName={candidateName}
@@ -144,62 +144,58 @@ const StudentDashboard = () => {
                 />
 
                 {/* Main Body */}
-                <main className="w-full pt-20 sm:pt-24 min-h-[calc(100vh-2rem)] bg-[#09090B] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 font-sans">
-                    <div className="flex flex-col gap-8 w-full max-w-[1400px] mx-auto">
+                <main className="w-full pt-20 sm:pt-24 min-h-[calc(100vh-2rem)] bg-[#050505] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 font-mono">
+                    <div className="flex flex-col gap-6 w-full max-w-[1400px] mx-auto">
 
                         {/* Top Multi-Tab Navigation Bar */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-4">
+                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => setActiveTab('overview')}
-                                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                                    className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
                                         activeTab === 'overview'
-                                            ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
-                                            : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                            ? 'bg-[#111113] text-white border border-white/20 shadow-sm'
+                                            : 'text-[#737373] hover:text-white hover:border-white/10 border border-transparent'
                                     }`}
                                 >
-                                    <span className="material-symbols-outlined text-[18px]">person</span>
-                                    <span>Profile &amp; Skills</span>
+                                    <span>[01: Overview]</span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('jobs')}
-                                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                                    className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
                                         activeTab === 'jobs'
-                                            ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
-                                            : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                            ? 'bg-[#111113] text-white border border-white/20 shadow-sm'
+                                            : 'text-[#737373] hover:text-white hover:border-white/10 border border-transparent'
                                     }`}
                                 >
-                                    <span className="material-symbols-outlined text-[18px]">work</span>
-                                    <span>Job Matches</span>
-                                    <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 font-semibold ml-1">
+                                    <span>[02: Matched Requisitions]</span>
+                                    <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-[#050505] border border-white/10 text-[#888888] font-mono ml-0.5">
                                         {jobs.length}
                                     </span>
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('learning')}
-                                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all cursor-pointer flex items-center gap-2 ${
+                                    className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
                                         activeTab === 'learning'
-                                            ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-sm'
-                                            : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                            ? 'bg-[#111113] text-white border border-white/20 shadow-sm'
+                                            : 'text-[#737373] hover:text-white hover:border-white/10 border border-transparent'
                                     }`}
                                 >
-                                    <span className="material-symbols-outlined text-[18px]">school</span>
-                                    <span>Learning Paths</span>
+                                    <span>[03: Learning Curriculum]</span>
                                 </button>
                             </div>
 
                             <button
                                 onClick={() => navigate('/student/assessment')}
-                                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-zinc-950 rounded-xl text-xs sm:text-sm font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer transition-colors"
+                                className="px-3.5 py-1.5 bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 rounded-md text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
                             >
-                                <span className="material-symbols-outlined text-[18px]">play_circle</span>
-                                <span>Take New Assessment</span>
+                                <span>[ + Start Assessment ↗ ]</span>
                             </button>
                         </div>
 
                         {/* TAB 1: OVERVIEW & PROFILE */}
                         {activeTab === 'overview' && (
-                            <div className="space-y-8 animate-fadeIn">
+                            <div className="space-y-6">
                                 <VerificationProfileBlock 
                                     profile={profile}
                                     recommendation={recommendation}
@@ -213,34 +209,34 @@ const StudentDashboard = () => {
                                     onAccessLearning={() => setActiveTab('learning')}
                                 />
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="bg-[#121318] rounded-2xl border border-white/[0.08] p-6 shadow-sm space-y-3">
-                                        <div className="flex items-center justify-between">
-                                            <h4 className="font-semibold text-white text-base">Top Matching Opportunities</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-5 space-y-2">
+                                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
+                                            <h4 className="font-semibold text-white text-xs uppercase tracking-wider">[ Matched Requisitions ]</h4>
                                             <button 
                                                 onClick={() => setActiveTab('jobs')}
-                                                className="text-xs font-semibold text-blue-400 hover:text-blue-300 cursor-pointer"
+                                                className="text-xs font-mono text-[#888888] hover:text-white cursor-pointer"
                                             >
-                                                View All →
+                                                view all ({jobs.length}) &rarr;
                                             </button>
                                         </div>
-                                        <p className="text-sm text-zinc-400">
-                                            You have {jobs.length} open roles matching your verified skill set.
+                                        <p className="text-xs text-[#737373] leading-relaxed">
+                                            {jobs.length} open roles currently aligned with your verified competence profile.
                                         </p>
                                     </div>
 
-                                    <div className="bg-[#121318] rounded-2xl border border-white/[0.08] p-6 shadow-sm space-y-3">
-                                        <div className="flex items-center justify-between">
-                                            <h4 className="font-semibold text-white text-base">Workplace Personality Radar</h4>
+                                    <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-5 space-y-2">
+                                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
+                                            <h4 className="font-semibold text-white text-xs uppercase tracking-wider">[ Engineering Archetype ]</h4>
                                             <button 
                                                 onClick={() => navigate('/student/personality-test')}
-                                                className="text-xs font-semibold text-blue-400 hover:text-blue-300 cursor-pointer"
+                                                className="text-xs font-mono text-[#888888] hover:text-white cursor-pointer"
                                             >
-                                                View Insights →
+                                                profile insights &rarr;
                                             </button>
                                         </div>
-                                        <p className="text-sm text-zinc-400">
-                                            Understand your team collaboration and architectural problem-solving style.
+                                        <p className="text-xs text-[#737373] leading-relaxed">
+                                            Algorithmic analysis of systems thinking, code review style, and collaboration heuristics.
                                         </p>
                                     </div>
                                 </div>
@@ -249,7 +245,7 @@ const StudentDashboard = () => {
 
                         {/* TAB 2: JOB MATCHES */}
                         {activeTab === 'jobs' && (
-                            <div className="space-y-6 animate-fadeIn">
+                            <div className="space-y-6">
                                 <MatchedPositionsGrid 
                                     jobs={jobs}
                                     myApplications={myApplications}
@@ -263,7 +259,7 @@ const StudentDashboard = () => {
 
                         {/* TAB 3: LEARNING & UPSKILLING */}
                         {activeTab === 'learning' && (
-                            <div className="space-y-6 animate-fadeIn">
+                            <div className="space-y-6">
                                 <UpskillTerminalCard 
                                     onResumeCurriculum={() => navigate('/student/upskill')}
                                 />
@@ -274,12 +270,11 @@ const StudentDashboard = () => {
                 </main>
 
                 {/* Clean Simplified Footer */}
-                <footer className="w-full border-t border-white/[0.08] bg-[#09090B] text-xs text-zinc-500 font-sans py-4">
+                <footer className="w-full border-t border-white/[0.06] bg-[#050505] text-xs text-[#555555] font-mono py-4">
                     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-                        <div>SkillForge Candidate Hub © {new Date().getFullYear()}</div>
-                        <div className="flex items-center gap-2 text-emerald-400 font-medium">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <span>Evaluation Enclave Active &amp; Secure</span>
+                        <div>SkillForge Candidate Hub &copy; {new Date().getFullYear()}</div>
+                        <div className="text-[11px] text-[#737373]">
+                            [verification enclave: active]
                         </div>
                     </div>
                 </footer>

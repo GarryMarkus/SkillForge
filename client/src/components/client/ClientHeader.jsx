@@ -11,76 +11,75 @@ const ClientHeader = ({
     onLogout
 }) => {
     return (
-        <header className="fixed top-0 left-0 w-full z-50 bg-[#09090B]/90 backdrop-blur-md border-b border-white/[0.08] font-sans" id="ClientHeader">
+        <header className="fixed top-0 left-0 w-full z-50 bg-[#050505] border-b border-white/[0.06] font-mono select-none" id="ClientHeader">
             {/* Top Enterprise Navigation */}
-            <div className="h-16 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            <div className="h-14 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm">
+                    <div className="w-6 h-6 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center text-[#f5f5f5] font-bold text-xs font-mono">
                         SF
                     </div>
-                    <span className="text-base sm:text-lg font-semibold text-white tracking-tight">
+                    <span className="text-sm font-display font-bold text-white tracking-tight">
                         SkillForge Employer Hub
                     </span>
-                    <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                        Enclave Active
+                    <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-sm bg-[#0b0b0c] text-[#888888] border border-white/10 text-[11px] font-mono">
+                        [enclave : active]
                     </span>
                 </div>
 
-                <div className="flex items-center gap-4 text-sm font-medium">
-                    <div className="hidden lg:flex items-center gap-2 text-xs text-zinc-400 bg-white/[0.04] px-3 py-1 rounded-full border border-white/[0.08]">
+                <div className="flex items-center gap-3 sm:gap-4 text-xs font-mono">
+                    <div className="hidden lg:flex items-center gap-2 text-xs text-[#888888] bg-[#0b0b0c] px-2.5 py-1 rounded-sm border border-white/10">
                         <span className="font-semibold text-white">{companyName}</span>
-                        <span className="text-zinc-600">·</span>
-                        <span className="text-zinc-400">Hiring Manager</span>
+                        <span className="text-[#555555]">&bull;</span>
+                        <span className="text-[#737373]">Hiring Manager</span>
                     </div>
 
                     <button
                         onClick={onLogout}
-                        className="px-3.5 py-1.5 rounded-xl border border-white/[0.08] hover:border-rose-500/20 text-zinc-400 hover:text-rose-400 text-xs font-medium transition-colors cursor-pointer"
+                        className="px-3 py-1.5 rounded-md border border-white/10 hover:border-rose-500/30 text-[#888888] hover:text-rose-300 text-xs font-mono transition-colors cursor-pointer"
                     >
-                        Log Out
+                        [logout]
                     </button>
-                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                    <div className="w-7 h-7 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center text-[#f5f5f5] font-mono text-xs font-bold">
                         HR
                     </div>
                 </div>
             </div>
 
             {/* Sub-Header Navigation Tabs Rail */}
-            <div className="h-12 w-full bg-[#0C0E14] border-t border-white/[0.06]">
-                <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between overflow-x-auto">
+            <div className="h-11 w-full bg-[#0b0b0c] border-t border-white/[0.06]">
+                <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between overflow-x-auto text-xs">
                     <nav className="flex items-center h-full gap-2 py-1">
                         <button
                             onClick={() => setActiveTab('REQUISITIONS')}
-                            className={`h-full flex items-center px-4 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                            className={`h-full flex items-center px-3 rounded-sm text-xs font-mono transition-all cursor-pointer ${
                                 activeTab === 'REQUISITIONS'
-                                    ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-xs'
-                                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                    ? 'bg-[#111113] text-white border border-white/20 shadow-xs'
+                                    : 'text-[#737373] hover:text-white'
                             }`}
                         >
-                            Job Openings ({jobsCount})
+                            [01: Requisitions ({jobsCount})]
                         </button>
                         <button
                             onClick={() => setActiveTab('CANDIDATES')}
-                            className={`h-full flex items-center px-4 rounded-xl text-xs sm:text-sm font-medium transition-all cursor-pointer ${
+                            className={`h-full flex items-center px-3 rounded-sm text-xs font-mono transition-all cursor-pointer ${
                                 activeTab === 'CANDIDATES'
-                                    ? 'bg-white/[0.08] text-white border border-white/[0.1] shadow-xs'
-                                    : 'text-zinc-400 hover:text-white hover:bg-white/[0.04]'
+                                    ? 'bg-[#111113] text-white border border-white/20 shadow-xs'
+                                    : 'text-[#737373] hover:text-white'
                             }`}
                         >
-                            Candidate Pipeline ({totalApplicantsCount})
+                            [02: Candidate Pipeline ({totalApplicantsCount})]
                         </button>
                     </nav>
 
                     {/* Quick Metric Pills */}
-                    <div className="hidden md:flex items-center gap-6 text-xs text-zinc-400 font-medium">
+                    <div className="hidden md:flex items-center gap-5 text-xs text-[#737373] font-mono">
                         <div>
                             <span>Avg Match Fit:</span>{' '}
-                            <strong className="text-blue-400 font-semibold">{verifiedTalentIndex}</strong>
+                            <strong className="text-[#ededed] font-mono font-semibold">{verifiedTalentIndex}</strong>
                         </div>
                         <div>
                             <span>Time to Shortlist:</span>{' '}
-                            <strong className="text-emerald-400 font-semibold">{timeToShortlist}</strong>
+                            <strong className="text-[#ededed] font-mono font-semibold">{timeToShortlist}</strong>
                         </div>
                     </div>
                 </div>

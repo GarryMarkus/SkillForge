@@ -8,82 +8,82 @@ const CandidateDossierModal = ({
     if (!candidate) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm select-none font-sans">
-            <div className="bg-[#121318] rounded-2xl border border-white/[0.08] w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden text-white animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm select-none font-mono">
+            <div className="bg-[#0b0b0c] rounded-md border border-white/10 w-full max-w-2xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden text-[#ededed]">
                 {/* Header */}
-                <div className="px-6 py-4 bg-[#181A22] border-b border-white/[0.08] flex items-center justify-between">
+                <div className="px-5 py-3.5 bg-[#050505] border-b border-white/[0.06] flex items-center justify-between">
                     <div>
-                        <h2 className="text-base font-semibold text-white">
-                            Candidate Profile
+                        <h2 className="text-xs font-semibold uppercase tracking-wider text-white">
+                            [ Candidate Dossier ]
                         </h2>
-                        <p className="text-xs text-zinc-400">
-                            Reference ID: {candidate.candidate_ref || 'SF-REF'}
+                        <p className="text-xs text-[#737373] mt-0.5">
+                            Reference: {candidate.candidate_ref || 'SF-REF'}
                         </p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/[0.06] text-sm font-semibold transition-colors cursor-pointer"
+                        className="text-xs text-[#737373] hover:text-white font-mono cursor-pointer"
                         aria-label="Close"
                     >
-                        ✕
+                        [close ✕]
                     </button>
                 </div>
 
                 {/* Body Content */}
-                <div className="p-6 overflow-y-auto space-y-5 flex-1 text-zinc-300 text-sm">
+                <div className="p-5 overflow-y-auto space-y-4 flex-1 text-xs text-[#888888]">
                     {/* Candidate Overview */}
-                    <div className="p-5 bg-white/[0.02] rounded-xl border border-white/[0.08] flex flex-col gap-2">
+                    <div className="p-4 bg-[#050505] rounded-sm border border-white/10 flex flex-col gap-1.5">
                         <div className="flex justify-between items-baseline flex-wrap gap-2">
-                            <span className="text-xl sm:text-2xl font-bold text-white">
+                            <span className="text-base font-bold text-white font-display">
                                 {candidate.candidate_name}
                             </span>
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                                {candidate.cosine_sim}% Match
+                            <span className="px-2 py-0.5 rounded-sm text-xs font-mono bg-[#111113] text-[#ededed] border border-white/20">
+                                [{candidate.cosine_sim}% Match]
                             </span>
                         </div>
-                        <div className="text-sm font-normal text-zinc-400">
-                            {candidate.role_label} • {candidate.region}
+                        <div className="text-xs text-[#737373]">
+                            {candidate.role_label} &bull; {candidate.region}
                         </div>
-                        <div className="text-xs text-zinc-500">
-                            Email: {candidate.email}
+                        <div className="text-[11px] text-[#555555]">
+                            email: {candidate.email}
                         </div>
                     </div>
 
                     {/* Verified Assessment Results */}
-                    <div className="p-5 bg-[#181A22] rounded-xl border border-white/[0.08] space-y-3">
-                        <div className="text-xs font-medium uppercase tracking-wider text-blue-400">
-                            Proctored Assessment Results
+                    <div className="p-4 bg-[#050505] rounded-sm border border-white/10 space-y-2.5">
+                        <div className="text-[11px] uppercase tracking-wider text-white">
+                            [ proctored evaluation telemetry ]
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                            <div className="bg-[#09090B] p-3 rounded-lg border border-white/[0.06]">
-                                <span className="text-xs text-zinc-400 block">Assessment Score</span>
-                                <strong className="text-white text-base">{candidate.proctor_score}</strong>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <div className="bg-[#0b0b0c] p-2.5 rounded-sm border border-white/10">
+                                <span className="text-[11px] text-[#555555] block">Score</span>
+                                <strong className="text-white text-xs font-mono">{candidate.proctor_score}</strong>
                             </div>
-                            <div className="bg-[#09090B] p-3 rounded-lg border border-white/[0.06]">
-                                <span className="text-xs text-zinc-400 block">Integrity Flags</span>
-                                <strong className="text-white text-base">{candidate.proctor_flags}</strong>
+                            <div className="bg-[#0b0b0c] p-2.5 rounded-sm border border-white/10">
+                                <span className="text-[11px] text-[#555555] block">Integrity Record</span>
+                                <strong className="text-white text-xs font-mono">{candidate.proctor_flags}</strong>
                             </div>
-                            <div className="bg-[#09090B] p-3 rounded-lg border border-white/[0.06]">
-                                <span className="text-xs text-zinc-400 block">Webcam Status</span>
-                                <strong className="text-white text-base">{candidate.cam_status}</strong>
+                            <div className="bg-[#0b0b0c] p-2.5 rounded-sm border border-white/10">
+                                <span className="text-[11px] text-[#555555] block">Hardware Telemetry</span>
+                                <strong className="text-white text-xs font-mono">{candidate.cam_status}</strong>
                             </div>
-                            <div className="bg-[#09090B] p-3 rounded-lg border border-white/[0.06]">
-                                <span className="text-xs text-zinc-400 block">Candidate Rating</span>
-                                <strong className="text-amber-400 text-base">{candidate.stars} ({candidate.rating_num})</strong>
+                            <div className="bg-[#0b0b0c] p-2.5 rounded-sm border border-white/10">
+                                <span className="text-[11px] text-[#555555] block">Peer Calibrated Rating</span>
+                                <strong className="text-white text-xs font-mono">[{candidate.rating_num}]</strong>
                             </div>
                         </div>
                     </div>
 
                     {/* Verified Skills */}
-                    <div className="p-5 bg-white/[0.02] rounded-xl border border-white/[0.08] space-y-3">
-                        <div className="text-xs font-medium uppercase tracking-wider text-zinc-400">
-                            Verified Skills
+                    <div className="p-4 bg-[#050505] rounded-sm border border-white/10 space-y-2">
+                        <div className="text-[11px] uppercase tracking-wider text-white">
+                            [ verified competencies ]
                         </div>
-                        <div className="flex flex-wrap gap-2 text-xs">
+                        <div className="flex flex-wrap gap-1.5 text-xs">
                             {(candidate.tags || ["Python", "FastAPI", "Docker"]).map((t, idx) => (
                                 <span
                                     key={idx}
-                                    className="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-md font-mono text-xs"
+                                    className="bg-[#0b0b0c] text-[#888888] border border-white/10 px-2 py-0.5 rounded-sm font-mono text-xs"
                                 >
                                     {t}
                                 </span>
@@ -92,26 +92,22 @@ const CandidateDossierModal = ({
                     </div>
 
                     {/* Actions */}
-                    <div className="pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+                    <div className="pt-3 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3">
                         <button
                             onClick={onClose}
-                            className="px-5 py-2.5 rounded-xl border border-white/[0.1] text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] transition-colors cursor-pointer"
+                            className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white transition-colors cursor-pointer"
                         >
-                            Close
+                            [Close]
                         </button>
+
                         <button
                             onClick={() => {
                                 onIssueOffer(candidate);
                                 onClose();
                             }}
-                            disabled={candidate.status === 'accepted'}
-                            className={`px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer ${
-                                candidate.status === 'accepted'
-                                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 cursor-default'
-                                    : 'bg-white hover:bg-zinc-200 text-zinc-950'
-                            }`}
+                            className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors cursor-pointer"
                         >
-                            {candidate.status === 'accepted' ? '✓ Offer Extended' : 'Shortlist Candidate →'}
+                            [Extend Interview / Offer ↗]
                         </button>
                     </div>
                 </div>

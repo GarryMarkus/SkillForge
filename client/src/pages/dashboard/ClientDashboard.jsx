@@ -240,7 +240,7 @@ const ClientDashboard = () => {
         : ["PYTHON", "FASTAPI", "DOCKER", "KUBERNETES", "POSTGRESQL_INDEXING", "REDIS"];
 
     return (
-        <div className="bg-[#09090B] text-zinc-100 font-sans antialiased min-h-screen flex flex-col">
+        <div className="bg-[#050505] text-[#ededed] font-mono antialiased min-h-screen flex flex-col">
             {/* Top Enterprise Console Header with Integrated Metric Ribbon */}
             <ClientHeader
                 companyName={companyName}
@@ -254,7 +254,7 @@ const ClientDashboard = () => {
             />
 
             {/* Main Console Workspace */}
-            <main className="w-full pt-32 bg-[#09090B] min-h-screen flex-1 flex flex-col justify-between">
+            <main className="w-full pt-28 bg-[#050505] min-h-screen flex-1 flex flex-col justify-between font-mono">
                 <div>
                     {/* Requisition Deployment Action Bar */}
                     <RequisitionActionBar
@@ -264,7 +264,7 @@ const ClientDashboard = () => {
                     />
 
                     {/* Main Workplane Grid */}
-                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
                         {/* Active Deployed Jobs Table Block */}
                         <ActiveJobsTableBlock
                             jobs={jobs}
@@ -274,7 +274,7 @@ const ClientDashboard = () => {
                         />
 
                         {/* Two-Column Engineering Split */}
-                        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                             {/* Left Column: Applicant Rankings Grid (8 Cols) */}
                             <ApplicantRankingsGrid
                                 selectedJob={selectedJob}

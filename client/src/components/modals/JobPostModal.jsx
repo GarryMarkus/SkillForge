@@ -43,53 +43,53 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm select-none font-sans">
-            <div className="bg-[#121318] rounded-2xl border border-white/[0.08] w-full max-w-2xl shadow-2xl max-h-[92vh] flex flex-col overflow-hidden text-white animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm select-none font-mono">
+            <div className="bg-[#0b0b0c] rounded-md border border-white/10 w-full max-w-2xl shadow-2xl max-h-[92vh] flex flex-col overflow-hidden text-[#ededed]">
                 {/* Modal Header */}
-                <div className="px-6 py-4 bg-[#181A22] border-b border-white/[0.08] flex items-center justify-between">
+                <div className="px-5 py-3.5 bg-[#050505] border-b border-white/[0.06] flex items-center justify-between">
                     <div>
-                        <h2 className="text-base font-semibold text-white">
-                            Post New Job Opening
+                        <h2 className="text-xs font-semibold uppercase tracking-wider text-white">
+                            [ Post New Requisition ]
                         </h2>
-                        <p className="text-xs text-zinc-400">
-                            Create a role specification to find matched, verified candidates
+                        <p className="text-xs text-[#737373] mt-0.5">
+                            Define role specification to evaluate against candidate telemetry
                         </p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/[0.06] text-sm font-semibold transition-colors cursor-pointer"
+                        className="text-xs text-[#737373] hover:text-white font-mono cursor-pointer"
                         aria-label="Close"
                     >
-                        ✕
+                        [close ✕]
                     </button>
                 </div>
 
                 {/* Modal Form Body */}
-                <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1 text-zinc-300 text-sm">
+                <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-4 flex-1 text-xs text-[#888888] font-mono">
                     <div>
-                        <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                            Job Title <span className="text-rose-400">*</span>
+                        <label className="block text-xs font-mono text-[#888888] mb-1.5">
+                            Job Title <span className="text-[#737373]">*</span>
                         </label>
                         <input
                             name="title"
                             value={formData.title}
                             onChange={handleChange}
-                            placeholder="e.g. Senior Frontend Engineer"
+                            placeholder="Senior Distributed Systems Engineer"
                             required
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors placeholder:text-zinc-500"
+                            className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-[#f5f5f5] text-xs font-mono transition-colors placeholder-[#444444]"
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                                Category
+                            <label className="block text-xs font-mono text-[#888888] mb-1.5">
+                                Category Domain
                             </label>
                             <select
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors cursor-pointer"
+                                className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-[#f5f5f5] text-xs font-mono transition-colors cursor-pointer"
                             >
                                 <option value="Web Development">Web Development</option>
                                 <option value="Backend Systems">Backend Systems</option>
@@ -103,25 +103,25 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                                Annual Budget ($USD) <span className="text-rose-400">*</span>
+                            <label className="block text-xs font-mono text-[#888888] mb-1.5">
+                                Annual Budget ($USD) <span className="text-[#737373]">*</span>
                             </label>
                             <input
                                 type="number"
                                 name="budget_amount"
                                 value={formData.budget_amount}
                                 onChange={handleChange}
-                                placeholder="120000"
+                                placeholder="140000"
                                 required
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors placeholder:text-zinc-500"
+                                className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-[#f5f5f5] text-xs font-mono transition-colors placeholder-[#444444]"
                             />
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                                Minimum Skill Score (0–100)
+                            <label className="block text-xs font-mono text-[#888888] mb-1.5">
+                                Minimum Score Threshold (0–100)
                             </label>
                             <input
                                 type="number"
@@ -132,19 +132,19 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                                 onChange={handleChange}
                                 placeholder="80"
                                 required
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors placeholder:text-zinc-500"
+                                className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-[#f5f5f5] text-xs font-mono transition-colors placeholder-[#444444]"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                            <label className="block text-xs font-mono text-[#888888] mb-1.5">
                                 Compensation Type
                             </label>
                             <select
                                 name="budget_type"
                                 value={formData.budget_type}
                                 onChange={handleChange}
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors cursor-pointer"
+                                className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-[#f5f5f5] text-xs font-mono transition-colors cursor-pointer"
                             >
                                 <option value="fixed">Full-Time Annual Salary</option>
                                 <option value="hourly">Hourly Contract Rate</option>
@@ -153,8 +153,8 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                     </div>
 
                     <div>
-                        <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                            Required Skills (comma-separated) <span className="text-rose-400">*</span>
+                        <label className="block text-xs font-mono text-[#888888] mb-1.5">
+                            Required Competencies (comma-separated) <span className="text-[#737373]">*</span>
                         </label>
                         <input
                             name="skills_required"
@@ -162,43 +162,43 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                             onChange={handleChange}
                             placeholder="Python, React, TypeScript, Docker, PostgreSQL"
                             required
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors placeholder:text-zinc-500"
+                            className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-[#f5f5f5] text-xs font-mono transition-colors placeholder-[#444444]"
                         />
-                        <span className="text-xs text-zinc-500 block mt-1">
-                            Candidates with matching verified skills will be automatically recommended.
+                        <span className="text-[11px] text-[#555555] block mt-1">
+                            Matching algorithm filters candidates meeting these specific tags.
                         </span>
                     </div>
 
                     <div>
-                        <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                            Role Description <span className="text-rose-400">*</span>
+                        <label className="block text-xs font-mono text-[#888888] mb-1.5">
+                            Role Description <span className="text-[#737373]">*</span>
                         </label>
                         <textarea
                             name="description"
                             value={formData.description}
                             onChange={handleChange}
                             rows="4"
-                            placeholder="Describe the responsibilities, team structure, and qualifications needed..."
+                            placeholder="Specification details, architectural responsibilities, and team requirements..."
                             required
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors resize-none placeholder:text-zinc-500"
+                            className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-[#f5f5f5] text-xs font-mono transition-colors resize-none placeholder-[#444444]"
                         />
                     </div>
 
                     {/* Bottom Actions */}
-                    <div className="pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+                    <div className="pt-4 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-3">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-5 py-2.5 rounded-xl border border-white/[0.1] text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] transition-colors cursor-pointer"
+                            className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white transition-colors cursor-pointer"
                         >
-                            Cancel
+                            [Cancel]
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="bg-white hover:bg-zinc-200 text-zinc-950 px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
+                            className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                         >
-                            {loading ? 'Publishing...' : 'Publish Job Opening →'}
+                            {loading ? 'Publishing...' : '[ Publish Requisition ↗ ]'}
                         </button>
                     </div>
                 </form>

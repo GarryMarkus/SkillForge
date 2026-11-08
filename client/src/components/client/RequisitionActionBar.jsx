@@ -7,37 +7,34 @@ const RequisitionActionBar = ({
 }) => {
     return (
         <section
-            className="w-full bg-[#09090B] border-b border-white/[0.08] font-sans"
+            className="w-full bg-[#050505] border-b border-white/[0.06] font-mono select-none"
             id="RequisitionActionBar"
         >
-            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
                     <button
                         onClick={onDeployClick}
-                        className="bg-white hover:bg-zinc-200 text-zinc-950 text-sm font-semibold px-5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center gap-2 shadow-sm"
+                        className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 text-xs font-mono px-4 py-2 rounded-md transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
                         type="button"
                     >
-                        <span className="material-symbols-outlined text-[18px]">add</span>
-                        <span>Post New Role</span>
+                        <span>[+ Post New Role]</span>
                     </button>
 
                     <button
                         onClick={onExportCSV}
-                        className="bg-white/[0.06] hover:bg-white/[0.1] text-zinc-200 border border-white/[0.08] text-sm font-medium px-4 py-2.5 rounded-xl transition-all cursor-pointer flex items-center gap-2"
+                        className="bg-[#050505] hover:bg-[#111113] text-[#888888] hover:text-white border border-white/10 text-xs font-mono px-4 py-2 rounded-md transition-all cursor-pointer flex items-center gap-1.5"
                         type="button"
                     >
-                        <span className="material-symbols-outlined text-[18px]">download</span>
-                        <span>Export Candidates (CSV)</span>
+                        <span>[↓ Export CSV]</span>
                     </button>
 
-                    <div className="hidden xl:flex items-center gap-2 pl-4 border-l border-white/[0.08] text-xs text-zinc-400 font-medium">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                        <span>Automated Skill Matching: Active</span>
+                    <div className="hidden xl:flex items-center gap-2 pl-4 border-l border-white/[0.06] text-xs text-[#737373] font-mono">
+                        <span>[automated skill matching: active]</span>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs text-zinc-500">
-                    <span>Synchronized: {lastRunTimestamp}</span>
+                <div className="flex items-center gap-2 text-xs text-[#555555] font-mono">
+                    <span>synced: {lastRunTimestamp}</span>
                 </div>
             </div>
         </section>
