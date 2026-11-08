@@ -8,13 +8,6 @@ import React from 'react';
 const HeroHeadline = () => {
     return (
         <div className="space-y-4">
-            {/* Monospace Kicker */}
-            <div className="flex items-center gap-2">
-                <span className="text-xs font-mono tracking-wider text-[#737373] uppercase">
-                    Empirical Skill Verification Protocol
-                </span>
-            </div>
-
             {/* Display Title in Courier Prime */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight leading-[1.12]">
                 <span className="block text-[#f5f5f5]">SkillForge</span>

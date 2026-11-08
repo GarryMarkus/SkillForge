@@ -40,7 +40,7 @@ const LandingPage = () => {
             <div className="w-full text-[#ededed] font-mono min-h-screen selection:bg-white/20 selection:text-white flex flex-col justify-between">
                 <Navbar />
 
-                <main className="w-full pt-16 sm:pt-24 md:pt-32 flex-1 relative z-10">
+                <main className="w-full pt-4 sm:pt-6 md:pt-8 flex-1 relative z-10">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex flex-col w-full">
                             {/* Beat 1: Spacious Empirical Skill Verification Hero */}

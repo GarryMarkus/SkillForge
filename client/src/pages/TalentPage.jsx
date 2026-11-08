@@ -41,7 +41,7 @@ const TalentPage = () => {
 
                 <main className="w-full flex-1 relative z-10 font-mono">
                     {/* Header Section */}
-                    <header className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16 md:pt-36 md:pb-24">
+                    <header className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12 md:pt-12 md:pb-16">
                         <span className="text-xs font-mono uppercase tracking-widest text-[#737373] block mb-3">
                             Talent &amp; Solutions
                         </span>
