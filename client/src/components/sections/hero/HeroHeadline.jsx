@@ -22,7 +22,7 @@ const HeroHeadline = () => {
             </h1>
 
             {/* Description Paragraph in Consolas */}
-            <p className="text-sm sm:text-base font-mono text-[#8a8a8e] max-w-xl leading-relaxed">
+            <p className="text-base md:text-lg font-mono text-[#888888] max-w-xl leading-relaxed">
                 Objective technical evaluation without resume inflation. Direct code analysis, sandboxed execution, and verified skill dossiers engineered for high-signal engineering teams.
             </p>
         </div>
