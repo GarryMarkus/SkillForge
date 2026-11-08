@@ -1,252 +1,171 @@
 import React from 'react';
-import SpotlightCard from '../ui/animations/SpotlightCard';
-import BorderBeam from '../ui/animations/BorderBeam';
-import DecryptedText from '../ui/animations/DecryptedText';
-import ShinyText from '../ui/animations/ShinyText';
 
 const HeroSection = ({ onStartAssessment, onPostRequisition }) => {
     return (
         <section
-            className="w-full relative font-sans p-6 sm:p-10 lg:p-14 rounded-3xl bg-[#090B10]/95 border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.7)] backdrop-blur-2xl overflow-hidden mb-16"
+            className="w-full relative font-sans p-6 sm:p-10 lg:p-12 rounded-2xl bg-[#121318] border border-white/[0.08] border-t-white/[0.15] shadow-xl overflow-hidden mb-12"
             id="HeroSection"
         >
-            {/* Ambient Radial Spotlight inside Section */}
-            <div
-                className="pointer-events-none absolute -top-40 -left-40 w-96 h-96 bg-cyanAccent/10 rounded-full blur-[120px]"
-                aria-hidden="true"
-            />
-            <div
-                className="pointer-events-none absolute -bottom-40 -right-40 w-96 h-96 bg-emerald-500/10 rounded-full blur-[140px]"
-                aria-hidden="true"
-            />
-
-            <div className="flex flex-col gap-10 lg:gap-12 relative z-10">
-                {/* Top Blueprint Telemetry Header */}
-                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-5">
-                    {/* Super-Header Badge with DecryptedText */}
-                    <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-cyanAccent/10 border border-cyanAccent/30 text-cyanAccent text-xs font-mono shadow-[0_0_15px_rgba(0,240,255,0.15)]">
-                        <span className="w-2 h-2 rounded-full bg-cyanAccent shadow-[0_0_8px_#00F0FF] animate-pulse" />
-                        <DecryptedText
-                            text="EMPIRICAL TALENT PROTOCOL // ZERO RESUME BIAS"
-                            speed={30}
-                            animateOn="view"
-                            className="font-semibold tracking-wider"
-                        />
+            <div className="flex flex-col gap-8 lg:gap-10 relative z-10">
+                {/* Clean Enterprise Category Tag */}
+                <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                        <span>Empirical Skill Verification Platform</span>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs font-mono text-slate-400 bg-white/[0.03] border border-white/[0.06] px-3 py-1 rounded-full">
-                        <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                        <span>LATENCY: 14MS // NODE_US_EAST</span>
+                    <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-400">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        <span>Verified Hiring Active</span>
                     </div>
                 </div>
 
-                {/* Asymmetric Two-Column Grid Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-                    {/* Left Column (7 Cols): Architectural Pitch */}
-                    <div className="lg:col-span-7 flex flex-col justify-between gap-8">
-                        <div className="space-y-6">
-                            <h1 className="text-4xl sm:text-5xl lg:text-[4.2rem] xl:text-[4.75rem] font-display font-extrabold text-[#F8FAFC] tracking-tight leading-[1.06]">
+                {/* Two-Column Layout */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+                    {/* Left Column (7 Cols): Executive Value Proposition */}
+                    <div className="lg:col-span-7 flex flex-col justify-between gap-6">
+                        <div className="space-y-4">
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white tracking-tight leading-[1.12]">
                                 Hire Verified Talent.{' '}
-                                <span className="block mt-1 sm:mt-2 bg-gradient-to-r from-cyanAccent via-teal-300 to-emerald-400 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(0,240,255,0.3)]">
+                                <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400">
                                     Prove Your Actual Skills.
                                 </span>
                             </h1>
 
-                            <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed font-sans">
-                                SkillForge replaces resume inflation and hiring guesswork through sandboxed real-world engineering challenges, live tamper-evident telemetry, and mathematically verified competency scoring.
+                            <p className="text-base sm:text-lg text-zinc-300 max-w-xl leading-relaxed">
+                                SkillForge replaces resume embellishment with standardized, sandboxed technical assessments. Candidates demonstrate real problem-solving ability, and engineering teams hire with empirical confidence.
                             </p>
                         </div>
 
-                        {/* Interactive Action CTAs */}
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-4 sm:gap-6 pt-2">
-                            {/* Primary CTA: Launch Verification Assessment */}
-                            <div className="flex-1 sm:flex-initial">
-                                <div className="relative group rounded-xl">
-                                    <button
-                                        onClick={onStartAssessment}
-                                        className="relative w-full sm:w-auto bg-gradient-to-r from-cyanAccent to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 text-slate-950 font-display font-bold text-base py-4 px-8 rounded-xl shadow-[0_0_25px_rgba(0,240,255,0.35)] hover:shadow-[0_0_35px_rgba(0,240,255,0.55)] transition-all cursor-pointer flex items-center justify-center gap-3 active:scale-[0.98] overflow-hidden"
-                                    >
-                                        <BorderBeam
-                                            size={30}
-                                            duration={4}
-                                            colorFrom="#FFFFFF"
-                                            colorTo="#00F0FF"
-                                            borderWidth={1.5}
-                                            borderRadius={12}
-                                        />
-                                        <span className="relative z-10 tracking-tight">Launch Verification Assessment</span>
-                                        <span className="material-symbols-outlined text-[20px] relative z-10 transform transition-transform group-hover:translate-x-1.5">
-                                            arrow_forward
-                                        </span>
-                                    </button>
-                                </div>
-                                <span className="text-xs text-slate-400 mt-2.5 block font-mono text-center sm:text-left">
-                                    20-minute adaptive challenge · Zero resume required
+                        {/* Solid Action Buttons */}
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 sm:gap-4 pt-1">
+                            <button
+                                onClick={onStartAssessment}
+                                className="inline-flex items-center justify-center gap-2 bg-white text-zinc-950 hover:bg-zinc-100 font-semibold text-sm py-3.5 px-6 rounded-xl shadow-sm transition-colors cursor-pointer active:scale-[0.99]"
+                            >
+                                <span>Start Technical Assessment</span>
+                                <span className="material-symbols-outlined text-[18px]">
+                                    arrow_forward
                                 </span>
-                            </div>
+                            </button>
 
-                            {/* Secondary CTA: Recruiter Command Deck */}
-                            <div className="flex-1 sm:flex-initial">
-                                <button
-                                    onClick={onPostRequisition}
-                                    className="w-full sm:w-auto bg-white/[0.03] hover:bg-white/[0.08] text-white border border-white/[0.12] hover:border-cyanAccent/50 font-display font-semibold text-base py-4 px-7 rounded-xl shadow-sm hover:shadow-[0_0_20px_rgba(0,240,255,0.15)] transition-all cursor-pointer flex items-center justify-center gap-2.5 active:scale-[0.98] backdrop-blur-md"
-                                >
-                                    <span className="material-symbols-outlined text-cyanAccent text-[20px]">
-                                        grid_view
-                                    </span>
-                                    <span>Recruiter Command Deck</span>
-                                </button>
-                                <span className="text-xs text-slate-400 mt-2.5 block font-mono text-center sm:text-left">
-                                    Instant pre-evaluated candidate pipelines
-                                </span>
-                            </div>
+                            <button
+                                onClick={onPostRequisition}
+                                className="inline-flex items-center justify-center gap-2 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 hover:text-white border border-zinc-700/80 font-semibold text-sm py-3.5 px-6 rounded-xl transition-colors cursor-pointer"
+                            >
+                                <span>For Hiring Teams</span>
+                            </button>
                         </div>
 
-                        {/* Micro-Telemetry Benchmark Bar */}
-                        <div className="grid grid-cols-3 gap-3 pt-6 border-t border-white/[0.08] text-xs font-mono">
-                            <div className="flex flex-col gap-0.5 p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
-                                <span className="text-slate-500 uppercase tracking-wider text-[10px]">AVG TIME</span>
-                                <span className="text-cyanAccent font-bold text-sm tracking-wide">20 MIN</span>
+                        {/* Clean Benchmark Indicators */}
+                        <div className="grid grid-cols-3 gap-3 pt-5 border-t border-white/[0.06] text-xs">
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-zinc-500 text-[11px] uppercase tracking-wide font-medium">Evaluation Time</span>
+                                <span className="text-zinc-200 font-semibold text-sm">20 Minutes</span>
                             </div>
-                            <div className="flex flex-col gap-0.5 p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
-                                <span className="text-slate-500 uppercase tracking-wider text-[10px]">TAMPER RISK</span>
-                                <span className="text-emerald-400 font-bold text-sm tracking-wide">&lt; 0.02%</span>
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-zinc-500 text-[11px] uppercase tracking-wide font-medium">Anti-Tamper Rate</span>
+                                <span className="text-emerald-400 font-semibold text-sm">99.9% Verified</span>
                             </div>
-                            <div className="flex flex-col gap-0.5 p-3 rounded-lg bg-white/[0.02] border border-white/[0.05]">
-                                <span className="text-slate-500 uppercase tracking-wider text-[10px]">PRECISION</span>
-                                <span className="text-cyanAccent font-bold text-sm tracking-wide">99.4% COSINE</span>
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-zinc-500 text-[11px] uppercase tracking-wide font-medium">Skill Matching</span>
+                                <span className="text-blue-400 font-semibold text-sm">Semantic Alignment</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Right Column (5 Cols): The Holographic Candidate Dossier & Verification HUD */}
+                    {/* Right Column (5 Cols): Sleek Executive Credential Card */}
                     <div className="lg:col-span-5">
-                        <SpotlightCard
-                            spotlightColor="rgba(0, 240, 255, 0.2)"
-                            borderColor="rgba(0, 240, 255, 0.45)"
-                            bgClassName="bg-[#0C0E14]/90"
-                            className="p-6 sm:p-8 border border-white/[0.1] shadow-[0_12px_48px_rgba(0,0,0,0.85)] relative"
-                        >
-                            {/* Traveling Perimeter Laser Beam */}
-                            <BorderBeam
-                                size={28}
-                                duration={7}
-                                colorFrom="#00F0FF"
-                                colorTo="#10B981"
-                                borderWidth={1.5}
-                                borderRadius={16}
-                            />
-
-                            <div className="flex flex-col justify-between gap-6 relative z-10">
-                                {/* Header Bar: Window Chrome & Live Tamper Status */}
-                                <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                                        <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                                        <span className="text-[11px] font-mono text-slate-400 ml-2">
-                                            VERIFIED_DOSSIER // UID: 8F29-ALX
-                                        </span>
+                        <div className="rounded-xl bg-[#181A22] border border-white/[0.08] border-t-white/[0.18] p-6 shadow-xl relative">
+                            <div className="flex flex-col gap-5">
+                                {/* Card Header: Candidate Identity & Verification Badge */}
+                                <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-semibold text-sm">
+                                            AR
+                                        </div>
+                                        <div>
+                                            <div className="text-sm font-semibold text-white flex items-center gap-1.5">
+                                                <span>Alex Rivera</span>
+                                                <span className="material-symbols-outlined text-blue-400 text-[15px]">
+                                                    verified
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-zinc-400 font-normal">
+                                                Full-Stack Software Engineer
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center gap-1.5 text-[10px] font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-                                        <span className="relative flex h-1.5 w-1.5">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                                        </span>
-                                        <span>NOMINAL</span>
-                                    </div>
+                                    <span className="px-2.5 py-1 rounded-full text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
+                                        Verified
+                                    </span>
                                 </div>
 
-                                {/* Big Metric Display with ShinyText Metallic Sweep */}
+                                {/* Score Showcase */}
                                 <div className="my-1">
                                     <div className="flex items-baseline justify-between">
-                                        <ShinyText
-                                            speed={3.5}
-                                            className="font-display text-5xl sm:text-6xl font-extrabold tracking-tight"
-                                            color="#FFFFFF"
-                                            shineColor="#00F0FF"
-                                        >
-                                            100%
-                                        </ShinyText>
-                                        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wider text-cyanAccent bg-cyanAccent/10 border border-cyanAccent/30">
-                                            PERCENTILE: 98.6TH
+                                        <div className="text-4xl font-display font-bold text-white tracking-tight">
+                                            98.6<span className="text-xl font-normal text-zinc-400">th</span>
+                                        </div>
+                                        <span className="text-xs font-medium text-zinc-400">
+                                            Percentile Rank
                                         </span>
                                     </div>
-                                    <div className="text-sm font-mono font-bold text-slate-200 mt-1 uppercase tracking-wider">
-                                        EMPIRICAL COMPETENCE SCORE
-                                    </div>
-                                    <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-sans">
-                                        Evaluated across 42 automated regression suites, runtime complexity profiling, and AST code integrity checks.
+                                    <p className="text-xs text-zinc-400 mt-1">
+                                        Evaluated across runtime efficiency, problem solving, and architecture design.
                                     </p>
                                 </div>
 
-                                {/* Interactive Verification Vectors */}
-                                <div className="space-y-3.5 pt-4 border-t border-white/[0.08]">
-                                    {/* Vector 1: Sandboxed Problem Solving */}
-                                    <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2">
+                                {/* Skill Breakdown Meters */}
+                                <div className="space-y-3 pt-3 border-t border-white/[0.06]">
+                                    {/* Metric 1 */}
+                                    <div className="space-y-1.5">
                                         <div className="flex items-center justify-between text-xs">
-                                            <span className="font-semibold text-slate-200 flex items-center gap-2">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-cyanAccent" />
-                                                Sandboxed Problem Solving
-                                            </span>
-                                            <span className="font-mono text-emerald-400 font-bold">98/100</span>
+                                            <span className="text-zinc-300 font-medium">Algorithmic Problem Solving</span>
+                                            <span className="text-white font-semibold">98/100</span>
                                         </div>
-                                        <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                                            <div
-                                                className="h-full bg-gradient-to-r from-cyanAccent to-emerald-400 rounded-full"
-                                                style={{ width: '98%' }}
-                                            />
+                                        <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                            <div className="h-full bg-blue-500 rounded-full" style={{ width: '98%' }} />
                                         </div>
                                     </div>
 
-                                    {/* Vector 2: GitHub Commit Depth Analysis */}
-                                    <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] space-y-2">
+                                    {/* Metric 2 */}
+                                    <div className="space-y-1.5">
                                         <div className="flex items-center justify-between text-xs">
-                                            <span className="font-semibold text-slate-200 flex items-center gap-2">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-cyanAccent" />
-                                                GitHub Commit Depth Analysis
-                                            </span>
-                                            <span className="font-mono text-cyanAccent text-[11px]">482 Commits · 14 Repos</span>
+                                            <span className="text-zinc-300 font-medium">System Architecture &amp; Design</span>
+                                            <span className="text-white font-semibold">95/100</span>
                                         </div>
-                                        {/* Activity Sparkline Dot Grid */}
-                                        <div className="flex items-center justify-between gap-1 pt-1">
-                                            {[3, 5, 8, 4, 7, 9, 6, 8, 10, 7, 9, 10, 8, 9, 10].map((h, i) => (
-                                                <div
-                                                    key={i}
-                                                    className="flex-1 bg-cyanAccent/30 hover:bg-cyanAccent rounded-xs transition-colors"
-                                                    style={{ height: `${h * 2}px` }}
-                                                />
-                                            ))}
+                                        <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                            <div className="h-full bg-indigo-500 rounded-full" style={{ width: '95%' }} />
                                         </div>
                                     </div>
 
-                                    {/* Vector 3: Biometric & Canvas Proctoring */}
-                                    <div className="p-3 rounded-xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between">
-                                        <div className="flex items-center gap-2 text-xs">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                                            <span className="font-semibold text-slate-200">Biometric &amp; Canvas Proctoring</span>
+                                    {/* Metric 3 */}
+                                    <div className="space-y-1.5">
+                                        <div className="flex items-center justify-between text-xs">
+                                            <span className="text-zinc-300 font-medium">Code Quality &amp; Maintainability</span>
+                                            <span className="text-white font-semibold">99/100</span>
                                         </div>
-                                        <span className="px-2 py-0.5 rounded text-[10px] font-mono text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 font-semibold">
-                                            0 Anomalies Detected
-                                        </span>
+                                        <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                            <div className="h-full bg-emerald-500 rounded-full" style={{ width: '99%' }} />
+                                        </div>
                                     </div>
                                 </div>
 
-                                {/* Card Footer: Cryptographic SHA-256 Seal Stamp Badge */}
-                                <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px] font-mono text-slate-400">
-                                    <div className="flex items-center gap-1.5 text-cyanAccent">
-                                        <span className="material-symbols-outlined text-[16px]">verified</span>
-                                        <span className="font-semibold">SHA-256: 8F29C...6A71</span>
+                                {/* Card Footer: Proctoring Audit */}
+                                <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
+                                    <div className="flex items-center gap-1.5 text-zinc-300">
+                                        <span className="material-symbols-outlined text-emerald-400 text-[16px]">
+                                            check_circle
+                                        </span>
+                                        <span>Proctor Integrity: Clean</span>
                                     </div>
-                                    <span className="text-[10px] tracking-wider text-slate-500 uppercase">
-                                        TAMPER-PROOF AUDIT HASH
+                                    <span className="text-[11px] text-zinc-500 font-mono">
+                                        ID #SF-9842
                                     </span>
                                 </div>
                             </div>
-                        </SpotlightCard>
+                        </div>
                     </div>
                 </div>
             </div>
