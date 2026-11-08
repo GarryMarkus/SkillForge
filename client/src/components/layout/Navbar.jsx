@@ -67,7 +67,7 @@ const Navbar = () => {
                                 className="text-[#666666] hover:text-[#ededed] transition-colors px-1"
                                 title="Sign out"
                             >
-                                [exit]
+                                Sign Out
                             </button>
                         </>
                     ) : (
