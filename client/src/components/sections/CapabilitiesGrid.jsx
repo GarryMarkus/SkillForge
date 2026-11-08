@@ -1,4 +1,5 @@
 import React from 'react';
+import SpotlightCard from '../ui/animations/SpotlightCard';
 
 const pillars = [
     {
@@ -42,13 +43,13 @@ const CapabilitiesGrid = () => {
             <div className="flex flex-col gap-8">
                 {/* Section Header */}
                 <div className="max-w-2xl space-y-2">
-                    <span className="text-xs text-[#888888] font-display uppercase tracking-wider block">
+                    <span className="text-xs text-[#737373] font-mono uppercase tracking-wider block">
                         Three Pillars of Verification
                     </span>
                     <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
                         How SkillForge Evaluates Real Ability
                     </h2>
-                    <p className="text-xs sm:text-sm text-[#888888] leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#8a8a8e] leading-relaxed">
                         Every stage is engineered to be transparent, mathematically objective, and focused strictly on demonstrated competence.
                     </p>
                 </div>
@@ -56,30 +57,31 @@ const CapabilitiesGrid = () => {
                 {/* 3 Columns Card Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {pillars.map((pillar, idx) => (
-                        <div
+                        <SpotlightCard
                             key={idx}
-                            className="p-6 rounded-md bg-[#0b0b0c] border border-white/10 flex flex-col justify-between gap-6"
+                            bgClassName="bg-[#0e0e11]"
+                            className="p-6 sm:p-7 rounded-md border border-white/[0.08] flex flex-col justify-between gap-6"
                         >
-                            <div className="space-y-4">
+                            <div className="space-y-4 relative z-10">
                                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 text-xs">
-                                    <span className="font-bold text-white">
+                                    <span className="font-bold font-mono text-[#f5f5f5]">
                                         {pillar.num}
                                     </span>
-                                    <span className="text-[#666666] uppercase text-[11px]">
+                                    <span className="text-[11px] font-mono text-[#8a8a8e] px-2 py-0.5 rounded-sm bg-[#080809] border border-white/[0.06]">
                                         {pillar.tag}
                                     </span>
                                 </div>
 
-                                <h3 className="text-base font-bold text-white tracking-tight">
+                                <h3 className="text-base font-bold font-display text-white tracking-tight">
                                     {pillar.title}
                                 </h3>
 
-                                <p className="text-xs text-[#888888] leading-relaxed">
+                                <p className="text-xs text-[#8a8a8e] leading-relaxed">
                                     {pillar.summary}
                                 </p>
                             </div>
 
-                            <ul className="space-y-2 border-t border-white/[0.06] pt-4 text-xs text-[#737373]">
+                            <ul className="space-y-2 border-t border-white/[0.06] pt-4 text-xs text-[#737373] relative z-10">
                                 {pillar.points.map((pt, pIdx) => (
                                     <li key={pIdx} className="flex items-start gap-2">
                                         <span className="text-[#555555] select-none">-</span>
@@ -87,7 +89,7 @@ const CapabilitiesGrid = () => {
                                     </li>
                                 ))}
                             </ul>
-                        </div>
+                        </SpotlightCard>
                     ))}
                 </div>
             </div>
