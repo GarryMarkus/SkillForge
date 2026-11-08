@@ -1,4 +1,5 @@
 import React from 'react';
+import SpotlightCard from '../ui/animations/SpotlightCard';
 
 const pillars = [
     {
@@ -39,46 +40,49 @@ const pillars = [
 const CapabilitiesGrid = () => {
     return (
         <section className="w-full font-sans pb-16 mb-16" id="CapabilitiesRow">
-            <div className="flex flex-col gap-8">
-                {/* Clean Section Header */}
+            <div className="flex flex-col gap-10">
+                {/* Architectural Section Header */}
                 <div className="text-center max-w-2xl mx-auto space-y-3">
-                    <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">
+                    <span className="text-xs font-mono uppercase tracking-wider text-cyanAccent bg-cyanAccent/10 border border-cyanAccent/30 px-3.5 py-1 rounded-full inline-block shadow-[0_0_12px_rgba(0,240,255,0.15)]">
                         Three Pillars of Verification
                     </span>
-                    <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-950 tracking-tight">
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold text-[#F8FAFC] tracking-tight">
                         How SkillForge Evaluates Real Ability
                     </h2>
-                    <p className="text-base sm:text-lg text-gray-600 leading-relaxed">
-                        Every step of our process is designed to be clear, respectful, and focused strictly on the skills that matter.
+                    <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-sans">
+                        Every stage is engineered to be transparent, mathematically objective, and focused strictly on empirical competence.
                     </p>
                 </div>
 
-                {/* 3 Columns Modern Card Grid */}
+                {/* 3 Columns SpotlightCard Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                     {pillars.map((pillar, idx) => (
-                        <div
+                        <SpotlightCard
                             key={idx}
-                            className="bg-white rounded-2xl border border-gray-100 p-8 sm:p-10 flex flex-col justify-between gap-6 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5"
+                            spotlightColor="rgba(0, 240, 255, 0.15)"
+                            borderColor="rgba(0, 240, 255, 0.4)"
+                            bgClassName="bg-[#0C0E14]/90"
+                            className="p-8 sm:p-10 flex flex-col justify-between gap-6 border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:-translate-y-1 transition-all duration-300"
                         >
-                            <div className="space-y-4">
-                                <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
-                                    <span className="material-symbols-outlined text-[24px]">
+                            <div className="space-y-5">
+                                <div className="w-12 h-12 rounded-xl bg-cyanAccent/10 border border-cyanAccent/30 text-cyanAccent flex items-center justify-center font-bold shadow-[0_0_15px_rgba(0,240,255,0.2)]">
+                                    <span className="material-symbols-outlined text-[26px]">
                                         {pillar.icon}
                                     </span>
                                 </div>
 
-                                <h3 className="text-xl font-bold text-gray-900 tracking-tight">
+                                <h3 className="text-xl font-display font-bold text-white tracking-tight">
                                     {pillar.title}
                                 </h3>
 
-                                <p className="text-sm sm:text-base text-gray-600 leading-relaxed font-medium">
+                                <p className="text-sm text-slate-300 leading-relaxed font-normal">
                                     {pillar.summary}
                                 </p>
 
-                                <ul className="text-sm text-gray-600 space-y-2.5 pt-2 leading-relaxed">
+                                <ul className="text-xs sm:text-sm text-slate-400 space-y-3 pt-2 leading-relaxed">
                                     {pillar.points.map((pt, pIdx) => (
-                                        <li key={pIdx} className="flex items-start gap-2">
-                                            <span className="material-symbols-outlined text-blue-600 text-[16px] shrink-0 mt-1">
+                                        <li key={pIdx} className="flex items-start gap-2.5">
+                                            <span className="material-symbols-outlined text-cyanAccent text-[18px] shrink-0 mt-0.5">
                                                 check
                                             </span>
                                             <span>{pt}</span>
@@ -87,11 +91,11 @@ const CapabilitiesGrid = () => {
                                 </ul>
                             </div>
 
-                            <div className="pt-4 border-t border-gray-100 flex items-center justify-between text-xs font-semibold text-gray-500">
-                                <span>{pillar.tag}</span>
-                                <span className="text-blue-600 font-bold">Step 0{idx + 1}</span>
+                            <div className="pt-5 border-t border-white/[0.08] flex items-center justify-between text-xs font-mono text-slate-400">
+                                <span className="uppercase tracking-wider">{pillar.tag}</span>
+                                <span className="text-cyanAccent font-bold">STAGE 0{idx + 1}</span>
                             </div>
-                        </div>
+                        </SpotlightCard>
                     ))}
                 </div>
             </div>
