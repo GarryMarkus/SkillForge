@@ -22,14 +22,14 @@ const MarkdownContentReader = ({ content = '' }) => {
             <div className="w-full bg-[#050505] px-6 py-3.5 rounded-t-md border-b border-white/[0.06] flex items-center justify-between">
                 <div>
                     <h3 className="text-xs font-semibold uppercase tracking-wider text-white">
-                        [ curriculum guide ]
+                        Curriculum Guide
                     </h3>
                     <p className="text-xs text-[#737373] mt-0.5">
                         Technical specification &amp; architectural rationale
                     </p>
                 </div>
                 <span className="text-[11px] font-mono text-[#888888] bg-[#111113] border border-white/10 px-2 py-0.5 rounded-sm">
-                    [interactive spec]
+                    Interactive Spec
                 </span>
             </div>
 
@@ -78,7 +78,7 @@ const MarkdownContentReader = ({ content = '' }) => {
                         pre: ({ children, ...props }) => (
                             <div className="my-4 rounded-md border border-white/10 overflow-hidden">
                                 <div className="bg-[#050505] text-[#737373] px-3.5 py-1.5 text-[11px] font-mono flex items-center justify-between select-none border-b border-white/[0.06]">
-                                    <span>[code implementation]</span>
+                                    <span>Code Implementation</span>
                                     <span className="text-[#555555] text-[10px]">read-only</span>
                                 </div>
                                 <pre className="p-4 bg-[#050505] text-[#ededed] overflow-x-auto text-xs font-mono leading-relaxed" {...props}>

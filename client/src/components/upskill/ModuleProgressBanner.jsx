@@ -17,7 +17,7 @@ const ModuleProgressBanner = ({
             <div className="w-full border-b border-white/[0.06] pb-4 mb-5 flex flex-wrap items-center justify-between gap-3">
                 <div>
                     <span className="text-[11px] font-mono uppercase tracking-wider text-[#737373] block mb-1">
-                        [ skill module specification ]
+                        Skill Module Specification
                     </span>
                     <h2 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
                         {topic}
@@ -38,11 +38,11 @@ const ModuleProgressBanner = ({
                 {/* Left: Status */}
                 <div className="md:col-span-5 flex flex-col gap-2 border-b md:border-b-0 md:border-r border-white/[0.06] pb-4 md:pb-0 md:pr-6">
                     <div className="text-xs text-[#737373]">
-                        completion status
+                        Completion Status
                     </div>
                     <div className="flex items-baseline gap-3 flex-wrap">
                         <span className="text-xl sm:text-2xl font-bold font-mono text-white tracking-tight">
-                            {isCompleted ? '[100% Completed]' : '[In Progress]'}
+                            {isCompleted ? '100% Completed' : 'In Progress'}
                         </span>
                     </div>
                     {/* Progress Bar */}
@@ -57,10 +57,10 @@ const ModuleProgressBanner = ({
                 {/* Right: Prereqs & impact */}
                 <div className="md:col-span-7 flex flex-col gap-2 text-xs">
                     <div className="text-[#737373]">
-                        score boost benchmark: <span className="text-white font-mono font-semibold">{scoreBoost}</span>
+                        Score boost benchmark: <span className="text-white font-mono font-semibold">{scoreBoost}</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5 pt-1">
-                        <span className="text-[#555555] self-center">prerequisites:</span>
+                        <span className="text-[#555555] self-center">Prerequisites:</span>
                         {prerequisites && prerequisites.length > 0 ? (
                             prerequisites.map((p, i) => (
                                 <span key={i} className="px-2 py-0.5 rounded-sm bg-[#050505] text-[#888888] text-xs font-mono border border-white/10">
@@ -69,7 +69,7 @@ const ModuleProgressBanner = ({
                             ))
                         ) : (
                             <span className="px-2 py-0.5 rounded-sm bg-[#050505] text-[#888888] text-xs font-mono border border-white/10">
-                                foundational systems architecture
+                                Foundational Systems Architecture
                             </span>
                         )}
                     </div>

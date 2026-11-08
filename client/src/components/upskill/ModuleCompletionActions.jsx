@@ -47,7 +47,7 @@ const ModuleCompletionActions = ({
                 <div className="flex items-center gap-2 text-xs">
                     <span className="text-[#555555]">Status:</span>
                     <span className="px-2 py-0.5 rounded-sm font-mono text-xs bg-[#050505] text-[#888888] border border-white/10">
-                        {isCompleted ? '[completed]' : '[in progress]'}
+                        {isCompleted ? 'Completed' : 'In Progress'}
                     </span>
                 </div>
                 <div className="text-xs text-[#737373]">
@@ -61,7 +61,7 @@ const ModuleCompletionActions = ({
                     className="bg-[#050505] hover:bg-[#111113] text-[#888888] hover:text-white border border-white/10 text-xs font-mono px-4 py-2 rounded-md transition-colors cursor-pointer"
                     type="button"
                 >
-                    <span>[+ New Topic]</span>
+                    <span>+ New Topic</span>
                 </button>
 
                 <button
@@ -74,8 +74,8 @@ const ModuleCompletionActions = ({
                         {submitting
                             ? 'Saving...'
                             : isCompleted
-                            ? '[ Take Assessment ↗ ]'
-                            : '[ Mark Complete & Test ↗ ]'}
+                            ? 'Take Assessment ↗'
+                            : 'Mark Complete & Test ↗'}
                     </span>
                 </button>
             </div>

@@ -14,14 +14,14 @@ const RoleCard = ({ role, title, description, features, selectRole, selected }) 
             <div>
                 <div className="flex items-center justify-between mb-3">
                     <span className="text-[11px] font-mono uppercase tracking-wider text-[#737373]">
-                        {role === 'student' ? '[for candidates]' : '[for teams]'}
+                        {role === 'student' ? 'For Candidates' : 'For Hiring Teams'}
                     </span>
                     <span className={`text-xs font-mono ${
                         selected
                             ? 'text-white font-bold'
                             : 'text-[#444444]'
                     }`}>
-                        {selected ? '[✓]' : '[ ]'}
+                        {selected ? '✓' : ''}
                     </span>
                 </div>
 

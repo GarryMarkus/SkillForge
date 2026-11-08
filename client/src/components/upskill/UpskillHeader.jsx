@@ -19,7 +19,7 @@ const UpskillHeader = ({
                         SkillForge
                     </span>
                     <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-sm text-[11px] font-mono text-[#888888] bg-[#0b0b0c] border border-white/10">
-                        [learning : enclave]
+                        Learning Platform
                     </span>
                 </div>
 
@@ -29,7 +29,7 @@ const UpskillHeader = ({
                             {moduleRef} &bull; {moduleTopic}
                         </span>
                         <span className="px-2 py-0.5 rounded-sm text-[11px] font-mono bg-[#0b0b0c] text-[#888888] border border-white/10 ml-1">
-                            {isCompleted ? '[completed]' : '[in progress]'}
+                            {isCompleted ? 'Completed' : 'In Progress'}
                         </span>
                     </div>
 
@@ -37,7 +37,7 @@ const UpskillHeader = ({
                         onClick={() => navigate('/student/dashboard')}
                         className="px-3 py-1.5 rounded-md border border-white/10 bg-[#0b0b0c] text-xs font-mono text-[#888888] hover:text-white hover:border-white/25 transition-colors cursor-pointer flex items-center gap-1"
                     >
-                        <span>&larr; return to dashboard</span>
+                        <span>&larr; Return to Dashboard</span>
                     </button>
                 </div>
             </div>
