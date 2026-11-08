@@ -5,10 +5,10 @@ const SkillPill = ({ label, selected, onClick }) => (
     <button
         type="button"
         onClick={onClick}
-        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
             selected
                 ? 'bg-blue-600 text-white shadow-sm'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 hover:text-white border border-zinc-700/60'
         }`}
     >
         {label}
@@ -30,21 +30,21 @@ const Step3Details = () => {
         return (
             <div className="space-y-4 font-sans">
                 <div className="mb-2">
-                    <h3 className="text-sm font-semibold text-gray-900">
+                    <h3 className="text-sm font-semibold text-white">
                         Customize Your Career Goals
                     </h3>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-zinc-400">
                         Tell us what you want to achieve so we can suggest relevant assessments.
                     </p>
                 </div>
 
                 {/* Primary Learning Goal */}
                 <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                         Primary Career Goal
                     </label>
                     <select
-                        className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
+                        className="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900/80 border border-zinc-700/70 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none text-sm text-white transition-colors cursor-pointer"
                         value={formData.learningGoal || ''}
                         onChange={(e) => updateFormData({ learningGoal: e.target.value })}
                     >
@@ -58,7 +58,7 @@ const Step3Details = () => {
 
                 {/* Experience Tier */}
                 <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                         Experience Level
                     </label>
                     <div className="grid grid-cols-3 gap-2">
@@ -67,10 +67,10 @@ const Step3Details = () => {
                                 key={level}
                                 type="button"
                                 onClick={() => updateFormData({ experienceLevel: level })}
-                                className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                                className={`py-2 px-3 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
                                     formData.experienceLevel === level
-                                        ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                                        : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                                        ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
+                                        : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:bg-zinc-800 hover:text-white'
                                 }`}
                             >
                                 {level}
@@ -81,7 +81,7 @@ const Step3Details = () => {
 
                 {/* Target Competencies */}
                 <div>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                         Areas of Interest
                     </label>
                     <div className="flex flex-wrap gap-2 pt-1">
@@ -103,20 +103,20 @@ const Step3Details = () => {
     return (
         <div className="space-y-4 font-sans">
             <div className="mb-2">
-                <h3 className="text-sm font-semibold text-gray-900">
+                <h3 className="text-sm font-semibold text-white">
                     Hiring Preferences
                 </h3>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-zinc-400">
                     Help us match you with candidates fitting your company's scale.
                 </p>
             </div>
 
             <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                     Industry Domain
                 </label>
                 <select
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900/80 border border-zinc-700/70 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none text-sm text-white transition-colors cursor-pointer"
                     value={formData.industry || ''}
                     onChange={(e) => updateFormData({ industry: e.target.value })}
                 >
@@ -130,7 +130,7 @@ const Step3Details = () => {
             </div>
 
             <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                     Engineering Team Size
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -139,10 +139,10 @@ const Step3Details = () => {
                             key={size}
                             type="button"
                             onClick={() => updateFormData({ companySize: size })}
-                            className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                            className={`py-2 px-3 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
                                 formData.companySize === size
-                                    ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                                    : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                                    ? 'bg-blue-600 text-white border-blue-500 shadow-sm'
+                                    : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:bg-zinc-800 hover:text-white'
                             }`}
                         >
                             {size}
@@ -152,7 +152,7 @@ const Step3Details = () => {
             </div>
 
             <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                     Expected Hires This Year
                 </label>
                 <input
@@ -161,7 +161,7 @@ const Step3Details = () => {
                     placeholder="e.g. 15 roles"
                     value={formData.trainCount || ''}
                     onChange={(e) => updateFormData({ trainCount: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900/80 border border-zinc-700/70 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none text-sm text-white placeholder-zinc-500 transition-colors"
                 />
             </div>
         </div>

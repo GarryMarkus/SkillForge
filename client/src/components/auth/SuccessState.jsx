@@ -38,30 +38,30 @@ const SuccessState = () => {
     };
 
     return (
-        <div className="w-full bg-white rounded-2xl border border-gray-200 p-8 sm:p-12 shadow-lg font-sans text-center flex flex-col items-center gap-5">
-            <div className="w-14 h-14 rounded-full bg-green-50 border border-green-200 text-green-600 flex items-center justify-center text-2xl font-bold">
+        <div className="w-full bg-[#121318] rounded-xl border border-white/[0.08] p-8 sm:p-12 shadow-xl font-sans text-center flex flex-col items-center gap-5">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">
                 ✓
             </div>
 
-            <div className="space-y-2">
-                <h2 className="text-2xl font-bold text-gray-900">
-                    Welcome to SkillForge!
+            <div className="space-y-1.5">
+                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                    Welcome to SkillForge
                 </h2>
-                <p className="text-sm text-gray-500 max-w-sm mx-auto leading-relaxed">
-                    Your account has been created successfully. We're setting up your workspace now.
+                <p className="text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
+                    Your account has been created successfully. Setting up your workspace.
                 </p>
             </div>
 
-            <div className="text-xs text-gray-400">
-                Redirecting automatically in {count} seconds...
+            <div className="text-xs text-zinc-400 font-mono">
+                Redirecting in {count}s...
             </div>
 
             <button
                 type="button"
                 onClick={handleProceedNow}
-                className="bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-6 rounded-xl font-semibold text-xs sm:text-sm transition-colors shadow-sm cursor-pointer"
+                className="bg-white hover:bg-zinc-100 text-zinc-950 py-2.5 px-6 rounded-lg font-semibold text-xs sm:text-sm transition-colors shadow-sm cursor-pointer"
             >
-                Continue to Setup Now →
+                Continue Now &rarr;
             </button>
         </div>
     );

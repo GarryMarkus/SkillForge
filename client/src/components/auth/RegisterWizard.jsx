@@ -74,27 +74,27 @@ const RegisterWizard = () => {
     }
 
     return (
-        <div className="w-full bg-white rounded-2xl border border-gray-200 p-8 sm:p-10 shadow-lg font-sans select-none">
+        <div className="w-full bg-[#121318] rounded-xl border border-white/[0.08] p-7 sm:p-9 shadow-xl font-sans select-none">
             {/* Header */}
-            <div className="flex items-center justify-between pb-4 mb-6 border-b border-gray-100">
+            <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/[0.06]">
                 <div>
-                    <h2 className="text-xl font-bold text-gray-900">
+                    <h2 className="text-xl font-bold text-white tracking-tight">
                         Create Your Account
                     </h2>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-zinc-400 mt-0.5">
                         Step {step} of 4: {steps[step - 1]?.title}
                     </p>
                 </div>
                 <button
                     type="button"
                     onClick={() => setAuthMode('login')}
-                    className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline cursor-pointer"
+                    className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
                 >
-                    Already have an account? Sign in
+                    Sign In instead
                 </button>
             </div>
 
-            {/* Stepper Tabs */}
+            {/* Stepper Tabs - Minimalist horizontal progress bar */}
             <div className="grid grid-cols-4 gap-2 mb-6">
                 {steps.map((s) => {
                     const isActive = s.id === step;
@@ -103,12 +103,12 @@ const RegisterWizard = () => {
                     return (
                         <div
                             key={s.id}
-                            className={`py-2 px-1 text-center rounded-lg text-xs font-semibold transition-all ${
+                            className={`py-2 px-1 text-center rounded-lg text-xs font-medium transition-all ${
                                 isActive
-                                    ? 'bg-blue-600 text-white shadow-sm'
+                                    ? 'bg-zinc-800 text-white border border-zinc-700 shadow-sm'
                                     : isPast
-                                    ? 'bg-blue-50 text-blue-700'
-                                    : 'bg-gray-100 text-gray-400'
+                                    ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                                    : 'bg-zinc-900/60 text-zinc-400 border border-zinc-800/80'
                             }`}
                         >
                             <span>{s.title}</span>
@@ -127,20 +127,20 @@ const RegisterWizard = () => {
 
             {/* Error Message */}
             {error && (
-                <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3.5 text-red-700 text-xs font-medium">
+                <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-rose-400 text-xs font-medium">
                     {error}
                 </div>
             )}
 
             {/* Bottom Actions */}
-            <div className="pt-4 border-t border-gray-100 flex items-center justify-between gap-3">
+            <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between gap-3">
                 {step > 1 ? (
                     <button
                         type="button"
                         onClick={prevStep}
-                        className="px-5 py-2.5 rounded-xl border border-gray-300 text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                        className="px-4 py-2 rounded-lg border border-zinc-700/80 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
                     >
-                        ← Back
+                        &larr; Back
                     </button>
                 ) : (
                     <div />
@@ -150,13 +150,13 @@ const RegisterWizard = () => {
                     type="button"
                     onClick={handleNext}
                     disabled={isLoading}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-xs font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
+                    className="bg-white hover:bg-zinc-100 text-zinc-950 px-5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                 >
                     {isLoading
                         ? 'Creating Account...'
                         : step === 4
-                        ? 'Confirm & Create Account →'
-                        : 'Continue →'}
+                        ? 'Confirm & Create Account'
+                        : 'Continue'}
                 </button>
             </div>
         </div>
