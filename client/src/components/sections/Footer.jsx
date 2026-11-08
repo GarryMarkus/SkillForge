@@ -7,6 +7,9 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
                 {/* Left: Platform & Copyright */}
                 <div className="flex items-center gap-3">
+                    <span className="w-5 h-5 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center text-[#f5f5f5] font-mono text-[10px] font-bold">
+                        SF
+                    </span>
                     <span className="font-display font-bold text-white text-sm">
                         SkillForge
                     </span>
@@ -18,18 +21,18 @@ const Footer = () => {
 
                 {/* Center: Editorial Monospace Navigation */}
                 <div className="flex flex-wrap items-center justify-center gap-6 text-[#888888]">
+                    <Link to="/verification" className="hover:text-white transition-colors">
+                        Verification ↗
+                    </Link>
+                    <Link to="/protocol" className="hover:text-white transition-colors">
+                        Protocol ↗
+                    </Link>
+                    <Link to="/talent" className="hover:text-white transition-colors">
+                        Talent &amp; Teams ↗
+                    </Link>
                     <Link to="/how-it-works" className="hover:text-white transition-colors">
                         How It Works ↗
                     </Link>
-                    <a href="/#CapabilitiesRow" className="hover:text-white transition-colors">
-                        Verification ↗
-                    </a>
-                    <a href="/#BlueprintSection" className="hover:text-white transition-colors">
-                        Proctoring ↗
-                    </a>
-                    <a href="/#PersonaSplitSection" className="hover:text-white transition-colors">
-                        Enterprises ↗
-                    </a>
                     <Link to="/auth" className="hover:text-white transition-colors">
                         Sign In ↗
                     </Link>
