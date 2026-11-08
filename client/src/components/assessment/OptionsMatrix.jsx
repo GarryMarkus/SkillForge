@@ -16,9 +16,9 @@ const OptionsMatrix = ({
             <div className="flex flex-col gap-2.5">
                 <div className="flex items-center justify-between pb-1">
                     <span className="text-xs text-[#737373] font-medium uppercase tracking-wider">
-                        [ Candidate Solutions ]
+                        Select Solution
                     </span>
-                    <span className="text-xs text-[#555555] font-mono">single choice</span>
+                    <span className="text-xs text-[#555555] font-mono">Single Choice</span>
                 </div>
 
                 {options.map((option, idx) => {
@@ -41,7 +41,7 @@ const OptionsMatrix = ({
                                     ? 'bg-[#111113] text-white border border-white/30'
                                     : 'bg-[#050505] text-[#737373] border border-white/10'
                             }`}>
-                                [{letter}]
+                                {letter}
                             </div>
                             <div className={`flex-1 text-xs sm:text-sm leading-relaxed ${isSelected ? 'font-medium text-white' : 'font-normal'}`}>
                                 {option}
@@ -69,7 +69,7 @@ const OptionsMatrix = ({
                             className="px-3 py-2 text-[#737373] hover:text-white text-xs font-mono transition-colors cursor-pointer"
                             type="button"
                         >
-                            [Clear Selection]
+                            Clear Selection
                         </button>
                     )}
                     <button
@@ -77,7 +77,7 @@ const OptionsMatrix = ({
                         className="px-5 py-2 rounded-md bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 text-xs font-mono shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
                         type="button"
                     >
-                        <span>{isLastQuestion ? '[ Submit Assessment ↗ ]' : '[ Next Question &rarr; ]'}</span>
+                        <span>{isLastQuestion ? 'Submit Assessment ↗' : 'Next Question →'}</span>
                     </button>
                 </div>
             </div>

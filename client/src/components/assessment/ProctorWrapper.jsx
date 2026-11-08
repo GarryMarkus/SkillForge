@@ -259,7 +259,7 @@ const ProctorWrapper = ({
                 <div className="fixed inset-0 bg-black/80 z-[60] flex flex-col items-center justify-center p-6 text-center font-mono backdrop-blur-sm">
                     <div className="bg-[#0b0b0c] border border-white/10 rounded-md p-8 max-w-md shadow-2xl text-center space-y-4">
                         <div className="w-10 h-10 rounded-sm bg-[#111113] text-[#ededed] border border-white/20 mx-auto flex items-center justify-center font-mono text-xs font-bold">
-                            [FS]
+                            FS
                         </div>
                         <h2 className="text-base font-semibold text-white font-mono uppercase tracking-wider">
                             Full-Screen Lock Required
@@ -271,7 +271,7 @@ const ProctorWrapper = ({
                             onClick={enterFullScreen}
                             className="w-full bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 font-mono text-xs py-2.5 px-5 rounded-md transition cursor-pointer"
                         >
-                            [ Resume Full-Screen Enclosure ]
+                            Resume Full Screen
                         </button>
                     </div>
                 </div>

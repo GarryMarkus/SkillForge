@@ -20,13 +20,13 @@ const AssessmentHeader = ({
                         Skill Evaluation
                     </span>
                     <span className="px-2 py-0.5 rounded-sm bg-[#0b0b0c] text-[#888888] border border-white/10 text-[11px] font-mono hidden md:inline-block">
-                        [session: {examId}]
+                        Session {examId}
                     </span>
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-4 text-xs font-mono">
                     <div className="px-2.5 py-1 rounded-sm bg-[#0b0b0c] text-[#888888] border border-white/10 whitespace-nowrap">
-                        Question {currentQuestion + 1} / {totalQuestions}
+                        Question {currentQuestion + 1} of {totalQuestions}
                     </div>
 
                     <div className="px-2.5 py-1 rounded-sm bg-[#111113] border border-white/20 text-white flex items-center gap-2 whitespace-nowrap">
@@ -39,7 +39,8 @@ const AssessmentHeader = ({
 
                 <div className="flex items-center gap-3 text-xs font-mono">
                     <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-sm bg-[#0b0b0c] text-[#888888] border border-white/10">
-                        <span>[proctor: active]</span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/80"></span>
+                        <span>Proctoring Active</span>
                     </div>
 
                     <button
@@ -47,7 +48,7 @@ const AssessmentHeader = ({
                         className="px-3 py-1.5 rounded-md border border-white/10 hover:border-rose-500/30 text-[#888888] hover:text-rose-300 transition-colors cursor-pointer text-xs font-mono"
                         type="button"
                     >
-                        [Exit]
+                        Exit
                     </button>
                 </div>
             </div>

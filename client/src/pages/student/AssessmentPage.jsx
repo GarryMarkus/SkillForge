@@ -346,7 +346,7 @@ const AssessmentPage = () => {
         return (
             <div className="min-h-screen bg-[#050505] font-mono flex flex-col items-center justify-center p-8 text-[#ededed]">
                 <div className="border border-white/10 bg-[#0b0b0c] rounded-md p-8 max-w-md w-full text-center space-y-3">
-                    <div className="text-xs text-[#888888] font-mono">[initializing : assessment enclave]</div>
+                    <div className="text-xs text-[#888888] font-mono">Initializing Assessment Environment</div>
                     <h2 className="text-sm font-semibold text-white font-mono">
                         Preparing Practical Assessment
                     </h2>
@@ -365,10 +365,10 @@ const AssessmentPage = () => {
                 <div className="max-w-2xl w-full bg-[#0b0b0c] border border-white/10 rounded-md p-8 sm:p-10 shadow-2xl space-y-6">
                     <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
                         <span className="text-[11px] text-[#737373] uppercase tracking-wider font-mono">
-                            [ skillforge : assessment briefing ]
+                            SkillForge Assessment Briefing
                         </span>
                         <span className="text-xs text-[#555555] font-mono">
-                            duration: ~20 mins
+                            Duration: ~20 mins
                         </span>
                     </div>
 
@@ -384,15 +384,15 @@ const AssessmentPage = () => {
                     {/* Guidelines Card */}
                     <div className="rounded-md bg-[#050505] border border-white/10 p-5 space-y-3 text-xs text-[#888888]">
                         <div className="flex items-start gap-2.5">
-                            <span className="text-white font-mono">[01]</span>
+                            <span className="text-white font-mono">01</span>
                             <span><strong className="text-white font-mono">Camera Integrity:</strong> Keep optical feed active so the enclave can verify test integrity.</span>
                         </div>
                         <div className="flex items-start gap-2.5">
-                            <span className="text-white font-mono">[02]</span>
+                            <span className="text-white font-mono">02</span>
                             <span><strong className="text-white font-mono">Window Lock:</strong> Maintain active tab focus throughout the duration of the evaluation session.</span>
                         </div>
                         <div className="flex items-start gap-2.5">
-                            <span className="text-white font-mono">[03]</span>
+                            <span className="text-white font-mono">03</span>
                             <span><strong className="text-white font-mono">Instant Verification:</strong> Scoring rubrics and rubric feedback are computed immediately upon completion.</span>
                         </div>
                     </div>
@@ -409,7 +409,7 @@ const AssessmentPage = () => {
                             onClick={startTest}
                             className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-6 py-2.5 rounded-md text-xs font-mono shadow-sm transition-all cursor-pointer flex items-center gap-2"
                         >
-                            <span>[ Begin Assessment ↗ ]</span>
+                            <span>Begin Assessment ↗</span>
                         </button>
                     </div>
                 </div>
@@ -483,12 +483,12 @@ const AssessmentPage = () => {
                         {/* Clean System Footer */}
                         <div className="w-full bg-[#050505] border-t border-white/[0.06] px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between text-xs text-[#555555] font-mono">
                             <div className="flex items-center gap-2">
-                                <span className="text-[#888888]">[session: SF-2026-09]</span>
+                                <span className="text-[#888888]">Session SF-2026-09</span>
                                 <span className="text-[#444444]">&bull;</span>
-                                <span>evaluation enclave active</span>
+                                <span>Evaluation Session Active</span>
                             </div>
                             <div className="text-[11px] text-[#737373]">
-                                [secure stream confirmed]
+                                Secure Stream Confirmed
                             </div>
                         </div>
                     </main>

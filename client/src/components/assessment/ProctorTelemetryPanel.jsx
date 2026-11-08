@@ -15,11 +15,11 @@ const ProctorTelemetryPanel = ({
             <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-4 space-y-3 font-mono">
                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-[#888888]">
-                        [ Optical Telemetry ]
+                        Optical Telemetry
                     </span>
                     <div className="flex items-center gap-1.5">
                         <span className="text-[11px] text-[#ededed] font-mono">
-                            {faceDetected ? '[Face: Verified]' : '[Calibrating...]'}
+                            {faceDetected ? 'Face Verified' : 'Calibrating'}
                         </span>
                     </div>
                 </div>
@@ -35,7 +35,7 @@ const ProctorTelemetryPanel = ({
                     {/* Subtle Gaze Overlay Box */}
                     <div className="relative w-24 h-32 border border-white/40 rounded-sm flex flex-col justify-between p-1.5 z-10 pointer-events-none">
                         <span className="text-[10px] bg-[#111113] text-[#ededed] border border-white/20 px-1 py-0.2 self-start font-mono">
-                            [lock]
+                            Tracked
                         </span>
                         <div className="text-[10px] text-right text-white font-mono">
                             {faceDetected ? '98% conf' : 'searching'}
@@ -64,7 +64,7 @@ const ProctorTelemetryPanel = ({
             <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-4 space-y-3 font-mono">
                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-[#888888]">
-                        [ Integrity Record ]
+                        Integrity Record
                     </span>
                     <span className="px-2 py-0.5 rounded-sm bg-[#050505] text-[#888888] border border-white/10 text-[11px]">
                         Nominal

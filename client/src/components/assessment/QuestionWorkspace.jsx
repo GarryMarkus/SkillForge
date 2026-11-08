@@ -15,14 +15,14 @@ const QuestionWorkspace = ({ question, questionIndex = 0 }) => {
             {/* Question Header Information */}
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] pb-4 mb-5">
                 <span className="text-xs text-[#888888] font-semibold uppercase tracking-wider">
-                    [ Section {questionIndex + 1} &bull; {sectionTitle} ]
+                    Section {questionIndex + 1} &bull; {sectionTitle}
                 </span>
                 <div className="flex items-center gap-2 text-xs text-[#737373]">
                     <span className="bg-[#050505] border border-white/10 px-2 py-0.5 rounded-sm text-[#888888] font-mono text-xs">
                         {weight}
                     </span>
                     <span className="text-[#555555]">&bull;</span>
-                    <span>[{taxonomy}]</span>
+                    <span>{taxonomy}</span>
                 </div>
             </div>
 
@@ -41,7 +41,7 @@ const QuestionWorkspace = ({ question, questionIndex = 0 }) => {
                 <div className="mt-5 rounded-md overflow-hidden border border-white/10 bg-[#050505] text-[#ededed]" id="CodeSnippetBox">
                     <div className="bg-[#0b0b0c] px-4 py-2 border-b border-white/[0.06] flex items-center justify-between text-xs text-[#737373] font-mono">
                         <div className="flex items-center gap-2">
-                            <span>[code : python reference]</span>
+                            <span>Python Reference</span>
                         </div>
                         <span className="text-[#555555] text-xs">read-only</span>
                     </div>
@@ -53,7 +53,7 @@ const QuestionWorkspace = ({ question, questionIndex = 0 }) => {
                     </div>
 
                     <div className="bg-[#0b0b0c] px-4 py-1.5 border-t border-white/[0.06] flex items-center justify-between text-[#555555] text-xs">
-                        <span>environment: standard sandbox</span>
+                        <span>Environment: Standard Sandbox</span>
                         <span>UTF-8</span>
                     </div>
                 </div>
