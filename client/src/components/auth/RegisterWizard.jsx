@@ -74,27 +74,27 @@ const RegisterWizard = () => {
     }
 
     return (
-        <div className="w-full bg-[#121318] rounded-xl border border-white/[0.08] p-7 sm:p-9 shadow-xl font-sans select-none">
+        <div className="w-full bg-[#0b0b0c] rounded-md border border-white/10 p-7 sm:p-9 font-mono select-none">
             {/* Header */}
             <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/[0.06]">
                 <div>
-                    <h2 className="text-xl font-bold text-white tracking-tight">
-                        Create Your Account
+                    <h2 className="text-xl font-bold font-display text-white tracking-tight">
+                        Create Account
                     </h2>
-                    <p className="text-xs text-zinc-400 mt-0.5">
-                        Step {step} of 4: {steps[step - 1]?.title}
+                    <p className="text-xs text-[#737373] mt-0.5">
+                        [{String(step).padStart(2, '0')} / 04: {steps[step - 1]?.title}]
                     </p>
                 </div>
                 <button
                     type="button"
                     onClick={() => setAuthMode('login')}
-                    className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors cursor-pointer"
+                    className="text-xs font-mono text-[#888888] hover:text-white transition-colors cursor-pointer"
                 >
-                    Sign In instead
+                    sign in instead &rarr;
                 </button>
             </div>
 
-            {/* Stepper Tabs - Minimalist horizontal progress bar */}
+            {/* Stepper Tabs - Monotone horizontal strip */}
             <div className="grid grid-cols-4 gap-2 mb-6">
                 {steps.map((s) => {
                     const isActive = s.id === step;
@@ -103,15 +103,15 @@ const RegisterWizard = () => {
                     return (
                         <div
                             key={s.id}
-                            className={`py-2 px-1 text-center rounded-lg text-xs font-medium transition-all ${
+                            className={`py-2 px-1 text-center rounded-sm text-xs font-mono transition-all ${
                                 isActive
-                                    ? 'bg-zinc-800 text-white border border-zinc-700 shadow-sm'
+                                    ? 'bg-[#111113] text-white border border-white/20'
                                     : isPast
-                                    ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                                    : 'bg-zinc-900/60 text-zinc-400 border border-zinc-800/80'
+                                    ? 'bg-[#050505] text-[#888888] border border-white/10'
+                                    : 'bg-[#050505] text-[#444444] border border-white/5'
                             }`}
                         >
-                            <span>{s.title}</span>
+                            <span>[{String(s.id).padStart(2, '0')}: {s.title}]</span>
                         </div>
                     );
                 })}
@@ -127,7 +127,7 @@ const RegisterWizard = () => {
 
             {/* Error Message */}
             {error && (
-                <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-rose-400 text-xs font-medium">
+                <div className="mb-4 rounded-md border border-rose-500/20 bg-rose-500/10 p-3 text-rose-300 text-xs">
                     {error}
                 </div>
             )}
@@ -138,7 +138,7 @@ const RegisterWizard = () => {
                     <button
                         type="button"
                         onClick={prevStep}
-                        className="px-4 py-2 rounded-lg border border-zinc-700/80 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+                        className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
                     >
                         &larr; Back
                     </button>
@@ -150,13 +150,13 @@ const RegisterWizard = () => {
                     type="button"
                     onClick={handleNext}
                     disabled={isLoading}
-                    className="bg-white hover:bg-zinc-100 text-zinc-950 px-5 py-2 rounded-lg text-xs font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
+                    className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                 >
                     {isLoading
                         ? 'Creating Account...'
                         : step === 4
-                        ? 'Confirm & Create Account'
-                        : 'Continue'}
+                        ? '[ Confirm & Create ↗ ]'
+                        : '[ Continue &rarr; ]'}
                 </button>
             </div>
         </div>

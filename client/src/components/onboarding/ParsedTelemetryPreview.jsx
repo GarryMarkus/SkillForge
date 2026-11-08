@@ -30,62 +30,62 @@ const ParsedTelemetryPreview = ({
     };
 
     return (
-        <div className="w-full rounded-2xl border border-white/[0.08] bg-[#121318] p-5 sm:p-6 font-sans select-none text-white" id="ParsedTelemetryPreview">
+        <div className="w-full rounded-md border border-white/10 bg-[#0b0b0c] p-5 sm:p-6 font-mono select-none text-[#ededed]" id="ParsedTelemetryPreview">
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-4">
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 mb-4">
                 <div>
-                    <h3 className="text-sm font-semibold text-white">
-                        Profile &amp; Skills Summary
+                    <h3 className="text-xs font-semibold text-[#f5f5f5] uppercase tracking-wider">
+                        [ profile &amp; skills telemetry ]
                     </h3>
-                    <p className="text-xs text-zinc-400">
-                        Extracted automatically or added manually
+                    <p className="text-xs text-[#737373] mt-0.5">
+                        Extracted automatically or calibrated manually
                     </p>
                 </div>
-                <span className="text-xs font-medium text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-full">
-                    Auto-Extracted
+                <span className="text-[11px] font-mono text-[#888888] bg-[#050505] border border-white/10 px-2 py-0.5 rounded-sm">
+                    [auto-indexed]
                 </span>
             </div>
 
             {/* Profile Overview */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 text-xs border-b border-white/[0.08] pb-4">
-                <div className="bg-[#181A22] p-3 rounded-xl border border-white/[0.06]">
-                    <span className="text-zinc-500 block mb-0.5">Full Name</span>
-                    <strong className="text-white text-sm font-semibold">{fullName || 'Not specified'}</strong>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 text-xs border-b border-white/[0.06] pb-4">
+                <div className="bg-[#050505] p-3 rounded-sm border border-white/10">
+                    <span className="text-[#555555] block mb-0.5 text-[11px]">candidate name</span>
+                    <strong className="text-[#f5f5f5] text-xs font-semibold">{fullName || 'Not specified'}</strong>
                 </div>
-                <div className="bg-[#181A22] p-3 rounded-xl border border-white/[0.06]">
-                    <span className="text-zinc-500 block mb-0.5">Education / Degree</span>
-                    <strong className="text-white text-sm font-semibold">{education || 'Not specified'}</strong>
+                <div className="bg-[#050505] p-3 rounded-sm border border-white/10">
+                    <span className="text-[#555555] block mb-0.5 text-[11px]">credential</span>
+                    <strong className="text-[#f5f5f5] text-xs font-semibold">{education || 'Not specified'}</strong>
                 </div>
-                <div className="bg-[#181A22] p-3 rounded-xl border border-white/[0.06]">
-                    <span className="text-zinc-500 block mb-0.5">Experience Level</span>
-                    <strong className="text-blue-400 text-sm font-semibold">{experienceLevel}</strong>
+                <div className="bg-[#050505] p-3 rounded-sm border border-white/10">
+                    <span className="text-[#555555] block mb-0.5 text-[11px]">tier</span>
+                    <strong className="text-[#ededed] text-xs font-semibold">[{experienceLevel}]</strong>
                 </div>
             </div>
 
             {/* Skills List */}
             <div>
                 <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs font-medium text-zinc-300">
-                        Skills ({skillList.length})
+                    <label className="text-xs font-mono text-[#888888]">
+                        Indexed Skills ({skillList.length})
                     </label>
-                    <span className="text-xs text-zinc-500">Click a skill to remove it</span>
+                    <span className="text-xs text-[#555555]">Click to remove</span>
                 </div>
 
-                <div className="flex flex-wrap gap-2 min-h-[44px] p-3 rounded-xl bg-[#181A22] border border-white/[0.08] mb-3">
+                <div className="flex flex-wrap gap-2 min-h-[44px] p-3 rounded-md bg-[#050505] border border-white/10 mb-3">
                     {skillList.length === 0 ? (
-                        <span className="text-zinc-500 text-xs italic">
-                            No skills added yet. Add custom skills below or upload your resume.
+                        <span className="text-[#555555] text-xs italic">
+                            No skills indexed. Add custom skills below or upload your resume document.
                         </span>
                     ) : (
                         skillList.map((tag, i) => (
                             <span
                                 key={i}
                                 onClick={() => handleRemoveTag(tag)}
-                                className="inline-flex items-center gap-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded-lg text-xs font-mono font-medium cursor-pointer hover:bg-rose-500/10 hover:text-rose-400 hover:border-rose-500/30 transition-colors"
+                                className="inline-flex items-center gap-1.5 bg-[#111113] text-[#ededed] border border-white/10 px-2.5 py-1 rounded-sm text-xs font-mono cursor-pointer hover:border-rose-500/40 hover:text-rose-300 transition-colors"
                                 title="Click to remove"
                             >
                                 <span>{tag}</span>
-                                <span className="text-xs opacity-60">✕</span>
+                                <span className="text-[10px] text-[#737373]">✕</span>
                             </span>
                         ))
                     )}
@@ -97,14 +97,14 @@ const ParsedTelemetryPreview = ({
                         type="text"
                         value={newTagInput}
                         onChange={(e) => setNewTagInput(e.target.value)}
-                        placeholder="Add a skill (e.g. React, TypeScript, Docker)..."
-                        className="flex-1 px-3.5 py-2 rounded-xl bg-[#09090B] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-xs text-white placeholder:text-zinc-500 transition-colors"
+                        placeholder="Add skill (e.g. Python, Docker, PostgreSQL)..."
+                        className="flex-1 px-3 py-2 rounded-md bg-[#050505] border border-white/10 text-xs font-mono text-[#f5f5f5] placeholder-[#444444] focus:border-white/30 focus:outline-none transition-colors"
                     />
                     <button
                         type="submit"
-                        className="px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-zinc-200 border border-white/[0.08] text-xs font-medium transition-colors cursor-pointer"
+                        className="px-3.5 py-2 rounded-md border border-white/10 bg-[#111113] text-xs font-mono text-[#ededed] hover:bg-[#1a1a1d] hover:border-white/20 transition-colors cursor-pointer"
                     >
-                        + Add Skill
+                        [+ Add]
                     </button>
                 </form>
             </div>

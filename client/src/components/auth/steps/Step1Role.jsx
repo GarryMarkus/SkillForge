@@ -5,38 +5,38 @@ const RoleCard = ({ role, title, description, features, selectRole, selected }) 
     return (
         <div
             onClick={() => selectRole(role)}
-            className={`p-5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between ${
+            className={`p-5 rounded-md border font-mono transition-all cursor-pointer flex flex-col justify-between ${
                 selected
-                    ? 'border-blue-500 bg-blue-500/[0.06] shadow-sm'
-                    : 'border-white/[0.08] bg-[#181A22] hover:border-zinc-700 hover:bg-zinc-900/60'
+                    ? 'border-white/40 bg-[#121214]'
+                    : 'border-white/10 bg-[#050505] hover:border-white/20'
             }`}
         >
             <div>
                 <div className="flex items-center justify-between mb-3">
-                    <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">
-                        {role === 'student' ? 'For Individuals' : 'For Companies'}
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-[#737373]">
+                        {role === 'student' ? '[for candidates]' : '[for teams]'}
                     </span>
-                    <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
+                    <span className={`text-xs font-mono ${
                         selected
-                            ? 'bg-blue-600 text-white'
-                            : 'border border-zinc-700 text-transparent'
+                            ? 'text-white font-bold'
+                            : 'text-[#444444]'
                     }`}>
-                        ✓
+                        {selected ? '[✓]' : '[ ]'}
                     </span>
                 </div>
 
-                <h3 className="text-base font-semibold text-white mb-1">
+                <h3 className="text-sm font-semibold text-[#f5f5f5] mb-1 font-mono">
                     {title}
                 </h3>
-                <p className="text-xs text-zinc-400 leading-relaxed mb-4">
+                <p className="text-xs text-[#737373] leading-relaxed mb-4">
                     {description}
                 </p>
             </div>
 
             <div className="border-t border-white/[0.06] pt-3 space-y-2">
                 {features.map((feat, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-zinc-300">
-                        <span className="text-blue-400 font-bold">•</span>
+                    <div key={i} className="flex items-center gap-2 text-xs text-[#888888]">
+                        <span className="text-[#555555]">-</span>
                         <span>{feat}</span>
                     </div>
                 ))}
@@ -49,13 +49,13 @@ const Step1Role = () => {
     const { role, setRole } = useAuthStore();
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 font-mono">
             <div className="text-center mb-4">
-                <h3 className="text-sm font-semibold text-white">
-                    Choose Your Path
+                <h3 className="text-sm font-semibold text-[#f5f5f5]">
+                    Select Your Role
                 </h3>
-                <p className="text-xs text-zinc-400">
-                    Select how you intend to use the platform to tailor your experience
+                <p className="text-xs text-[#737373]">
+                    Choose your operating profile on the protocol
                 </p>
             </div>
 
@@ -82,7 +82,7 @@ const Step1Role = () => {
                     features={[
                         'Pre-screened candidate pipeline',
                         'Objective code evaluation',
-                        'Salary benchmark transparency',
+                        'Transparent salary benchmarks',
                     ]}
                 />
             </div>

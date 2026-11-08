@@ -38,30 +38,30 @@ const SuccessState = () => {
     };
 
     return (
-        <div className="w-full bg-[#121318] rounded-xl border border-white/[0.08] p-8 sm:p-12 shadow-xl font-sans text-center flex flex-col items-center gap-5">
-            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl font-bold">
-                ✓
+        <div className="w-full bg-[#0b0b0c] rounded-md border border-white/10 p-8 sm:p-12 font-mono text-center flex flex-col items-center gap-5">
+            <div className="w-10 h-10 rounded-sm bg-[#111113] border border-white/20 text-[#f5f5f5] flex items-center justify-center text-sm font-mono font-bold">
+                [✓]
             </div>
 
             <div className="space-y-1.5">
-                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                    Welcome to SkillForge
+                <h2 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
+                    Account Initialized
                 </h2>
-                <p className="text-sm text-zinc-400 max-w-sm mx-auto leading-relaxed">
-                    Your account has been created successfully. Setting up your workspace.
+                <p className="text-xs text-[#888888] max-w-sm mx-auto leading-relaxed">
+                    Identity verified and account record created. Initializing workspace environment.
                 </p>
             </div>
 
-            <div className="text-xs text-zinc-400 font-mono">
-                Redirecting in {count}s...
+            <div className="text-xs text-[#555555] font-mono">
+                [redirecting in {count}s...]
             </div>
 
             <button
                 type="button"
                 onClick={handleProceedNow}
-                className="bg-white hover:bg-zinc-100 text-zinc-950 py-2.5 px-6 rounded-lg font-semibold text-xs sm:text-sm transition-colors shadow-sm cursor-pointer"
+                className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 py-2.5 px-6 rounded-md font-mono text-xs transition-colors shadow-sm cursor-pointer"
             >
-                Continue Now &rarr;
+                [ Proceed to Workspace ↗ ]
             </button>
         </div>
     );
