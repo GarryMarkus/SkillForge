@@ -246,32 +246,32 @@ const ProctorWrapper = ({
     }
 
     return (
-        <div className="relative min-h-screen bg-[#09090B] text-zinc-100 font-sans select-none">
+        <div className="relative min-h-screen bg-[#050505] text-[#ededed] font-mono select-none">
             {/* Standalone webcam if requested */}
             {showStandaloneWebcam && (
-                <div className="fixed bottom-4 right-4 w-48 h-36 bg-black border border-white/[0.1] rounded-xl overflow-hidden z-50 pointer-events-none">
+                <div className="fixed bottom-4 right-4 w-48 h-36 bg-black border border-white/20 rounded-md overflow-hidden z-50 pointer-events-none">
                     {webcamNode}
                 </div>
             )}
 
             {/* Fullscreen Re-entry blocker */}
             {!isFullScreen && isArmed && (
-                <div className="fixed inset-0 bg-black/80 z-[60] flex flex-col items-center justify-center p-6 text-center font-sans backdrop-blur-sm">
-                    <div className="bg-[#121318] border border-white/[0.08] rounded-2xl p-8 max-w-md shadow-2xl text-center space-y-4">
-                        <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 mx-auto flex items-center justify-center">
-                            <span className="material-symbols-outlined text-[28px]">fullscreen</span>
+                <div className="fixed inset-0 bg-black/80 z-[60] flex flex-col items-center justify-center p-6 text-center font-mono backdrop-blur-sm">
+                    <div className="bg-[#0b0b0c] border border-white/10 rounded-md p-8 max-w-md shadow-2xl text-center space-y-4">
+                        <div className="w-10 h-10 rounded-sm bg-[#111113] text-[#ededed] border border-white/20 mx-auto flex items-center justify-center font-mono text-xs font-bold">
+                            [FS]
                         </div>
-                        <h2 className="text-lg font-semibold text-white">
-                            Full-Screen Mode Required
+                        <h2 className="text-base font-semibold text-white font-mono uppercase tracking-wider">
+                            Full-Screen Lock Required
                         </h2>
-                        <p className="text-sm text-zinc-400 leading-relaxed">
-                            To ensure test integrity and prevent accidental interruptions, this assessment runs in full-screen mode. Please click below to resume.
+                        <p className="text-xs text-[#737373] leading-relaxed">
+                            To ensure test integrity and prevent accidental window focus loss, this assessment runs under strict full-screen enclosure.
                         </p>
                         <button
                             onClick={enterFullScreen}
-                            className="w-full bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-sm py-3 px-6 rounded-xl transition cursor-pointer"
+                            className="w-full bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 font-mono text-xs py-2.5 px-5 rounded-md transition cursor-pointer"
                         >
-                            Resume Full-Screen Mode
+                            [ Resume Full-Screen Enclosure ]
                         </button>
                     </div>
                 </div>
