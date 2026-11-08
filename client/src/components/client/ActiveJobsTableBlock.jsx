@@ -8,15 +8,15 @@ const ActiveJobsTableBlock = ({
     onDeployClick
 }) => {
     return (
-        <section className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm font-sans overflow-hidden" id="ActiveJobsTableBlock">
+        <section className="w-full bg-[#121318] rounded-2xl border border-white/[0.08] font-sans overflow-hidden" id="ActiveJobsTableBlock">
             {/* Header Bar */}
-            <div className="w-full px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <div className="w-full px-6 py-4 border-b border-white/[0.08] flex items-center justify-between">
                 <div>
-                    <h3 className="font-bold text-gray-900 text-lg">Active Role Openings</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">Select a role to review evaluated candidate rankings</p>
+                    <h3 className="font-semibold text-white text-base sm:text-lg">Active Role Openings</h3>
+                    <p className="text-xs text-zinc-400 mt-0.5">Select a role to review evaluated candidate rankings</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold">
+                    <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs font-medium">
                         <CounterTicker value={jobs.length || 0} duration={0.8} /> Active Openings
                     </span>
                 </div>
@@ -26,7 +26,7 @@ const ActiveJobsTableBlock = ({
             <div className="w-full overflow-x-auto">
                 <table className="w-full text-left border-collapse text-sm">
                     <thead>
-                        <tr className="bg-gray-50/70 text-gray-500 uppercase border-b border-gray-100 text-xs font-semibold">
+                        <tr className="bg-white/[0.02] text-zinc-400 uppercase border-b border-white/[0.08] text-xs font-medium tracking-wider">
                             <th className="py-3 px-5">Role Designation</th>
                             <th className="py-3 px-5">Department</th>
                             <th className="py-3 px-5">Compensation</th>
@@ -36,14 +36,14 @@ const ActiveJobsTableBlock = ({
                             <th className="py-3 px-5 text-right">Action</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 text-gray-900">
+                    <tbody className="divide-y divide-white/[0.04] text-zinc-200">
                         {jobs.length === 0 ? (
                             <tr>
-                                <td colSpan="7" className="py-10 px-5 text-center text-gray-400">
+                                <td colSpan="7" className="py-10 px-5 text-center text-zinc-500">
                                     No active role openings found.{' '}
                                     <button
                                         onClick={onDeployClick}
-                                        className="text-blue-600 font-semibold underline cursor-pointer ml-1"
+                                        className="text-blue-400 font-medium underline cursor-pointer ml-1"
                                     >
                                         Post your first opening
                                     </button>
@@ -60,38 +60,38 @@ const ActiveJobsTableBlock = ({
                                         key={job.id}
                                         onClick={() => onSelectJob(job)}
                                         className={`cursor-pointer transition-colors ${
-                                            isSelected ? 'bg-blue-50/50' : 'hover:bg-gray-50/50'
+                                            isSelected ? 'bg-blue-500/10' : 'hover:bg-white/[0.02]'
                                         }`}
                                     >
                                         <td className="py-4 px-5">
-                                            <div className="font-bold text-gray-900 flex items-center gap-2">
+                                            <div className="font-medium text-white flex items-center gap-2">
                                                 <span>{job.title}</span>
                                                 {isSelected && (
-                                                    <span className="text-[11px] bg-blue-600 text-white px-2 py-0.5 rounded-full font-semibold">
+                                                    <span className="text-[11px] bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-full font-medium">
                                                         Selected
                                                     </span>
                                                 )}
                                             </div>
                                         </td>
-                                        <td className="py-4 px-5 text-gray-500 text-xs font-medium">
+                                        <td className="py-4 px-5 text-zinc-400 text-xs font-normal">
                                             {job.category || 'Engineering Core'}
                                         </td>
-                                        <td className="py-4 px-5 font-semibold text-gray-900">
-                                            ${budgetNum} <span className="text-xs text-gray-400 font-normal">/ yr</span>
+                                        <td className="py-4 px-5 font-medium text-white">
+                                            ${budgetNum} <span className="text-xs text-zinc-500 font-normal">/ yr</span>
                                         </td>
                                         <td className="py-4 px-5">
-                                            <span className="font-semibold text-blue-600">
+                                            <span className="font-semibold text-blue-400">
                                                 {job.min_skill_score || 80} / 100
                                             </span>
                                         </td>
                                         <td className="py-4 px-5">
-                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-xs">
+                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium text-xs">
                                                 <CounterTicker value={applicantCount} duration={0.8} /> Candidates
                                             </span>
                                         </td>
                                         <td className="py-4 px-5">
-                                            <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                                            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-400">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
                                                 Active
                                             </span>
                                         </td>
@@ -101,7 +101,7 @@ const ActiveJobsTableBlock = ({
                                                     e.stopPropagation();
                                                     onSelectJob(job);
                                                 }}
-                                                className="px-3.5 py-1.5 rounded-xl border border-gray-200 hover:border-blue-300 text-xs font-semibold text-gray-700 hover:text-blue-600 transition-colors"
+                                                className="px-3.5 py-1.5 rounded-xl border border-white/[0.08] hover:border-white/[0.2] text-xs font-medium text-zinc-300 hover:text-white transition-colors"
                                             >
                                                 View Pipeline
                                             </button>

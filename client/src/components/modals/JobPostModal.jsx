@@ -43,21 +43,21 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm select-none font-sans">
-            <div className="bg-white rounded-2xl border border-gray-200 w-full max-w-2xl shadow-2xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm select-none font-sans">
+            <div className="bg-[#121318] rounded-2xl border border-white/[0.08] w-full max-w-2xl shadow-2xl max-h-[92vh] flex flex-col overflow-hidden text-white animate-in fade-in zoom-in-95 duration-150">
                 {/* Modal Header */}
-                <div className="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                <div className="px-6 py-4 bg-[#181A22] border-b border-white/[0.08] flex items-center justify-between">
                     <div>
-                        <h2 className="text-base font-bold text-gray-900">
+                        <h2 className="text-base font-semibold text-white">
                             Post New Job Opening
                         </h2>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-zinc-400">
                             Create a role specification to find matched, verified candidates
                         </p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-200 text-sm font-semibold transition-colors cursor-pointer"
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/[0.06] text-sm font-semibold transition-colors cursor-pointer"
                         aria-label="Close"
                     >
                         ✕
@@ -65,10 +65,10 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                 </div>
 
                 {/* Modal Form Body */}
-                <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1 text-gray-800 text-sm">
+                <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1 text-zinc-300 text-sm">
                     <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                            Job Title <span className="text-red-500">*</span>
+                        <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                            Job Title <span className="text-rose-400">*</span>
                         </label>
                         <input
                             name="title"
@@ -76,20 +76,20 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                             onChange={handleChange}
                             placeholder="e.g. Senior Frontend Engineer"
                             required
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors placeholder:text-zinc-500"
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                                 Category
                             </label>
                             <select
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors cursor-pointer"
                             >
                                 <option value="Web Development">Web Development</option>
                                 <option value="Backend Systems">Backend Systems</option>
@@ -103,8 +103,8 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                                Annual Budget ($USD) <span className="text-red-500">*</span>
+                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                                Annual Budget ($USD) <span className="text-rose-400">*</span>
                             </label>
                             <input
                                 type="number"
@@ -113,14 +113,14 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                                 onChange={handleChange}
                                 placeholder="120000"
                                 required
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors placeholder:text-zinc-500"
                             />
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                                 Minimum Skill Score (0–100)
                             </label>
                             <input
@@ -132,19 +132,19 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                                 onChange={handleChange}
                                 placeholder="80"
                                 required
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors placeholder:text-zinc-500"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
                                 Compensation Type
                             </label>
                             <select
                                 name="budget_type"
                                 value={formData.budget_type}
                                 onChange={handleChange}
-                                className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors cursor-pointer"
+                                className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors cursor-pointer"
                             >
                                 <option value="fixed">Full-Time Annual Salary</option>
                                 <option value="hourly">Hourly Contract Rate</option>
@@ -153,8 +153,8 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                     </div>
 
                     <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                            Required Skills (comma-separated) <span className="text-red-500">*</span>
+                        <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                            Required Skills (comma-separated) <span className="text-rose-400">*</span>
                         </label>
                         <input
                             name="skills_required"
@@ -162,16 +162,16 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                             onChange={handleChange}
                             placeholder="Python, React, TypeScript, Docker, PostgreSQL"
                             required
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors placeholder:text-zinc-500"
                         />
-                        <span className="text-xs text-gray-500 block mt-1">
+                        <span className="text-xs text-zinc-500 block mt-1">
                             Candidates with matching verified skills will be automatically recommended.
                         </span>
                     </div>
 
                     <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                            Role Description <span className="text-red-500">*</span>
+                        <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                            Role Description <span className="text-rose-400">*</span>
                         </label>
                         <textarea
                             name="description"
@@ -180,23 +180,23 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                             rows="4"
                             placeholder="Describe the responsibilities, team structure, and qualifications needed..."
                             required
-                            className="w-full px-3.5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-blue-600 focus:outline-none text-sm transition-colors resize-none"
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-[#181A22] border border-white/[0.08] focus:border-blue-500 focus:outline-none text-white text-sm transition-colors resize-none placeholder:text-zinc-500"
                         />
                     </div>
 
                     {/* Bottom Actions */}
-                    <div className="pt-4 border-t border-gray-200 flex flex-wrap items-center justify-between gap-3">
+                    <div className="pt-4 border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-5 py-2.5 rounded-xl border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
+                            className="px-5 py-2.5 rounded-xl border border-white/[0.1] text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] transition-colors cursor-pointer"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
+                            className="bg-white hover:bg-zinc-200 text-zinc-950 px-6 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                         >
                             {loading ? 'Publishing...' : 'Publish Job Opening →'}
                         </button>

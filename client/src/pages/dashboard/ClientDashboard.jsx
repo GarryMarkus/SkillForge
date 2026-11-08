@@ -240,7 +240,7 @@ const ClientDashboard = () => {
         : ["PYTHON", "FASTAPI", "DOCKER", "KUBERNETES", "POSTGRESQL_INDEXING", "REDIS"];
 
     return (
-        <div className="bg-[#FAFAFA] text-gray-900 font-sans antialiased min-h-screen flex flex-col">
+        <div className="bg-[#09090B] text-zinc-100 font-sans antialiased min-h-screen flex flex-col">
             {/* Top Enterprise Console Header with Integrated Metric Ribbon */}
             <ClientHeader
                 companyName={companyName}
@@ -254,7 +254,7 @@ const ClientDashboard = () => {
             />
 
             {/* Main Console Workspace */}
-            <main className="w-full pt-32 bg-[#FAFAFA] min-h-screen flex-1 flex flex-col justify-between">
+            <main className="w-full pt-32 bg-[#09090B] min-h-screen flex-1 flex flex-col justify-between">
                 <div>
                     {/* Requisition Deployment Action Bar */}
                     <RequisitionActionBar
