@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
- * CardNav - React Bits-style interactive expandable navigation bar.
- * A sleek top navigation bar that springs open into a row of interactive cards
- * with nested links, telemetry badges, and smooth spring physics.
- * Automatically dismisses on Escape key or route transitions.
+ * CardNav - Executive enterprise expandable navigation bar.
+ * Clean, lightweight navigation inspired by Linear and Vercel.
+ * Provides smooth spring reveals for secondary modules without performance overhead or visual noise.
  */
 const CardNav = ({
     cards = [],
@@ -14,8 +13,7 @@ const CardNav = ({
     secondaryCta,
     telemetry,
     maxWidth = 1200,
-    minHeight = 180,
-    accentColor = '#00F0FF',
+    minHeight = 160,
     menuLabel = true,
     linkComponent: LinkComp = 'a',
     className = '',
@@ -59,13 +57,12 @@ const CardNav = ({
             className={`w-full relative z-50 font-sans ${className}`}
             style={{
                 maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth,
-                '--cardnav-accent': accentColor,
             }}
         >
             {/* Top Navigation Bar Header */}
-            <div className="relative rounded-2xl bg-[#07080B]/90 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.6)] px-4 sm:px-6 py-3 transition-all duration-300">
+            <div className="relative rounded-xl bg-[#121318] border border-white/[0.08] shadow-lg px-4 sm:px-6 py-2.5 transition-colors">
                 <div className="flex items-center justify-between gap-4">
-                    {/* Left: Brand Logo */}
+                    {/* Left: Brand Logo & Telemetry */}
                     <div className="flex items-center gap-4 sm:gap-6">
                         {logo}
                         {telemetry && (
@@ -76,52 +73,48 @@ const CardNav = ({
                     </div>
 
                     {/* Right: Controls & Actions */}
-                    <div className="flex items-center gap-3 sm:gap-4">
-                        {/* Secondary CTA (e.g., Dashboard or Sign In) */}
+                    <div className="flex items-center gap-2.5 sm:gap-3">
                         {secondaryCta && (
                             <div className="hidden sm:flex items-center">
                                 {secondaryCta}
                             </div>
                         )}
 
-                        {/* Primary Action Button (CTA) */}
                         {cta && (
                             <div>
                                 {cta}
                             </div>
                         )}
 
-                        {/* Menu Toggle Pill Button */}
+                        {/* Menu Toggle Button */}
                         <button
                             type="button"
                             onClick={() => setIsOpen((prev) => !prev)}
-                            className="group relative inline-flex items-center gap-2 px-3 sm:px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] hover:border-cyanAccent/40 text-slate-200 hover:text-white transition-all cursor-pointer shadow-sm select-none"
+                            className="group relative inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-700/60 text-zinc-300 hover:text-white text-xs font-medium transition-colors cursor-pointer select-none"
                             aria-expanded={isOpen}
                             aria-label={isOpen ? 'Close navigation menu' : 'Open navigation menu'}
                         >
-                            {/* Animated Icon (Hamburger to Close) */}
-                            <div className="relative w-4 h-4 flex flex-col justify-center items-center gap-1">
+                            <div className="relative w-3.5 h-3.5 flex flex-col justify-center items-center gap-1">
                                 <motion.span
-                                    animate={isOpen ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }}
-                                    transition={{ duration: 0.25 }}
-                                    className="w-3.5 h-[2px] bg-cyanAccent rounded-full block"
+                                    animate={isOpen ? { rotate: 45, y: 4.5 } : { rotate: 0, y: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="w-3.5 h-[1.5px] bg-zinc-300 group-hover:bg-white rounded-full block"
                                 />
                                 <motion.span
                                     animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
                                     transition={{ duration: 0.15 }}
-                                    className="w-3.5 h-[2px] bg-slate-300 rounded-full block"
+                                    className="w-3.5 h-[1.5px] bg-zinc-400 rounded-full block"
                                 />
                                 <motion.span
-                                    animate={isOpen ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }}
-                                    transition={{ duration: 0.25 }}
-                                    className="w-3.5 h-[2px] bg-cyanAccent rounded-full block"
+                                    animate={isOpen ? { rotate: -45, y: -4.5 } : { rotate: 0, y: 0 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="w-3.5 h-[1.5px] bg-zinc-300 group-hover:bg-white rounded-full block"
                                 />
                             </div>
 
-                            {/* Rolling Menu/Close Label */}
                             {menuLabel && (
-                                <span className="text-xs font-mono font-semibold tracking-wider text-slate-300 group-hover:text-cyanAccent transition-colors">
-                                    {isOpen ? 'CLOSE' : 'MENU'}
+                                <span className="text-xs font-medium tracking-normal text-zinc-300 group-hover:text-white transition-colors">
+                                    {isOpen ? 'Close' : 'Menu'}
                                 </span>
                             )}
                         </button>
@@ -132,35 +125,27 @@ const CardNav = ({
                 <AnimatePresence>
                     {isOpen && (
                         <motion.div
-                            initial={{ opacity: 0, y: -12, scale: 0.98 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                            transition={{ type: 'spring', damping: 26, stiffness: 320 }}
+                            initial={{ opacity: 0, y: -8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: 0.18, ease: 'easeOut' }}
                             className="pt-4 mt-3 border-t border-white/[0.08]"
                         >
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                                 {cards.map((card, idx) => (
-                                    <motion.div
+                                    <div
                                         key={card.title || idx}
-                                        initial={{ opacity: 0, y: 14 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 8 }}
-                                        transition={{
-                                            duration: 0.25,
-                                            delay: idx * 0.05,
-                                            ease: 'easeOut',
-                                        }}
                                         style={{ minHeight: `${minHeight}px` }}
-                                        className="rounded-xl bg-[#0C0E14]/95 border border-white/[0.08] p-5 flex flex-col justify-between hover:border-cyanAccent/40 hover:bg-[#11141C] shadow-[0_8px_24px_rgba(0,0,0,0.5)] transition-all group"
+                                        className="rounded-lg bg-[#181A22] border border-white/[0.06] p-4 flex flex-col justify-between hover:border-zinc-700 transition-colors group"
                                     >
-                                        <div className="space-y-3">
-                                            {/* Card Tag & Icon */}
-                                            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
-                                                <span className="text-[10px] font-mono font-bold tracking-wider text-cyanAccent uppercase">
-                                                    {card.tag || `MODULE_0${idx + 1}`}
+                                        <div className="space-y-2.5">
+                                            {/* Card Tag */}
+                                            <div className="flex items-center justify-between border-b border-white/[0.05] pb-2">
+                                                <span className="text-[11px] font-medium tracking-wide text-zinc-400 uppercase">
+                                                    {card.tag || `Section 0${idx + 1}`}
                                                 </span>
                                                 {card.icon && (
-                                                    <span className="material-symbols-outlined text-[18px] text-cyanAccent/70 group-hover:text-cyanAccent transition-colors">
+                                                    <span className="material-symbols-outlined text-[16px] text-zinc-500 group-hover:text-zinc-300 transition-colors">
                                                         {card.icon}
                                                     </span>
                                                 )}
@@ -168,11 +153,11 @@ const CardNav = ({
 
                                             {/* Card Title & Description */}
                                             <div>
-                                                <h4 className="font-display font-bold text-white text-base tracking-tight group-hover:text-cyanAccent transition-colors">
+                                                <h4 className="font-semibold text-white text-sm tracking-tight">
                                                     {card.title}
                                                 </h4>
                                                 {card.description && (
-                                                    <p className="text-xs text-slate-400 mt-1 leading-relaxed font-sans">
+                                                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
                                                         {card.description}
                                                     </p>
                                                 )}
@@ -180,17 +165,17 @@ const CardNav = ({
                                         </div>
 
                                         {/* Card Links List */}
-                                        <div className="space-y-1.5 pt-3 border-t border-white/[0.06]">
+                                        <div className="space-y-1 pt-2.5 border-t border-white/[0.05]">
                                             {card.links?.map((link, lIdx) => {
                                                 const isExternal = typeof link.href === 'string' && link.href.startsWith('#');
                                                 const content = (
-                                                    <div className="flex items-center justify-between text-xs py-1 text-slate-300 hover:text-cyanAccent transition-colors group/link cursor-pointer">
+                                                    <div className="flex items-center justify-between text-xs py-1 text-zinc-300 hover:text-white transition-colors group/link cursor-pointer">
                                                         <span className="font-medium flex items-center gap-1.5">
-                                                            <span className="w-1 h-1 rounded-full bg-cyanAccent/50 group-hover/link:bg-cyanAccent transition-colors" />
+                                                            <span className="w-1 h-1 rounded-full bg-zinc-500 group-hover/link:bg-blue-400 transition-colors" />
                                                             {link.title}
                                                         </span>
-                                                        <span className="material-symbols-outlined text-[14px] text-slate-500 group-hover/link:text-cyanAccent transform transition-transform group-hover/link:translate-x-1">
-                                                            arrow_forward
+                                                        <span className="material-symbols-outlined text-[14px] text-zinc-500 group-hover/link:text-zinc-300 transform transition-transform group-hover/link:translate-x-0.5">
+                                                            chevron_right
                                                         </span>
                                                     </div>
                                                 );
@@ -234,7 +219,7 @@ const CardNav = ({
                                                 );
                                             })}
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 ))}
                             </div>
                         </motion.div>
