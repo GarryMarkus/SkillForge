@@ -35,30 +35,30 @@ const ParsedTelemetryPreview = ({
             <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 mb-4">
                 <div>
                     <h3 className="text-xs font-semibold text-[#f5f5f5] uppercase tracking-wider">
-                        [ profile &amp; skills telemetry ]
+                        Profile &amp; Skills Telemetry
                     </h3>
                     <p className="text-xs text-[#737373] mt-0.5">
                         Extracted automatically or calibrated manually
                     </p>
                 </div>
                 <span className="text-[11px] font-mono text-[#888888] bg-[#050505] border border-white/10 px-2 py-0.5 rounded-sm">
-                    [auto-indexed]
+                    Auto-Indexed
                 </span>
             </div>
 
             {/* Profile Overview */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4 text-xs border-b border-white/[0.06] pb-4">
                 <div className="bg-[#050505] p-3 rounded-sm border border-white/10">
-                    <span className="text-[#555555] block mb-0.5 text-[11px]">candidate name</span>
+                    <span className="text-[#555555] block mb-0.5 text-[11px]">Candidate Name</span>
                     <strong className="text-[#f5f5f5] text-xs font-semibold">{fullName || 'Not specified'}</strong>
                 </div>
                 <div className="bg-[#050505] p-3 rounded-sm border border-white/10">
-                    <span className="text-[#555555] block mb-0.5 text-[11px]">credential</span>
+                    <span className="text-[#555555] block mb-0.5 text-[11px]">Credential</span>
                     <strong className="text-[#f5f5f5] text-xs font-semibold">{education || 'Not specified'}</strong>
                 </div>
                 <div className="bg-[#050505] p-3 rounded-sm border border-white/10">
-                    <span className="text-[#555555] block mb-0.5 text-[11px]">tier</span>
-                    <strong className="text-[#ededed] text-xs font-semibold">[{experienceLevel}]</strong>
+                    <span className="text-[#555555] block mb-0.5 text-[11px]">Tier</span>
+                    <strong className="text-[#ededed] text-xs font-semibold">{experienceLevel}</strong>
                 </div>
             </div>
 
@@ -104,7 +104,7 @@ const ParsedTelemetryPreview = ({
                         type="submit"
                         className="px-3.5 py-2 rounded-md border border-white/10 bg-[#111113] text-xs font-mono text-[#ededed] hover:bg-[#1a1a1d] hover:border-white/20 transition-colors cursor-pointer"
                     >
-                        [+ Add]
+                        Add
                     </button>
                 </form>
             </div>

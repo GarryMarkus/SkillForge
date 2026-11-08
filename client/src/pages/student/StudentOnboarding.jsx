@@ -128,7 +128,7 @@ const StudentOnboarding = () => {
                     {/* Section Header */}
                     <div className="border-b border-white/[0.06] pb-5 mb-6">
                         <span className="text-[11px] font-mono uppercase tracking-wider text-[#737373] block mb-1">
-                            [ candidate : profile intake ]
+                            Candidate Profile Intake
                         </span>
                         <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mb-2">
                             Build Your Verified Profile
@@ -249,7 +249,7 @@ const StudentOnboarding = () => {
                                 onClick={() => navigate('/student/dashboard')}
                                 className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
                             >
-                                [ Skip for Now ]
+                                Skip for Now
                             </button>
 
                             <button
@@ -257,7 +257,7 @@ const StudentOnboarding = () => {
                                 disabled={isLoading}
                                 className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-6 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                             >
-                                {isLoading ? 'Saving Profile...' : '[ Save Profile & Continue ↗ ]'}
+                                {isLoading ? 'Saving Profile...' : 'Save Profile & Continue ↗'}
                             </button>
                         </div>
                     </form>

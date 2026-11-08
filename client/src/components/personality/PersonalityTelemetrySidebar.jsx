@@ -19,7 +19,7 @@ const PersonalityTelemetrySidebar = ({
             <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-4 space-y-3 text-[#ededed]">
                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
                     <span className="text-[11px] uppercase tracking-wider text-[#737373] font-medium">
-                        [ Progress ]
+                        Progress
                     </span>
                     <span className="text-xs font-semibold px-2 py-0.2 rounded-sm bg-[#050505] text-[#888888] border border-white/10 font-mono">
                         {completionPercent}%
@@ -64,7 +64,7 @@ const PersonalityTelemetrySidebar = ({
                                             : 'bg-[#050505] text-[#444444] border border-white/5 hover:border-white/10'
                                     }`}
                                 >
-                                    <div>[{idx + 1}]</div>
+                                    <div>{idx + 1}</div>
                                 </button>
                             );
                         })}
@@ -78,7 +78,7 @@ const PersonalityTelemetrySidebar = ({
                     disabled={!canSubmit || isSubmitting}
                     className="w-full bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 py-2 px-3 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer disabled:opacity-40"
                 >
-                    {isSubmitting ? 'Submitting...' : '[ Submit Calibration ↗ ]'}
+                    {isSubmitting ? 'Submitting...' : 'Submit Calibration ↗'}
                 </button>
             </div>
         </aside>

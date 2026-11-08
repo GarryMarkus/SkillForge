@@ -17,7 +17,7 @@ const SummaryItem = ({ label, value, step, setStep }) => {
                 onClick={() => setStep(step)}
                 className="text-[#888888] text-xs font-mono hover:text-white hover:underline cursor-pointer ml-3"
             >
-                [edit]
+                Edit
             </button>
         </div>
     );

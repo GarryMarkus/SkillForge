@@ -15,7 +15,7 @@ const StudentOnboardingHeader = ({ candidateEmail = 'candidate@skillforge.io' })
                         SkillForge
                     </span>
                     <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-sm text-[11px] font-mono text-[#888888] bg-[#0b0b0c] border border-white/10">
-                        [candidate: onboarding]
+                        Candidate Onboarding
                     </span>
                 </div>
 
@@ -28,7 +28,7 @@ const StudentOnboardingHeader = ({ candidateEmail = 'candidate@skillforge.io' })
                         onClick={() => navigate('/student/dashboard')}
                         className="px-3 py-1.5 rounded-md border border-white/10 bg-[#0b0b0c] text-xs font-mono text-[#888888] hover:text-white hover:border-white/25 transition-colors cursor-pointer"
                     >
-                        [ Dashboard ↗ ]
+                        Dashboard ↗
                     </button>
                 </div>
             </div>

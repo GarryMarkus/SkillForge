@@ -7,7 +7,7 @@ const PersonalityIntroCard = ({ onStart, onReturn }) => {
             <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-6 sm:p-9 text-[#ededed]">
                 <div className="border-b border-white/[0.06] pb-5 mb-6 text-center sm:text-left">
                     <span className="text-[11px] font-mono uppercase tracking-wider text-[#737373] block mb-1">
-                        [ psychometric calibration ]
+                        Psychometric Calibration
                     </span>
                     <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mb-2">
                         Engineering Archetype &amp; Cadence
@@ -21,7 +21,7 @@ const PersonalityIntroCard = ({ onStart, onReturn }) => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
                     <div className="bg-[#050505] rounded-sm border border-white/10 p-3.5">
                         <div className="text-xs font-mono font-bold text-white mb-1">
-                            [01: Style]
+                            01: Style
                         </div>
                         <h4 className="font-semibold text-xs text-[#f5f5f5] mb-1">
                             Execution Style
@@ -33,7 +33,7 @@ const PersonalityIntroCard = ({ onStart, onReturn }) => {
 
                     <div className="bg-[#050505] rounded-sm border border-white/10 p-3.5">
                         <div className="text-xs font-mono font-bold text-white mb-1">
-                            [02: Debug]
+                            02: Debug
                         </div>
                         <h4 className="font-semibold text-xs text-[#f5f5f5] mb-1">
                             Heuristic Analysis
@@ -45,7 +45,7 @@ const PersonalityIntroCard = ({ onStart, onReturn }) => {
 
                     <div className="bg-[#050505] rounded-sm border border-white/10 p-3.5">
                         <div className="text-xs font-mono font-bold text-white mb-1">
-                            [03: Pace]
+                            03: Pace
                         </div>
                         <h4 className="font-semibold text-xs text-[#f5f5f5] mb-1">
                             Learning Velocity
@@ -59,7 +59,7 @@ const PersonalityIntroCard = ({ onStart, onReturn }) => {
                 {/* What to Expect */}
                 <div className="space-y-2 mb-6 text-xs">
                     <div className="text-[11px] text-[#555555] uppercase tracking-wider mb-2">
-                        parameters:
+                        Parameters:
                     </div>
                     <div className="flex items-start gap-2.5 p-3 rounded-sm bg-[#050505] border border-white/10 text-[#888888]">
                         <span>-</span>
@@ -90,7 +90,7 @@ const PersonalityIntroCard = ({ onStart, onReturn }) => {
                         onClick={onStart}
                         className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-6 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer"
                     >
-                        [ Start Assessment ↗ ]
+                        Start Assessment ↗
                     </button>
                 </div>
             </div>

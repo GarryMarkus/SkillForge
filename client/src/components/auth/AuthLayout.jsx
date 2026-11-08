@@ -17,7 +17,7 @@ const AuthLayout = ({ children, LeftPanel }) => {
                             </span>
                         </Link>
                         <span className="hidden sm:inline-block px-2 py-0.5 rounded-sm text-[11px] font-mono text-[#888888] border border-white/10 bg-[#0b0b0c]">
-                            [auth: portal]
+                            Authentication Portal
                         </span>
                     </div>
 
@@ -26,7 +26,7 @@ const AuthLayout = ({ children, LeftPanel }) => {
                             to="/"
                             className="px-3 py-1.5 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white hover:border-white/25 transition-colors flex items-center gap-1.5"
                         >
-                            <span>&larr; back to home</span>
+                            <span>&larr; Back to Home</span>
                         </Link>
                     </div>
                 </div>

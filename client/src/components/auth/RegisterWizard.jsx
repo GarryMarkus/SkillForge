@@ -82,7 +82,7 @@ const RegisterWizard = () => {
                         Create Account
                     </h2>
                     <p className="text-xs text-[#737373] mt-0.5">
-                        [{String(step).padStart(2, '0')} / 04: {steps[step - 1]?.title}]
+                        Step {step} of 4 · {steps[step - 1]?.title}
                     </p>
                 </div>
                 <button
@@ -111,7 +111,7 @@ const RegisterWizard = () => {
                                     : 'bg-[#050505] text-[#444444] border border-white/5'
                             }`}
                         >
-                            <span>[{String(s.id).padStart(2, '0')}: {s.title}]</span>
+                            <span>{String(s.id).padStart(2, '0')}. {s.title}</span>
                         </div>
                     );
                 })}
@@ -155,8 +155,8 @@ const RegisterWizard = () => {
                     {isLoading
                         ? 'Creating Account...'
                         : step === 4
-                        ? '[ Confirm & Create ↗ ]'
-                        : '[ Continue &rarr; ]'}
+                        ? 'Confirm & Create ↗'
+                        : 'Continue →'}
                 </button>
             </div>
         </div>

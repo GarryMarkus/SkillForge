@@ -50,7 +50,7 @@ const ResumeUploadZone = ({
                     Resume Document
                 </label>
                 <span className="text-xs text-[#555555]">
-                    [PDF format &bull; max 5MB]
+                    PDF format · Max 5MB
                 </span>
             </div>
 
@@ -58,21 +58,21 @@ const ResumeUploadZone = ({
             {isParsing ? (
                 <div className="w-full rounded-md border border-white/20 bg-[#0b0b0c] p-6 flex flex-col gap-4 font-mono">
                     <div className="flex items-center justify-between text-xs text-[#f5f5f5]">
-                        <span>[parsing : document structure]</span>
+                        <span>Parsing Document Structure</span>
                         <span className="text-[#888888] animate-pulse">processing...</span>
                     </div>
 
                     <div className="space-y-2 py-1 text-xs">
                         <div className={`flex items-center gap-2 ${parseStep >= 1 ? 'text-[#f5f5f5]' : 'text-[#555555]'}`}>
-                            <span>{parseStep >= 1 ? '[✓]' : '[ ]'}</span>
+                            <span>{parseStep >= 1 ? '✓' : '○'}</span>
                             <span>Extract text token tree and header hierarchy</span>
                         </div>
                         <div className={`flex items-center gap-2 ${parseStep >= 2 ? 'text-[#f5f5f5]' : 'text-[#555555]'}`}>
-                            <span>{parseStep >= 2 ? '[✓]' : '[ ]'}</span>
+                            <span>{parseStep >= 2 ? '✓' : '○'}</span>
                             <span>Derive verified technical competencies</span>
                         </div>
                         <div className={`flex items-center gap-2 ${parseStep >= 3 ? 'text-[#f5f5f5]' : 'text-[#555555]'}`}>
-                            <span>{parseStep >= 3 ? '[✓]' : '[ ]'}</span>
+                            <span>{parseStep >= 3 ? '✓' : '○'}</span>
                             <span>Index benchmark baseline profile</span>
                         </div>
                     </div>
@@ -99,13 +99,13 @@ const ResumeUploadZone = ({
                             onClick={onFileRemoved}
                             className="text-rose-400 hover:text-rose-300 text-xs font-mono cursor-pointer"
                         >
-                            [remove]
+                            Remove
                         </button>
                     </div>
 
                     <div className="flex items-center justify-between text-[11px] text-[#737373]">
                         <span>Size: {formatBytes(file.size)}</span>
-                        <span>Status: [ready for parsing]</span>
+                        <span>Status: Ready for Parsing</span>
                     </div>
                 </div>
             ) : (

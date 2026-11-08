@@ -17,7 +17,7 @@ const PersonalityHeader = ({
                         SkillForge
                     </span>
                     <span className="hidden md:inline-flex items-center px-2 py-0.5 rounded-sm text-[11px] font-mono text-[#888888] bg-[#0b0b0c] border border-white/10">
-                        [psychometric : archetype]
+                        Psychometric Archetype
                     </span>
                 </div>
 
@@ -25,12 +25,12 @@ const PersonalityHeader = ({
                     <div className="flex items-center gap-2 border-r border-white/[0.06] pr-4 text-[#888888]">
                         <span>Question</span>
                         <span className="font-semibold text-white">
-                            {currentIndex + 1} / {totalQuestions}
+                            {currentIndex + 1} of {totalQuestions}
                         </span>
                     </div>
 
                     <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs bg-[#0b0b0c] border border-white/10 text-[#888888]">
-                        <span>{isFullscreen ? '[fullscreen]' : '[windowed]'}</span>
+                        <span>{isFullscreen ? 'Fullscreen' : 'Windowed'}</span>
                     </div>
 
                     <button
@@ -38,7 +38,7 @@ const PersonalityHeader = ({
                         onClick={onAbort}
                         className="px-3 py-1.5 rounded-md border border-white/10 hover:border-rose-500/30 text-[#888888] hover:text-rose-300 text-xs font-mono transition-colors cursor-pointer"
                     >
-                        [Exit]
+                        Exit
                     </button>
                 </div>
             </div>

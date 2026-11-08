@@ -20,13 +20,13 @@ const LeftPanel = () => {
             <div className="space-y-4 my-auto py-8">
                 <div className="bg-[#050505] rounded-md p-6 border border-white/10 space-y-4">
                     <div className="text-[11px] uppercase tracking-wider text-[#737373] pb-1 border-b border-white/[0.06]">
-                        [ verification criteria ]
+                        Verification Criteria
                     </div>
 
                     <div className="space-y-4 text-xs">
                         <div className="flex items-start gap-3">
                             <span className="text-[#888888] shrink-0 mt-0.5 font-bold">
-                                [01]
+                                01
                             </span>
                             <div>
                                 <strong className="font-semibold block text-[#f5f5f5]">Direct Competence Matching</strong>
@@ -38,7 +38,7 @@ const LeftPanel = () => {
 
                         <div className="flex items-start gap-3">
                             <span className="text-[#888888] shrink-0 mt-0.5 font-bold">
-                                [02]
+                                02
                             </span>
                             <div>
                                 <strong className="font-semibold block text-[#f5f5f5]">Standardized Evaluations</strong>
@@ -50,7 +50,7 @@ const LeftPanel = () => {
 
                         <div className="flex items-start gap-3">
                             <span className="text-[#888888] shrink-0 mt-0.5 font-bold">
-                                [03]
+                                03
                             </span>
                             <div>
                                 <strong className="font-semibold block text-[#f5f5f5]">Actionable Rubric Feedback</strong>

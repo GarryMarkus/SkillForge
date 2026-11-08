@@ -41,7 +41,7 @@ const LoginForm = () => {
         <div className="w-full bg-[#0b0b0c] rounded-md border border-white/10 p-7 sm:p-9 font-mono select-none">
             {/* Header */}
             <div className="text-center mb-6">
-                <div className="text-[11px] text-[#737373] uppercase tracking-wider mb-1">[ auth : session ]</div>
+                <div className="text-[11px] text-[#737373] uppercase tracking-wider mb-1">Authentication Session</div>
                 <h1 className="text-xl sm:text-2xl font-bold font-display text-[#f5f5f5] mb-1.5 tracking-tight">
                     Sign In
                 </h1>
@@ -107,7 +107,7 @@ const LoginForm = () => {
                         <span>Remember session</span>
                     </label>
                     <span className="text-[#555555]">
-                        [256-bit encrypted]
+                        256-Bit Encrypted
                     </span>
                 </div>
 
@@ -123,7 +123,7 @@ const LoginForm = () => {
                         disabled={loading}
                         className="w-full bg-[#111113] hover:bg-[#1a1a1d] text-[#f5f5f5] border border-white/20 py-2.5 px-4 rounded-md font-mono text-xs font-medium transition-colors shadow-sm cursor-pointer disabled:opacity-50"
                     >
-                        {loading ? 'Authenticating...' : '[ Sign In ↗ ]'}
+                        {loading ? 'Authenticating...' : 'Sign In ↗'}
                     </button>
                 </div>
             </form>

@@ -19,7 +19,7 @@ const CompanySpecForm = ({
             <div className="rounded-md bg-[#0b0b0c] border border-white/10 p-6 sm:p-8">
                 <div className="border-b border-white/[0.06] pb-5 mb-6">
                     <span className="text-[11px] font-mono uppercase tracking-wider text-[#737373] block mb-1">
-                        {isUpdate ? '[ organization : settings ]' : '[ employer : profile setup ]'}
+                        {isUpdate ? 'Organization Settings' : 'Employer Profile Setup'}
                     </span>
                     <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mb-1.5">
                         Configure Company Profile
@@ -40,7 +40,7 @@ const CompanySpecForm = ({
                     {/* Section 01: Entity Details */}
                     <div className="space-y-4">
                         <h2 className="text-xs font-semibold uppercase tracking-wider text-[#888888] border-b border-white/[0.06] pb-2">
-                            [01: Entity Details]
+                            01: Entity Details
                         </h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -107,7 +107,7 @@ const CompanySpecForm = ({
                     {/* Section 02: Requisition Preferences */}
                     <div className="space-y-4 pt-4 border-t border-white/[0.06]">
                         <h2 className="text-xs font-semibold uppercase tracking-wider text-[#888888] border-b border-white/[0.06] pb-2">
-                            [02: Hiring Capacity &amp; Parameters]
+                            02: Hiring Capacity &amp; Parameters
                         </h2>
 
                         <div>
@@ -176,7 +176,7 @@ const CompanySpecForm = ({
                             onClick={onBypass}
                             className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
                         >
-                            [ Skip for Now ]
+                            Skip for Now
                         </button>
 
                         <button
@@ -187,8 +187,8 @@ const CompanySpecForm = ({
                             {isLoading
                                 ? 'Saving...'
                                 : isUpdate
-                                ? '[ Update Company Profile ↗ ]'
-                                : '[ Save & Continue ↗ ]'}
+                                ? 'Update Company Profile ↗'
+                                : 'Save & Continue ↗'}
                         </button>
                     </div>
                 </form>

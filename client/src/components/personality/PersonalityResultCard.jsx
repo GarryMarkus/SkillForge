@@ -29,7 +29,7 @@ const PersonalityResultCard = ({ result, onProceed }) => {
             <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-6 sm:p-9 space-y-5 text-[#ededed]">
                 <div className="text-center sm:text-left border-b border-white/[0.06] pb-4">
                     <span className="inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-mono bg-[#050505] text-[#888888] border border-white/10 mb-2">
-                        [calibration : complete]
+                        Calibration Complete
                     </span>
                     <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mb-1.5">
                         Engineering Learning Profile
@@ -54,14 +54,14 @@ const PersonalityResultCard = ({ result, onProceed }) => {
                             Recommended Pace
                         </div>
                         <div className="text-xl sm:text-2xl text-white font-bold mt-1 uppercase font-mono">
-                            [{result?.learning_level || 'Balanced'}]
+                            {result?.learning_level || 'Balanced'}
                         </div>
                     </div>
                 </div>
 
                 <div className="bg-[#050505] rounded-sm border border-white/10 p-4 text-xs">
                     <h3 className="font-semibold text-xs uppercase tracking-wider text-white mb-1">
-                        [ {activePace.title} ]
+                        {activePace.title}
                     </h3>
                     <p className="text-xs text-[#888888] leading-relaxed">
                         {activePace.desc}
@@ -71,7 +71,7 @@ const PersonalityResultCard = ({ result, onProceed }) => {
                 {/* Actions */}
                 <div className="pt-4 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
                     <span className="text-[#555555]">
-                        indexed in candidate verification profile
+                        Indexed in candidate verification profile
                     </span>
 
                     <button
@@ -79,7 +79,7 @@ const PersonalityResultCard = ({ result, onProceed }) => {
                         onClick={onProceed}
                         className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-6 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer"
                     >
-                        [ Dashboard ↗ ]
+                        Dashboard ↗
                     </button>
                 </div>
             </div>

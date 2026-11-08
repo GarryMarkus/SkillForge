@@ -130,7 +130,7 @@ const PersonalityTest = () => {
         return (
             <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] flex items-center justify-center p-4">
                 <div className="rounded-md border border-white/10 bg-[#0b0b0c] p-8 text-center max-w-sm w-full space-y-3 font-mono">
-                    <div className="text-xs text-[#888888] font-mono">[loading : questions]</div>
+                    <div className="text-xs text-[#888888] font-mono">Loading Questions</div>
                     <div className="font-semibold text-xs text-white">
                         Preparing Psychometric Engine
                     </div>

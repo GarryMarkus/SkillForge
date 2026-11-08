@@ -23,11 +23,11 @@ const PersonalityQuestionCard = ({
                 {/* Header */}
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.06] pb-3 mb-5">
                     <div className="text-xs font-semibold text-[#888888]">
-                        <span>[ Question {questionIndex + 1} of {totalQuestions} ]</span>
+                        <span>Question {questionIndex + 1} of {totalQuestions}</span>
                     </div>
 
                     <span className="text-xs text-[#555555] font-mono">
-                        single selection
+                        Single Selection
                     </span>
                 </div>
 
@@ -66,7 +66,7 @@ const PersonalityQuestionCard = ({
                                                 : 'bg-[#050505] text-[#737373] border border-white/10'
                                         }`}
                                     >
-                                        [{optionLetter}]
+                                        {optionLetter}
                                     </span>
                                     <span className="text-xs sm:text-sm leading-relaxed">
                                         {optText}
@@ -74,7 +74,7 @@ const PersonalityQuestionCard = ({
                                 </div>
 
                                 <div className={`shrink-0 text-xs font-mono ${isSelected ? 'text-white' : 'text-[#444444]'}`}>
-                                    {isSelected ? '[✓]' : '[ ]'}
+                                    {isSelected ? '✓' : ''}
                                 </div>
                             </button>
                         );
@@ -100,7 +100,7 @@ const PersonalityQuestionCard = ({
                             onClick={onNext}
                             className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer"
                         >
-                            [ Next &rarr; ]
+                            Next →
                         </button>
                     ) : (
                         <button
@@ -109,7 +109,7 @@ const PersonalityQuestionCard = ({
                             disabled={!canSubmit || isSubmitting}
                             className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer disabled:opacity-40"
                         >
-                            {isSubmitting ? 'Submitting...' : '[ Submit Calibration ↗ ]'}
+                            {isSubmitting ? 'Submitting...' : 'Submit Calibration ↗'}
                         </button>
                     )}
                 </div>

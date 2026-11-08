@@ -140,7 +140,7 @@ const UpskillPage = () => {
                         <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 mb-4">
                             <div>
                                 <h3 className="text-xs font-semibold uppercase tracking-wider text-white">
-                                    [ generate learning module ]
+                                    Generate Learning Module
                                 </h3>
                                 <p className="text-xs text-[#737373] mt-0.5">
                                     Enclave synthesizes targeted architectural walkthroughs for skill focus areas
@@ -152,7 +152,7 @@ const UpskillPage = () => {
                                     className="text-xs text-[#737373] hover:text-white font-mono cursor-pointer"
                                     aria-label="Close"
                                 >
-                                    [close ✕]
+                                    Close ✕
                                 </button>
                             )}
                         </div>
@@ -171,7 +171,7 @@ const UpskillPage = () => {
                                 disabled={isGenerating}
                                 className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer whitespace-nowrap disabled:opacity-50"
                             >
-                                {isGenerating ? 'Synthesizing...' : '[ Generate Module ↗ ]'}
+                                {isGenerating ? 'Synthesizing...' : 'Generate Module ↗'}
                             </button>
                         </form>
 
@@ -203,20 +203,20 @@ const UpskillPage = () => {
                     <aside className="lg:col-span-3 rounded-md border border-white/10 bg-[#0b0b0c] flex flex-col select-none overflow-hidden">
                         <div className="w-full bg-[#050505] px-4 py-3 border-b border-white/[0.06] flex items-center justify-between">
                             <span className="font-semibold text-xs uppercase tracking-wider text-white">
-                                [ Modules: {modules.length} ]
+                                Modules ({modules.length})
                             </span>
                             <button
                                 onClick={() => setShowGenerator(prev => !prev)}
                                 className="text-xs font-mono text-[#888888] hover:text-white cursor-pointer"
                             >
-                                [+ New]
+                                + New
                             </button>
                         </div>
 
                         <div className="divide-y divide-white/[0.04] max-h-[600px] overflow-y-auto">
                             {modules.length === 0 ? (
                                 <div className="p-5 text-center text-[#555555] text-xs">
-                                    No guides indexed. Click [+ New] to generate.
+                                    No guides indexed. Click + New to generate.
                                 </div>
                             ) : (
                                 modules.map((mod, idx) => {
@@ -235,10 +235,10 @@ const UpskillPage = () => {
                                         >
                                             <div className="flex items-center justify-between gap-1 text-xs text-white">
                                                 <span className="truncate">
-                                                    [{String(idx + 1).padStart(2, '0')}] {mod.topic}
+                                                    {String(idx + 1).padStart(2, '0')}. {mod.topic}
                                                 </span>
                                                 <span className="text-[10px] text-[#888888] font-mono">
-                                                    {isModCompleted ? '[✓]' : '[-]'}
+                                                    {isModCompleted ? '✓' : '−'}
                                                 </span>
                                             </div>
                                             <div className="flex items-center justify-between text-[11px] text-[#555555]">
@@ -257,7 +257,7 @@ const UpskillPage = () => {
                         {isGenerating ? (
                             <div className="w-full rounded-md border border-dashed border-white/20 bg-[#0b0b0c] p-12 flex flex-col items-center justify-center text-center gap-4">
                                 <div className="text-xs text-[#888888] animate-pulse">
-                                    [synthesizing curriculum guide...]
+                                    Synthesizing curriculum guide...
                                 </div>
                                 <div className="space-y-1">
                                     <h3 className="font-semibold text-sm text-white">
@@ -310,7 +310,7 @@ const UpskillPage = () => {
                                     onClick={() => setShowGenerator(true)}
                                     className="mt-2 bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer"
                                 >
-                                    [+ Generate New Guide]
+                                    Generate New Guide
                                 </button>
                             </div>
                         )}
