@@ -2,18 +2,18 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 /**
- * BorderBeam - A glowing gradient laser beam segment (cyan-to-emerald)
- * that travels continuously around the perimeter of a card or container.
+ * BorderBeam - A quiet, hairline monochrome beam segment
+ * that travels around the perimeter of a container.
  */
 const BorderBeam = ({
     className = '',
     size = 25, // percentage of the perimeter
-    duration = 6,
+    duration = 8,
     delay = 0,
-    colorFrom = '#00F0FF',
-    colorTo = '#10B981',
-    borderWidth = 1.5,
-    borderRadius = 16,
+    colorFrom = 'rgba(255, 255, 255, 0.4)',
+    colorTo = 'rgba(255, 255, 255, 0)',
+    borderWidth = 1,
+    borderRadius = 6,
     reverse = false,
 }) => {
     const rawId = React.useId();
@@ -33,7 +33,7 @@ const BorderBeam = ({
                 <defs>
                     <linearGradient id={cleanId} x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stopColor={colorFrom} stopOpacity="1" />
-                        <stop offset="60%" stopColor={colorTo} stopOpacity="0.7" />
+                        <stop offset="60%" stopColor={colorTo} stopOpacity="0.5" />
                         <stop offset="100%" stopColor={colorTo} stopOpacity="0" />
                     </linearGradient>
                 </defs>

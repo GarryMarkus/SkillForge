@@ -1,17 +1,16 @@
 import React from 'react';
 
 /**
- * ShinyText - Renders text with a continuous metallic shimmer sheen
- * that sweeps across the characters.
+ * ShinyText - Renders text with a subtle monochrome sweep.
  */
 const ShinyText = ({
     text,
     children,
     disabled = false,
-    speed = 4,
+    speed = 5,
     className = '',
-    color = '#F8FAFC',
-    shineColor = '#00F0FF',
+    color = '#EDEDED',
+    shineColor = '#FFFFFF',
 }) => {
     const content = text || children;
 
@@ -23,7 +22,7 @@ const ShinyText = ({
         <span
             className={`inline-block bg-clip-text text-transparent ${className}`}
             style={{
-                backgroundImage: `linear-gradient(110deg, #94A3B8 20%, ${color} 45%, ${shineColor} 50%, ${color} 55%, #94A3B8 80%)`,
+                backgroundImage: `linear-gradient(110deg, #737373 20%, ${color} 45%, ${shineColor} 50%, ${color} 55%, #737373 80%)`,
                 backgroundSize: '200% 100%',
                 animation: `shiny-sweep ${speed}s linear infinite`,
             }}

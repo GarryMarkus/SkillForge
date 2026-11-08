@@ -1,18 +1,17 @@
 import React, { useRef } from 'react';
 
 /**
- * SpotlightCard - High-performance hardware-accelerated spotlight card.
- * Uses direct DOM CSS variable manipulation for zero React state re-renders during mouse tracking,
- * zero layout thrashing, and crisp Enterprise Dark styling.
+ * SpotlightCard - Minimalist monochrome card with subtle white boundary sheen.
+ * Uses direct DOM CSS variables for zero React state re-renders during mouse tracking.
  */
 const SpotlightCard = ({
     children,
     className = '',
-    spotlightColor = 'rgba(59, 130, 246, 0.08)',
-    borderColor = 'rgba(59, 130, 246, 0.25)',
+    spotlightColor = 'rgba(255, 255, 255, 0.03)',
+    borderColor = 'rgba(255, 255, 255, 0.15)',
     size = 400,
     chamfered = false,
-    bgClassName = 'bg-[#121318]',
+    bgClassName = 'bg-[#0b0b0c]',
     as: Component = 'div',
     ...props
 }) => {
@@ -44,7 +43,7 @@ const SpotlightCard = ({
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className={`group relative overflow-hidden border border-white/[0.08] ${bgClassName} transition-colors duration-200 ${chamfered ? 'clip-chamfer' : 'rounded-2xl'} ${className}`}
+            className={`group relative overflow-hidden border border-white/10 ${bgClassName} transition-colors duration-150 ${chamfered ? 'clip-chamfer' : 'rounded-md'} ${className}`}
             style={{
                 '--mouse-x': '-1000px',
                 '--mouse-y': '-1000px',
@@ -52,18 +51,18 @@ const SpotlightCard = ({
             }}
             {...props}
         >
-            {/* Direct GPU-accelerated spotlight glow */}
+            {/* Subtle monochrome surface wash */}
             <div
-                className="pointer-events-none absolute -inset-px transition-opacity duration-300 ease-out z-0 opacity-[var(--spotlight-opacity)]"
+                className="pointer-events-none absolute -inset-px transition-opacity duration-200 ease-out z-0 opacity-[var(--spotlight-opacity)]"
                 style={{
                     background: `radial-gradient(${size}px circle at var(--mouse-x) var(--mouse-y), ${spotlightColor}, transparent 70%)`,
                 }}
                 aria-hidden="true"
             />
 
-            {/* Direct GPU-accelerated border sheen */}
+            {/* Subtle monochrome border highlight */}
             <div
-                className="pointer-events-none absolute -inset-px transition-opacity duration-300 ease-out z-0 rounded-[inherit] opacity-[var(--spotlight-opacity)]"
+                className="pointer-events-none absolute -inset-px transition-opacity duration-200 ease-out z-0 rounded-[inherit] opacity-[var(--spotlight-opacity)]"
                 style={{
                     background: `radial-gradient(${size * 0.65}px circle at var(--mouse-x) var(--mouse-y), ${borderColor}, transparent 60%)`,
                     mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
@@ -76,7 +75,7 @@ const SpotlightCard = ({
             />
 
             {/* Content Container */}
-            <div className="relative z-10 w-full h-full">
+            <div className="relative z-10 w-full h-full font-mono">
                 {children}
             </div>
         </Component>

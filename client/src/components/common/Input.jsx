@@ -13,11 +13,11 @@ const Input = ({
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
 
     return (
-        <div className={`flex flex-col gap-1.5 ${containerClassName}`}>
+        <div className={`flex flex-col gap-1.5 font-mono ${containerClassName}`}>
             {label && (
                 <label
                     htmlFor={inputId}
-                    className="text-xs sm:text-sm font-medium text-zinc-300"
+                    className="text-xs text-[#888888] font-normal"
                 >
                     {label}
                 </label>
@@ -25,15 +25,15 @@ const Input = ({
             <input
                 id={inputId}
                 type={type}
-                className={`w-full px-3.5 py-2.5 rounded-lg bg-zinc-900/80 border border-zinc-700/70 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${
-                    error ? 'border-rose-500/80 focus:border-rose-500 focus:ring-rose-500' : ''
+                className={`w-full px-3.5 py-2 rounded-md bg-[#050505] border border-white/10 text-sm text-[#f5f5f5] placeholder-[#555555] focus:outline-none focus:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors ${
+                    error ? 'border-white/40' : ''
                 } ${className}`}
                 {...props}
             />
             {error ? (
-                <span className="text-xs text-rose-400 mt-0.5">{error}</span>
+                <span className="text-xs text-[#a3a3a3] mt-0.5">{error}</span>
             ) : helperText ? (
-                <span className="text-xs text-zinc-400 mt-0.5">{helperText}</span>
+                <span className="text-xs text-[#666666] mt-0.5">{helperText}</span>
             ) : null}
         </div>
     );

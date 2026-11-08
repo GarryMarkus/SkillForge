@@ -1,16 +1,16 @@
 import React from 'react';
 
 const variants = {
-    default: 'bg-zinc-800/80 text-zinc-300 border-zinc-700/60',
-    primary: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    success: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-    warning: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
-    error: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+    default: 'text-[#888888] border-white/10 bg-transparent',
+    primary: 'text-[#ededed] border-white/20 bg-white/[0.04]',
+    success: 'text-[#d4d4d4] border-white/15 bg-white/[0.03]',
+    warning: 'text-[#a3a3a3] border-white/10 bg-transparent',
+    error: 'text-[#a3a3a3] border-white/20 bg-white/[0.02]',
 };
 
 const sizes = {
-    sm: 'text-[10px] px-2 py-0.5',
-    md: 'text-xs px-2.5 py-1',
+    sm: 'text-[10px] px-1.5 py-0.25',
+    md: 'text-xs px-2 py-0.5',
 };
 
 const Badge = ({
@@ -22,22 +22,10 @@ const Badge = ({
 }) => {
     return (
         <span
-            className={`inline-flex items-center gap-1.5 font-medium rounded-full border ${variants[variant] || variants.default} ${sizes[size] || sizes.md} ${className}`}
+            className={`inline-flex items-center gap-1.5 font-mono tracking-tight rounded-sm border ${variants[variant] || variants.default} ${sizes[size] || sizes.md} ${className}`}
         >
             {dot && (
-                <span
-                    className={`w-1.5 h-1.5 rounded-full ${
-                        variant === 'success'
-                            ? 'bg-emerald-400'
-                            : variant === 'primary'
-                            ? 'bg-blue-400'
-                            : variant === 'error'
-                            ? 'bg-rose-400'
-                            : variant === 'warning'
-                            ? 'bg-amber-400'
-                            : 'bg-zinc-400'
-                    }`}
-                />
+                <span className="w-1 h-1 rounded-full bg-[#888888]" />
             )}
             {children}
         </span>
