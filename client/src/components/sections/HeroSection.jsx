@@ -3,167 +3,134 @@ import React from 'react';
 const HeroSection = ({ onStartAssessment, onPostRequisition }) => {
     return (
         <section
-            className="w-full relative font-sans p-6 sm:p-10 lg:p-12 rounded-2xl bg-[#121318] border border-white/[0.08] border-t-white/[0.15] shadow-xl overflow-hidden mb-12"
+            className="w-full relative font-mono p-6 sm:p-10 lg:p-12 rounded-md bg-[#0b0b0c] border border-white/10 mb-12 select-none"
             id="HeroSection"
         >
-            <div className="flex flex-col gap-8 lg:gap-10 relative z-10">
-                {/* Clean Enterprise Category Tag */}
+            <div className="flex flex-col gap-8 relative z-10">
+                {/* Super-header / Kicker */}
                 <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                        <span>Empirical Skill Verification Platform</span>
-                    </div>
-
-                    <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-400">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                        <span>Verified Hiring Active</span>
-                    </div>
+                    <span className="text-xs text-[#888888] font-display uppercase tracking-widest">
+                        empirical skill verification protocol
+                    </span>
+                    <span className="text-xs text-[#555555] font-mono hidden sm:inline-block">
+                        status: active
+                    </span>
                 </div>
 
                 {/* Two-Column Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-                    {/* Left Column (7 Cols): Executive Value Proposition */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                    {/* Left Column (7 Cols): Headline, Subtitle, Actions */}
                     <div className="lg:col-span-7 flex flex-col justify-between gap-6">
                         <div className="space-y-4">
-                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-white tracking-tight leading-[1.12]">
-                                Hire Verified Talent.{' '}
-                                <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-400">
-                                    Prove Your Actual Skills.
-                                </span>
+                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight leading-[1.15]">
+                                <span className="block text-[#f5f5f5]">SkillForge</span>
+                                <span className="block text-[#737373]">verifies competence</span>
                             </h1>
 
-                            <p className="text-base sm:text-lg text-zinc-300 max-w-xl leading-relaxed">
-                                SkillForge replaces resume embellishment with standardized, sandboxed technical assessments. Candidates demonstrate real problem-solving ability, and engineering teams hire with empirical confidence.
+                            <p className="text-sm sm:text-base text-[#888888] max-w-xl leading-relaxed">
+                                Objective technical evaluation without resume inflation. Direct code analysis, sandboxed execution, and verified skill dossiers.
                             </p>
                         </div>
 
-                        {/* Solid Action Buttons */}
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-start gap-3 sm:gap-4 pt-1">
+                        {/* Action Bar */}
+                        <div className="flex flex-wrap items-center gap-3 pt-2">
                             <button
                                 onClick={onStartAssessment}
-                                className="inline-flex items-center justify-center gap-2 bg-white text-zinc-950 hover:bg-zinc-100 font-semibold text-sm py-3.5 px-6 rounded-xl shadow-sm transition-colors cursor-pointer active:scale-[0.99]"
+                                className="inline-flex items-center gap-1.5 bg-[#111113] hover:bg-[#1a1a1d] text-[#f5f5f5] border border-white/10 px-4 py-2.5 text-xs sm:text-sm rounded-md transition-colors cursor-pointer"
                             >
-                                <span>Start Technical Assessment</span>
-                                <span className="material-symbols-outlined text-[18px]">
-                                    arrow_forward
-                                </span>
+                                <span>Start Free Assessment</span>
+                                <span className="text-[#888888]">↗</span>
                             </button>
 
                             <button
                                 onClick={onPostRequisition}
-                                className="inline-flex items-center justify-center gap-2 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 hover:text-white border border-zinc-700/80 font-semibold text-sm py-3.5 px-6 rounded-xl transition-colors cursor-pointer"
+                                className="inline-flex items-center gap-1.5 bg-transparent hover:bg-white/[0.04] text-[#cccccc] hover:text-white border border-white/10 px-4 py-2.5 text-xs sm:text-sm rounded-md transition-colors cursor-pointer"
                             >
-                                <span>For Hiring Teams</span>
+                                <span>Hire Verified Talent</span>
+                                <span className="text-[#888888]">↗</span>
                             </button>
+
+                            <a
+                                href="#CapabilitiesRow"
+                                className="inline-flex items-center gap-1.5 text-xs text-[#888888] hover:text-white px-3 py-2 transition-colors cursor-pointer"
+                            >
+                                <span>Protocol Spec</span>
+                                <span className="text-[#666666]">↗</span>
+                            </a>
                         </div>
 
                         {/* Clean Benchmark Indicators */}
-                        <div className="grid grid-cols-3 gap-3 pt-5 border-t border-white/[0.06] text-xs">
-                            <div className="flex flex-col gap-0.5">
-                                <span className="text-zinc-500 text-[11px] uppercase tracking-wide font-medium">Evaluation Time</span>
-                                <span className="text-zinc-200 font-semibold text-sm">20 Minutes</span>
+                        <div className="grid grid-cols-3 gap-4 pt-6 border-t border-white/[0.06] text-xs">
+                            <div className="flex flex-col gap-1">
+                                <span className="text-[#555555]">Evaluation</span>
+                                <span className="text-[#ededed] font-bold">20 Minutes</span>
                             </div>
-                            <div className="flex flex-col gap-0.5">
-                                <span className="text-zinc-500 text-[11px] uppercase tracking-wide font-medium">Anti-Tamper Rate</span>
-                                <span className="text-emerald-400 font-semibold text-sm">99.9% Verified</span>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-[#555555]">Anti-Tamper</span>
+                                <span className="text-[#ededed] font-bold">Verified</span>
                             </div>
-                            <div className="flex flex-col gap-0.5">
-                                <span className="text-zinc-500 text-[11px] uppercase tracking-wide font-medium">Skill Matching</span>
-                                <span className="text-blue-400 font-semibold text-sm">Semantic Alignment</span>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-[#555555]">Model</span>
+                                <span className="text-[#ededed] font-bold">Semantic</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Right Column (5 Cols): Sleek Executive Credential Card */}
+                    {/* Right Column (5 Cols): Restrained Technical Index Card */}
                     <div className="lg:col-span-5">
-                        <div className="rounded-xl bg-[#181A22] border border-white/[0.08] border-t-white/[0.18] p-6 shadow-xl relative">
-                            <div className="flex flex-col gap-5">
-                                {/* Card Header: Candidate Identity & Verification Badge */}
-                                <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-semibold text-sm">
-                                            AR
-                                        </div>
-                                        <div>
-                                            <div className="text-sm font-semibold text-white flex items-center gap-1.5">
-                                                <span>Alex Rivera</span>
-                                                <span className="material-symbols-outlined text-blue-400 text-[15px]">
-                                                    verified
-                                                </span>
-                                            </div>
-                                            <p className="text-xs text-zinc-400 font-normal">
-                                                Full-Stack Software Engineer
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <span className="px-2.5 py-1 rounded-full text-xs font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
-                                        Verified
-                                    </span>
+                        <div className="rounded-md bg-[#050505] border border-white/10 p-6 space-y-5">
+                            {/* Card Header */}
+                            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 text-xs">
+                                <span className="font-display font-bold text-white">
+                                    Verified Dossier
+                                </span>
+                                <span className="text-[#555555]">
+                                    #SF-9842
+                                </span>
+                            </div>
+
+                            {/* Candidate Identity */}
+                            <div>
+                                <div className="text-sm font-bold text-[#f5f5f5]">
+                                    Alex Rivera
                                 </div>
-
-                                {/* Score Showcase */}
-                                <div className="my-1">
-                                    <div className="flex items-baseline justify-between">
-                                        <div className="text-4xl font-display font-bold text-white tracking-tight">
-                                            98.6<span className="text-xl font-normal text-zinc-400">th</span>
-                                        </div>
-                                        <span className="text-xs font-medium text-zinc-400">
-                                            Percentile Rank
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-zinc-400 mt-1">
-                                        Evaluated across runtime efficiency, problem solving, and architecture design.
-                                    </p>
+                                <div className="text-xs text-[#737373]">
+                                    Systems &amp; Backend Engineering
                                 </div>
+                            </div>
 
-                                {/* Skill Breakdown Meters */}
-                                <div className="space-y-3 pt-3 border-t border-white/[0.06]">
-                                    {/* Metric 1 */}
-                                    <div className="space-y-1.5">
-                                        <div className="flex items-center justify-between text-xs">
-                                            <span className="text-zinc-300 font-medium">Algorithmic Problem Solving</span>
-                                            <span className="text-white font-semibold">98/100</span>
-                                        </div>
-                                        <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                                            <div className="h-full bg-blue-500 rounded-full" style={{ width: '98%' }} />
-                                        </div>
-                                    </div>
-
-                                    {/* Metric 2 */}
-                                    <div className="space-y-1.5">
-                                        <div className="flex items-center justify-between text-xs">
-                                            <span className="text-zinc-300 font-medium">System Architecture &amp; Design</span>
-                                            <span className="text-white font-semibold">95/100</span>
-                                        </div>
-                                        <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                                            <div className="h-full bg-indigo-500 rounded-full" style={{ width: '95%' }} />
-                                        </div>
-                                    </div>
-
-                                    {/* Metric 3 */}
-                                    <div className="space-y-1.5">
-                                        <div className="flex items-center justify-between text-xs">
-                                            <span className="text-zinc-300 font-medium">Code Quality &amp; Maintainability</span>
-                                            <span className="text-white font-semibold">99/100</span>
-                                        </div>
-                                        <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                                            <div className="h-full bg-emerald-500 rounded-full" style={{ width: '99%' }} />
-                                        </div>
-                                    </div>
+                            {/* Typographic Metrics */}
+                            <div className="space-y-2 py-2 border-y border-white/[0.06] text-xs text-[#888888]">
+                                <div className="flex justify-between items-center">
+                                    <span>Problem Solving:</span>
+                                    <span className="text-white font-bold">100th Percentile</span>
                                 </div>
-
-                                {/* Card Footer: Proctoring Audit */}
-                                <div className="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-400">
-                                    <div className="flex items-center gap-1.5 text-zinc-300">
-                                        <span className="material-symbols-outlined text-emerald-400 text-[16px]">
-                                            check_circle
-                                        </span>
-                                        <span>Proctor Integrity: Clean</span>
-                                    </div>
-                                    <span className="text-[11px] text-zinc-500 font-mono">
-                                        ID #SF-9842
-                                    </span>
+                                <div className="flex justify-between items-center">
+                                    <span>Code Integrity:</span>
+                                    <span className="text-white font-bold">Verified (AST)</span>
                                 </div>
+                                <div className="flex justify-between items-center">
+                                    <span>Proctor Status:</span>
+                                    <span className="text-white font-bold">Clean</span>
+                                </div>
+                            </div>
+
+                            {/* Verified Competencies List */}
+                            <div className="space-y-2">
+                                <div className="text-[11px] text-[#555555] uppercase tracking-wider">
+                                    Verified Competencies:
+                                </div>
+                                <div className="flex flex-wrap gap-1.5 text-xs text-[#cccccc]">
+                                    <span className="px-2 py-0.5 border border-white/10 rounded-sm">Python</span>
+                                    <span className="px-2 py-0.5 border border-white/10 rounded-sm">FastAPI</span>
+                                    <span className="px-2 py-0.5 border border-white/10 rounded-sm">PostgreSQL</span>
+                                    <span className="px-2 py-0.5 border border-white/10 rounded-sm">Docker</span>
+                                </div>
+                            </div>
+
+                            {/* Timestamp */}
+                            <div className="text-[11px] text-[#555555] pt-1">
+                                Authenticated by SkillForge Evaluation Enclave
                             </div>
                         </div>
                     </div>

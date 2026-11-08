@@ -2,8 +2,8 @@ import React from 'react';
 
 const pillars = [
     {
-        icon: 'code',
-        title: 'Real Project & Repository Analysis',
+        num: '01',
+        title: 'Project & Repository Analysis',
         summary: 'Automated evaluation of production experience, commit depth, and architectural quality.',
         points: [
             'Analyzes code depth and modularity rather than keyword scraping.',
@@ -13,7 +13,7 @@ const pillars = [
         tag: 'Ingestion'
     },
     {
-        icon: 'verified_user',
+        num: '02',
         title: 'Standardized Technical Evaluations',
         summary: 'Practical 20-minute problem-solving scenarios modeled on real engineering systems.',
         points: [
@@ -24,7 +24,7 @@ const pillars = [
         tag: 'Verification'
     },
     {
-        icon: 'hub',
+        num: '03',
         title: 'Direct, Merit-Based Job Matching',
         summary: 'Direct introductions to hiring teams seeking demonstrated technical competence.',
         points: [
@@ -38,59 +38,55 @@ const pillars = [
 
 const CapabilitiesGrid = () => {
     return (
-        <section className="w-full font-sans pb-12 mb-12" id="CapabilitiesRow">
+        <section className="w-full font-mono pb-12 mb-12 select-none" id="CapabilitiesRow">
             <div className="flex flex-col gap-8">
                 {/* Section Header */}
-                <div className="text-center max-w-2xl mx-auto space-y-2">
-                    <span className="text-xs uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full inline-block font-medium">
+                <div className="max-w-2xl space-y-2">
+                    <span className="text-xs text-[#888888] font-display uppercase tracking-wider block">
                         Three Pillars of Verification
                     </span>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">
+                    <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
                         How SkillForge Evaluates Real Ability
                     </h2>
-                    <p className="text-sm sm:text-base text-zinc-400 leading-relaxed font-sans">
+                    <p className="text-xs sm:text-sm text-[#888888] leading-relaxed">
                         Every stage is engineered to be transparent, mathematically objective, and focused strictly on demonstrated competence.
                     </p>
                 </div>
 
                 {/* 3 Columns Card Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {pillars.map((pillar, idx) => (
                         <div
                             key={idx}
-                            className="p-6 sm:p-7 rounded-xl bg-[#121318] border border-white/[0.08] flex flex-col justify-between gap-5 shadow-sm hover:border-zinc-700 transition-colors"
+                            className="p-6 rounded-md bg-[#0b0b0c] border border-white/10 flex flex-col justify-between gap-6"
                         >
                             <div className="space-y-4">
-                                <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
-                                    <span className="material-symbols-outlined text-[22px]">
-                                        {pillar.icon}
+                                <div className="flex items-center justify-between border-b border-white/[0.06] pb-3 text-xs">
+                                    <span className="font-bold text-white">
+                                        [{pillar.num}]
+                                    </span>
+                                    <span className="text-[#666666] uppercase text-[11px]">
+                                        {pillar.tag}
                                     </span>
                                 </div>
 
-                                <h3 className="text-lg font-semibold text-white tracking-tight">
+                                <h3 className="text-base font-bold text-white tracking-tight">
                                     {pillar.title}
                                 </h3>
 
-                                <p className="text-sm text-zinc-400 leading-relaxed">
+                                <p className="text-xs text-[#888888] leading-relaxed">
                                     {pillar.summary}
                                 </p>
-
-                                <ul className="text-xs sm:text-sm text-zinc-400 space-y-2.5 pt-1 leading-relaxed">
-                                    {pillar.points.map((pt, pIdx) => (
-                                        <li key={pIdx} className="flex items-start gap-2">
-                                            <span className="material-symbols-outlined text-emerald-400 text-[16px] shrink-0 mt-0.5">
-                                                check
-                                            </span>
-                                            <span>{pt}</span>
-                                        </li>
-                                    ))}
-                                </ul>
                             </div>
 
-                            <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-zinc-500">
-                                <span className="font-medium uppercase tracking-wide">{pillar.tag}</span>
-                                <span className="text-zinc-300 font-semibold">Pillar 0{idx + 1}</span>
-                            </div>
+                            <ul className="space-y-2 border-t border-white/[0.06] pt-4 text-xs text-[#737373]">
+                                {pillar.points.map((pt, pIdx) => (
+                                    <li key={pIdx} className="flex items-start gap-2">
+                                        <span className="text-[#555555] select-none">-</span>
+                                        <span>{pt}</span>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     ))}
                 </div>

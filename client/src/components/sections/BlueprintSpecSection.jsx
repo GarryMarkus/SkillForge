@@ -46,88 +46,75 @@ const comparisons = [
     {
         aspect: 'Fairness & Bias',
         traditional: 'Heavily biased toward elite university names and pedigree',
-        skillforge: '100% merit-based evaluation accessible to all self-taught and traditional talent'
+        skillforge: '100% merit-based evaluation accessible to all engineering talent'
     }
 ];
 
 const BlueprintSpecSection = () => {
     return (
-        <section className="w-full font-sans py-4 mb-12" id="BlueprintSection">
-            <div className="bg-[#121318] rounded-2xl border border-white/[0.08] p-6 sm:p-10 lg:p-12 shadow-lg flex flex-col gap-10 relative overflow-hidden">
+        <section className="w-full font-mono py-4 mb-12 select-none" id="BlueprintSection">
+            <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-6 sm:p-10 lg:p-12 flex flex-col gap-10">
                 {/* Header */}
-                <div className="text-center max-w-2xl mx-auto space-y-2">
-                    <span className="text-xs uppercase tracking-wider text-blue-400 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full inline-block font-medium">
+                <div className="max-w-2xl space-y-2">
+                    <span className="text-xs text-[#888888] font-display uppercase tracking-wider block">
                         Transparent Evaluation Flow
                     </span>
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">
-                        How We Replace Resume Guesswork
+                    <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                        From First Commit to Verified Offer
                     </h2>
-                    <p className="text-sm sm:text-base text-zinc-400 leading-relaxed">
-                        A seamless, human-centric evaluation journey engineered to be fair, respectful, and crystal-clear.
+                    <p className="text-xs sm:text-sm text-[#888888] leading-relaxed">
+                        A rigorous 4-step pipeline that replaces resume screening guesswork with verifiable engineering evidence.
                     </p>
                 </div>
 
-                {/* 4 Steps Horizontal Flow */}
+                {/* 4 Workflow Steps Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {workflowSteps.map((s) => (
+                    {workflowSteps.map((step) => (
                         <div
-                            key={s.num}
-                            className="bg-[#181A22] rounded-xl p-5 border border-white/[0.06] flex flex-col justify-between space-y-3 hover:border-zinc-700 transition-colors"
+                            key={step.num}
+                            className="p-5 rounded-md bg-[#050505] border border-white/10 flex flex-col justify-between gap-4"
                         >
-                            <div className="flex items-center justify-between">
-                                <span className="w-7 h-7 rounded-md bg-zinc-800 text-zinc-200 font-semibold text-xs flex items-center justify-center">
-                                    {s.num}
-                                </span>
-                                <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400">
-                                    {s.badge}
-                                </span>
-                            </div>
-                            <div className="space-y-1.5">
-                                <h3 className="font-semibold text-white text-base">
-                                    {s.title}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between border-b border-white/[0.06] pb-2 text-xs">
+                                    <span className="font-bold text-white">[{step.num}]</span>
+                                    <span className="text-[#666666] text-[11px]">{step.badge}</span>
+                                </div>
+                                <h3 className="text-sm font-bold text-white">
+                                    {step.title}
                                 </h3>
-                                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                                    {s.detail}
+                                <p className="text-xs text-[#888888] leading-relaxed">
+                                    {step.detail}
                                 </p>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {/* Modern Comparison Table */}
-                <div className="mt-2 pt-6 border-t border-white/[0.06]">
-                    <div className="mb-5 text-center">
-                        <h3 className="text-lg sm:text-xl font-bold text-white">
-                            Traditional Hiring vs SkillForge
-                        </h3>
+                {/* High-Contrast Comparison Matrix */}
+                <div className="border-t border-white/[0.06] pt-8 space-y-4">
+                    <div className="text-xs uppercase text-[#888888] font-bold tracking-wider">
+                        Methodology Comparison
                     </div>
-
-                    <div className="overflow-x-auto rounded-xl border border-white/[0.08]">
-                        <table className="w-full text-left border-collapse text-sm">
+                    <div className="w-full overflow-x-auto">
+                        <table className="w-full text-left border-collapse text-xs">
                             <thead>
-                                <tr className="border-b border-white/[0.08] bg-[#181A22] text-xs uppercase tracking-wider text-zinc-400">
-                                    <th className="py-3 px-4 font-semibold">Evaluation Aspect</th>
-                                    <th className="py-3 px-4 font-semibold text-zinc-400">Traditional Job Boards</th>
-                                    <th className="py-3 px-4 font-semibold text-blue-400">The SkillForge Way</th>
+                                <tr className="border-b border-white/10 text-[#666666]">
+                                    <th className="py-2.5 pr-4 font-normal">Evaluation Dimension</th>
+                                    <th className="py-2.5 pr-4 font-normal">Traditional Hiring</th>
+                                    <th className="py-2.5 font-bold text-white">SkillForge Protocol</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-white/[0.06] bg-[#121318]">
+                            <tbody className="divide-y divide-white/[0.04]">
                                 {comparisons.map((c, i) => (
-                                    <tr key={i} className="hover:bg-white/[0.015] transition-colors">
-                                        <td className="py-3.5 px-4 font-medium text-zinc-200 whitespace-nowrap">
+                                    <tr key={i} className="hover:bg-white/[0.02]">
+                                        <td className="py-3 pr-4 font-bold text-white whitespace-nowrap">
                                             {c.aspect}
                                         </td>
-                                        <td className="py-3.5 px-4 text-zinc-400">
-                                            <div className="flex items-center gap-2">
-                                                <span className="material-symbols-outlined text-rose-400 text-[16px]">close</span>
-                                                <span>{c.traditional}</span>
-                                            </div>
+                                        <td className="py-3 pr-4 text-[#737373]">
+                                            {c.traditional}
                                         </td>
-                                        <td className="py-3.5 px-4 font-medium text-white bg-blue-500/[0.03] border-x border-blue-500/10">
-                                            <div className="flex items-center gap-2 text-zinc-200">
-                                                <span className="material-symbols-outlined text-emerald-400 text-[16px]">check_circle</span>
-                                                <span>{c.skillforge}</span>
-                                            </div>
+                                        <td className="py-3 text-[#cccccc] font-medium">
+                                            {c.skillforge}
                                         </td>
                                     </tr>
                                 ))}

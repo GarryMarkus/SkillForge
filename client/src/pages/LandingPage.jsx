@@ -6,7 +6,6 @@ import CapabilitiesGrid from '../components/sections/CapabilitiesGrid';
 import BlueprintSpecSection from '../components/sections/BlueprintSpecSection';
 import PersonaSplitSection from '../components/sections/PersonaSplitSection';
 import Footer from '../components/sections/Footer';
-import CadGridBackground from '../components/ui/animations/CadGridBackground';
 import { useAuthStore } from '../store/authStore';
 
 const LandingPage = () => {
@@ -42,44 +41,34 @@ const LandingPage = () => {
     };
 
     return (
-        <div className="w-full bg-[#07080B] text-slate-100 font-sans min-h-screen selection:bg-cyan-500/20 selection:text-cyan-300 relative overflow-x-hidden">
-            <CadGridBackground
-                gridSize={36}
-                gridColor="rgba(255, 255, 255, 0.035)"
-                crosshairColor="rgba(255, 255, 255, 0.08)"
-                spotlightColor="rgba(0, 240, 255, 0.12)"
-                spotlightCrosshairColor="#00F0FF"
-                spotlightRadius={220}
-                className="min-h-screen flex flex-col justify-between"
-            >
-                <Navbar />
+        <div className="w-full bg-[#050505] text-[#ededed] font-mono min-h-screen selection:bg-white/20 selection:text-white relative overflow-x-hidden flex flex-col justify-between">
+            <Navbar />
 
-                <main className="w-full pt-8 sm:pt-12 min-h-[calc(100vh-64px)] relative z-10">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-                        <div className="flex flex-col w-full">
-                            {/* Empirical Skill Verification Hero Section */}
-                            <HeroSection
-                                onStartAssessment={handleStartAssessment}
-                                onPostRequisition={handleRecruiterAction}
-                            />
+            <main className="w-full pt-8 sm:pt-12 flex-1 relative z-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+                    <div className="flex flex-col w-full">
+                        {/* Empirical Skill Verification Hero Section */}
+                        <HeroSection
+                            onStartAssessment={handleStartAssessment}
+                            onPostRequisition={handleRecruiterAction}
+                        />
 
-                            {/* Architectural Pillars Capabilities Grid */}
-                            <CapabilitiesGrid />
+                        {/* Three Pillars Capabilities Grid */}
+                        <CapabilitiesGrid />
 
-                            {/* Full-Bleed CAD Engineering Blueprint Specification */}
-                            <BlueprintSpecSection />
+                        {/* Engineering Blueprint Specification & Comparison */}
+                        <BlueprintSpecSection />
 
-                            {/* Dual Persona Workflow Segmentation */}
-                            <PersonaSplitSection
-                                onSelectCandidateRole={handleCandidateOnboard}
-                                onSelectRecruiterRole={handleRecruiterOnboard}
-                            />
-                        </div>
+                        {/* Dual Persona Workflow Segmentation */}
+                        <PersonaSplitSection
+                            onSelectCandidateRole={handleCandidateOnboard}
+                            onSelectRecruiterRole={handleRecruiterOnboard}
+                        />
                     </div>
-                </main>
+                </div>
+            </main>
 
-                <Footer />
-            </CadGridBackground>
+            <Footer />
         </div>
     );
 };
