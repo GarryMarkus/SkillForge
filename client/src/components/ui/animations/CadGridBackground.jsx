@@ -1,21 +1,25 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 /**
- * CadGridBackground - Architectural blueprint drafting grid with crosshairs (+)
- * and subtle cobalt cursor proximity illumination.
+ * CadGridBackground - High-precision CAD blueprint drafting canvas.
+ * Renders an interactive radial spotlight grid with fine hairline divisions (#ffffff0a),
+ * registration crosshairs (+), and hardware-accelerated cursor illumination.
  */
 const CadGridBackground = ({
     gridSize = 36,
-    crosshairSize = 5,
-    gridColor = 'rgba(0, 0, 0, 0.06)',
-    crosshairColor = 'rgba(0, 0, 0, 0.18)',
-    proximityColor = 'rgba(29, 82, 184, 0.15)',
-    proximityCrosshairColor = '#1D52B8',
-    proximityRadius = 140,
+    crosshairSize = 6,
+    gridColor = 'rgba(255, 255, 255, 0.04)',
+    crosshairColor = 'rgba(255, 255, 255, 0.12)',
+    spotlightColor = 'rgba(0, 240, 255, 0.12)',
+    spotlightCrosshairColor = '#00F0FF',
+    spotlightRadius = 180,
+    showRegistrationMarks = true,
     interactive = true,
     className = '',
+    children,
 }) => {
     const canvasRef = useRef(null);
+    const containerRef = useRef(null);
     const mouseRef = useRef({ x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false });
     const rafRef = useRef(null);
 
@@ -51,9 +55,22 @@ const CadGridBackground = ({
             ctx.clearRect(0, 0, width, height);
 
             const mouse = mouseRef.current;
-            const radiusSq = proximityRadius * proximityRadius;
+            const radiusSq = spotlightRadius * spotlightRadius;
 
-            // 1. Draw hairline grid lines
+            // 1. Draw radial cursor illumination glow behind the grid
+            if (mouse.active && mouse.x >= 0 && mouse.y >= 0) {
+                const gradient = ctx.createRadialGradient(
+                    mouse.x, mouse.y, 0,
+                    mouse.x, mouse.y, spotlightRadius
+                );
+                gradient.addColorStop(0, spotlightColor);
+                gradient.addColorStop(0.5, 'rgba(0, 240, 255, 0.04)');
+                gradient.addColorStop(1, 'rgba(0, 240, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, width, height);
+            }
+
+            // 2. Draw high-precision hairline grid
             ctx.strokeStyle = gridColor;
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -68,7 +85,7 @@ const CadGridBackground = ({
             }
             ctx.stroke();
 
-            // 2. Draw intersection crosshairs (+) and proximity reaction
+            // 3. Draw intersection registration crosshairs (+)
             for (let x = 0; x <= width; x += gridSize) {
                 for (let y = 0; y <= height; y += gridSize) {
                     const dx = x - mouse.x;
@@ -76,24 +93,18 @@ const CadGridBackground = ({
                     const distSq = dx * dx + dy * dy;
 
                     const isNear = mouse.active && distSq < radiusSq;
-                    const proximityFactor = isNear ? 1 - Math.sqrt(distSq) / proximityRadius : 0;
-
-                    // If within proximity radius, draw faint cell highlight
-                    if (isNear && proximityFactor > 0.05) {
-                        ctx.fillStyle = proximityColor;
-                        ctx.globalAlpha = proximityFactor * 0.45;
-                        ctx.fillRect(x - gridSize / 2, y - gridSize / 2, gridSize, gridSize);
-                        ctx.globalAlpha = 1.0;
-                    }
+                    const proximityFactor = isNear ? 1 - Math.sqrt(distSq) / spotlightRadius : 0;
 
                     // Draw (+) crosshair
                     ctx.beginPath();
                     if (isNear && proximityFactor > 0.1) {
-                        ctx.strokeStyle = proximityCrosshairColor;
+                        ctx.strokeStyle = spotlightCrosshairColor;
                         ctx.lineWidth = 1.5;
+                        ctx.globalAlpha = Math.min(1, 0.3 + proximityFactor * 0.7);
                     } else {
                         ctx.strokeStyle = crosshairColor;
                         ctx.lineWidth = 1;
+                        ctx.globalAlpha = 0.6;
                     }
 
                     // Horizontal arm
@@ -103,6 +114,7 @@ const CadGridBackground = ({
                     ctx.moveTo(x + 0.5, y - crosshairSize + 0.5);
                     ctx.lineTo(x + 0.5, y + crosshairSize + 0.5);
                     ctx.stroke();
+                    ctx.globalAlpha = 1.0;
                 }
             }
 
@@ -111,13 +123,12 @@ const CadGridBackground = ({
 
         const renderLoop = () => {
             const mouse = mouseRef.current;
-            // Smooth cursor interpolation
             const dx = mouse.targetX - mouse.x;
             const dy = mouse.targetY - mouse.y;
 
             if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
-                mouse.x += dx * 0.25;
-                mouse.y += dy * 0.25;
+                mouse.x += dx * 0.22;
+                mouse.y += dy * 0.22;
                 draw();
                 rafRef.current = requestAnimationFrame(renderLoop);
             } else {
@@ -154,7 +165,7 @@ const CadGridBackground = ({
         resize();
         window.addEventListener('resize', resize);
 
-        const parent = canvas.parentElement;
+        const parent = containerRef.current || canvas.parentElement;
         if (interactive && parent) {
             parent.addEventListener('pointermove', handlePointerMove, { passive: true });
             parent.addEventListener('pointerleave', handlePointerLeave, { passive: true });
@@ -168,14 +179,36 @@ const CadGridBackground = ({
             }
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
-    }, [gridSize, crosshairSize, gridColor, crosshairColor, proximityColor, proximityCrosshairColor, proximityRadius, interactive]);
+    }, [gridSize, crosshairSize, gridColor, crosshairColor, spotlightColor, spotlightCrosshairColor, spotlightRadius, interactive]);
 
     return (
-        <canvas
-            ref={canvasRef}
-            className={`pointer-events-none absolute inset-0 z-0 block w-full h-full select-none ${className}`}
-            aria-hidden="true"
-        />
+        <div ref={containerRef} className={`relative w-full overflow-hidden ${className}`}>
+            <canvas
+                ref={canvasRef}
+                className="pointer-events-none absolute inset-0 z-0 block w-full h-full select-none"
+                aria-hidden="true"
+            />
+            {/* Corner Architectural Registration Crosshairs */}
+            {showRegistrationMarks && (
+                <>
+                    <div className="pointer-events-none absolute top-4 left-4 z-10 text-cyan-500/40 font-mono text-[10px] tracking-widest select-none">
+                        + [00,00] CAD_SYS
+                    </div>
+                    <div className="pointer-events-none absolute top-4 right-4 z-10 text-cyan-500/40 font-mono text-[10px] tracking-widest select-none">
+                        [100,00] +
+                    </div>
+                    <div className="pointer-events-none absolute bottom-4 left-4 z-10 text-cyan-500/30 font-mono text-[10px] tracking-widest select-none">
+                        + [00,100]
+                    </div>
+                    <div className="pointer-events-none absolute bottom-4 right-4 z-10 text-cyan-500/30 font-mono text-[10px] tracking-widest select-none">
+                        [100,100] +
+                    </div>
+                </>
+            )}
+            <div className="relative z-10 w-full">
+                {children}
+            </div>
+        </div>
     );
 };
 

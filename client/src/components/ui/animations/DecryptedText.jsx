@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
-const DEFAULT_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_/#+=-';
+const DEFAULT_CHARS = '01_/*#[]{}<>-+~';
 
 /**
  * DecryptedText - High-performance monospace terminal text scrambler.
- * Cycles unrevealed characters at high speed before locking in the target string.
+ * Cycles unrevealed characters at high speed with random glyphs ("01_/*#[]{}<>")
+ * before locking into the target plaintext.
  */
 const DecryptedText = ({
     text = '',
-    speed = 30,
-    maxIterations = 8,
+    speed = 35,
+    maxIterations = 10,
     characters = DEFAULT_CHARS,
     className = '',
     parentClassName = '',
-    encryptedClassName = 'text-primary-container font-bold opacity-75',
+    encryptedClassName = 'text-cyanAccent font-mono drop-shadow-[0_0_8px_rgba(0,240,255,0.6)]',
     animateOn = 'view', // 'view' | 'mount' | 'hover'
     revealDirection = 'start', // 'start' | 'end' | 'center'
     onComplete,
@@ -30,7 +31,7 @@ const DecryptedText = ({
 
         const length = text.length;
         let iteration = 0;
-        const totalIterations = length * maxIterations;
+        const totalIterations = Math.max(12, length * maxIterations);
 
         if (intervalRef.current) clearInterval(intervalRef.current);
 
@@ -77,7 +78,7 @@ const DecryptedText = ({
         }, speed);
     }, [text, speed, maxIterations, characters, revealDirection, onComplete]);
 
-    // IntersectionObserver for 'view' trigger
+    // IntersectionObserver for 'view' trigger or immediate 'mount' trigger
     useEffect(() => {
         if (animateOn === 'mount') {
             startScramble();
@@ -94,7 +95,7 @@ const DecryptedText = ({
                         observer.disconnect();
                     }
                 },
-                { threshold: 0.15 }
+                { threshold: 0.1 }
             );
 
             const el = containerRef.current;
@@ -111,7 +112,7 @@ const DecryptedText = ({
         };
     }, [animateOn, hasAnimated, startScramble]);
 
-    // Handle text change
+    // Handle prop text update
     useEffect(() => {
         setDisplayText(text);
     }, [text]);
