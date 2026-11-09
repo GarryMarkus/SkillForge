@@ -59,7 +59,7 @@
 ```
 SkillForge/
 ├── client/                     # Frontend SPA (React 19, Vite 7, Tailwind, Zustand)
-│   ├── public/                 # Static assets, CAD blueprint favicon.svg, and icons
+│   ├── public/                 # Static assets, SVG/PNG favicon suite, and site manifest
 │   ├── src/
 │   │   ├── api/                # API client facade and Celery task status hook
 │   │   ├── components/         # Modular UI architecture:
@@ -68,15 +68,15 @@ SkillForge/
 │   │   │   ├── client/         # ActiveJobsTable, ApplicantRankings, DossierModal
 │   │   │   ├── common/         # ErrorBoundary.jsx (global runtime exception boundary)
 │   │   │   ├── guards/         # ProtectedRoute and RoleGuard RBAC navigation shields
-│   │   │   ├── layout/         # Responsive Navbar (multi-tab navigation) & Footer
+│   │   │   ├── layout/         # CardNav (expandable card navigation) & Footer
 │   │   │   ├── modals/         # JobPostModal, CandidateDossierModal
-│   │   │   ├── sections/       # HeroSection, CapabilitiesGrid, BlueprintSpec, PersonaSplit
+│   │   │   ├── sections/       # HeroSection (Noise & RotatingText), Footer
 │   │   │   ├── student/        # StudentHeader, MatchedPositionsGrid, ProfileBlock
-│   │   │   ├── ui/             # Core UI components & mechanical animation primitives
+│   │   │   ├── ui/             # Core UI components & typography animation primitives
 │   │   │   └── upskill/        # MarkdownContentReader, ModuleCompletionActions
 │   │   ├── hooks/              # useTaskStatus.js (resilient Celery polling)
 │   │   ├── lib/                # api.js (JWT refresh, offline recovery) and cn.js
-│   │   ├── pages/              # LandingPage, HowItWorksPage, AuthPage, Dashboards, Assessments
+│   │   ├── pages/              # LandingPage, VerificationPage, ProtocolPage, TalentPage, AuthPage, Dashboards
 │   │   └── store/              # Zustand stores: authStore (tokens, role) & themeStore
 │   ├── .env.example            # Frontend environment variable template
 │   ├── Dockerfile              # Multi-stage production container (Node 20 + Nginx)
