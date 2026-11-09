@@ -7,3 +7,4 @@ export { default as CounterTicker } from './CounterTicker';
 export { default as MagneticButton } from './MagneticButton';
 export { default as CardNav } from './CardNav';
 export { default as StudioNoise } from './StudioNoise';
+export { default as RotatingText } from './RotatingText';
