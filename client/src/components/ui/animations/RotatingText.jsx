@@ -2,8 +2,10 @@ import React, {
     forwardRef,
     useCallback,
     useEffect,
+    useLayoutEffect,
     useImperativeHandle,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,13 +18,13 @@ import { cn } from '../../../lib/cn';
  * Invariants:
  * - Pure Courier Prime & Consolas typography.
  * - Smooth character or word-level staggered spring transitions.
- * - Supports highlight pill mode with customizable highlightColor (#ffffff).
+ * - Synchronous measured width interpolation for fluid highlight badge resizing.
  * - Zero layout jitter, accessible sr-only text announcement.
  */
 const RotatingText = forwardRef((
     {
         texts = [],
-        transition = { type: 'spring', damping: 25, stiffness: 300 },
+        transition = { type: 'spring', damping: 26, stiffness: 240 },
         initial = { y: '100%', opacity: 0 },
         animate = { y: 0, opacity: 1 },
         exit = { y: '-120%', opacity: 0 },
@@ -45,6 +47,8 @@ const RotatingText = forwardRef((
     ref
 ) => {
     const [currentTextIndex, setCurrentTextIndex] = useState(0);
+    const measureRef = useRef(null);
+    const [currentWidth, setCurrentWidth] = useState('auto');
 
     const splitIntoChars = (text) => {
         if (typeof Intl !== 'undefined' && 'Segmenter' in Intl) {
@@ -174,55 +178,110 @@ const RotatingText = forwardRef((
         return () => clearInterval(intervalId);
     }, [auto, rotationInterval, next, texts.length]);
 
+    // Measure active word dimensions accurately for silky-smooth width transitions
+    const updateWidth = useCallback(() => {
+        if (measureRef.current) {
+            const rect = measureRef.current.getBoundingClientRect();
+            if (rect.width > 0) {
+                setCurrentWidth(Math.ceil(rect.width));
+            }
+        }
+    }, []);
+
+    const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
+
+    useIsomorphicLayoutEffect(() => {
+        updateWidth();
+    }, [currentTextIndex, texts, updateWidth]);
+
+    useEffect(() => {
+        window.addEventListener('resize', updateWidth);
+        return () => window.removeEventListener('resize', updateWidth);
+    }, [updateWidth]);
+
     const isHighlightActive = highlight || Boolean(highlightColor);
     const highlightStyle = isHighlightActive && highlightColor ? { backgroundColor: highlightColor } : undefined;
 
+    const widthTransition = {
+        type: 'spring',
+        damping: 26,
+        stiffness: 220,
+        mass: 0.8,
+    };
+
     return (
-        <motion.span
-            layout
-            transition={{ layout: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
-            style={highlightStyle}
-            className={cn(
-                'inline-flex items-center overflow-hidden font-display',
-                isHighlightActive && 'px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-sm text-[#050505] selection:bg-[#050505] selection:text-white',
-                mainClassName
-            )}
-            {...rest}
-        >
-            <span className="sr-only">{texts[currentTextIndex]}</span>
-            <AnimatePresence
-                mode={animatePresenceMode}
-                initial={animatePresenceInitial}
+        <>
+            {/* Invisible measurement node with identical typography and padding */}
+            <span
+                ref={measureRef}
+                aria-hidden="true"
+                className={cn(
+                    'absolute pointer-events-none select-none invisible whitespace-nowrap font-display',
+                    isHighlightActive && 'px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-sm',
+                    mainClassName
+                )}
+                style={{
+                    position: 'absolute',
+                    top: -9999,
+                    left: -9999,
+                    visibility: 'hidden',
+                    whiteSpace: 'nowrap',
+                }}
             >
-                <motion.span
-                    key={currentTextIndex}
-                    className={cn(
-                        'inline-flex items-center whitespace-nowrap relative',
-                        splitLevelClassName
-                    )}
-                    aria-hidden="true"
+                {texts[currentTextIndex]}
+            </span>
+
+            <motion.span
+                layout
+                animate={{ width: currentWidth }}
+                transition={{
+                    width: widthTransition,
+                    layout: widthTransition,
+                }}
+                style={highlightStyle}
+                className={cn(
+                    'inline-flex items-center overflow-hidden font-display relative align-middle',
+                    isHighlightActive && 'px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-sm text-[#050505] selection:bg-[#050505] selection:text-white',
+                    mainClassName
+                )}
+                {...rest}
+            >
+                <span className="sr-only">{texts[currentTextIndex]}</span>
+                <AnimatePresence
+                    mode={animatePresenceMode}
+                    initial={animatePresenceInitial}
                 >
-                    {elements.map((el, index) => {
-                        const delay = getStaggerDelay(index, elements.length);
-                        return (
-                            <motion.span
-                                key={index}
-                                initial={initial}
-                                animate={animate}
-                                exit={exit}
-                                transition={{
-                                    ...transition,
-                                    delay: transition?.delay ? transition.delay + delay : delay,
-                                }}
-                                className={cn('inline-block', elementLevelClassName)}
-                            >
-                                {el.char}
-                            </motion.span>
-                        );
-                    })}
-                </motion.span>
-            </AnimatePresence>
-        </motion.span>
+                    <motion.span
+                        key={currentTextIndex}
+                        className={cn(
+                            'inline-flex items-center whitespace-nowrap relative justify-center w-full',
+                            splitLevelClassName
+                        )}
+                        layout
+                        aria-hidden="true"
+                    >
+                        {elements.map((el, index) => {
+                            const delay = getStaggerDelay(index, elements.length);
+                            return (
+                                <motion.span
+                                    key={index}
+                                    initial={initial}
+                                    animate={animate}
+                                    exit={exit}
+                                    transition={{
+                                        ...transition,
+                                        delay: transition?.delay ? transition.delay + delay : delay,
+                                    }}
+                                    className={cn('inline-block', elementLevelClassName)}
+                                >
+                                    {el.char}
+                                </motion.span>
+                            );
+                        })}
+                    </motion.span>
+                </AnimatePresence>
+            </motion.span>
+        </>
     );
 });
 
