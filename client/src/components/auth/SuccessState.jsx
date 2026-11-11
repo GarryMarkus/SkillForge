@@ -8,24 +8,21 @@ const SuccessState = () => {
     const [count, setCount] = useState(3);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCount((prev) => {
-                if (prev <= 1) {
-                    clearInterval(timer);
-                    if (role === 'student') {
-                        navigate('/student/onboarding');
-                    } else if (role === 'client') {
-                        navigate('/client/onboarding');
-                    } else {
-                        navigate('/');
-                    }
-                    return 0;
-                }
-                return prev - 1;
-            });
+        if (count <= 0) {
+            if (role === 'student') {
+                navigate('/student/onboarding');
+            } else if (role === 'client') {
+                navigate('/client/onboarding');
+            } else {
+                navigate('/');
+            }
+            return undefined;
+        }
+        const timer = setTimeout(() => {
+            setCount((prev) => prev - 1);
         }, 1000);
-        return () => clearInterval(timer);
-    }, [navigate, role]);
+        return () => clearTimeout(timer);
+    }, [count, navigate, role]);
 
     const handleProceedNow = () => {
         if (role === 'student') {
