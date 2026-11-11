@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
+import StudioNoise from '../../components/ui/animations/StudioNoise';
 
 import ClientHeader from '../../components/client/ClientHeader';
 import RequisitionActionBar from '../../components/client/RequisitionActionBar';
@@ -121,21 +122,21 @@ const ClientDashboard = () => {
                             application_id: app.application_id,
                             rank: `#${String(i + 1).padStart(2, '0')}`,
                             cosine_sim: typeof app.match === 'number' ? app.match.toFixed(1) : 94.2,
-                            candidate_name: app.name || app.email?.split('@')[0]?.toUpperCase() || `APPLICANT_${app.id}`,
+                            candidate_name: app.name || app.email?.split('@')[0] || `Candidate ${app.id}`,
                             candidate_ref: `SF-APP-${app.application_id || app.id}`,
-                            role_label: app.experience_level ? `${app.experience_level} Software Engineer` : "Engineering Candidate",
+                            role_label: app.experience_level ? `${app.experience_level} Software Engineer` : 'Engineering Candidate',
                             hash: `hash_${app.id}..77b2`,
-                            region: "VERIFIED CANDIDATE",
+                            region: 'Verified Candidate',
                             pdf_parsed: true,
-                            github_repos: app.github_url ? "LINKED" : "AUDITED",
-                            tags: app.skills ? app.skills.split(',').map(s => s.trim()) : (job.skills_required ? job.skills_required.split(',').map(s => s.trim()) : ["PYTHON", "DJANGO"]),
-                            proctor_score: app.skill_score ? `${app.skill_score}%` : "98%",
-                            proctor_flags: app.is_flagged ? "SECURITY_FLAGGED" : "ZERO_CHEATING_FLAGS",
-                            cam_status: app.is_flagged ? "RISK_ELEVATED" : "SYNCHRONIZED (1080P)",
+                            github_repos: app.github_url ? 'GitHub Linked' : 'AST Audited',
+                            tags: app.skills ? app.skills.split(',').map(s => s.trim()) : (job.skills_required ? job.skills_required.split(',').map(s => s.trim()) : ['Python', 'Django']),
+                            proctor_score: app.skill_score ? `${app.skill_score}%` : '98%',
+                            proctor_flags: app.is_flagged ? 'Security Flagged' : 'Clean · Zero Anomalies',
+                            cam_status: app.is_flagged ? 'Integrity Review Required' : 'Synchronized · 1080p',
                             stars: starsStr,
                             rating_num: `${app.star_rating || 4.5} / 5.0`,
-                            email: app.email || "candidate@example.com",
-                            status: app.status || "pending"
+                            email: app.email || 'candidate@example.com',
+                            status: app.status || 'pending'
                         };
                     });
                     setApplicants(formatted);
@@ -229,91 +230,97 @@ const ClientDashboard = () => {
 
     const displayedApplicants = applicants.filter(a => {
         if (filterMode === 'TRUST_90') return parseFloat(a.cosine_sim) >= 90;
-        if (filterMode === 'ZERO_FLAG') return a.proctor_flags?.toLowerCase().includes("clean") || a.proctor_flags?.includes("ZERO");
+        if (filterMode === 'ZERO_FLAG') {
+            const flags = (a.proctor_flags || '').toLowerCase();
+            return flags.includes('clean') || flags.includes('zero');
+        }
         return true;
     });
 
     const companyName = profile?.company_name || user?.email?.split('@')[0] || 'SkillForge Partner';
     const totalApplicantsCount = (jobs.length * 14) + applicants.length;
-    const requiredSkillsList = selectedJob?.skills_required 
+    const requiredSkillsList = selectedJob?.skills_required
         ? selectedJob.skills_required.split(',').map(s => s.trim())
         : ["Python", "FastAPI", "Docker", "Kubernetes", "PostgreSQL", "Redis"];
+    const syncTimestamp = `${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC`;
 
     return (
-        <div className="bg-[#050505] text-[#ededed] font-mono antialiased min-h-screen flex flex-col">
-            {/* Top Enterprise Console Header with Integrated Metric Ribbon */}
-            <ClientHeader
-                companyName={companyName}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                jobsCount={jobs.length}
-                totalApplicantsCount={totalApplicantsCount}
-                verifiedTalentIndex="96.2%"
-                timeToShortlist="1.4 Days"
-                onLogout={handleLogout}
-            />
+        <StudioNoise opacity={0.07}>
+            <div className="text-[#ededed] font-mono antialiased min-h-screen flex flex-col">
+                {/* Top Enterprise Console Header with Integrated Metric Ribbon */}
+                <ClientHeader
+                    companyName={companyName}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                    jobsCount={jobs.length}
+                    totalApplicantsCount={totalApplicantsCount}
+                    verifiedTalentIndex="96.2%"
+                    timeToShortlist="1.4 Days"
+                    onLogout={handleLogout}
+                />
 
-            {/* Main Console Workspace */}
-            <main className="w-full pt-28 bg-[#050505] min-h-screen flex-1 flex flex-col justify-between font-mono">
-                <div>
-                    {/* Requisition Deployment Action Bar */}
-                    <RequisitionActionBar
-                        onDeployClick={() => setIsModalOpen(true)}
-                        onExportCSV={handleExportCSV}
-                        lastRunTimestamp="2026-10-24 18:42:01"
-                    />
-
-                    {/* Main Workplane Grid */}
-                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
-                        {/* Active Deployed Jobs Table Block */}
-                        <ActiveJobsTableBlock
-                            jobs={jobs}
-                            selectedJob={selectedJob}
-                            onSelectJob={handleSelectJob}
+                {/* Main Console Workspace */}
+                <main className="w-full pt-28 min-h-screen flex-1 flex flex-col justify-between font-mono relative z-10">
+                    <div>
+                        {/* Requisition Deployment Action Bar */}
+                        <RequisitionActionBar
                             onDeployClick={() => setIsModalOpen(true)}
+                            onExportCSV={handleExportCSV}
+                            lastRunTimestamp={syncTimestamp}
                         />
 
-                        {/* Two-Column Engineering Split */}
-                        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                            {/* Left Column: Applicant Rankings Grid (8 Cols) */}
-                            <ApplicantRankingsGrid
+                        {/* Main Workplane Grid */}
+                        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+                            {/* Active Deployed Jobs Table Block */}
+                            <ActiveJobsTableBlock
+                                jobs={jobs}
                                 selectedJob={selectedJob}
-                                applicants={displayedApplicants}
-                                filterMode={filterMode}
-                                setFilterMode={setFilterMode}
-                                onInspectCandidate={setInspectingCandidate}
-                                onIssueOffer={handleIssueOffer}
+                                onSelectJob={handleSelectJob}
+                                onDeployClick={() => setIsModalOpen(true)}
                             />
 
-                            {/* Right Column: Technical Blueprint Specification Card (4 Cols) */}
-                            <RequisitionBlueprintCard
-                                skillsList={requiredSkillsList}
-                                onRecalibrate={() => setIsModalOpen(true)}
-                                onCloneSpec={() => setIsModalOpen(true)}
-                                timestamp="2026-10-24 18:42:01 UTC"
-                            />
+                            {/* Two-Column Engineering Split */}
+                            <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                                {/* Left Column: Applicant Rankings Grid (8 Cols) */}
+                                <ApplicantRankingsGrid
+                                    selectedJob={selectedJob}
+                                    applicants={displayedApplicants}
+                                    filterMode={filterMode}
+                                    setFilterMode={setFilterMode}
+                                    onInspectCandidate={setInspectingCandidate}
+                                    onIssueOffer={handleIssueOffer}
+                                />
+
+                                {/* Right Column: Technical Blueprint Specification Card (4 Cols) */}
+                                <RequisitionBlueprintCard
+                                    skillsList={requiredSkillsList}
+                                    onRecalibrate={() => setIsModalOpen(true)}
+                                    onCloneSpec={() => setIsModalOpen(true)}
+                                    timestamp={syncTimestamp}
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Technical Ground & Coordinates Information Strip */}
-                <ClientFooter />
-            </main>
+                    {/* Technical Ground & Coordinates Information Strip */}
+                    <ClientFooter />
+                </main>
 
-            {/* Candidate Dossier Inspection Modal */}
-            <CandidateDossierModal
-                candidate={inspectingCandidate}
-                onClose={() => setInspectingCandidate(null)}
-                onIssueOffer={handleIssueOffer}
-            />
+                {/* Candidate Dossier Inspection Modal */}
+                <CandidateDossierModal
+                    candidate={inspectingCandidate}
+                    onClose={() => setInspectingCandidate(null)}
+                    onIssueOffer={handleIssueOffer}
+                />
 
-            {/* Requisition Creation Modal */}
-            <JobPostModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onJobCreated={handleJobCreated}
-            />
-        </div>
+                {/* Requisition Creation Modal */}
+                <JobPostModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onJobCreated={handleJobCreated}
+                />
+            </div>
+        </StudioNoise>
     );
 };
 
