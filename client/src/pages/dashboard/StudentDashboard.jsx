@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {
+    LayoutDashboard,
+    Briefcase,
+    BookOpen,
+    Play,
+    CheckCircle2,
+    ChevronRight,
+    FileText,
+    ShieldCheck,
+    BrainCircuit,
+} from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../api/client';
 import StudioNoise from '../../components/ui/animations/StudioNoise';
@@ -13,14 +24,38 @@ import UpskillTerminalCard from '../../components/student/UpskillTerminalCard';
 const StudentDashboard = () => {
     const { logout, user } = useAuthStore();
     const navigate = useNavigate();
+    const location = useLocation();
     const [profile, setProfile] = useState(null);
     const [recommendation, setRecommendation] = useState(null);
     const [jobs, setJobs] = useState([]);
     const [myApplications, setMyApplications] = useState([]);
-    const [filterMode, setFilterMode] = useState('ALL'); // 'ALL', 'MATCH_85', 'APPLIED'
+    const [upskillModules, setUpskillModules] = useState([]);
+    const [completedModuleIds, setCompletedModuleIds] = useState([]);
+    const [filterMode, setFilterMode] = useState('ALL');
     const [applyingTo, setApplyingTo] = useState(null);
+    const [toastBanner, setToastBanner] = useState(null);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-    const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'jobs', 'learning'
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    const resolveTabFromHash = (hash) => {
+        if (hash === '#jobs') return 'jobs';
+        if (hash === '#learning') return 'learning';
+        return 'overview';
+    };
+
+    const [activeTab, setActiveTab] = useState(() => resolveTabFromHash(location.hash));
+
+    useEffect(() => {
+        setActiveTab(resolveTabFromHash(location.hash));
+    }, [location.hash]);
+
+    const handleSelectTab = (tab) => {
+        setActiveTab(tab);
+        const hash = tab === 'overview' ? '' : `#${tab}`;
+        if (location.hash !== hash) {
+            navigate(`/student/dashboard${hash}`, { replace: true });
+        }
+    };
 
     useEffect(() => {
         if (user && user.onboarding_stage < 2) {
@@ -31,7 +66,6 @@ const StudentDashboard = () => {
     useEffect(() => {
         let isMounted = true;
         const loadDashboard = async () => {
-            // Fetch Profile
             try {
                 const res = await api.get('/accounts/profile/');
                 if (res.ok && isMounted) {
@@ -42,7 +76,6 @@ const StudentDashboard = () => {
                 console.error('Error fetching profile:', e);
             }
 
-            // Fetch Recommendation
             try {
                 const res = await api.get('/verification/recommendation/');
                 if (res.ok && isMounted) {
@@ -74,7 +107,6 @@ const StudentDashboard = () => {
                 console.error('Error fetching recommendation:', e);
             }
 
-            // Fetch My Applications
             try {
                 const res = await api.get('/project/my-applications/');
                 if (res.ok && isMounted) {
@@ -85,7 +117,6 @@ const StudentDashboard = () => {
                 console.error('Error fetching applications:', e);
             }
 
-            // Fetch Available Jobs
             try {
                 const res = await api.get('/project/jobs/');
                 if (res.ok && isMounted) {
@@ -94,6 +125,25 @@ const StudentDashboard = () => {
                 }
             } catch (e) {
                 console.error('Error fetching jobs:', e);
+            }
+
+            try {
+                const [modRes, progRes] = await Promise.all([
+                    api.get('/modules/upskill/modules/'),
+                    api.get('/modules/upskill/progress/'),
+                ]);
+                if (modRes.ok && isMounted) {
+                    const modData = await modRes.json();
+                    setUpskillModules(Array.isArray(modData) ? modData : []);
+                }
+                if (progRes.ok && isMounted) {
+                    const progData = await progRes.json();
+                    if (Array.isArray(progData.completed_module_ids)) {
+                        setCompletedModuleIds(progData.completed_module_ids);
+                    }
+                }
+            } catch (e) {
+                console.error('Error fetching learning modules:', e);
             }
         };
 
@@ -108,15 +158,15 @@ const StudentDashboard = () => {
         try {
             const res = await api.post('/project/apply/', { job_id: jobId });
             if (res.ok) {
-                alert('Application submitted successfully! Your verified profile has been forwarded to the employer.');
                 setMyApplications(prev => [...prev, { job: jobId, status: 'pending' }]);
+                setToastBanner({ type: 'success', text: 'Application submitted. Your verified profile was sent to the team.' });
             } else {
                 const err = await res.json().catch(() => ({}));
-                alert(err.error || 'Failed to submit application. Please try again.');
+                setToastBanner({ type: 'error', text: err.error || 'Could not submit application. Please try again.' });
             }
         } catch (e) {
             console.error('Application failed:', e);
-            alert('A network error occurred. Please check your connection and try again.');
+            setToastBanner({ type: 'error', text: 'Network error while submitting application.' });
         } finally {
             setApplyingTo(null);
         }
@@ -128,156 +178,234 @@ const StudentDashboard = () => {
     };
 
     const candidateName = profile?.full_name || user?.full_name || user?.email?.split('@')[0] || 'Candidate';
+    const hasProfile = Boolean(profile?.skills || profile?.resume || profile?.resume_text);
+    const hasSkillTest = Boolean(recommendation?.skill_score || profile?.rating);
+    const hasWorkStyle = Boolean(recommendation?.personality_score);
+    const hasUpskillOrApplied = completedModuleIds.length > 0 || myApplications.length > 0;
+
+    const journeySteps = [
+        { label: 'Profile & Resume', done: hasProfile, icon: FileText, onClick: () => navigate('/student/onboarding') },
+        { label: 'Skill Assessment', done: hasSkillTest, icon: ShieldCheck, onClick: () => navigate('/student/assessment') },
+        { label: 'Work Style', done: hasWorkStyle, icon: BrainCircuit, onClick: () => navigate('/student/personality-test') },
+        { label: 'Learn & Apply', done: hasUpskillOrApplied, icon: Briefcase, onClick: () => handleSelectTab('jobs') },
+    ];
 
     return (
         <StudioNoise opacity={0.07}>
             <div className="font-mono text-[#ededed] antialiased min-h-screen flex flex-col">
                 {/* Sidebar Navigation */}
-                <StudentSidebar sidebarCollapsed={sidebarCollapsed} />
+                <StudentSidebar
+                    sidebarCollapsed={sidebarCollapsed}
+                    mobileOpen={mobileMenuOpen}
+                    onCloseMobile={() => setMobileMenuOpen(false)}
+                />
 
                 {/* Main Content Wrapper */}
                 <div className={`transition-all duration-200 flex-1 flex flex-col ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-60'}`}>
                     {/* Header */}
-                    <StudentHeader 
+                    <StudentHeader
                         candidateName={candidateName}
                         onLogout={handleLogout}
                         sidebarCollapsed={sidebarCollapsed}
                         setSidebarCollapsed={setSidebarCollapsed}
+                        onOpenMobileMenu={() => setMobileMenuOpen(true)}
                     />
 
                     {/* Main Body */}
-                    <main className="w-full pt-20 sm:pt-24 flex-1 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 font-mono relative z-10">
+                    <main className="w-full pt-24 pb-12 flex-1 px-4 sm:px-6 lg:px-8 font-mono relative z-10">
                         <div className="flex flex-col gap-6 w-full max-w-[1400px] mx-auto">
 
-                            {/* Top Multi-Tab Navigation Bar */}
-                            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
-                                <div className="inline-flex items-center gap-1.5 p-1 rounded-sm bg-[#0D0F14] border border-white/[0.08]">
+                            {/* Inline Toast Notice */}
+                            {toastBanner && (
+                                <div
+                                    className={`px-4 py-3 rounded-sm border text-xs flex items-center justify-between gap-3 ${
+                                        toastBanner.type === 'success'
+                                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                                            : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+                                    }`}
+                                >
+                                    <span>{toastBanner.text}</span>
                                     <button
-                                        onClick={() => setActiveTab('overview')}
-                                        className={`px-3.5 py-1.5 rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 ${
+                                        type="button"
+                                        onClick={() => setToastBanner(null)}
+                                        className="text-current opacity-70 hover:opacity-100 cursor-pointer"
+                                    >
+                                        Dismiss
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Clean Tab Navigation + Primary Action */}
+                            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
+                                <div className="inline-flex items-center gap-1 p-1 rounded-sm bg-[#0D0F14] border border-white/[0.08] overflow-x-auto max-w-full">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleSelectTab('overview')}
+                                        className={`px-3.5 py-1.5 rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                                             activeTab === 'overview'
                                                 ? 'bg-[#181B22] text-white border border-white/15 font-medium'
                                                 : 'text-[#888888] hover:text-white border border-transparent'
                                         }`}
                                     >
+                                        <LayoutDashboard className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
                                         <span>Overview</span>
                                     </button>
+
                                     <button
-                                        onClick={() => setActiveTab('jobs')}
-                                        className={`px-3.5 py-1.5 rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 ${
+                                        type="button"
+                                        onClick={() => handleSelectTab('jobs')}
+                                        className={`px-3.5 py-1.5 rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                                             activeTab === 'jobs'
                                                 ? 'bg-[#181B22] text-white border border-white/15 font-medium'
                                                 : 'text-[#888888] hover:text-white border border-transparent'
                                         }`}
                                     >
-                                        <span>Matched Requisitions</span>
-                                        <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-white/[0.04] border border-white/[0.08] text-zinc-300 font-mono ml-0.5">
+                                        <Briefcase className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                                        <span>Matched Jobs</span>
+                                        <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-white/[0.06] border border-white/[0.08] text-zinc-200 font-mono">
                                             {jobs.length}
                                         </span>
                                     </button>
+
                                     <button
-                                        onClick={() => setActiveTab('learning')}
-                                        className={`px-3.5 py-1.5 rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 ${
+                                        type="button"
+                                        onClick={() => handleSelectTab('learning')}
+                                        className={`px-3.5 py-1.5 rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-2 whitespace-nowrap ${
                                             activeTab === 'learning'
                                                 ? 'bg-[#181B22] text-white border border-white/15 font-medium'
                                                 : 'text-[#888888] hover:text-white border border-transparent'
                                         }`}
                                     >
-                                        <span>Learning Curriculum</span>
+                                        <BookOpen className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                                        <span>Learning Paths</span>
+                                        {upskillModules.length > 0 && (
+                                            <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-white/[0.06] border border-white/[0.08] text-zinc-200 font-mono">
+                                                {upskillModules.length}
+                                            </span>
+                                        )}
                                     </button>
                                 </div>
 
                                 <button
+                                    type="button"
                                     onClick={() => navigate('/student/assessment')}
-                                    className="px-4 py-2 bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
+                                    className="px-4 py-2 bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold rounded-sm text-xs font-mono transition-colors cursor-pointer inline-flex items-center gap-1.5"
                                 >
+                                    <Play className="w-3.5 h-3.5 fill-current" aria-hidden="true" />
                                     <span>Start Assessment</span>
-                                    <span aria-hidden="true">↗</span>
                                 </button>
                             </div>
 
-                            {/* TAB 1: OVERVIEW & PROFILE */}
+                            {/* TAB 1: OVERVIEW */}
                             {activeTab === 'overview' && (
                                 <div className="space-y-6">
-                                    <VerificationProfileBlock 
+                                    {/* Visual 4-Step Verification Path */}
+                                    <div className="rounded-md bg-[#0D0F14] border border-white/[0.08] border-t-white/15 p-4 sm:p-5">
+                                        <div className="flex items-center justify-between mb-3 text-xs">
+                                            <span className="font-semibold text-white uppercase tracking-wider text-[11px]">
+                                                Your Verification Journey
+                                            </span>
+                                            <span className="text-[11px] text-[#71717A]">
+                                                Click any step to update
+                                            </span>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                                            {journeySteps.map((step, i) => {
+                                                const StepIcon = step.icon;
+                                                return (
+                                                    <button
+                                                        key={step.label}
+                                                        type="button"
+                                                        onClick={step.onClick}
+                                                        className={`p-3 rounded-sm border text-left transition-colors cursor-pointer flex items-center justify-between gap-2 ${
+                                                            step.done
+                                                                ? 'bg-[#060709] border-white/[0.08] hover:border-white/20'
+                                                                : 'bg-[#111318] border-white/15 hover:border-white/30'
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center gap-2.5 min-w-0">
+                                                            <div
+                                                                className={`w-7 h-7 rounded-sm flex items-center justify-center shrink-0 border ${
+                                                                    step.done
+                                                                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                                                        : 'bg-white/[0.04] border-white/15 text-zinc-300'
+                                                                }`}
+                                                            >
+                                                                {step.done ? (
+                                                                    <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} aria-hidden="true" />
+                                                                ) : (
+                                                                    <StepIcon className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                                                                )}
+                                                            </div>
+                                                            <div className="min-w-0">
+                                                                <div className="text-[10px] text-[#71717A] uppercase">
+                                                                    Step {i + 1}
+                                                                </div>
+                                                                <div className="text-xs font-medium text-white truncate">
+                                                                    {step.label}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <ChevronRight className="w-3.5 h-3.5 text-[#71717A] shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Visual Quick-Action Cards */}
+                                    <ActionControlStrip
+                                        onStartAssessment={() => navigate('/student/assessment')}
+                                        onAccessLearning={() => navigate('/student/upskill')}
+                                        onViewJobs={() => handleSelectTab('jobs')}
+                                        onOpenPersonality={() => navigate('/student/personality-test')}
+                                        jobsCount={jobs.length}
+                                        modulesCount={upskillModules.length}
+                                    />
+
+                                    {/* Visual Profile Gauge + Skill Snapshot */}
+                                    <VerificationProfileBlock
                                         profile={profile}
                                         recommendation={recommendation}
                                         candidateName={candidateName}
-                                        onViewFullMetrics={() => navigate('/student/assessment')}
                                     />
-
-                                    <ActionControlStrip 
-                                        onStartAssessment={() => navigate('/student/assessment')}
-                                        onReingestResume={() => navigate('/student/onboarding')}
-                                        onAccessLearning={() => setActiveTab('learning')}
-                                    />
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="bg-[#0D0F14] rounded-md border border-white/[0.08] border-t-white/15 p-5 space-y-2 hover:border-white/20 transition-colors">
-                                            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
-                                                <h4 className="font-semibold text-white text-xs uppercase tracking-wider">Matched Requisitions</h4>
-                                                <button 
-                                                    onClick={() => setActiveTab('jobs')}
-                                                    className="text-xs font-mono text-[#888888] hover:text-white hover:underline underline-offset-4 cursor-pointer"
-                                                >
-                                                    View all ({jobs.length}) &rarr;
-                                                </button>
-                                            </div>
-                                            <p className="text-xs text-[#888888] leading-relaxed pt-1">
-                                                {jobs.length} open roles currently aligned with your verified competence profile.
-                                            </p>
-                                        </div>
-
-                                        <div className="bg-[#0D0F14] rounded-md border border-white/[0.08] border-t-white/15 p-5 space-y-2 hover:border-white/20 transition-colors">
-                                            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
-                                                <h4 className="font-semibold text-white text-xs uppercase tracking-wider">Engineering Archetype</h4>
-                                                <button 
-                                                    onClick={() => navigate('/student/personality-test')}
-                                                    className="text-xs font-mono text-[#888888] hover:text-white hover:underline underline-offset-4 cursor-pointer"
-                                                >
-                                                    Profile insights &rarr;
-                                                </button>
-                                            </div>
-                                            <p className="text-xs text-[#888888] leading-relaxed pt-1">
-                                                Algorithmic analysis of systems thinking, code review style, and collaboration heuristics.
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
                             )}
 
                             {/* TAB 2: JOB MATCHES */}
                             {activeTab === 'jobs' && (
-                                <div className="space-y-6">
-                                    <MatchedPositionsGrid 
-                                        jobs={jobs}
-                                        myApplications={myApplications}
-                                        filterMode={filterMode}
-                                        setFilterMode={setFilterMode}
-                                        onApply={handleApply}
-                                        applyingTo={applyingTo}
-                                    />
-                                </div>
+                                <MatchedPositionsGrid
+                                    jobs={jobs}
+                                    myApplications={myApplications}
+                                    filterMode={filterMode}
+                                    setFilterMode={setFilterMode}
+                                    onApply={handleApply}
+                                    applyingTo={applyingTo}
+                                />
                             )}
 
-                            {/* TAB 3: LEARNING & UPSKILLING */}
+                            {/* TAB 3: LEARNING & CURRICULUM */}
                             {activeTab === 'learning' && (
-                                <div className="space-y-6">
-                                    <UpskillTerminalCard 
-                                        onResumeCurriculum={() => navigate('/student/upskill')}
-                                    />
-                                </div>
+                                <UpskillTerminalCard
+                                    modules={upskillModules}
+                                    completedModuleIds={completedModuleIds}
+                                    recommendedTopics={recommendation?.weaknesses || []}
+                                    onOpenModule={(id) => navigate(`/student/upskill?id=${id}`)}
+                                    onCreateTopic={(topic) => navigate(`/student/upskill?topic=${encodeURIComponent(topic)}`)}
+                                    onResumeCurriculum={() => navigate('/student/upskill')}
+                                />
                             )}
 
                         </div>
                     </main>
 
-                    {/* Clean Simplified Footer */}
+                    {/* Simplified Footer */}
                     <footer className="w-full border-t border-white/[0.06] bg-[#060709] text-xs text-[#71717A] font-mono py-4 relative z-10">
                         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
                             <div>SkillForge Candidate Hub &copy; {new Date().getFullYear()}</div>
                             <div className="text-[11px] text-[#71717A]">
-                                Verification Protocol Active
+                                Empirical Skill Verification
                             </div>
                         </div>
                     </footer>
