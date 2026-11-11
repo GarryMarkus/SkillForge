@@ -74,23 +74,23 @@ const RegisterWizard = () => {
     }
 
     return (
-        <div className="w-full bg-[#0b0b0c] rounded-md border border-white/10 p-7 sm:p-9 font-mono select-none">
+        <div className="w-full bg-[#111318] rounded-md border border-white/[0.08] border-t-white/15 p-7 sm:p-9 font-mono select-none shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between pb-4 mb-5 border-b border-white/[0.06]">
                 <div>
                     <h2 className="text-xl font-bold font-display text-white tracking-tight">
                         Create Account
                     </h2>
-                    <p className="text-xs text-[#737373] mt-0.5">
+                    <p className="text-xs text-[#888888] mt-0.5">
                         Step {step} of 4 · {steps[step - 1]?.title}
                     </p>
                 </div>
                 <button
                     type="button"
                     onClick={() => setAuthMode('login')}
-                    className="text-xs font-mono text-[#888888] hover:text-white transition-colors cursor-pointer"
+                    className="text-xs font-mono text-[#888888] hover:text-white hover:underline underline-offset-4 transition-colors cursor-pointer"
                 >
-                    sign in instead &rarr;
+                    Sign in instead &rarr;
                 </button>
             </div>
 
@@ -103,12 +103,12 @@ const RegisterWizard = () => {
                     return (
                         <div
                             key={s.id}
-                            className={`py-2 px-1 text-center rounded-sm text-xs font-mono transition-all ${
+                            className={`py-2 px-1 text-center rounded-sm text-xs font-mono transition-colors ${
                                 isActive
-                                    ? 'bg-[#111113] text-white border border-white/20'
+                                    ? 'bg-[#181B22] text-white border border-white/20 font-medium'
                                     : isPast
-                                    ? 'bg-[#050505] text-[#888888] border border-white/10'
-                                    : 'bg-[#050505] text-[#444444] border border-white/5'
+                                    ? 'bg-[#060709] text-[#888888] border border-white/[0.08]'
+                                    : 'bg-[#060709] text-[#555555] border border-white/[0.04]'
                             }`}
                         >
                             <span>{String(s.id).padStart(2, '0')}. {s.title}</span>
@@ -127,7 +127,7 @@ const RegisterWizard = () => {
 
             {/* Error Message */}
             {error && (
-                <div className="mb-4 rounded-md border border-rose-500/20 bg-rose-500/10 p-3 text-rose-300 text-xs">
+                <div className="mb-4 rounded-sm border border-rose-500/20 bg-rose-500/10 p-3 text-rose-300 text-xs">
                     {error}
                 </div>
             )}
@@ -138,7 +138,7 @@ const RegisterWizard = () => {
                     <button
                         type="button"
                         onClick={prevStep}
-                        className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
+                        className="px-4 py-2 rounded-sm bg-[#121316] border border-white/10 text-xs font-mono text-[#E4E4E7] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
                     >
                         &larr; Back
                     </button>
@@ -150,7 +150,7 @@ const RegisterWizard = () => {
                     type="button"
                     onClick={handleNext}
                     disabled={isLoading}
-                    className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-5 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer disabled:opacity-50"
+                    className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-5 py-2 rounded-sm text-xs sm:text-sm font-mono transition-colors cursor-pointer disabled:opacity-50"
                 >
                     {isLoading
                         ? 'Creating Account...'

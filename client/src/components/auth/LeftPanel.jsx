@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShieldCheck } from 'lucide-react';
 
 const LeftPanel = () => {
     return (
@@ -6,7 +7,7 @@ const LeftPanel = () => {
             {/* Top Brand */}
             <div>
                 <div className="flex items-center gap-2.5 mb-3">
-                    <span className="w-7 h-7 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center font-bold text-xs text-[#f5f5f5]">
+                    <span className="w-7 h-7 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center font-bold text-xs text-[#f5f5f5]">
                         SF
                     </span>
                     <span className="text-lg font-display font-bold tracking-tight text-white">SkillForge</span>
@@ -18,8 +19,8 @@ const LeftPanel = () => {
 
             {/* Feature List */}
             <div className="space-y-4 my-auto py-8">
-                <div className="bg-[#050505] rounded-md p-6 border border-white/10 space-y-4">
-                    <div className="text-[11px] uppercase tracking-wider text-[#737373] pb-1 border-b border-white/[0.06]">
+                <div className="bg-[#0D0F14] rounded-md p-6 border border-white/[0.08] border-t-white/15 space-y-4">
+                    <div className="text-[11px] uppercase tracking-wider text-[#8a8a8e] pb-2 border-b border-white/[0.06]">
                         Verification Criteria
                     </div>
 
@@ -63,19 +64,20 @@ const LeftPanel = () => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="bg-[#050505] rounded-md p-3.5 border border-white/10">
+                    <div className="bg-[#111318] rounded-md p-4 border border-white/[0.08] border-t-white/15">
                         <span className="text-[#737373] block mb-1">Verified Placements</span>
-                        <strong className="text-base text-[#f5f5f5] font-bold font-mono">12,400+</strong>
+                        <strong className="text-base text-white font-bold font-mono">12,400+</strong>
                     </div>
-                    <div className="bg-[#050505] rounded-md p-3.5 border border-white/10">
+                    <div className="bg-[#111318] rounded-md p-4 border border-white/[0.08] border-t-white/15">
                         <span className="text-[#737373] block mb-1">Precision Match</span>
-                        <strong className="text-base text-[#f5f5f5] font-bold font-mono">96.4%</strong>
+                        <strong className="text-base text-white font-bold font-mono">96.4%</strong>
                     </div>
                 </div>
             </div>
 
             {/* Bottom Note */}
-            <div className="text-[11px] text-[#555555] flex items-center gap-1.5">
+            <div className="text-[11px] text-[#71717A] flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#71717A]" strokeWidth={1.5} aria-hidden="true" />
                 <span>256-Bit Enterprise Security</span>
             </div>
         </div>
