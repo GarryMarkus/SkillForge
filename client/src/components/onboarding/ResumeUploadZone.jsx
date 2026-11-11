@@ -56,7 +56,7 @@ const ResumeUploadZone = ({
 
             {/* Parsing Progress Animation */}
             {isParsing ? (
-                <div className="w-full rounded-md border border-white/20 bg-[#0b0b0c] p-6 flex flex-col gap-4 font-mono">
+                <div className="w-full rounded-md border border-white/15 border-t-white/25 bg-[#111318] p-6 flex flex-col gap-4 font-mono">
                     <div className="flex items-center justify-between text-xs text-[#f5f5f5]">
                         <span>Parsing Document Structure</span>
                         <span className="text-[#888888] animate-pulse">processing...</span>
@@ -77,19 +77,19 @@ const ResumeUploadZone = ({
                         </div>
                     </div>
 
-                    <div className="w-full bg-[#18181b] h-1.5 rounded-none overflow-hidden">
+                    <div className="w-full bg-[#060709] border border-white/[0.08] h-1.5 rounded-none overflow-hidden">
                         <div
-                            className="bg-[#ededed] h-full transition-all duration-300"
+                            className="bg-[#F5F5F5] h-full transition-all duration-300"
                             style={{ width: `${(parseStep / 3) * 100}%` }}
                         />
                     </div>
                 </div>
             ) : file ? (
                 /* File Selected Inspection Box */
-                <div className="w-full rounded-md border border-white/10 bg-[#0b0b0c] p-4 flex flex-col gap-3 font-mono">
+                <div className="w-full rounded-md border border-white/[0.08] border-t-white/15 bg-[#111318] p-4 flex flex-col gap-3 font-mono">
                     <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
                         <div className="flex items-center gap-2.5 text-xs text-[#f5f5f5]">
-                            <span className="w-6 h-6 rounded-sm bg-[#111113] border border-white/20 text-[#888888] flex items-center justify-center text-[10px]">
+                            <span className="w-6 h-6 rounded-sm bg-white/[0.04] border border-white/[0.08] text-zinc-300 flex items-center justify-center text-[10px]">
                                 PDF
                             </span>
                             <span className="truncate max-w-xs">{file.name}</span>
@@ -114,10 +114,10 @@ const ResumeUploadZone = ({
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`w-full rounded-md border border-dashed transition-all p-8 flex flex-col items-center justify-center text-center cursor-pointer font-mono ${
+                    className={`w-full rounded-md border border-dashed transition-colors p-8 flex flex-col items-center justify-center text-center cursor-pointer font-mono ${
                         isDragging
-                            ? 'border-white/40 bg-[#121214]'
-                            : 'border-white/15 bg-[#050505] hover:border-white/30 hover:bg-[#0b0b0c]'
+                            ? 'border-white/40 bg-[#181B22]'
+                            : 'border-white/15 bg-[#060709] hover:border-white/30 hover:bg-[#111318]'
                     }`}
                     onClick={() => document.getElementById('resume-file-input')?.click()}
                 >
@@ -128,13 +128,13 @@ const ResumeUploadZone = ({
                         className="hidden"
                         onChange={handleInputChange}
                     />
-                    <div className="w-9 h-9 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center text-[#888888] mb-3">
+                    <div className="w-9 h-9 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#888888] mb-3">
                         <span className="text-sm">↑</span>
                     </div>
                     <p className="text-xs text-[#f5f5f5] mb-1">
                         Drag and drop your PDF resume here, or <span className="underline text-white">browse</span>
                     </p>
-                    <p className="text-[11px] text-[#555555]">
+                    <p className="text-[11px] text-[#71717A]">
                         Plain text parsing &bull; zero third-party leakage
                     </p>
                 </div>
