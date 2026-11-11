@@ -196,7 +196,7 @@ const StudioNoise = ({
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 w-full h-full select-none z-[1]"
                 style={{
-                    background: 'radial-gradient(ellipse at 50% 25%, transparent 30%, rgba(5, 5, 5, 0.75) 85%)'
+                    background: 'radial-gradient(ellipse at 50% 25%, transparent 30%, rgba(6, 7, 9, 0.75) 85%)'
                 }}
             />
         </>
@@ -204,7 +204,7 @@ const StudioNoise = ({
 
     if (children) {
         return (
-            <div className={`relative min-h-screen w-full bg-[#050505] overflow-x-hidden ${className}`}>
+            <div className={`relative min-h-screen w-full bg-[#060709] overflow-x-hidden ${className}`}>
                 {backgroundLayers}
                 <div className="relative z-10 w-full">
                     {children}

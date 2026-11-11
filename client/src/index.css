@@ -10,11 +10,11 @@
   * {
     font-family: Consolas, "Courier Prime", monospace;
     scrollbar-width: thin;
-    scrollbar-color: #222222 #050505;
+    scrollbar-color: #222222 #060709;
   }
 
   body {
-    background-color: #050505;
+    background-color: #060709;
     color: #ededed;
     font-family: Consolas, "Courier Prime", monospace;
     @apply antialiased selection:bg-white/20 selection:text-white;
@@ -27,7 +27,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #050505;
+    background: #060709;
   }
 
   ::-webkit-scrollbar-thumb {
@@ -42,11 +42,13 @@
 
 /* Common Monotone Surface Helpers */
 .surface-panel {
-  background-color: #0b0b0c;
+  background-color: #0D0F14;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.15);
 }
 
 .surface-panel-overlay {
-  background-color: #121214;
+  background-color: #111318;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.15);
 }

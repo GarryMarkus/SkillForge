@@ -13,7 +13,7 @@ import HeroDossierCard from './HeroDossierCard';
 const HeroSection = ({ onStartAssessment, onPostRequisition }) => {
     return (
         <section
-            className="w-full relative font-mono p-6 sm:p-10 lg:p-12 rounded-md bg-[#080809] border border-white/[0.08] mb-12 select-none overflow-hidden"
+            className="w-full relative font-mono p-6 sm:p-10 lg:p-12 rounded-md bg-[#0A0B0F] border border-white/[0.08] border-t-white/[0.12] mb-12 select-none overflow-hidden"
             id="HeroSection"
         >
             {/* React Bits Studio Noise Background Texture */}

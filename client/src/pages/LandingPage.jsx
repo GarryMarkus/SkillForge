@@ -53,7 +53,7 @@ const LandingPage = () => {
                             <section className="w-full border-t border-white/[0.06] pt-16 pb-28 md:pb-36 font-mono">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
                                     {/* Column 1: Evaluation Engine */}
-                                    <div className="flex flex-col justify-between gap-6 p-6 sm:p-8 rounded-md bg-[#080809]/60 border border-white/[0.06] hover:border-white/15 transition-colors">
+                                    <div className="flex flex-col justify-between gap-6 p-6 sm:p-8 rounded-md bg-[#0D0F14] border border-white/[0.08] border-t-white/15 hover:border-white/20 transition-colors">
                                         <div className="space-y-3">
                                             <span className="text-xs text-[#737373] uppercase tracking-wider block">
                                                 01 · Engine
@@ -75,7 +75,7 @@ const LandingPage = () => {
                                     </div>
 
                                     {/* Column 2: The Protocol */}
-                                    <div className="flex flex-col justify-between gap-6 p-6 sm:p-8 rounded-md bg-[#080809]/60 border border-white/[0.06] hover:border-white/15 transition-colors">
+                                    <div className="flex flex-col justify-between gap-6 p-6 sm:p-8 rounded-md bg-[#0D0F14] border border-white/[0.08] border-t-white/15 hover:border-white/20 transition-colors">
                                         <div className="space-y-3">
                                             <span className="text-xs text-[#737373] uppercase tracking-wider block">
                                                 02 · Architecture
@@ -97,7 +97,7 @@ const LandingPage = () => {
                                     </div>
 
                                     {/* Column 3: For Teams & Engineers */}
-                                    <div className="flex flex-col justify-between gap-6 p-6 sm:p-8 rounded-md bg-[#080809]/60 border border-white/[0.06] hover:border-white/15 transition-colors">
+                                    <div className="flex flex-col justify-between gap-6 p-6 sm:p-8 rounded-md bg-[#0D0F14] border border-white/[0.08] border-t-white/15 hover:border-white/20 transition-colors">
                                         <div className="space-y-3">
                                             <span className="text-xs text-[#737373] uppercase tracking-wider block">
                                                 03 · Solutions
