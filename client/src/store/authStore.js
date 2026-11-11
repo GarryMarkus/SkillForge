@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import api from '../lib/api';
+import api, { extractApiErrorMessage } from '../lib/api';
 
 /**
  * Global authentication and registration state store.
@@ -84,7 +84,7 @@ export const useAuthStore = create((set, get) => ({
 
             if (!response.ok) {
                 const error = await response.json().catch(() => ({}));
-                throw new Error(error.detail || error.error || 'Login failed');
+                throw new Error(extractApiErrorMessage(error, 'Login failed'));
             }
 
             const data = await response.json();
@@ -123,7 +123,7 @@ export const useAuthStore = create((set, get) => ({
 
             if (!response.ok) {
                 const error = await response.json().catch(() => ({}));
-                throw new Error(JSON.stringify(error));
+                throw new Error(extractApiErrorMessage(error, 'Registration failed'));
             }
 
             const data = await response.json();
