@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import client from '../../api/client';
+import client, { extractApiErrorMessage } from '../../api/client';
 
 import StudentOnboardingHeader from '../../components/onboarding/StudentOnboardingHeader';
 import ResumeUploadZone from '../../components/onboarding/ResumeUploadZone';
@@ -107,7 +107,7 @@ const StudentOnboarding = () => {
                 navigate('/student/dashboard');
             } else {
                 const err = await response.json().catch(() => ({}));
-                setError(err.error || JSON.stringify(err) || 'Failed to submit candidate profile.');
+                setError(extractApiErrorMessage(err, 'Failed to submit candidate profile.'));
             }
         } catch (err) {
             console.error('Error submitting onboarding profile:', err);

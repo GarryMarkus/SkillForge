@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import client from '../../api/client';
+import client, { extractApiErrorMessage } from '../../api/client';
 import ClientOnboardingHeader from '../../components/onboarding/ClientOnboardingHeader';
 import CompanySpecForm from '../../components/onboarding/CompanySpecForm';
 
@@ -66,7 +66,7 @@ const ClientOnboarding = () => {
             } else {
                 const err = await response.json().catch(() => ({}));
                 console.error('Failed to update client profile:', err);
-                setError(err);
+                setError(extractApiErrorMessage(err, 'Failed to update company profile.'));
             }
         } catch (err) {
             console.error('Error submitting client profile:', err);
