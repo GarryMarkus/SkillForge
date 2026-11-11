@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { User, GraduationCap, Github, FileText, CheckCircle2, ArrowUpRight, Layers, Sparkles } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import client, { extractApiErrorMessage } from '../../api/client';
 
@@ -118,6 +119,10 @@ const StudentOnboarding = () => {
         }
     };
 
+    const hasDetails = Boolean(formData.full_name.trim() && formData.education.trim());
+    const hasResume = Boolean(resumeFile);
+    const hasSkills = Boolean(formData.skills.trim());
+
     return (
         <StudioNoise opacity={0.07}>
             <div className="min-h-screen font-mono text-[#ededed] flex flex-col select-none">
@@ -125,27 +130,69 @@ const StudentOnboarding = () => {
                 <StudentOnboardingHeader candidateEmail={user?.email || 'candidate@skillforge.io'} />
 
                 {/* Main Content */}
-                <main className="w-full max-w-4xl mx-auto p-4 sm:p-8 flex-1 flex flex-col gap-6 relative z-10">
-                    <div className="bg-[#0D0F14] rounded-md border border-white/[0.08] border-t-white/15 p-6 sm:p-10 text-[#ededed]">
-                        {/* Section Header */}
-                        <div className="border-b border-white/[0.06] pb-5 mb-6">
-                            <span className="text-xs font-mono uppercase tracking-widest text-[#8a8a8e] block mb-2">
-                                Candidate Profile Intake
+                <main className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 flex flex-col gap-6 relative z-10">
+                    {/* Visual 3-Step Progress Header */}
+                    <section className="bg-[#0D0F14] rounded-md border border-white/[0.08] border-t-white/15 p-5 sm:p-6 space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <span className="text-[11px] font-mono uppercase tracking-wider text-[#8a8a8e] block mb-1">
+                                    Profile Setup
+                                </span>
+                                <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white">
+                                    Build Your Verified Profile
+                                </h1>
+                            </div>
+                            <span className="text-xs text-[#888888] bg-[#060709] border border-white/[0.08] px-3 py-1.5 rounded-sm self-start sm:self-auto">
+                                Takes ~2 mins
                             </span>
-                            <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mb-2">
-                                Build Your Verified Profile
-                            </h1>
-                            <p className="text-xs text-[#888888] leading-relaxed">
-                                Specify technical credentials and upload a resume document. The system indexes your baseline skills to match you with empirical requisitions.
-                            </p>
                         </div>
 
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-3 border-t border-white/[0.06]">
+                            {[
+                                { label: '1. Basic Details', done: hasDetails, icon: User, hint: 'Name & degree' },
+                                { label: '2. Resume PDF', done: hasResume, icon: FileText, hint: 'Optional auto-scan' },
+                                { label: '3. Target Skills', done: hasSkills, icon: Sparkles, hint: 'Match tags' },
+                            ].map((step) => {
+                                const StepIcon = step.icon;
+                                return (
+                                    <div
+                                        key={step.label}
+                                        className={`flex items-center gap-2.5 p-2.5 rounded-sm border transition-colors ${
+                                            step.done
+                                                ? 'bg-[#111318] border-white/20 text-white'
+                                                : 'bg-[#060709] border-white/[0.06] text-[#888888]'
+                                        }`}
+                                    >
+                                        <span className={`w-7 h-7 rounded-sm border flex items-center justify-center shrink-0 ${
+                                            step.done
+                                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                                                : 'bg-white/[0.03] border-white/[0.08] text-zinc-400'
+                                        }`}>
+                                            {step.done ? (
+                                                <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={2} aria-hidden="true" />
+                                            ) : (
+                                                <StepIcon className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                                            )}
+                                        </span>
+                                        <div className="min-w-0">
+                                            <div className="text-xs font-semibold truncate">{step.label}</div>
+                                            <div className="text-[10px] text-[#71717A] truncate">{step.hint}</div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </section>
+
+                    <div className="bg-[#0D0F14] rounded-md border border-white/[0.08] border-t-white/15 p-6 sm:p-8 text-[#ededed]">
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* Name & Education */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-mono text-[#888888] mb-1.5">
-                                        Full Legal Name <span className="text-[#737373]">*</span>
+                                    <label className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 mb-1.5">
+                                        <User className="w-3.5 h-3.5 text-[#888888]" strokeWidth={1.75} aria-hidden="true" />
+                                        <span>Full Legal Name</span>
+                                        <span className="text-[#737373]">*</span>
                                     </label>
                                     <input
                                         name="full_name"
@@ -158,8 +205,10 @@ const StudentOnboarding = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-mono text-[#888888] mb-1.5">
-                                        Highest Degree / Credential <span className="text-[#737373]">*</span>
+                                    <label className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 mb-1.5">
+                                        <GraduationCap className="w-3.5 h-3.5 text-[#888888]" strokeWidth={1.75} aria-hidden="true" />
+                                        <span>Highest Degree</span>
+                                        <span className="text-[#737373]">*</span>
                                     </label>
                                     <input
                                         name="education"
@@ -175,8 +224,9 @@ const StudentOnboarding = () => {
                             {/* Experience Level & GitHub */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-mono text-[#888888] mb-1.5">
-                                        Experience Tier
+                                    <label className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 mb-1.5">
+                                        <Layers className="w-3.5 h-3.5 text-[#888888]" strokeWidth={1.75} aria-hidden="true" />
+                                        <span>Experience Level</span>
                                     </label>
                                     <select
                                         name="experience_level"
@@ -191,8 +241,9 @@ const StudentOnboarding = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-mono text-[#888888] mb-1.5">
-                                        GitHub / Codebase URL
+                                    <label className="flex items-center gap-1.5 text-xs font-mono text-zinc-300 mb-1.5">
+                                        <Github className="w-3.5 h-3.5 text-[#888888]" strokeWidth={1.75} aria-hidden="true" />
+                                        <span>GitHub URL</span>
                                     </label>
                                     <input
                                         name="github_url"
@@ -206,15 +257,15 @@ const StudentOnboarding = () => {
 
                             {/* Bio */}
                             <div>
-                                <label className="block text-xs font-mono text-[#888888] mb-1.5">
-                                    Technical Summary
+                                <label className="block text-xs font-mono text-zinc-300 mb-1.5">
+                                    Short Bio
                                 </label>
                                 <textarea
                                     name="bio"
                                     value={formData.bio}
                                     onChange={handleChange}
                                     rows="3"
-                                    placeholder="Summary of engineering competencies, systems built, and core technical strengths..."
+                                    placeholder="Share key systems you've built and your strongest technical areas..."
                                     className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#555555] transition-colors resize-none"
                                 />
                             </div>
@@ -235,7 +286,7 @@ const StudentOnboarding = () => {
                                 fullName={formData.full_name}
                                 education={formData.education}
                                 experienceLevel={formData.experience_level}
-                                githubUrl={formData.github_url}
+                                _githubUrl={formData.github_url}
                             />
 
                             {error && (
@@ -257,9 +308,10 @@ const StudentOnboarding = () => {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-6 py-2.5 rounded-sm text-xs font-mono transition-colors cursor-pointer disabled:opacity-50"
+                                    className="inline-flex items-center gap-1.5 bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-6 py-2.5 rounded-sm text-xs font-mono transition-colors cursor-pointer disabled:opacity-50"
                                 >
-                                    {isLoading ? 'Saving Profile...' : 'Save Profile & Continue ↗'}
+                                    <span>{isLoading ? 'Saving Profile...' : 'Save & Continue'}</span>
+                                    <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2} aria-hidden="true" />
                                 </button>
                             </div>
                         </form>

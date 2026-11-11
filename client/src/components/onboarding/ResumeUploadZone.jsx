@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { UploadCloud, FileText, Trash2, CheckCircle2, Circle, Loader2, ShieldCheck, AlertCircle } from 'lucide-react';
 
 const ResumeUploadZone = ({
     file,
@@ -8,6 +9,7 @@ const ResumeUploadZone = ({
     parseStep = 1
 }) => {
     const [isDragging, setIsDragging] = useState(false);
+    const [fileError, setFileError] = useState('');
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -21,19 +23,26 @@ const ResumeUploadZone = ({
     const handleDrop = (e) => {
         e.preventDefault();
         setIsDragging(false);
+        setFileError('');
         if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             const dropped = e.dataTransfer.files[0];
-            if (dropped.type === 'application/pdf' || dropped.name.endsWith('.pdf')) {
+            if (dropped.type === 'application/pdf' || dropped.name.toLowerCase().endsWith('.pdf')) {
                 onFileSelected(dropped);
             } else {
-                alert('Please upload a PDF document (.pdf).');
+                setFileError('Only PDF documents (.pdf) are supported.');
             }
         }
     };
 
     const handleInputChange = (e) => {
+        setFileError('');
         if (e.target.files && e.target.files.length > 0) {
-            onFileSelected(e.target.files[0]);
+            const chosen = e.target.files[0];
+            if (chosen.type === 'application/pdf' || chosen.name.toLowerCase().endsWith('.pdf')) {
+                onFileSelected(chosen);
+            } else {
+                setFileError('Only PDF documents (.pdf) are supported.');
+            }
         }
     };
 
@@ -44,40 +53,57 @@ const ResumeUploadZone = ({
     };
 
     return (
-        <div className="w-full font-mono select-none" id="ResumeUploadZone">
-            <div className="flex items-center justify-between mb-2">
-                <label className="block text-xs font-mono text-[#888888]">
-                    Resume Document
+        <div className="w-full font-mono select-none space-y-2" id="ResumeUploadZone">
+            <div className="flex items-center justify-between">
+                <label className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-300">
+                    <FileText className="w-3.5 h-3.5 text-[#888888]" strokeWidth={1.75} aria-hidden="true" />
+                    <span>Resume PDF (Optional)</span>
                 </label>
-                <span className="text-xs text-[#555555]">
-                    PDF format · Max 5MB
+                <span className="text-[11px] text-[#71717A]">
+                    PDF &bull; Max 5MB
                 </span>
             </div>
 
+            {fileError && (
+                <div className="flex items-center gap-2 p-2.5 rounded-sm bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs">
+                    <AlertCircle className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                    <span>{fileError}</span>
+                </div>
+            )}
+
             {/* Parsing Progress Animation */}
             {isParsing ? (
-                <div className="w-full rounded-md border border-white/15 border-t-white/25 bg-[#111318] p-6 flex flex-col gap-4 font-mono">
+                <div className="w-full rounded-md border border-white/15 border-t-white/25 bg-[#111318] p-5 flex flex-col gap-3.5 font-mono">
                     <div className="flex items-center justify-between text-xs text-[#f5f5f5]">
-                        <span>Parsing Document Structure</span>
-                        <span className="text-[#888888] animate-pulse">processing...</span>
+                        <span className="inline-flex items-center gap-2 font-semibold">
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-white" strokeWidth={2} aria-hidden="true" />
+                            <span>Scanning Resume</span>
+                        </span>
+                        <span className="text-[11px] text-[#888888]">Step {parseStep} of 3</span>
                     </div>
 
-                    <div className="space-y-2 py-1 text-xs">
-                        <div className={`flex items-center gap-2 ${parseStep >= 1 ? 'text-[#f5f5f5]' : 'text-[#555555]'}`}>
-                            <span>{parseStep >= 1 ? '✓' : '○'}</span>
-                            <span>Extract text token tree and header hierarchy</span>
-                        </div>
-                        <div className={`flex items-center gap-2 ${parseStep >= 2 ? 'text-[#f5f5f5]' : 'text-[#555555]'}`}>
-                            <span>{parseStep >= 2 ? '✓' : '○'}</span>
-                            <span>Derive verified technical competencies</span>
-                        </div>
-                        <div className={`flex items-center gap-2 ${parseStep >= 3 ? 'text-[#f5f5f5]' : 'text-[#555555]'}`}>
-                            <span>{parseStep >= 3 ? '✓' : '○'}</span>
-                            <span>Index benchmark baseline profile</span>
-                        </div>
+                    <div className="space-y-2 py-0.5 text-xs">
+                        {[
+                            { step: 1, label: 'Reading document layout & sections' },
+                            { step: 2, label: 'Identifying technical skills' },
+                            { step: 3, label: 'Updating skill preview tags' },
+                        ].map((item) => {
+                            const done = parseStep >= item.step;
+                            const StepIcon = done ? CheckCircle2 : Circle;
+                            return (
+                                <div key={item.step} className={`flex items-center gap-2 ${done ? 'text-[#f5f5f5]' : 'text-[#555555]'}`}>
+                                    <StepIcon
+                                        className={`w-3.5 h-3.5 shrink-0 ${done ? 'text-emerald-400' : 'text-[#555555]'}`}
+                                        strokeWidth={1.75}
+                                        aria-hidden="true"
+                                    />
+                                    <span>{item.label}</span>
+                                </div>
+                            );
+                        })}
                     </div>
 
-                    <div className="w-full bg-[#060709] border border-white/[0.08] h-1.5 rounded-none overflow-hidden">
+                    <div className="w-full bg-[#060709] border border-white/[0.08] h-1.5 rounded-full overflow-hidden">
                         <div
                             className="bg-[#F5F5F5] h-full transition-all duration-300"
                             style={{ width: `${(parseStep / 3) * 100}%` }}
@@ -86,27 +112,26 @@ const ResumeUploadZone = ({
                 </div>
             ) : file ? (
                 /* File Selected Inspection Box */
-                <div className="w-full rounded-md border border-white/[0.08] border-t-white/15 bg-[#111318] p-4 flex flex-col gap-3 font-mono">
-                    <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
-                        <div className="flex items-center gap-2.5 text-xs text-[#f5f5f5]">
-                            <span className="w-6 h-6 rounded-sm bg-white/[0.04] border border-white/[0.08] text-zinc-300 flex items-center justify-center text-[10px]">
-                                PDF
-                            </span>
-                            <span className="truncate max-w-xs">{file.name}</span>
+                <div className="w-full rounded-md border border-white/[0.08] border-t-white/15 bg-[#111318] p-4 flex items-center justify-between gap-3 font-mono">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <span className="w-9 h-9 rounded-sm bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 flex items-center justify-center shrink-0">
+                            <CheckCircle2 className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
+                        </span>
+                        <div className="min-w-0">
+                            <div className="text-xs text-white font-semibold truncate">{file.name}</div>
+                            <div className="text-[11px] text-[#71717A] mt-0.5">
+                                {formatBytes(file.size)} &bull; Ready to save
+                            </div>
                         </div>
-                        <button
-                            type="button"
-                            onClick={onFileRemoved}
-                            className="text-rose-400 hover:text-rose-300 text-xs font-mono cursor-pointer"
-                        >
-                            Remove
-                        </button>
                     </div>
-
-                    <div className="flex items-center justify-between text-[11px] text-[#737373]">
-                        <span>Size: {formatBytes(file.size)}</span>
-                        <span>Status: Ready for Parsing</span>
-                    </div>
+                    <button
+                        type="button"
+                        onClick={onFileRemoved}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm bg-[#060709] border border-white/[0.08] hover:border-rose-500/35 text-rose-400 hover:text-rose-300 text-xs font-mono cursor-pointer transition-colors shrink-0"
+                    >
+                        <Trash2 className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                        <span>Remove</span>
+                    </button>
                 </div>
             ) : (
                 /* Drag and Drop Box */
@@ -114,7 +139,7 @@ const ResumeUploadZone = ({
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`w-full rounded-md border border-dashed transition-colors p-8 flex flex-col items-center justify-center text-center cursor-pointer font-mono ${
+                    className={`w-full rounded-md border border-dashed transition-colors p-7 flex flex-col items-center justify-center text-center cursor-pointer font-mono ${
                         isDragging
                             ? 'border-white/40 bg-[#181B22]'
                             : 'border-white/15 bg-[#060709] hover:border-white/30 hover:bg-[#111318]'
@@ -128,14 +153,15 @@ const ResumeUploadZone = ({
                         className="hidden"
                         onChange={handleInputChange}
                     />
-                    <div className="w-9 h-9 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#888888] mb-3">
-                        <span className="text-sm">↑</span>
+                    <div className="w-10 h-10 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-zinc-200 mb-3">
+                        <UploadCloud className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
                     </div>
                     <p className="text-xs text-[#f5f5f5] mb-1">
-                        Drag and drop your PDF resume here, or <span className="underline text-white">browse</span>
+                        Drop your PDF resume here, or <span className="underline text-white">choose file</span>
                     </p>
-                    <p className="text-[11px] text-[#71717A]">
-                        Plain text parsing &bull; zero third-party leakage
+                    <p className="inline-flex items-center gap-1.5 text-[11px] text-[#71717A]">
+                        <ShieldCheck className="w-3 h-3 text-zinc-400" strokeWidth={1.75} aria-hidden="true" />
+                        <span>Auto-extracts skills cleanly without external sharing</span>
                     </p>
                 </div>
             )}
