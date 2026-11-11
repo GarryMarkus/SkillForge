@@ -8,9 +8,10 @@ import './CardNav.css';
  * CardNav - SkillForge Expandable Navigation System
  * Adapted from React Bits CardNav with strict dark monochrome tokens.
  *
- * Responsive behavior:
- * - Desktop (>1024px): Displays inline top-level navigation links alongside CTAs and hides the redundant hamburger menu button.
- * - Mobile/Tablet (<1024px): Collapses inline links into the expandable CardNav card drawer with hamburger-to-cross morph toggle.
+ * Invariants:
+ * - Pure monochrome styling (#050505 canvas, #0e0e11 panel, #121215 cards).
+ * - Typography: Courier Prime bold headings, Consolas monospace links and metadata.
+ * - Zero artificial slashes, zero bracket wrappers.
  */
 const CardNav = ({
     cards = [],
@@ -35,7 +36,7 @@ const CardNav = ({
         setIsOpen(false);
     }
 
-    // Close on Escape key, click outside, or resize into desktop breakpoint
+    // Close on Escape key press or click outside
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape' && isOpen) {
@@ -49,19 +50,11 @@ const CardNav = ({
             }
         };
 
-        const handleResize = () => {
-            if (window.innerWidth >= 1024 && isOpen) {
-                setIsOpen(false);
-            }
-        };
-
         window.addEventListener('keydown', handleKeyDown);
         document.addEventListener('mousedown', handleClickOutside);
-        window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('mousedown', handleClickOutside);
-            window.removeEventListener('resize', handleResize);
         };
     }, [isOpen]);
 
@@ -95,32 +88,12 @@ const CardNav = ({
                     {telemetry && <div className="hidden lg:flex items-center">{telemetry}</div>}
                 </div>
 
-                {/* Center: Direct Desktop Route Links (>=1024px) */}
-                {cards.length > 0 && (
-                    <div className="card-nav__desktop-links" aria-label="Primary Sections">
-                        {cards.map((card, idx) => {
-                            const label = card.label || card.title;
-                            const isActive = Boolean(card.href && routeKey === card.href);
-                            return card.href ? (
-                                <LinkComp
-                                    key={label || idx}
-                                    to={card.href}
-                                    href={card.href}
-                                    className={`card-nav__desktop-link ${isActive ? 'card-nav__desktop-link--active' : ''}`}
-                                >
-                                    {label}
-                                </LinkComp>
-                            ) : null;
-                        })}
-                    </div>
-                )}
-
                 {/* Right: Controls & Actions */}
                 <div className="card-nav__right">
                     {secondaryCta && <div className="hidden sm:flex items-center">{secondaryCta}</div>}
                     {cta && <div>{cta}</div>}
 
-                    {/* Mobile/Tablet Menu Toggle Button (<1024px only) */}
+                    {/* Menu Toggle Button with morph animation and locked width */}
                     <button
                         type="button"
                         onClick={() => setIsOpen((prev) => !prev)}
@@ -155,7 +128,7 @@ const CardNav = ({
                 </div>
             </div>
 
-            {/* Expandable Navigation Cards Overlay (Mobile/Tablet) */}
+            {/* Expandable Navigation Cards Overlay */}
             <AnimatePresence>
                 {isOpen && (
                     <motion.div
@@ -222,13 +195,6 @@ const CardNav = ({
                                     )}
                                 </motion.div>
                             ))}
-
-                            {secondaryCta && (
-                                <div className="sm:hidden pt-2 border-t border-white/[0.06] flex items-center justify-between">
-                                    <span className="text-[11px] text-[#737373] font-mono">Account</span>
-                                    <div onClick={() => setIsOpen(false)}>{secondaryCta}</div>
-                                </div>
-                            )}
                         </div>
                     </motion.div>
                 )}
