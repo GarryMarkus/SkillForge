@@ -13,6 +13,8 @@ import StudentOnboarding from './pages/student/StudentOnboarding';
 import AssessmentPage from './pages/student/AssessmentPage';
 import PersonalityTest from './pages/student/PersonalityTest';
 import UpskillPage from './pages/student/UpskillPage';
+import JobMatchesPage from './pages/student/JobMatchesPage';
+import AiAnalysisPage from './pages/student/AiAnalysisPage';
 import ProtectedRoute from './components/guards/ProtectedRoute';
 import RoleGuard from './components/guards/RoleGuard';
 
@@ -77,6 +79,46 @@ function App() {
             <ProtectedRoute allowedRoles={['student']}>
               <RoleGuard requiredRole="student">
                 <UpskillPage />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/jobs"
+          element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <RoleGuard requiredRole="student">
+                <JobMatchesPage />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/job-matches"
+          element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <RoleGuard requiredRole="student">
+                <JobMatchesPage />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/analysis"
+          element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <RoleGuard requiredRole="student">
+                <AiAnalysisPage />
+              </RoleGuard>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/student/ai-analysis"
+          element={
+            <ProtectedRoute allowedRoles={['student']}>
+              <RoleGuard requiredRole="student">
+                <AiAnalysisPage />
               </RoleGuard>
             </ProtectedRoute>
           }

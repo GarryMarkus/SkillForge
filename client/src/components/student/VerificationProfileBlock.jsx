@@ -10,6 +10,7 @@ import {
     ArrowUpRight,
     BookOpen,
     BrainCircuit,
+    ScanSearch,
 } from 'lucide-react';
 import { CounterTicker } from '../ui/animations';
 
@@ -61,11 +62,18 @@ const VerificationProfileBlock = ({ profile, recommendation, candidateName }) =>
     const roleArchetype = profile?.experience_level
         ? `${profile.experience_level} Software Engineer`
         : 'Software Engineer';
-    const skillScore = recommendation?.skill_score ?? profile?.rating ?? 94;
-    const personalityScore = recommendation?.personality_score ?? 88;
-    const starRating = recommendation?.star_rating || 4.6;
-    const strengths = recommendation?.strengths || ['System Architecture', 'Database Optimization', 'API Design'];
-    const weaknesses = recommendation?.weaknesses || ['In-Memory Caching'];
+    const isVerifiedReady = recommendation?.status === 'ready';
+    const skillScore = Number(
+        recommendation?.skill_score ?? (profile?.rating && Number(profile.rating) > 0 ? profile.rating : 0)
+    );
+    const personalityScore = Number(recommendation?.personality_score ?? 0);
+    const starRating = Number(recommendation?.star_rating ?? profile?.rating ?? 0);
+    const strengths = isVerifiedReady && recommendation?.strengths?.length
+        ? recommendation.strengths
+        : (profile?.skills || '').split(',').map((s) => s.trim()).filter(Boolean).slice(0, 4);
+    const weaknesses = recommendation?.weaknesses?.length
+        ? recommendation.weaknesses
+        : ['System Design', 'Distributed Caching'];
     const hasResume = Boolean(profile?.resume || profile?.resume_text);
     const hasGithub = Boolean(profile?.github_url);
 
@@ -88,8 +96,8 @@ const VerificationProfileBlock = ({ profile, recommendation, candidateName }) =>
                     </div>
 
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm bg-white/[0.04] border border-white/[0.08] text-zinc-200 text-[11px] shrink-0">
-                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" strokeWidth={1.75} aria-hidden="true" />
-                        <span>Top 5% Match</span>
+                        <ShieldCheck className={`w-3.5 h-3.5 ${isVerifiedReady ? 'text-emerald-400' : 'text-amber-300'}`} strokeWidth={1.75} aria-hidden="true" />
+                        <span>{isVerifiedReady ? 'Verified Profile' : 'Assessment Pending'}</span>
                     </span>
                 </div>
 
@@ -151,24 +159,32 @@ const VerificationProfileBlock = ({ profile, recommendation, candidateName }) =>
                     <div className="flex flex-wrap items-center gap-2">
                         <button
                             type="button"
-                            onClick={() => navigate('/student/onboarding')}
+                            onClick={() => navigate('/student/analysis')}
                             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm bg-[#060709] border border-white/[0.08] hover:border-white/25 text-zinc-300 hover:text-white transition-colors cursor-pointer"
                         >
                             <FileCheck2 className={`w-3.5 h-3.5 ${hasResume ? 'text-emerald-400' : 'text-[#71717A]'}`} strokeWidth={1.75} aria-hidden="true" />
-                            <span>{hasResume ? 'Resume Verified' : 'Upload Resume'}</span>
+                            <span>{hasResume ? 'Resume Analyzed' : 'Upload Resume'}</span>
                         </button>
 
                         <button
                             type="button"
-                            onClick={() => navigate('/student/onboarding')}
+                            onClick={() => navigate('/student/analysis')}
                             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm bg-[#060709] border border-white/[0.08] hover:border-white/25 text-zinc-300 hover:text-white transition-colors cursor-pointer"
                         >
                             <Code2 className={`w-3.5 h-3.5 ${hasGithub ? 'text-emerald-400' : 'text-[#71717A]'}`} strokeWidth={1.75} aria-hidden="true" />
-                            <span>{hasGithub ? 'GitHub Linked' : 'Add GitHub'}</span>
+                            <span>{hasGithub ? 'GitHub Scanned' : 'Add GitHub'}</span>
                         </button>
                     </div>
 
-                    <span className="text-[11px] text-[#71717A]">Clean Proctor Record</span>
+                    <button
+                        type="button"
+                        onClick={() => navigate('/student/analysis')}
+                        className="inline-flex items-center gap-1 text-[11px] text-white hover:underline underline-offset-4 cursor-pointer"
+                    >
+                        <ScanSearch className="w-3.5 h-3.5 text-zinc-300" strokeWidth={1.75} aria-hidden="true" />
+                        <span>AI Source Audit</span>
+                        <ArrowUpRight className="w-3 h-3" aria-hidden="true" />
+                    </button>
                 </div>
             </div>
 

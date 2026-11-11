@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Briefcase,
     SlidersHorizontal,
@@ -7,6 +8,8 @@ import {
     CheckCircle2,
     Award,
     ArrowUpRight,
+    Lock,
+    AlertTriangle,
 } from 'lucide-react';
 
 const MatchedPositionsGrid = ({
@@ -15,12 +18,14 @@ const MatchedPositionsGrid = ({
     filterMode,
     setFilterMode,
     onApply,
-    applyingTo
+    applyingTo,
+    assessmentCompleted = true,
 }) => {
+    const navigate = useNavigate();
     const hasApplied = (jobId) => myApplications.some(app => app.job === jobId || app.job_id === jobId);
 
     const filteredJobs = jobs.filter(job => {
-        const matchScore = typeof job.match === 'number' ? Math.round(job.match) : 90;
+        const matchScore = typeof job.match === 'number' ? Math.round(job.match) : 0;
         if (filterMode === 'MATCH_85') return matchScore >= 85;
         if (filterMode === 'APPLIED') return hasApplied(job.id);
         return true;
@@ -44,44 +49,73 @@ const MatchedPositionsGrid = ({
                     </div>
                 </div>
 
-                {/* Filter Pills */}
-                <div className="inline-flex items-center p-1 rounded-sm bg-[#060709] border border-white/[0.08] gap-1 text-xs">
-                    <SlidersHorizontal className="w-3.5 h-3.5 text-[#71717A] mx-2 hidden sm:inline" strokeWidth={1.75} aria-hidden="true" />
+                <div className="flex flex-wrap items-center gap-2.5">
+                    {/* Filter Pills */}
+                    <div className="inline-flex items-center p-1 rounded-sm bg-[#060709] border border-white/[0.08] gap-1 text-xs">
+                        <SlidersHorizontal className="w-3.5 h-3.5 text-[#71717A] mx-2 hidden sm:inline" strokeWidth={1.75} aria-hidden="true" />
+                        <button
+                            onClick={() => setFilterMode('ALL')}
+                            className={`px-3 py-1 rounded-sm font-mono cursor-pointer transition-colors ${
+                                filterMode === 'ALL'
+                                    ? 'bg-[#181B22] text-white border border-white/15 font-medium'
+                                    : 'text-[#888888] hover:text-white border border-transparent'
+                            }`}
+                            type="button"
+                        >
+                            All ({jobs.length})
+                        </button>
+                        <button
+                            onClick={() => setFilterMode('MATCH_85')}
+                            className={`px-3 py-1 rounded-sm font-mono cursor-pointer transition-colors ${
+                                filterMode === 'MATCH_85'
+                                    ? 'bg-[#181B22] text-white border border-white/15 font-medium'
+                                    : 'text-[#888888] hover:text-white border border-transparent'
+                            }`}
+                            type="button"
+                        >
+                            &ge;85% Match
+                        </button>
+                        <button
+                            onClick={() => setFilterMode('APPLIED')}
+                            className={`px-3 py-1 rounded-sm font-mono cursor-pointer transition-colors ${
+                                filterMode === 'APPLIED'
+                                    ? 'bg-[#181B22] text-white border border-white/15 font-medium'
+                                    : 'text-[#888888] hover:text-white border border-transparent'
+                            }`}
+                            type="button"
+                        >
+                            Applied ({myApplications.length})
+                        </button>
+                    </div>
+
                     <button
-                        onClick={() => setFilterMode('ALL')}
-                        className={`px-3 py-1 rounded-sm font-mono cursor-pointer transition-colors ${
-                            filterMode === 'ALL'
-                                ? 'bg-[#181B22] text-white border border-white/15 font-medium'
-                                : 'text-[#888888] hover:text-white border border-transparent'
-                        }`}
                         type="button"
+                        onClick={() => navigate('/student/jobs')}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-[#121316] border border-white/15 hover:border-white/30 text-xs text-white transition-colors cursor-pointer"
                     >
-                        All ({jobs.length})
-                    </button>
-                    <button
-                        onClick={() => setFilterMode('MATCH_85')}
-                        className={`px-3 py-1 rounded-sm font-mono cursor-pointer transition-colors ${
-                            filterMode === 'MATCH_85'
-                                ? 'bg-[#181B22] text-white border border-white/15 font-medium'
-                                : 'text-[#888888] hover:text-white border border-transparent'
-                        }`}
-                        type="button"
-                    >
-                        &ge;85% Match
-                    </button>
-                    <button
-                        onClick={() => setFilterMode('APPLIED')}
-                        className={`px-3 py-1 rounded-sm font-mono cursor-pointer transition-colors ${
-                            filterMode === 'APPLIED'
-                                ? 'bg-[#181B22] text-white border border-white/15 font-medium'
-                                : 'text-[#888888] hover:text-white border border-transparent'
-                        }`}
-                        type="button"
-                    >
-                        Applied ({myApplications.length})
+                        <span>Full Jobs Page</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
                 </div>
             </div>
+
+            {!assessmentCompleted && (
+                <div className="mx-5 sm:mx-6 mt-5 p-3.5 rounded-sm bg-amber-500/10 border border-amber-500/25 flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2 text-amber-200">
+                        <AlertTriangle className="w-4 h-4 text-amber-300 shrink-0" aria-hidden="true" />
+                        <span>
+                            Showing estimated preview matches — take the Skill Assessment to unlock verified scores and gated roles.
+                        </span>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => navigate('/student/assessment')}
+                        className="px-3 py-1 rounded-sm bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold text-xs cursor-pointer"
+                    >
+                        Take Test &rarr;
+                    </button>
+                </div>
+            )}
 
             {/* Role Cards Grid */}
             <div className="p-5 sm:p-6">
@@ -99,9 +133,12 @@ const MatchedPositionsGrid = ({
                             const userApp = myApplications.find(app => app.job === job.id || app.job_id === job.id);
                             const applied = Boolean(userApp);
                             const appStatus = userApp?.status;
-                            const matchScore = typeof job.match === 'number' ? Math.round(job.match) : 92;
+                            const matchScore = typeof job.match === 'number' ? Math.round(job.match) : 0;
                             const isApplying = applyingTo === job.id;
-                            const stackTags = job.skills || job.tags || ['Python', 'System Architecture', 'PostgreSQL'];
+                            const stackTags = Array.isArray(job.required_skills) && job.required_skills.length > 0
+                                ? job.required_skills
+                                : (job.skills_required || '').split(',').map((s) => s.trim()).filter(Boolean);
+                            const eligible = job.eligible_to_apply !== false;
 
                             return (
                                 <div
@@ -174,6 +211,15 @@ const MatchedPositionsGrid = ({
                                                     <span>Applied</span>
                                                 </span>
                                             )
+                                        ) : !eligible ? (
+                                            <button
+                                                type="button"
+                                                onClick={() => navigate('/student/assessment')}
+                                                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-sm bg-[#060709] hover:bg-[#181B22] border border-amber-500/30 text-amber-200 font-mono text-xs transition-colors cursor-pointer shrink-0"
+                                            >
+                                                <Lock className="w-3 h-3" aria-hidden="true" />
+                                                <span>{assessmentCompleted ? `Need ${job.min_skill_score}%` : 'Take Test'}</span>
+                                            </button>
                                         ) : (
                                             <button
                                                 type="button"

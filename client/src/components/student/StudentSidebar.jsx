@@ -8,16 +8,18 @@ import {
     BrainCircuit,
     FileText,
     CheckCircle2,
+    ScanSearch,
     X,
 } from 'lucide-react';
 
 const navItems = [
-    { label: 'Overview', path: '/student/dashboard', hash: '', icon: LayoutDashboard },
-    { label: 'Matched Jobs', path: '/student/dashboard#jobs', hash: '#jobs', icon: Briefcase },
-    { label: 'Learning Paths', path: '/student/upskill', icon: BookOpen },
-    { label: 'Skill Assessment', path: '/student/assessment', icon: ShieldCheck },
-    { label: 'Work Style', path: '/student/personality-test', icon: BrainCircuit },
-    { label: 'Resume & Profile', path: '/student/onboarding', icon: FileText },
+    { label: 'Overview', path: '/student/dashboard', matchPaths: ['/student/dashboard'], icon: LayoutDashboard },
+    { label: 'Matched Jobs', path: '/student/jobs', matchPaths: ['/student/jobs', '/student/job-matches'], icon: Briefcase },
+    { label: 'AI Analysis', path: '/student/analysis', matchPaths: ['/student/analysis', '/student/ai-analysis'], icon: ScanSearch },
+    { label: 'Learning Paths', path: '/student/upskill', matchPaths: ['/student/upskill'], icon: BookOpen },
+    { label: 'Skill Assessment', path: '/student/assessment', matchPaths: ['/student/assessment'], icon: ShieldCheck },
+    { label: 'Work Style', path: '/student/personality-test', matchPaths: ['/student/personality-test'], icon: BrainCircuit },
+    { label: 'Resume & Profile', path: '/student/onboarding', matchPaths: ['/student/onboarding'], icon: FileText },
 ];
 
 const StudentSidebar = ({ sidebarCollapsed, mobileOpen = false, onCloseMobile }) => {
@@ -30,12 +32,13 @@ const StudentSidebar = ({ sidebarCollapsed, mobileOpen = false, onCloseMobile })
     };
 
     const isItemActive = (item) => {
-        if (item.path.startsWith('/student/dashboard')) {
-            if (location.pathname !== '/student/dashboard') return false;
-            if (item.hash) return location.hash === item.hash;
-            return location.hash !== '#jobs' && location.hash !== '#learning';
+        if (item.path === '/student/dashboard') {
+            return location.pathname === '/student/dashboard' && location.hash !== '#jobs' && location.hash !== '#learning';
         }
-        return location.pathname === item.path;
+        if (item.path === '/student/jobs' && location.pathname === '/student/dashboard' && location.hash === '#jobs') {
+            return true;
+        }
+        return item.matchPaths ? item.matchPaths.includes(location.pathname) : location.pathname === item.path;
     };
 
     const renderNavContent = (collapsed) => (

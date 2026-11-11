@@ -179,15 +179,18 @@ const StudentDashboard = () => {
 
     const candidateName = profile?.full_name || user?.full_name || user?.email?.split('@')[0] || 'Candidate';
     const hasProfile = Boolean(profile?.skills || profile?.resume || profile?.resume_text);
-    const hasSkillTest = Boolean(recommendation?.skill_score || profile?.rating);
-    const hasWorkStyle = Boolean(recommendation?.personality_score);
+    const hasSkillTest = Boolean(
+        (recommendation?.skill_score && Number(recommendation.skill_score) > 0) ||
+        (profile?.rating && Number(profile.rating) > 0)
+    );
+    const hasWorkStyle = Boolean(recommendation?.personality_score && Number(recommendation.personality_score) > 0);
     const hasUpskillOrApplied = completedModuleIds.length > 0 || myApplications.length > 0;
 
     const journeySteps = [
         { label: 'Profile & Resume', done: hasProfile, icon: FileText, onClick: () => navigate('/student/onboarding') },
         { label: 'Skill Assessment', done: hasSkillTest, icon: ShieldCheck, onClick: () => navigate('/student/assessment') },
         { label: 'Work Style', done: hasWorkStyle, icon: BrainCircuit, onClick: () => navigate('/student/personality-test') },
-        { label: 'Learn & Apply', done: hasUpskillOrApplied, icon: Briefcase, onClick: () => handleSelectTab('jobs') },
+        { label: 'Learn & Apply', done: hasUpskillOrApplied, icon: Briefcase, onClick: () => navigate('/student/jobs') },
     ];
 
     return (
@@ -358,7 +361,7 @@ const StudentDashboard = () => {
                                     <ActionControlStrip
                                         onStartAssessment={() => navigate('/student/assessment')}
                                         onAccessLearning={() => navigate('/student/upskill')}
-                                        onViewJobs={() => handleSelectTab('jobs')}
+                                        onViewJobs={() => navigate('/student/jobs')}
                                         onOpenPersonality={() => navigate('/student/personality-test')}
                                         jobsCount={jobs.length}
                                         modulesCount={upskillModules.length}
@@ -382,6 +385,7 @@ const StudentDashboard = () => {
                                     setFilterMode={setFilterMode}
                                     onApply={handleApply}
                                     applyingTo={applyingTo}
+                                    assessmentCompleted={hasSkillTest}
                                 />
                             )}
 
