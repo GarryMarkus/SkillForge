@@ -13,6 +13,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 .pnpm-store/
+.yarn/
+.pnp.*
+.npm/
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # ------------------------------------------------------------------------------
 # Build Outputs & Bundler Caches
@@ -26,6 +30,7 @@ dist-ssr/
 .cache/
 .vite/
 .parcel-cache/
+.rollup.cache/
 .turbo/
 .eslintcache
 *.tsbuildinfo
@@ -41,6 +46,8 @@ playwright-report/
 test-results/
 blob-report/
 playwright/.cache/
+.nyc_output/
+*.har
 
 # ------------------------------------------------------------------------------
 # Python, Django & Celery
@@ -48,12 +55,17 @@ playwright/.cache/
 __pycache__/
 **/__pycache__/
 *.py[cod]
+*$py.class
 *.pyo
 *.pyd
 .Python
 *.egg-info/
 .eggs/
+*.whl
+.installed.cfg
+MANIFEST
 pip-wheel-metadata/
+share/python-wheels/
 env/
 venv/
 .venv/
@@ -63,14 +75,20 @@ ENV/
 **/.venv/
 env.bak/
 venv.bak/
+.python-version
 *.sqlite
 *.sqlite3
 *.sqlite3*
 *.db
 db.sqlite3
+local_settings.py
+**/local_settings.py
 media/
 **/media/
 server/media/
+resumes/
+**/resumes/
+server/resumes/
 staticfiles/
 **/staticfiles/
 celerybeat-schedule
@@ -83,6 +101,7 @@ dump.rdb
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.hypothesis/
 .tox/
 .nox/
 .coverage
@@ -97,7 +116,7 @@ logs/
 *.log
 
 # ------------------------------------------------------------------------------
-# Environment Variables & Secrets
+# Environment Variables, Keys & Secrets
 # ------------------------------------------------------------------------------
 .env
 .env.*
@@ -107,9 +126,18 @@ logs/
 !.env.example
 !**/.env.example
 mcp_config.json
+.secrets
+secrets.json
+*.secrets.*
+credentials.json
+*service-account*.json
+.gcloud/
 *.pem
 *.key
 *.crt
+*.p12
+*.pfx
+*.jks
 
 # ------------------------------------------------------------------------------
 # Operating System Artifacts
@@ -123,20 +151,25 @@ ehthumbs.db
 Thumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+*:Zone.Identifier
+*Zone.Identifier
 *~
 
 # ------------------------------------------------------------------------------
-# IDE & Code Editor Directories
+# IDE, Merge & Code Editor Files
 # ------------------------------------------------------------------------------
 .vscode/*
 !.vscode/extensions.json
 .idea/
+*.iml
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 *.bak
+*.orig
+*.rej
 *.sublime-workspace
 *.sublime-project
 
@@ -144,11 +177,14 @@ $RECYCLE.BIN/
 # Assistant & Scratch Artifacts
 # ------------------------------------------------------------------------------
 .agents/
+.aider*
 .claude/
 .codex/
 .cursor/
 .gemini/
 .antigravity/
+.kiro/
+.trae/
 .windsurf/
 scratch/
 tmp/

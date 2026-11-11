@@ -8,6 +8,9 @@ __pycache__/
 *$py.class
 *.egg-info/
 .eggs/
+*.whl
+.installed.cfg
+MANIFEST
 dist/
 build/
 
@@ -18,19 +21,33 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.python-version
 
 # Environment files & secrets
 .env
 .env.*
 *.env
 !.env.example
+local_settings.py
+.secrets
+secrets.json
+*.secrets.*
+credentials.json
+*service-account*.json
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
 
-# Local SQLite database & user uploads
+# Local SQLite database, static collect & user uploads
 db.sqlite3
 *.sqlite
 *.sqlite3*
 *.db
 media/
+resumes/
 staticfiles/
 
 # Celery, Redis & logs
@@ -48,11 +65,20 @@ logs/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.hypothesis/
+.tox/
+.nox/
 .coverage
 .coverage.*
 htmlcov/
 
-# IDE & OS
+# Scratch, merge, IDE & OS files
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+*.rej
 .vscode/*
 !.vscode/extensions.json
 .idea/

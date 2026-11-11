@@ -1,6 +1,12 @@
 # Normalize line endings across Windows/macOS/Linux
 * text=auto eol=lf
 
+# Web/JS text assets keep LF
+*.mjs text eol=lf
+*.svg text eol=lf
+*.webmanifest text eol=lf
+*.conf text eol=lf
+
 # Windows scripts keep CRLF
 *.bat text eol=crlf
 *.cmd text eol=crlf
@@ -18,3 +24,6 @@
 *.woff2 binary
 *.ttf binary
 *.eot binary
+*.sqlite binary
+*.sqlite3 binary
+*.db binary
