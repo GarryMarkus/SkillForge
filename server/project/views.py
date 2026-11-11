@@ -8,6 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from accounts.models import ClientProfile, StudentProfile
 from accounts.permissions import IsClientUser, IsStudentUser
+from verification.models import SkillTestAttempt
 from .models import JobPost, JobApplication
 from .serializers import JobPostSerializer, JobApplicationSerializer
 
@@ -87,12 +88,61 @@ class AllJobsAPI(APIView):
             serializer = JobPostSerializer(jobs, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        student = request.user.student_profile
+        student, _ = StudentProfile.objects.select_related("report").prefetch_related("analyses").get_or_create(
+            user=request.user
+        )
+        report = getattr(student, "report", None)
+        skill_score = float(report.skill_test_score) if (report and report.skill_test_score) else 0.0
+        assessment_completed = bool(
+            skill_score > 0
+            or SkillTestAttempt.objects.filter(user=request.user, is_evaluated=True).exists()
+        )
+        applied_job_ids = set(
+            JobApplication.objects.filter(student=student).values_list("job_id", flat=True)
+        )
+
+        # Gather verified + profile + extracted resume/GitHub skill signals
+        candidate_skills_lower = set()
+        extracted_tokens = []
+        for s in (student.skills or "").split(","):
+            cleaned = s.strip()
+            if cleaned:
+                candidate_skills_lower.add(cleaned.lower())
+                extracted_tokens.append(cleaned)
+
+        for analysis in student.analyses.all():
+            kw = analysis.extracted_keywords if isinstance(analysis.extracted_keywords, dict) else {}
+            for key in ("primary_skills", "secondary_skills", "skills", "languages"):
+                vals = kw.get(key) or []
+                if isinstance(vals, list):
+                    for item in vals:
+                        cleaned = str(item).strip()
+                        if cleaned:
+                            candidate_skills_lower.add(cleaned.lower())
+                            extracted_tokens.append(cleaned)
+
+        summary = report.report_summary if (report and isinstance(report.report_summary, dict)) else {}
+        sources = summary.get("sources") if isinstance(summary.get("sources"), dict) else {}
+        for src_name in ("resume", "github"):
+            src = sources.get(src_name)
+            if isinstance(src, dict):
+                for key in ("matched_skills", "detected_languages"):
+                    vals = src.get(key) or []
+                    if isinstance(vals, list):
+                        for item in vals:
+                            cleaned = str(item).strip()
+                            if cleaned:
+                                candidate_skills_lower.add(cleaned.lower())
+                                extracted_tokens.append(cleaned)
+
         profile_text = " ".join([
             student.skills or "",
+            " ".join(extracted_tokens),
+            student.bio or "",
             student.education or "",
             student.experience_level or ""
         ]).strip() or "general development"
+        profile_text_lower = profile_text.lower()
 
         job_texts = [
             f"{j.title} {j.description} {j.skills_required}".strip() or "job description"
@@ -105,6 +155,26 @@ class AllJobsAPI(APIView):
 
         results = []
         for job, score in zip(jobs, scores):
+            required_skills = [s.strip() for s in (job.skills_required or "").split(",") if s.strip()]
+            matched_skills = []
+            missing_skills = []
+            for req in required_skills:
+                req_low = req.lower()
+                if req_low in candidate_skills_lower or req_low in profile_text_lower:
+                    matched_skills.append(req)
+                else:
+                    missing_skills.append(req)
+
+            overlap_ratio = (len(matched_skills) / len(required_skills)) if required_skills else 0.0
+            if overlap_ratio > 0:
+                composite_match = round(min(99.0, (overlap_ratio * 0.7 + float(score) * 0.3) * 100), 1)
+            else:
+                composite_match = round(float(score) * 100, 2)
+
+            min_req = int(job.min_skill_score or 0)
+            effective_score = skill_score * 10 if min_req > 100 and skill_score <= 100 else skill_score
+            eligible_to_apply = (min_req <= 0) or (effective_score >= min_req)
+
             results.append({
                 "id": job.id,
                 "title": job.title,
@@ -113,12 +183,19 @@ class AllJobsAPI(APIView):
                 "budget_type": job.budget_type,
                 "budget_amount": job.budget_amount,
                 "skills_required": job.skills_required,
+                "required_skills": required_skills,
+                "matched_skills": matched_skills,
+                "missing_skills": missing_skills,
                 "min_skill_score": job.min_skill_score,
+                "eligible_to_apply": eligible_to_apply,
+                "assessment_completed": assessment_completed,
+                "student_skill_score": round(skill_score, 1),
+                "already_applied": job.id in applied_job_ids,
                 "status": job.status,
                 "created_at": job.created_at,
                 "company_name": job.client.company_name if job.client else "",
                 "applicant_count": getattr(job, "applicant_count", 0),
-                "match": round(float(score) * 100, 2)
+                "match": composite_match,
             })
 
         results.sort(key=lambda x: x["match"], reverse=True)

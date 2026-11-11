@@ -202,3 +202,44 @@ class ProjectAPITests(TestCase):
             format="json"
         )
         self.assertEqual(res_forbidden.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_job_matches_include_eligibility_and_skill_gap_metadata(self):
+        """Test AllJobsAPI attaches matched_skills, missing_skills, eligible_to_apply, and assessment_completed."""
+        JobPost.objects.create(
+            client=self.client_profile,
+            title="Cloud Platform Engineer",
+            category="Security & DevOps",
+            description="Django services deployed on Docker and AWS",
+            budget_type="fixed",
+            budget_amount=6000.00,
+            skills_required="Python, Django, Docker, AWS",
+            min_skill_score=95,
+            status="open"
+        )
+
+        # Student has score 90.0 -> below 95 gate
+        self.client.force_authenticate(user=self.student)
+        res = self.client.get("/api/project/jobs/")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 1)
+        job_item = res.data[0]
+        self.assertTrue(job_item["assessment_completed"])
+        self.assertEqual(job_item["student_skill_score"], 90.0)
+        self.assertFalse(job_item["eligible_to_apply"])
+        self.assertEqual(job_item["matched_skills"], ["Python", "Django"])
+        self.assertEqual(job_item["missing_skills"], ["Docker", "AWS"])
+
+        # Student with no assessment yet sees assessment_completed=False & preview match
+        unassessed = User.objects.create_user(
+            email="new_student@example.com",
+            password="Password123!",
+            role="student"
+        )
+        unassessed.student_profile.skills = "Python, React"
+        unassessed.student_profile.save()
+        self.client.force_authenticate(user=unassessed)
+        res_new = self.client.get("/api/project/jobs/")
+        self.assertEqual(res_new.status_code, status.HTTP_200_OK)
+        self.assertFalse(res_new.data[0]["assessment_completed"])
+        self.assertFalse(res_new.data[0]["eligible_to_apply"])
+        self.assertGreater(res_new.data[0]["match"], 0)
