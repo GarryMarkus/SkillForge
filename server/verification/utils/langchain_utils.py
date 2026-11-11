@@ -71,10 +71,26 @@ def analyze_resume(resume_text: str) -> str:
         {resume_text}
         </candidate_resume_data>
 
-        Provide an objective analysis:
-        - Key strengths
-        - Weaknesses
-        - Suggestions for improvement
+        Provide a clean, objective technical evaluation formatted with EXACTLY these Markdown headings and zero conversational preamble (do NOT write intro sentences like "Here's an analysis"):
+
+        ## Executive Summary
+        Write 2 concise sentences summarizing core technical domains, standout projects/patents, and career readiness.
+
+        ## Domain Breakdown
+        List up to 5 relevant technical domains evidenced in the resume (e.g. Programming Languages, Backend & APIs, Frontend & GUI, Systems & Linux, Cybersecurity, Databases, AI & Algorithms) using format:
+        - **Domain Name:** Concrete verified tools, projects, or evidence from the resume.
+
+        ## Key Strengths
+        List 3 to 4 crisp strengths using format:
+        - **Strength Title:** Specific evidence and impact from the resume.
+
+        ## Gaps & Weaknesses
+        List 2 to 3 concrete missing proof points or skill gaps using format:
+        - **Gap Title:** Specific area lacking depth, metrics, or architectural detail.
+
+        ## Actionable Suggestions
+        List 3 prioritized recommendations using format:
+        - **Recommendation Title:** Concrete next step the candidate can take.
         """
     )
     try:
@@ -106,10 +122,26 @@ def analyze_github_profile(github_profile: str) -> str:
         {github_profile}
         </candidate_github_data>
 
-        Provide:
-        - Key strengths (code quality, commit patterns, technologies)
-        - Weaknesses
-        - Suggestions for improvement
+        Provide a clean, objective portfolio evaluation formatted with EXACTLY these Markdown headings and zero conversational preamble (do NOT write intro sentences like "As an expert technical evaluator"):
+
+        ## Executive Summary
+        Write 2 concise sentences summarizing open-source breadth, primary languages, and engineering focus.
+
+        ## Domain Breakdown
+        Group notable repositories by technical domain using format:
+        - **Domain Name:** Mention specific repository names and languages demonstrated.
+
+        ## Key Strengths
+        List 3 to 4 crisp portfolio strengths using format:
+        - **Strength Title:** Cite specific repositories, languages, or problem-solving evidence.
+
+        ## Gaps & Weaknesses
+        List 2 to 3 portfolio gaps using format:
+        - **Gap Title:** Note missing documentation, tests, stars/traction, or domain depth.
+
+        ## Actionable Suggestions
+        List 3 prioritized GitHub improvements using format:
+        - **Recommendation Title:** Concrete step to strengthen public engineering proof.
         """
     )
     try:
@@ -139,8 +171,19 @@ def generate_final_report(resume_analysis: str, github_analysis: str) -> str:
         GitHub Analysis:
         {github_analysis}
 
-        Generate a comprehensive, professional summary report highlighting the candidate's core competencies,
-        readiness for technical roles, and suggested focus areas.
+        Generate a structured multi-source synthesis formatted with EXACTLY these Markdown headings and zero conversational preamble:
+
+        ## Executive Summary
+        Write 2 concise sentences combining verified Resume credentials and live GitHub repository proof.
+
+        ## Key Strengths
+        - **Cross-Source Strengths:** Where resume claims align with public code or achievements.
+
+        ## Gaps & Weaknesses
+        - **Verification Gaps:** Areas claimed on resume without public repo proof, or skills needing validation.
+
+        ## Actionable Suggestions
+        - **Priority Next Step:** Specific assessment focus or portfolio milestone to maximize readiness.
         """
     )
     try:

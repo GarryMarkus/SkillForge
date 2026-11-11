@@ -241,5 +241,110 @@ class AnalysisTransparencyAPITests(TestCase):
         self.assertEqual(res_get.status_code, status.HTTP_200_OK)
         self.assertEqual(res_get.data["github_source"]["username"], "priyanair-dev")
         self.assertIn("Production API delivery".lower(), res_get.data["resume_analysis"].lower())
+        self.assertIsInstance(res_get.data["domain_assessments"], list)
+        self.assertGreaterEqual(len(res_get.data["domain_assessments"]), 5)
+
+    def test_structured_domain_breakdown_and_legacy_markdown_parsing(self):
+        """Legacy stored Markdown analyses and multi-domain resumes parse into structured domain cards cleanly."""
+        from accounts.models import StudentReport
+
+        self.profile.github_url = "https://github.com/GarryMarkus"
+        self.profile.save()
+
+        raw_resume_md = (
+            "Here's an objective analysis of Prem Singh's resume:\n\n"
+            "### Key Strengths\n\n"
+            "1. **Exceptional Proactiveness & Innovation:** Filed two patents as an undergraduate.\n"
+            "2. **Strong Technical Foundation:**\n"
+            "* **Versatile Programming Skills:** Proficient in Python, C, and C++.\n"
+            "* **Robust OS & Networking Knowledge:** Deep understanding of Linux (Bash, systemd, iptables, TCP/IP).\n"
+            "* **Cybersecurity Tool Proficiency:** Experience with GDB, Wireshark, Nmap, Burp Suite, Metasploit, Splunk, BloodHound.\n"
+            "* **Database Experience:** Experience with PostgreSQL and MySQL.\n"
+            "### Gaps & Weaknesses\n"
+            "* **Production Telemetry:** Limited deployment metrics noted.\n"
+            "### Actionable Suggestions\n"
+            "* **Publish Writeups:** Add GitHub README benchmarks for PyQt6 and Swiss Pairing tooling.\n"
+        )
+        raw_github_md = (
+            "As an expert technical evaluator, I've reviewed GarryMarkus's GitHub profile based on the provided repository metadata.\n\n"
+            "---\n\n"
+            "### Key Strengths:\n\n"
+            "1. **Broad Technological Aptitude**: Proficiency across Python, JavaScript, TypeScript, Dart, and HTML.\n"
+            "2. **Diverse Project Interests & Problem-Solving**: Built `ChessReader`, `Document-Viewer` (PyQt6), and `Skip-The-Scroll`.\n"
+            "* `Skip-The-Scroll` solves a real user pain point with a clean browser extension.\n"
+        )
+
+        StudentReport.objects.create(
+            student=self.profile,
+            report_summary={
+                "stage": "temporary",
+                "resume_analysis": raw_resume_md,
+                "github_analysis": raw_github_md,
+                "summary": "Strong systems, cybersecurity, and full-stack capabilities.",
+                "sources": {
+                    "resume": {
+                        "status": "analyzed_pdf",
+                        "has_file": True,
+                        "filename": "prem_resume.pdf",
+                        "extracted_chars": 1200,
+                        "extracted_preview": "Prem Singh\nPROJECTS\nDocument Viewer (PyQt6, async rendering)\nPATENTS\n2 Patents Filed",
+                        "full_text_preview": (
+                            "Prem Singh\nhttps://github.com/GarryMarkus\nEDUCATION\nB.Tech Computer Science\n"
+                            "SKILLS\nPython, C, C++, Linux, Bash, systemd, iptables, TCP/IP, GDB, Wireshark, Nmap, Burp Suite, Splunk, BloodHound, PostgreSQL, MySQL, Django, React, PyQt6\n"
+                            "PROJECTS\n- Document Viewer built with PyQt6 and caching\n"
+                            "- SkillForge (Django, React, PostgreSQL) - 7th at JNU Hackathon\n"
+                            "PATENTS\n- Two patents filed in applied computing"
+                        ),
+                        "matched_skills": ["Python", "C", "C++", "PyQt6", "Wireshark", "PostgreSQL"],
+                    },
+                    "github": {
+                        "status": "analyzed_live",
+                        "has_github": True,
+                        "username": "GarryMarkus",
+                        "repos": [
+                            {"name": "Document-Viewer", "language": "Python", "stars": 5, "forks": 1, "description": "PyQt6 viewer", "topics": ["pyqt6"]},
+                            {"name": "ChessReader", "language": "Python", "stars": 4, "forks": 0, "description": "PGN reader", "topics": ["chess"]},
+                            {"name": "Skip-The-Scroll", "language": "JavaScript", "stars": 8, "forks": 0, "description": "Browser extension", "topics": ["chrome-extension"]},
+                            {"name": "zuno", "language": "Dart", "stars": 3, "forks": 0, "description": "Flutter music client", "topics": ["flutter"]},
+                        ],
+                        "detected_languages": ["Python", "JavaScript", "Dart"],
+                    },
+                },
+            },
+        )
+
+        res = self.client.get("/api/verification/analysis/")
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        data = res.data
+
+        # Preamble stripped & structured sections extracted cleanly
+        r_struct = data["resume_structured"]
+        self.assertNotIn("Here's an objective", r_struct["executive_summary"])
+        section_kinds = [s["kind"] for s in r_struct["sections"]]
+        self.assertIn("strengths", section_kinds)
+        self.assertIn("weaknesses", section_kinds)
+        self.assertIn("suggestions", section_kinds)
+
+        strengths_sec = next(s for s in r_struct["sections"] if s["kind"] == "strengths")
+        self.assertEqual(len(strengths_sec["items"]), 2)
+        self.assertEqual(strengths_sec["items"][1]["title"], "Strong Technical Foundation")
+        self.assertEqual(len(strengths_sec["items"][1]["subitems"]), 4)
+        self.assertEqual(strengths_sec["items"][1]["subitems"][0]["label"], "Versatile Programming Skills")
+
+        g_struct = data["github_structured"]
+        self.assertNotIn("As an expert technical evaluator", g_struct["executive_summary"])
+        self.assertEqual(g_struct["sections"][0]["items"][1]["subitems"][0]["text"][:17], "`Skip-The-Scroll`")
+
+        # Multi-domain coverage includes cybersecurity, systems, languages, and frontend GUI
+        domains_by_id = {d["id"]: d for d in data["domain_assessments"]}
+        self.assertIn("Wireshark", domains_by_id["cybersecurity"]["skills"])
+        self.assertIn("GDB", domains_by_id["cybersecurity"]["skills"])
+        self.assertIn("C", domains_by_id["languages"]["skills"])
+        self.assertIn("Dart", domains_by_id["languages"]["skills"])
+        self.assertIn("systemd", domains_by_id["systems_devops"]["skills"])
+        self.assertIn("PyQt6", domains_by_id["frontend"]["skills"])
+        self.assertEqual(data["github_source"]["total_stars"], 20)
+        self.assertEqual(data["github_source"]["language_breakdown"][0]["language"], "Python")
+
 
 

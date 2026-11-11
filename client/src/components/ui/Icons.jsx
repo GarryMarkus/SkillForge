@@ -586,3 +586,33 @@ export const Maximize2 = ({ className = 'w-3.5 h-3.5', ...props }) => (
         <path d="M2.5 13.5L7 9" />
     </Svg>
 );
+
+export const ChevronDown = ({ className = 'w-3.5 h-3.5', ...props }) => (
+    <Svg className={className} {...props}>
+        <path d="M3.5 6.5L8 11l4.5-4.5" />
+    </Svg>
+);
+
+export const ChevronUp = ({ className = 'w-3.5 h-3.5', ...props }) => (
+    <Svg className={className} {...props}>
+        <path d="M3.5 10.5L8 6l4.5 4.5" />
+    </Svg>
+);
+
+export const GitFork = ({ className = 'w-3.5 h-3.5', ...props }) => (
+    <Svg className={className} {...props}>
+        <circle cx="5" cy="4" r="1.4" />
+        <circle cx="11" cy="4" r="1.4" />
+        <circle cx="8" cy="12" r="1.4" />
+        <path d="M5 5.4v1.4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V5.4" />
+        <path d="M8 8.8v1.8" />
+    </Svg>
+);
+
+export const Link2 = ({ className = 'w-3.5 h-3.5', ...props }) => (
+    <Svg className={className} {...props}>
+        <path d="M6.5 10.5H5a2.5 2.5 0 0 1 0-5h1.5" />
+        <path d="M9.5 5.5H11a2.5 2.5 0 0 1 0 5H9.5" />
+        <path d="M5.5 8h5" />
+    </Svg>
+);

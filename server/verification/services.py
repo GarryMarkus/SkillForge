@@ -12,7 +12,13 @@ from proctor.models import Exam, ExamSession
 from .models import SkillCategory, SkillTestAttempt, PersonalityAttempt
 from .personality_data import PERSONALITY_QUESTIONS
 from .schemas import GeneratedTestPayloadSchema, FinalReportSummarySchema
-from .utils.git_utils import fetch_github_profile
+from .domain_analyzer import (
+    extract_domain_matched_skills,
+    extract_resume_structure,
+    structure_evaluation_text,
+    build_domain_assessments,
+)
+from .utils.git_utils import fetch_github_profile, _compute_language_breakdown
 from .utils.langchain_utils import (
     analyze_resume,
     analyze_github_profile,
@@ -26,12 +32,13 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 KNOWN_TECH_KEYWORDS = [
-    "Python", "Django", "Flask", "FastAPI", "React", "Next.js", "TypeScript",
-    "JavaScript", "Node.js", "PostgreSQL", "MySQL", "SQLite", "MongoDB",
-    "Redis", "Docker", "Kubernetes", "AWS", "GCP", "Azure", "Linux",
-    "Git", "CI/CD", "Celery", "GraphQL", "REST API", "TailwindCSS", "Vite",
-    "PyTorch", "TensorFlow", "Scikit-learn", "Machine Learning", "Java", "Go",
-    "Rust", "C++", "HTML", "CSS", "SQL",
+    "Python", "C", "C++", "Django", "Flask", "FastAPI", "React", "Next.js", "TypeScript",
+    "JavaScript", "Dart", "Flutter", "PyQt6", "Node.js", "PostgreSQL", "MySQL", "SQLite",
+    "MongoDB", "Redis", "Docker", "Kubernetes", "AWS", "GCP", "Azure", "Linux",
+    "Bash", "systemd", "iptables", "TCP/IP", "GDB", "Wireshark", "Nmap", "Burp Suite",
+    "Metasploit", "Splunk", "BloodHound", "Git", "CI/CD", "Celery", "GraphQL",
+    "REST API", "TailwindCSS", "Vite", "PyTorch", "TensorFlow", "Scikit-learn",
+    "LangChain", "Machine Learning", "Java", "Go", "Rust", "HTML", "CSS", "SQL",
 ]
 
 RESUME_FALLBACK_PREFIX = "Candidate resume analysis: Demonstrates foundational software development competencies."
@@ -70,29 +77,68 @@ def _parse_explicit_skills(skills_text: str | None) -> list[str]:
 
 
 def _extract_keywords_from_text(text: str, explicit_skills: list[str] | None = None) -> list[str]:
-    """Identify known technical stack keywords + explicit skills present in text."""
-    seen = set()
-    found = []
+    """Identify technical stack keywords across all domains + explicit skills present in text."""
+    flat_skills, _ = extract_domain_matched_skills(text or "", explicit_skills)
+    return flat_skills
 
-    for skill in (explicit_skills or []):
-        low = skill.lower()
-        if low not in seen:
-            seen.add(low)
-            found.append(skill)
 
-    if text:
-        lowered = text.lower()
-        for kw in KNOWN_TECH_KEYWORDS:
-            pattern = r"(?<![a-z0-9])" + re.escape(kw.lower()) + r"(?![a-z0-9])"
-            if re.search(pattern, lowered) and kw.lower() not in seen:
-                seen.add(kw.lower())
-                found.append(kw)
+def _format_github_prompt_payload(github_data: dict) -> str:
+    """Serialize live GitHub metadata cleanly for structured LLM evaluation."""
+    if not isinstance(github_data, dict):
+        return str(github_data)
 
-    return found
+    repos = github_data.get("repos") or []
+    breakdown = github_data.get("language_breakdown") or []
+    lang_summary = ", ".join(
+        f"{item.get('language')} ({item.get('percentage')}%)" for item in breakdown[:6]
+    ) or "Not detected"
+
+    lines = [
+        f"GitHub Handle: @{github_data.get('username', '')}",
+        f"Display Name: {github_data.get('name', '')}",
+        f"Bio: {github_data.get('bio', '') or 'None provided'}",
+        f"Public Repos: {github_data.get('public_repos', len(repos))}",
+        f"Followers: {github_data.get('followers', 0)} | Total Stars: {github_data.get('total_stars', 0)} | Total Forks: {github_data.get('total_forks', 0)}",
+        f"Language Breakdown: {lang_summary}",
+        "Repositories:",
+    ]
+    for repo in repos[:24]:
+        lang = repo.get("language") or "Unspecified"
+        stars = repo.get("stars", 0)
+        forks = repo.get("forks", 0)
+        desc = repo.get("description") or "No description"
+        topics = ", ".join(repo.get("topics") or [])
+        topic_part = f" [topics: {topics}]" if topics else ""
+        fork_tag = " [fork]" if repo.get("is_fork") else ""
+        lines.append(f"- {repo.get('name', '')}{fork_tag} ({lang}, stars={stars}, forks={forks}): {desc}{topic_part}")
+    return "\n".join(lines)
 
 
 def _is_llm_configured() -> bool:
     return bool(os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"))
+
+
+def _extract_positive_ai_evidence(structured: dict | None) -> str:
+    """Extract only positive skill/domain statements from structured AI sections, ignoring gaps/suggestions."""
+    if not isinstance(structured, dict):
+        return ""
+    parts = []
+    if structured.get("executive_summary"):
+        parts.append(str(structured["executive_summary"]))
+    for sec in structured.get("sections") or []:
+        if sec.get("kind") in ("weaknesses", "suggestions"):
+            continue
+        for item in sec.get("items") or []:
+            if item.get("title"):
+                parts.append(str(item["title"]))
+            if item.get("summary"):
+                parts.append(str(item["summary"]))
+            for sub in item.get("subitems") or []:
+                if sub.get("label"):
+                    parts.append(str(sub["label"]))
+                if sub.get("text"):
+                    parts.append(str(sub["text"]))
+    return "\n".join(parts)
 
 
 def generate_partial_report(student_id: int):
@@ -135,10 +181,11 @@ def generate_partial_report(student_id: int):
             resume_input_text = ""
             resume_analysis = "No resume PDF or profile technical summary provided yet."
 
-        resume_keywords = _extract_keywords_from_text(resume_input_text, explicit_skills)
+        resume_keywords, resume_domains = extract_domain_matched_skills(resume_input_text, explicit_skills)
+        resume_structure = extract_resume_structure(extracted_text or resume_input_text) if resume_input_text else {}
         resume_used_fallback = str(resume_analysis).startswith(RESUME_FALLBACK_PREFIX)
-        extracted_preview = ""
-        if extracted_text:
+        extracted_preview = resume_structure.get("extracted_preview", "")
+        if extracted_text and not extracted_preview:
             extracted_preview = (
                 extracted_text[:450].strip() + ("..." if len(extracted_text) > 450 else "")
             )
@@ -148,8 +195,15 @@ def generate_partial_report(student_id: int):
             "has_file": has_resume_file,
             "filename": resume_filename,
             "extracted_chars": len(extracted_text),
+            "word_count": resume_structure.get("word_count", 0),
+            "line_count": resume_structure.get("line_count", 0),
             "extracted_preview": extracted_preview,
+            "full_text_preview": resume_structure.get("full_text_preview", extracted_preview),
+            "extracted_links": resume_structure.get("links", []),
+            "extracted_sections": resume_structure.get("sections", []),
+            "extracted_highlights": resume_structure.get("highlights", []),
             "matched_skills": resume_keywords,
+            "domain_skills": resume_domains,
             "profile_skills": explicit_skills,
             "analysis_mode": (
                 "none" if resume_status == "missing"
@@ -168,19 +222,26 @@ def generate_partial_report(student_id: int):
             "username": "",
             "display_name": "",
             "bio": "",
+            "avatar_url": "",
+            "followers": 0,
             "public_repos": 0,
+            "total_stars": 0,
+            "total_forks": 0,
             "is_mock": False,
             "fallback_reason": "",
             "repos": [],
             "detected_languages": [],
+            "language_breakdown": [],
             "matched_skills": [],
+            "domain_skills": {},
             "analysis_mode": "none",
             "analyzed_at": now_iso,
         }
 
         if username:
             github_data = fetch_github_profile(username)
-            github_analysis = analyze_github_profile(str(github_data))
+            github_prompt_text = _format_github_prompt_payload(github_data)
+            github_analysis = analyze_github_profile(github_prompt_text)
             repos = github_data.get("repos", []) if isinstance(github_data, dict) else []
             detected_languages = []
             seen_langs = set()
@@ -192,10 +253,15 @@ def generate_partial_report(student_id: int):
                     detected_languages.append(lang)
                 repo_corpus_parts.append(str(repo.get("name") or ""))
                 repo_corpus_parts.append(str(repo.get("description") or ""))
+                repo_corpus_parts.extend(str(t) for t in (repo.get("topics") or []))
 
-            github_keywords = _extract_keywords_from_text(" ".join(repo_corpus_parts), detected_languages)
+            github_keywords, github_domains = extract_domain_matched_skills(
+                " ".join(repo_corpus_parts),
+                detected_languages,
+            )
             github_used_fallback = str(github_analysis).startswith(GITHUB_FALLBACK_PREFIX)
             is_mock = bool(github_data.get("is_mock", False))
+            language_breakdown = github_data.get("language_breakdown") or _compute_language_breakdown(repos)
 
             github_source = {
                 "status": "analyzed_fallback" if is_mock else "analyzed_live",
@@ -204,23 +270,60 @@ def generate_partial_report(student_id: int):
                 "username": github_data.get("username", username),
                 "display_name": github_data.get("name", username),
                 "bio": github_data.get("bio", ""),
+                "avatar_url": github_data.get("avatar_url", ""),
+                "followers": int(github_data.get("followers", 0) or 0),
                 "public_repos": github_data.get("public_repos", len(repos)),
+                "total_stars": int(github_data.get("total_stars", sum(int(r.get("stars") or 0) for r in repos)) or 0),
+                "total_forks": int(github_data.get("total_forks", sum(int(r.get("forks") or 0) for r in repos)) or 0),
                 "is_mock": is_mock,
                 "fallback_reason": github_data.get("fallback_reason", ""),
-                "repos": repos[:8],
+                "repos": repos[:20],
                 "detected_languages": detected_languages,
+                "language_breakdown": language_breakdown,
                 "matched_skills": github_keywords,
+                "domain_skills": github_domains,
                 "analysis_mode": (
                     "gemini_ai" if llm_configured and not github_used_fallback else "fallback_heuristic"
                 ),
                 "analyzed_at": now_iso,
             }
 
-        # 3. Combined Synthesis Report
+        # 3. Combined Synthesis Report + Structured Normalization
         if resume_status == "missing" and not github_source["has_github"]:
             summary = "Upload a resume PDF or link your GitHub profile so SkillForge can run a transparent multi-source analysis."
         else:
             summary = generate_final_report(str(resume_analysis), str(github_analysis))
+
+        resume_structured = structure_evaluation_text(
+            resume_analysis,
+            source_type="resume",
+            context={"matched_skills": resume_keywords, "active_domain_count": len(resume_domains)},
+        )
+        github_structured = structure_evaluation_text(
+            github_analysis,
+            source_type="github",
+            context={
+                "username": github_source.get("username", ""),
+                "repo_count": len(github_source.get("repos", [])),
+                "languages": github_source.get("detected_languages", []),
+            },
+        )
+        domain_assessments = build_domain_assessments(
+            resume_text=resume_input_text,
+            explicit_skills=explicit_skills,
+            github_repos=github_source.get("repos", []),
+            github_languages=github_source.get("detected_languages", []),
+            github_bio=github_source.get("bio", ""),
+            resume_analysis_text=_extract_positive_ai_evidence(resume_structured),
+            github_analysis_text=_extract_positive_ai_evidence(github_structured),
+        )
+        evidenced_domain_cnt = sum(1 for d in domain_assessments if d["evidenced"])
+
+        summary_structured = structure_evaluation_text(
+            summary,
+            source_type="summary",
+            context={"active_domain_count": evidenced_domain_cnt},
+        )
 
         with transaction.atomic():
             if resume_status != "missing":
@@ -229,13 +332,14 @@ def generate_partial_report(student_id: int):
                     source_type="resume",
                     defaults={
                         "extracted_keywords": {
-                            "primary_skills": resume_keywords[:8],
+                            "primary_skills": resume_keywords[:16],
                             "secondary_skills": explicit_skills,
                             "filename": resume_filename,
                             "extracted_chars": len(extracted_text),
                         },
                         "ai_summary": {
                             "text": resume_analysis,
+                            "structured": resume_structured,
                             "status": resume_status,
                             "preview": extracted_preview,
                             "analyzed_at": now_iso,
@@ -256,6 +360,7 @@ def generate_partial_report(student_id: int):
                         },
                         "ai_summary": {
                             "text": github_analysis,
+                            "structured": github_structured,
                             "is_mock": github_source["is_mock"],
                             "fallback_reason": github_source["fallback_reason"],
                             "repos": github_source["repos"],
@@ -279,6 +384,10 @@ def generate_partial_report(student_id: int):
                 "resume_analysis": resume_analysis,
                 "github_analysis": github_analysis,
                 "summary": summary,
+                "resume_structured": resume_structured,
+                "github_structured": github_structured,
+                "summary_structured": summary_structured,
+                "domain_assessments": domain_assessments,
                 "sources": {
                     "resume": resume_source,
                     "github": github_source,
@@ -619,13 +728,52 @@ def get_final_analysis(student_id: int):
             "analyzed_at": None,
         }
 
+    # Backfill full resume structure transparently for pre-existing saved records
+    reconstructed_resume_text = ""
+    if has_resume_file and "full_text_preview" not in resume_source:
+        try:
+            reconstructed_resume_text = extract_text_from_pdf_fileobj(profile.resume)
+        except Exception:
+            reconstructed_resume_text = ""
+        if reconstructed_resume_text:
+            resume_struct = extract_resume_structure(reconstructed_resume_text)
+            enriched_skills, enriched_domains = extract_domain_matched_skills(reconstructed_resume_text, explicit_skills)
+            resume_source["extracted_chars"] = len(reconstructed_resume_text)
+            resume_source["word_count"] = resume_struct.get("word_count", 0)
+            resume_source["line_count"] = resume_struct.get("line_count", 0)
+            resume_source["extracted_preview"] = resume_struct.get("extracted_preview") or resume_source.get("extracted_preview", "")
+            resume_source["full_text_preview"] = resume_struct.get("full_text_preview", "")
+            resume_source["extracted_links"] = resume_struct.get("links", [])
+            resume_source["extracted_sections"] = resume_struct.get("sections", [])
+            resume_source["extracted_highlights"] = resume_struct.get("highlights", [])
+            resume_source["matched_skills"] = enriched_skills
+            resume_source["domain_skills"] = enriched_domains
+            if resume_source.get("status") == "missing":
+                resume_source["status"] = "analyzed_pdf"
+    elif "domain_skills" not in resume_source:
+        fallback_blob = "\n".join(filter(None, [
+            resume_source.get("full_text_preview", ""),
+            resume_source.get("extracted_preview", ""),
+            summary.get("resume_analysis", ""),
+        ]))
+        merged_skills, domain_map = extract_domain_matched_skills(
+            fallback_blob,
+            list(dict.fromkeys([*(resume_source.get("matched_skills") or []), *explicit_skills])),
+        )
+        resume_source.setdefault("full_text_preview", resume_source.get("extracted_preview", ""))
+        resume_source.setdefault("extracted_links", [])
+        resume_source.setdefault("extracted_sections", [])
+        resume_source.setdefault("extracted_highlights", [])
+        resume_source["matched_skills"] = merged_skills
+        resume_source["domain_skills"] = domain_map
+
     # GitHub provenance reconstruction
     saved_github_source = sources.get("github") if isinstance(sources.get("github"), dict) else None
     github_analysis_record = analyses_by_type.get("github")
     if saved_github_source and (
         not github_username or saved_github_source.get("username", "").lower() == github_username.lower()
     ):
-        github_source = saved_github_source
+        github_source = dict(saved_github_source)
     elif github_analysis_record and github_username:
         kw = github_analysis_record.extracted_keywords if isinstance(github_analysis_record.extracted_keywords, dict) else {}
         ai_sum = github_analysis_record.ai_summary if isinstance(github_analysis_record.ai_summary, dict) else {}
@@ -664,6 +812,26 @@ def get_final_analysis(student_id: int):
             "analyzed_at": None,
         }
 
+    # Backfill GitHub language breakdown & star/fork totals if absent in legacy saved records
+    gh_repos = github_source.get("repos") if isinstance(github_source.get("repos"), list) else []
+    if not github_source.get("language_breakdown") and gh_repos:
+        github_source["language_breakdown"] = _compute_language_breakdown(gh_repos)
+    github_source.setdefault("avatar_url", "")
+    github_source.setdefault("followers", 0)
+    github_source.setdefault("total_stars", sum(int(r.get("stars") or 0) for r in gh_repos))
+    github_source.setdefault("total_forks", sum(int(r.get("forks") or 0) for r in gh_repos))
+    if not github_source.get("domain_skills") and (gh_repos or github_source.get("detected_languages")):
+        gh_blob = "\n".join(
+            [github_source.get("bio", "")]
+            + [f"{r.get('name', '')} {r.get('language', '')} {r.get('description', '')}" for r in gh_repos]
+        )
+        gh_merged, gh_domain_map = extract_domain_matched_skills(
+            gh_blob,
+            list(dict.fromkeys([*(github_source.get("matched_skills") or []), *(github_source.get("detected_languages") or [])])),
+        )
+        github_source["matched_skills"] = gh_merged
+        github_source["domain_skills"] = gh_domain_map
+
     latest_attempt = (
         SkillTestAttempt.objects.select_related("category")
         .filter(user_id=student_id, is_evaluated=True)
@@ -700,6 +868,58 @@ def get_final_analysis(student_id: int):
     if not github_text_summary and github_analysis_record and isinstance(github_analysis_record.ai_summary, dict):
         github_text_summary = github_analysis_record.ai_summary.get("text")
 
+    partial_summary_text = summary.get("summary") or summary.get("recommendations")
+
+    # Compute structured sections first so domain matrix never mistakes gap suggestions for verified skills
+    resume_corpus_for_domains = (
+        reconstructed_resume_text
+        or resume_source.get("full_text_preview")
+        or resume_source.get("extracted_preview")
+        or ""
+    )
+
+    resume_structured = summary.get("resume_structured")
+    if not isinstance(resume_structured, dict) or not resume_structured.get("sections"):
+        resume_structured = structure_evaluation_text(
+            resume_text_summary,
+            source_type="resume",
+            context={"matched_skills": resume_source.get("matched_skills") or explicit_skills},
+        )
+
+    github_structured = summary.get("github_structured")
+    if not isinstance(github_structured, dict) or not github_structured.get("sections"):
+        github_structured = structure_evaluation_text(
+            github_text_summary,
+            source_type="github",
+            context={
+                "username": github_source.get("username", ""),
+                "repo_count": len(gh_repos),
+                "languages": github_source.get("detected_languages") or [],
+            },
+        )
+
+    domain_assessments = build_domain_assessments(
+        resume_text=resume_corpus_for_domains,
+        explicit_skills=list(dict.fromkeys([*explicit_skills, *(resume_source.get("matched_skills") or [])])),
+        github_repos=gh_repos,
+        github_languages=github_source.get("detected_languages") or [],
+        github_bio=github_source.get("bio") or "",
+        resume_analysis_text=_extract_positive_ai_evidence(resume_structured),
+        github_analysis_text=_extract_positive_ai_evidence(github_structured),
+        assessment_completed=assessment_completed,
+        skill_score=skill_score,
+        latest_attempt_category=latest_attempt.category.name if latest_attempt and latest_attempt.category else "",
+    )
+    active_domain_count = sum(1 for d in domain_assessments if d["evidenced"])
+
+    summary_structured = summary.get("summary_structured")
+    if not isinstance(summary_structured, dict) or not summary_structured.get("sections"):
+        summary_structured = structure_evaluation_text(
+            partial_summary_text,
+            source_type="summary",
+            context={"active_domain_count": active_domain_count},
+        )
+
     return {
         "stage": summary.get("stage", "temporary"),
         "assessment_completed": assessment_completed,
@@ -723,18 +943,26 @@ def get_final_analysis(student_id: int):
         ),
         "profile_inputs": {
             "full_name": profile.full_name if profile else "",
+            "email": profile.user.email if profile and profile.user else "",
+            "location": profile.location if profile else "",
+            "bio": profile.bio if profile else "",
             "education": profile.education if profile else "",
             "experience_level": profile.experience_level if profile else "",
             "skills": explicit_skills,
             "github_url": github_url,
+            "portfolio_links": profile.portfolio_links if profile else "",
             "has_resume_file": has_resume_file,
             "resume_filename": resume_filename,
         },
         "resume_source": resume_source,
         "github_source": github_source,
+        "domain_assessments": domain_assessments,
         "resume_analysis": resume_text_summary,
         "github_analysis": github_text_summary,
-        "partial_summary": summary.get("summary") or summary.get("recommendations"),
+        "partial_summary": partial_summary_text,
+        "resume_structured": resume_structured,
+        "github_structured": github_structured,
+        "summary_structured": summary_structured,
         "final_analysis": final_data,
         "generated_at": summary.get("analyzed_at") or (report.generated_at.isoformat() if report else None),
     }
