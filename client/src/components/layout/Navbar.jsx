@@ -110,7 +110,7 @@ const Navbar = () => {
     );
 
     return (
-        <header className="sticky top-0 left-0 right-0 z-50 w-full pt-3 pb-2 px-4 sm:px-6 lg:px-8 bg-[#050505]/80 backdrop-blur-md transition-colors">
+        <header className="sticky top-0 left-0 right-0 z-50 w-full pt-3 pb-2 px-4 sm:px-6 lg:px-8 bg-[#060709]/80 backdrop-blur-md transition-colors">
             <div className="max-w-7xl mx-auto flex justify-center">
                 <CardNav
                     cards={navItems}
