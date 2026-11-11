@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/sections/Footer';
+import StudioNoise from '../components/ui/animations/StudioNoise';
 import SpotlightCard from '../components/ui/animations/SpotlightCard';
 import { useAuthStore } from '../store/authStore';
 
@@ -151,146 +152,158 @@ const HowItWorksPage = () => {
     const steps = activeTab === 'candidates' ? candidateSteps : employerSteps;
 
     return (
-        <div className="min-h-screen bg-[#050505] text-[#ededed] font-mono flex flex-col selection:bg-white/20 selection:text-white">
-            <Navbar />
+        <StudioNoise opacity={0.09}>
+            <div className="w-full text-[#ededed] font-mono min-h-screen flex flex-col justify-between selection:bg-white/20 selection:text-white">
+                <Navbar />
 
-            <main className="flex-1 pt-12 pb-20 font-mono">
-                {/* Hero Header Section */}
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-12">
-                    <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-sm bg-[#0e0e11] text-[#8a8a8e] border border-white/[0.08] text-xs font-mono mb-4">
-                        Protocol · Workflow
-                    </div>
-                    
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-white tracking-tight leading-[1.15] mb-4">
-                        How SkillForge Operates
-                    </h1>
-                    
-                    <p className="text-xs sm:text-sm text-[#8a8a8e] max-w-2xl mx-auto leading-relaxed">
-                        Connecting engineering talent and hiring teams through empirical skill verification — eliminating keyword guesswork and resume bias.
-                    </p>
+                <main className="w-full flex-1 relative z-10 font-mono">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        {/* Hero Header Section */}
+                        <header className="pt-8 pb-12 md:pt-12 md:pb-16 flex flex-col lg:flex-row lg:items-end justify-between gap-8 border-b border-white/[0.06]">
+                            <div className="max-w-3xl">
+                                <span className="text-xs font-mono uppercase tracking-widest text-[#8a8a8e] block mb-3">
+                                    Protocol · Operational Workflow
+                                </span>
 
-                    {/* Tab Switcher */}
-                    <div className="inline-flex p-1 rounded-md bg-[#0e0e11] border border-white/[0.08] mt-8">
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('candidates')}
-                            className={`px-4 py-1.5 rounded-sm text-xs font-mono transition-all cursor-pointer ${
-                                activeTab === 'candidates'
-                                    ? 'bg-[#18181b] text-white border border-white/20 shadow-sm'
-                                    : 'text-[#737373] hover:text-white'
-                            }`}
-                        >
-                            For Candidates
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setActiveTab('employers')}
-                            className={`px-4 py-1.5 rounded-sm text-xs font-mono transition-all cursor-pointer ${
-                                activeTab === 'employers'
-                                    ? 'bg-[#18181b] text-white border border-white/20 shadow-sm'
-                                    : 'text-[#737373] hover:text-white'
-                            }`}
-                        >
-                            For Hiring Teams
-                        </button>
-                    </div>
-                </div>
+                                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-display text-white tracking-tight leading-[1.15] mb-6">
+                                    How SkillForge Operates
+                                </h1>
 
-                {/* Steps Timeline Grid */}
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-                    {steps.map((item) => (
-                        <div key={item.step} id={item.anchorId} className="scroll-mt-24">
-                            {item.aliasAnchor && <div id={item.aliasAnchor} className="scroll-mt-24" />}
-                            <SpotlightCard
-                                bgClassName="bg-[#0e0e11]"
-                                className="rounded-md border border-white/[0.08] p-6 sm:p-8 flex flex-col md:flex-row gap-6 items-start text-[#ededed]"
-                            >
-                                {/* Step Badge */}
-                                <div className="shrink-0 flex items-center md:flex-col gap-2 relative z-10">
-                                    <div className="w-10 h-10 rounded-sm bg-[#121215] text-[#ededed] border border-white/20 flex items-center justify-center font-bold text-sm font-mono">
-                                        {item.step}
-                                    </div>
-                                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#737373]">
-                                        Stage
-                                    </span>
-                                </div>
-
-                                {/* Content Body */}
-                                <div className="flex-1 space-y-2 relative z-10">
-                                    <div className="text-[11px] font-mono text-[#737373] uppercase tracking-wider">
-                                        {item.tagline}
-                                    </div>
-                                    <h3 className="text-base sm:text-lg font-bold font-display text-white tracking-tight">
-                                        {item.title}
-                                    </h3>
-                                    <p className="text-xs text-[#8a8a8e] leading-relaxed">
-                                        {item.description}
-                                    </p>
-
-                                    {/* Highlights List */}
-                                    <div className="pt-2 space-y-1.5 text-xs text-[#8a8a8e]">
-                                        {item.highlights.map((h, hIdx) => (
-                                            <div key={hIdx} className="flex items-start gap-2">
-                                                <span className="text-[#555555] font-mono">-</span>
-                                                <span>{h}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </SpotlightCard>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Bottom Call to Action Card */}
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
-                    <SpotlightCard
-                        bgClassName="bg-[#0e0e11]"
-                        className="rounded-md border border-white/[0.08] text-white p-8 sm:p-10 text-center space-y-4"
-                    >
-                        <div className="relative z-10 space-y-4">
-                            <h2 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white">
-                                {activeTab === 'candidates' 
-                                    ? 'Verify competence. Get discovered.'
-                                    : 'Source verified engineering talent.'}
-                            </h2>
-                            <p className="text-[#8a8a8e] text-xs max-w-xl mx-auto leading-relaxed">
-                                {activeTab === 'candidates'
-                                    ? 'Join developers who have verified their ability and connected directly with hiring teams.'
-                                    : 'Eliminate resume screening bottlenecks. Connect with engineers benchmarked on real code today.'}
-                            </p>
-                            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-                                {activeTab === 'candidates' ? (
-                                    <button
-                                        type="button"
-                                        onClick={handleCandidateStart}
-                                        className="w-full sm:w-auto px-6 py-2.5 bg-[#121215] hover:bg-[#1a1a1e] text-white font-mono text-xs font-semibold rounded-sm border border-white/20 transition-colors shadow-sm cursor-pointer"
-                                    >
-                                        Start Free Assessment ↗
-                                    </button>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        onClick={handleEmployerStart}
-                                        className="w-full sm:w-auto px-6 py-2.5 bg-[#121215] hover:bg-[#1a1a1e] text-white font-mono text-xs font-semibold rounded-sm border border-white/20 transition-colors shadow-sm cursor-pointer"
-                                    >
-                                        Create Employer Account ↗
-                                    </button>
-                                )}
-                                <Link
-                                    to="/"
-                                    className="w-full sm:w-auto px-5 py-2.5 bg-transparent hover:bg-white/[0.04] text-[#8a8a8e] hover:text-white text-xs font-mono rounded-sm border border-white/10 transition-colors text-center"
-                                >
-                                    &larr; Return to Home
-                                </Link>
+                                <p className="text-sm sm:text-base md:text-lg text-[#888888] max-w-2xl leading-relaxed">
+                                    Connecting engineering talent and hiring teams through empirical skill verification — eliminating keyword guesswork and resume bias.
+                                </p>
                             </div>
-                        </div>
-                    </SpotlightCard>
-                </div>
-            </main>
 
-            <Footer />
-        </div>
+                            {/* Tab Switcher */}
+                            <div className="inline-flex self-start lg:self-end p-1 rounded-sm bg-[#0D0F14] border border-white/[0.08] border-t-white/15 shrink-0">
+                                <button
+                                    type="button"
+                                    onClick={() => setActiveTab('candidates')}
+                                    className={`px-4 py-2 rounded-sm text-xs font-mono transition-colors cursor-pointer ${
+                                        activeTab === 'candidates'
+                                            ? 'bg-[#111318] text-white border border-white/15 font-semibold'
+                                            : 'text-[#888888] hover:text-white border border-transparent'
+                                    }`}
+                                >
+                                    For Candidates
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setActiveTab('employers')}
+                                    className={`px-4 py-2 rounded-sm text-xs font-mono transition-colors cursor-pointer ${
+                                        activeTab === 'employers'
+                                            ? 'bg-[#111318] text-white border border-white/15 font-semibold'
+                                            : 'text-[#888888] hover:text-white border border-transparent'
+                                    }`}
+                                >
+                                    For Hiring Teams
+                                </button>
+                            </div>
+                        </header>
+
+                        {/* Steps Timeline Grid */}
+                        <section className="pt-12 md:pt-16 pb-28 md:pb-36 space-y-6">
+                            {steps.map((item) => (
+                                <div key={item.step} id={item.anchorId} className="scroll-mt-24">
+                                    {item.aliasAnchor && <div id={item.aliasAnchor} className="scroll-mt-24" />}
+                                    <SpotlightCard
+                                        bgClassName="bg-[#0D0F14]"
+                                        className="p-6 sm:p-8 md:p-10 flex flex-col md:flex-row gap-6 md:gap-8 items-start text-[#ededed] hover:border-white/20"
+                                    >
+                                        {/* Step Badge */}
+                                        <div className="shrink-0 flex items-center md:flex-col gap-2.5 relative z-10">
+                                            <div className="w-10 h-10 rounded-sm bg-[#111318] text-white border border-white/15 flex items-center justify-center font-bold text-sm font-display">
+                                                {item.step}
+                                            </div>
+                                            <span className="text-[11px] font-mono uppercase tracking-wider text-[#71717A]">
+                                                Phase
+                                            </span>
+                                        </div>
+
+                                        {/* Content Body */}
+                                        <div className="flex-1 space-y-3 relative z-10">
+                                            <div className="text-xs font-mono text-[#737373] uppercase tracking-wider">
+                                                {item.tagline}
+                                            </div>
+                                            <h3 className="text-lg sm:text-xl font-bold font-display text-white tracking-tight">
+                                                {item.title}
+                                            </h3>
+                                            <p className="text-xs sm:text-sm text-[#888888] leading-relaxed max-w-3xl">
+                                                {item.description}
+                                            </p>
+
+                                            {/* Highlights List */}
+                                            <div className="pt-3 border-t border-white/[0.06] space-y-2 text-xs text-[#cccccc]">
+                                                {item.highlights.map((h, hIdx) => (
+                                                    <div key={hIdx} className="flex items-start gap-2.5">
+                                                        <span className="text-[#555555] font-mono font-bold">-</span>
+                                                        <span>{h}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </SpotlightCard>
+                                </div>
+                            ))}
+
+                            {/* Bottom Call to Action Card */}
+                            <div className="relative pt-10">
+                                <div
+                                    aria-hidden="true"
+                                    className="pointer-events-none absolute -inset-4 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]"
+                                />
+                                <SpotlightCard
+                                    bgClassName="bg-[#111318]"
+                                    className="relative text-white p-8 sm:p-10 md:p-12 text-center space-y-4 shadow-xl"
+                                >
+                                    <div className="relative z-10 space-y-4">
+                                        <h2 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white">
+                                            {activeTab === 'candidates'
+                                                ? 'Verify competence. Get discovered.'
+                                                : 'Source verified engineering talent.'}
+                                        </h2>
+                                        <p className="text-[#888888] text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+                                            {activeTab === 'candidates'
+                                                ? 'Join developers who have verified their ability and connected directly with hiring teams.'
+                                                : 'Eliminate resume screening bottlenecks. Connect with engineers benchmarked on real code today.'}
+                                        </p>
+                                        <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                                            {activeTab === 'candidates' ? (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleCandidateStart}
+                                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#F5F5F5] hover:bg-white text-[#050505] font-mono text-xs sm:text-sm font-semibold rounded-sm transition-colors cursor-pointer"
+                                                >
+                                                    <span>Start Free Assessment</span>
+                                                    <span aria-hidden="true">↗</span>
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleEmployerStart}
+                                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#F5F5F5] hover:bg-white text-[#050505] font-mono text-xs sm:text-sm font-semibold rounded-sm transition-colors cursor-pointer"
+                                                >
+                                                    <span>Create Employer Account</span>
+                                                    <span aria-hidden="true">↗</span>
+                                                </button>
+                                            )}
+                                            <Link
+                                                to="/"
+                                                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#121316] text-[#E4E4E7] hover:text-white border border-white/10 hover:border-white/20 text-xs sm:text-sm font-mono rounded-sm transition-colors text-center"
+                                            >
+                                                <span>&larr; Return to Home</span>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </SpotlightCard>
+                            </div>
+                        </section>
+                    </div>
+                </main>
+
+                <Footer />
+            </div>
+        </StudioNoise>
     );
 };
 
