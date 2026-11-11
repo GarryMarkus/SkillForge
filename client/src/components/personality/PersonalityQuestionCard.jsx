@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, ArrowUpRight } from '../ui/Icons';
 
 const PersonalityQuestionCard = ({
     question,

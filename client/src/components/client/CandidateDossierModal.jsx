@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, X, Award, Camera, Mail, ArrowUpRight, CheckCircle2, Tag } from 'lucide-react';
+import { ShieldCheck, X, Award, Camera, Mail, ArrowUpRight, CheckCircle2, Tag } from '../ui/Icons';
 
 const CandidateDossierModal = ({
     candidate,

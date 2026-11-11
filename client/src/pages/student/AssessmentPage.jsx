@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, Lock, Award, Clock, Layers, ShieldCheck, ArrowLeft, Play } from 'lucide-react';
+import { Camera, Lock, Award, Clock, Layers, ShieldCheck, ArrowLeft, Play } from '../../components/ui/Icons';
 import { useAuthStore } from '../../store/authStore';
 import ProctorWrapper from '../../components/assessment/ProctorWrapper';
 import AssessmentHeader from '../../components/assessment/AssessmentHeader';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Clock, ListChecks, LogOut } from 'lucide-react';
+import { ShieldCheck, Clock, ListChecks, LogOut } from '../ui/Icons';
 
 const AssessmentHeader = ({
     examId = 'SF-2026-09',

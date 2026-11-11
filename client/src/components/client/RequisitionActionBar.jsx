@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Download, CheckCircle2, RefreshCw } from 'lucide-react';
+import { Plus, Download, CheckCircle2, RefreshCw } from '../ui/Icons';
 
 const RequisitionActionBar = ({
     onDeployClick,

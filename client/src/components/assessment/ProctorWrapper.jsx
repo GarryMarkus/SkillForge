@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from '../ui/Icons';
 
 const ProctorWrapper = ({ 
     children, 

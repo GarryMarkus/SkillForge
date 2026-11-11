@@ -10,7 +10,7 @@ import {
     CheckCircle2,
     ScanSearch,
     X,
-} from 'lucide-react';
+} from '../ui/Icons';
 
 const navItems = [
     { label: 'Overview', path: '/student/dashboard', matchPaths: ['/student/dashboard'], icon: LayoutDashboard },

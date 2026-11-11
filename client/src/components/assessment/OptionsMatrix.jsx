@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight, ArrowUpRight, Check, RotateCcw } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowUpRight, Check, RotateCcw } from '../ui/Icons';
 
 const OptionsMatrix = ({
     options = [],

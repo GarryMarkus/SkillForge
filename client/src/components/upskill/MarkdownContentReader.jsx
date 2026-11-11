@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { BookOpen, ListTree, Terminal, Copy, Check } from 'lucide-react';
+import { BookOpen, ListTree, Terminal, Copy, Check } from '../ui/Icons';
 
 const extractTextFromChildren = (children) => {
     if (typeof children === 'string') return children;

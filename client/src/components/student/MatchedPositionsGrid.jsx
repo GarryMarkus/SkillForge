@@ -10,7 +10,7 @@ import {
     ArrowUpRight,
     Lock,
     AlertTriangle,
-} from 'lucide-react';
+} from '../ui/Icons';
 
 const MatchedPositionsGrid = ({
     jobs = [],

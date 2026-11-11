@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, GraduationCap, Github, FileText, CheckCircle2, ArrowUpRight, Layers, Sparkles } from 'lucide-react';
+import { User, GraduationCap, Github, FileText, CheckCircle2, ArrowUpRight, Layers, Sparkles } from '../../components/ui/Icons';
 import { useAuthStore } from '../../store/authStore';
 import client, { extractApiErrorMessage } from '../../api/client';
 

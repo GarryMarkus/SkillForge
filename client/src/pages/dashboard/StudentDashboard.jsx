@@ -10,7 +10,7 @@ import {
     FileText,
     ShieldCheck,
     BrainCircuit,
-} from 'lucide-react';
+} from '../../components/ui/Icons';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../api/client';
 import StudioNoise from '../../components/ui/animations/StudioNoise';

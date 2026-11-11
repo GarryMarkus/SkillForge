@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, ArrowUpRight } from 'lucide-react';
+import { CheckCircle2, ArrowUpRight } from '../ui/Icons';
 
 const PersonalityTelemetrySidebar = ({
     questions = [],

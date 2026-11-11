@@ -1,5 +1,5 @@
 import React from 'react';
-import { CheckCircle2, Gauge, Award, ArrowUpRight } from 'lucide-react';
+import { CheckCircle2, Gauge, Award, ArrowUpRight } from '../ui/Icons';
 
 const PersonalityResultCard = ({ result, onProceed }) => {
     const pace = result?.learning_level?.toLowerCase() || 'average';

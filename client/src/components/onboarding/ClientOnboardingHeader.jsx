@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2, ArrowLeft } from 'lucide-react';
+import { Building2, ArrowLeft } from '../ui/Icons';
 
 const ClientOnboardingHeader = ({ clientEmail = 'recruiter@enterprise.io' }) => {
     const navigate = useNavigate();

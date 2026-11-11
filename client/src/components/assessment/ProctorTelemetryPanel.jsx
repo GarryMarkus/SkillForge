@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, ShieldCheck, ShieldAlert, Activity } from 'lucide-react';
+import { Camera, ShieldCheck, ShieldAlert, Activity } from '../ui/Icons';
 
 const ProctorTelemetryPanel = ({
     faceDetected = true,

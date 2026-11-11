@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Building2, Globe, MapPin, Layers, ArrowUpRight, Bell, CheckCircle2 } from 'lucide-react';
+import { Building2, Globe, MapPin, Layers, ArrowUpRight, Bell, CheckCircle2 } from '../ui/Icons';
 
 const CompanySpecForm = ({
     profile,

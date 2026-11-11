@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, Plus, Check, ArrowUpRight, Users } from 'lucide-react';
+import { Briefcase, Plus, Check, ArrowUpRight, Users } from '../ui/Icons';
 import { CounterTicker } from '../ui/animations';
 
 const ActiveJobsTableBlock = ({

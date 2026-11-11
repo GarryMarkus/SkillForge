@@ -1,5 +1,5 @@
 import React from 'react';
-import { SlidersHorizontal, CheckCircle2, Edit3, Copy, Tag } from 'lucide-react';
+import { SlidersHorizontal, CheckCircle2, Edit3, Copy, Tag } from '../ui/Icons';
 
 const RequisitionBlueprintCard = ({
     skillsList = ["Python", "FastAPI", "Docker", "Kubernetes", "PostgreSQL", "Redis"],

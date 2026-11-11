@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, FileText, Trash2, CheckCircle2, Circle, Loader2, ShieldCheck, AlertCircle } from 'lucide-react';
+import { UploadCloud, FileText, Trash2, CheckCircle2, Circle, Loader2, ShieldCheck, AlertCircle } from '../ui/Icons';
 
 const ResumeUploadZone = ({
     file,

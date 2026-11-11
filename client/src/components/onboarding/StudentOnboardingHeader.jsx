@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, UserCheck } from 'lucide-react';
+import { ArrowLeft, UserCheck } from '../ui/Icons';
 
 const StudentOnboardingHeader = ({ candidateEmail = 'candidate@skillforge.io' }) => {
     const navigate = useNavigate();

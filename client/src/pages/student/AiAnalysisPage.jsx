@@ -17,8 +17,7 @@ import {
     Sparkles,
     Cpu,
     FileText,
-    Code2,
-} from 'lucide-react';
+} from '../../components/ui/Icons';
 import { useAuthStore } from '../../store/authStore';
 import api, { extractApiErrorMessage } from '../../api/client';
 import StudioNoise from '../../components/ui/animations/StudioNoise';
@@ -516,7 +515,7 @@ const AiAnalysisPage = () => {
                                                 <div className="flex items-center justify-between gap-3 pb-4 border-b border-white/[0.06]">
                                                     <div className="flex items-center gap-3 min-w-0">
                                                         <div className="w-9 h-9 rounded-sm bg-[#111318] border border-white/[0.08] flex items-center justify-center shrink-0">
-                                                            <Code2 className="w-4 h-4 text-white" aria-hidden="true" />
+                                                            <Github className="w-4 h-4 text-white" aria-hidden="true" />
                                                         </div>
                                                         <div className="min-w-0">
                                                             <h2 className="font-display font-bold text-base text-white">
@@ -531,7 +530,7 @@ const AiAnalysisPage = () => {
                                                                         className="inline-flex items-center gap-1 hover:text-white underline underline-offset-2"
                                                                     >
                                                                         <span>github.com/{githubSource.username}</span>
-                                                                        <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                                                                        <ArrowUpRight className="w-3 h-3 text-[#71717A]" aria-hidden="true" />
                                                                     </a>
                                                                 ) : (
                                                                     'Link your GitHub handle to scan public repos'

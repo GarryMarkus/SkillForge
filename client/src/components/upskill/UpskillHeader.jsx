@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, CheckCircle2, Clock, Sparkles } from 'lucide-react';
+import { ArrowLeft, BookOpen, CheckCircle2, Clock, Sparkles } from '../ui/Icons';
 
 const UpskillHeader = ({
     moduleRef = 'Module 1',

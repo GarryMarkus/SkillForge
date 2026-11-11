@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, Plus, ArrowUpRight, Sparkles } from 'lucide-react';
+import { CheckCircle2, Plus, ArrowUpRight, Sparkles } from '../ui/Icons';
 import client from '../../api/client';
 
 const ModuleCompletionActions = ({

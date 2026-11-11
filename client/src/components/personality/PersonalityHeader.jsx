@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrainCircuit, Maximize2, LogOut } from 'lucide-react';
+import { BrainCircuit, Maximize2, LogOut } from '../ui/Icons';
 
 const PersonalityHeader = ({
     currentIndex = 0,

@@ -17,7 +17,7 @@ import {
     Loader2,
     FolderOpen,
     Award,
-} from 'lucide-react';
+} from '../../components/ui/Icons';
 import client from '../../api/client';
 import StudioNoise from '../../components/ui/animations/StudioNoise';
 import UpskillHeader from '../../components/upskill/UpskillHeader';

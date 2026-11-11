@@ -7,7 +7,7 @@ import {
     ArrowUpRight,
     Layers,
     Plus,
-} from 'lucide-react';
+} from '../ui/Icons';
 
 const DEFAULT_FOCUS_TOPICS = ['Docker & Containers', 'PostgreSQL Indexing', 'FastAPI Concurrency'];
 

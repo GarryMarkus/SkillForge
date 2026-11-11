@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Bug, Gauge, Clock, Layers, ShieldCheck, ArrowLeft, ArrowUpRight, BrainCircuit } from 'lucide-react';
+import { Compass, Bug, Gauge, Clock, Layers, ShieldCheck, ArrowLeft, ArrowUpRight, BrainCircuit } from '../ui/Icons';
 
 const PersonalityIntroCard = ({ onStart, onReturn }) => {
     const pillars = [

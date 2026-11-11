@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
     ShieldCheck,
     FileCheck2,
-    Code2,
+    Github,
     Star,
     Sparkles,
     CheckCircle2,
@@ -11,7 +11,7 @@ import {
     BookOpen,
     BrainCircuit,
     ScanSearch,
-} from 'lucide-react';
+} from '../ui/Icons';
 import { CounterTicker } from '../ui/animations';
 
 const ScoreRing = ({ score = 0 }) => {
@@ -171,7 +171,7 @@ const VerificationProfileBlock = ({ profile, recommendation, candidateName }) =>
                             onClick={() => navigate('/student/analysis')}
                             className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm bg-[#060709] border border-white/[0.08] hover:border-white/25 text-zinc-300 hover:text-white transition-colors cursor-pointer"
                         >
-                            <Code2 className={`w-3.5 h-3.5 ${hasGithub ? 'text-emerald-400' : 'text-[#71717A]'}`} strokeWidth={1.75} aria-hidden="true" />
+                            <Github className={`w-3.5 h-3.5 ${hasGithub ? 'text-emerald-400' : 'text-[#71717A]'}`} strokeWidth={1.75} aria-hidden="true" />
                             <span>{hasGithub ? 'GitHub Scanned' : 'Add GitHub'}</span>
                         </button>
                     </div>

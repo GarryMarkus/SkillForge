@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle2, X, Briefcase, Users } from 'lucide-react';
+import { CheckCircle2, X, Briefcase, Users } from '../../components/ui/Icons';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
 import StudioNoise from '../../components/ui/animations/StudioNoise';

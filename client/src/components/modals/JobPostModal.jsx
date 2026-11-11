@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Briefcase, X, ArrowUpRight, AlertCircle } from 'lucide-react';
+import { Briefcase, X, ArrowUpRight, AlertCircle } from '../ui/Icons';
 import client from '../../api/client';
 
 const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {

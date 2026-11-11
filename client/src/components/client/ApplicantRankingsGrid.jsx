@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, SlidersHorizontal, Eye, Send, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Users, SlidersHorizontal, Eye, Send, CheckCircle2, ShieldCheck } from '../ui/Icons';
 
 const ApplicantRankingsGrid = ({
     selectedJob,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, TrendingUp, Layers, CheckCircle2 } from 'lucide-react';
+import { Clock, TrendingUp, Layers, CheckCircle2 } from '../ui/Icons';
 
 const ModuleProgressBanner = ({
     topic = 'System Architecture',

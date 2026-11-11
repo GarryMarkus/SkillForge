@@ -5,7 +5,7 @@ import {
     Briefcase,
     BrainCircuit,
     ArrowUpRight,
-} from 'lucide-react';
+} from '../ui/Icons';
 
 const ActionControlStrip = ({
     onStartAssessment,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutGrid, Briefcase, Users, Building2, LogOut, TrendingUp, Clock } from 'lucide-react';
+import { LayoutGrid, Briefcase, Users, Building2, LogOut, TrendingUp, Clock } from '../ui/Icons';
 
 const ClientHeader = ({
     companyName = 'Nexus Technologies',

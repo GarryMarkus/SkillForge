@@ -15,10 +15,10 @@ import {
     BookOpen,
     ScanSearch,
     FileText,
-    Code2,
+    Github,
     Sparkles,
     RefreshCw,
-} from 'lucide-react';
+} from '../../components/ui/Icons';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../api/client';
 import StudioNoise from '../../components/ui/animations/StudioNoise';
@@ -385,7 +385,7 @@ const JobMatchesPage = () => {
                                             className="p-3 rounded-sm bg-[#060709] border border-white/[0.08] hover:border-white/20 text-left flex items-center justify-between gap-2 cursor-pointer transition-colors"
                                         >
                                             <div className="flex items-center gap-2.5 min-w-0">
-                                                <Code2 className={`w-4 h-4 shrink-0 ${hasGithub ? 'text-emerald-400' : 'text-amber-300'}`} strokeWidth={1.75} aria-hidden="true" />
+                                                <Github className={`w-4 h-4 shrink-0 ${hasGithub ? 'text-emerald-400' : 'text-amber-300'}`} strokeWidth={1.75} aria-hidden="true" />
                                                 <div className="min-w-0">
                                                     <div className="text-[11px] font-semibold text-white truncate">
                                                         GitHub Repositories

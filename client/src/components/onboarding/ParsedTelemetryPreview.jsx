@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, GraduationCap, Layers, Tag, Plus, X, Sparkles } from 'lucide-react';
+import { User, GraduationCap, Layers, Tag, Plus, X, Sparkles } from '../ui/Icons';
 
 const ParsedTelemetryPreview = ({
     skills = '',

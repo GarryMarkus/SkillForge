@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Menu, PanelLeftClose, PanelLeftOpen, ShieldCheck, LogOut, User } from 'lucide-react';
+import { Menu, PanelLeftClose, PanelLeftOpen, ShieldCheck, LogOut, User } from '../ui/Icons';
 
 const StudentHeader = ({
     candidateName = 'Candidate',
