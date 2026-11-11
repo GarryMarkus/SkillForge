@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import api from '../../api/client';
+import StudioNoise from '../../components/ui/animations/StudioNoise';
 import StudentSidebar from '../../components/student/StudentSidebar';
 import StudentHeader from '../../components/student/StudentHeader';
 import VerificationProfileBlock from '../../components/student/VerificationProfileBlock';
@@ -129,157 +130,160 @@ const StudentDashboard = () => {
     const candidateName = profile?.full_name || user?.full_name || user?.email?.split('@')[0] || 'Candidate';
 
     return (
-        <div className="bg-[#050505] font-mono text-[#ededed] antialiased min-h-screen">
-            {/* Sidebar Navigation */}
-            <StudentSidebar sidebarCollapsed={sidebarCollapsed} />
+        <StudioNoise opacity={0.07}>
+            <div className="font-mono text-[#ededed] antialiased min-h-screen flex flex-col">
+                {/* Sidebar Navigation */}
+                <StudentSidebar sidebarCollapsed={sidebarCollapsed} />
 
-            {/* Main Content Wrapper */}
-            <div className={`transition-all duration-200 ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-60'}`}>
-                {/* Header */}
-                <StudentHeader 
-                    candidateName={candidateName}
-                    onLogout={handleLogout}
-                    sidebarCollapsed={sidebarCollapsed}
-                    setSidebarCollapsed={setSidebarCollapsed}
-                />
+                {/* Main Content Wrapper */}
+                <div className={`transition-all duration-200 flex-1 flex flex-col ${sidebarCollapsed ? 'md:pl-16' : 'md:pl-60'}`}>
+                    {/* Header */}
+                    <StudentHeader 
+                        candidateName={candidateName}
+                        onLogout={handleLogout}
+                        sidebarCollapsed={sidebarCollapsed}
+                        setSidebarCollapsed={setSidebarCollapsed}
+                    />
 
-                {/* Main Body */}
-                <main className="w-full pt-20 sm:pt-24 min-h-[calc(100vh-2rem)] bg-[#050505] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 font-mono">
-                    <div className="flex flex-col gap-6 w-full max-w-[1400px] mx-auto">
+                    {/* Main Body */}
+                    <main className="w-full pt-20 sm:pt-24 flex-1 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 font-mono relative z-10">
+                        <div className="flex flex-col gap-6 w-full max-w-[1400px] mx-auto">
 
-                        {/* Top Multi-Tab Navigation Bar */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
-                            <div className="flex items-center gap-2">
+                            {/* Top Multi-Tab Navigation Bar */}
+                            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.06] pb-4">
+                                <div className="inline-flex items-center gap-1.5 p-1 rounded-sm bg-[#0D0F14] border border-white/[0.08]">
+                                    <button
+                                        onClick={() => setActiveTab('overview')}
+                                        className={`px-3.5 py-1.5 rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 ${
+                                            activeTab === 'overview'
+                                                ? 'bg-[#181B22] text-white border border-white/15 font-medium'
+                                                : 'text-[#888888] hover:text-white border border-transparent'
+                                        }`}
+                                    >
+                                        <span>Overview</span>
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveTab('jobs')}
+                                        className={`px-3.5 py-1.5 rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 ${
+                                            activeTab === 'jobs'
+                                                ? 'bg-[#181B22] text-white border border-white/15 font-medium'
+                                                : 'text-[#888888] hover:text-white border border-transparent'
+                                        }`}
+                                    >
+                                        <span>Matched Requisitions</span>
+                                        <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-white/[0.04] border border-white/[0.08] text-zinc-300 font-mono ml-0.5">
+                                            {jobs.length}
+                                        </span>
+                                    </button>
+                                    <button
+                                        onClick={() => setActiveTab('learning')}
+                                        className={`px-3.5 py-1.5 rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5 ${
+                                            activeTab === 'learning'
+                                                ? 'bg-[#181B22] text-white border border-white/15 font-medium'
+                                                : 'text-[#888888] hover:text-white border border-transparent'
+                                        }`}
+                                    >
+                                        <span>Learning Curriculum</span>
+                                    </button>
+                                </div>
+
                                 <button
-                                    onClick={() => setActiveTab('overview')}
-                                    className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
-                                        activeTab === 'overview'
-                                            ? 'bg-[#111113] text-white border border-white/20 shadow-sm'
-                                            : 'text-[#737373] hover:text-white hover:border-white/10 border border-transparent'
-                                    }`}
+                                    onClick={() => navigate('/student/assessment')}
+                                    className="px-4 py-2 bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold rounded-sm text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
                                 >
-                                    <span>Overview</span>
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('jobs')}
-                                    className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
-                                        activeTab === 'jobs'
-                                            ? 'bg-[#111113] text-white border border-white/20 shadow-sm'
-                                            : 'text-[#737373] hover:text-white hover:border-white/10 border border-transparent'
-                                    }`}
-                                >
-                                    <span>Matched Requisitions</span>
-                                    <span className="text-[10px] px-1.5 py-0.2 rounded-sm bg-[#050505] border border-white/10 text-[#888888] font-mono ml-0.5">
-                                        {jobs.length}
-                                    </span>
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('learning')}
-                                    className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
-                                        activeTab === 'learning'
-                                            ? 'bg-[#111113] text-white border border-white/20 shadow-sm'
-                                            : 'text-[#737373] hover:text-white hover:border-white/10 border border-transparent'
-                                    }`}
-                                >
-                                    <span>Learning Curriculum</span>
+                                    <span>Start Assessment</span>
+                                    <span aria-hidden="true">↗</span>
                                 </button>
                             </div>
 
-                            <button
-                                onClick={() => navigate('/student/assessment')}
-                                className="px-3.5 py-1.5 bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 rounded-md text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
-                            >
-                                <span>Start Assessment ↗</span>
-                            </button>
-                        </div>
+                            {/* TAB 1: OVERVIEW & PROFILE */}
+                            {activeTab === 'overview' && (
+                                <div className="space-y-6">
+                                    <VerificationProfileBlock 
+                                        profile={profile}
+                                        recommendation={recommendation}
+                                        candidateName={candidateName}
+                                        onViewFullMetrics={() => navigate('/student/assessment')}
+                                    />
 
-                        {/* TAB 1: OVERVIEW & PROFILE */}
-                        {activeTab === 'overview' && (
-                            <div className="space-y-6">
-                                <VerificationProfileBlock 
-                                    profile={profile}
-                                    recommendation={recommendation}
-                                    candidateName={candidateName}
-                                    onViewFullMetrics={() => navigate('/student/assessment')}
-                                />
+                                    <ActionControlStrip 
+                                        onStartAssessment={() => navigate('/student/assessment')}
+                                        onReingestResume={() => navigate('/student/onboarding')}
+                                        onAccessLearning={() => setActiveTab('learning')}
+                                    />
 
-                                <ActionControlStrip 
-                                    onStartAssessment={() => navigate('/student/assessment')}
-                                    onReingestResume={() => navigate('/student/onboarding')}
-                                    onAccessLearning={() => setActiveTab('learning')}
-                                />
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-5 space-y-2">
-                                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-                                            <h4 className="font-semibold text-white text-xs uppercase tracking-wider">Matched Requisitions</h4>
-                                            <button 
-                                                onClick={() => setActiveTab('jobs')}
-                                                className="text-xs font-mono text-[#888888] hover:text-white cursor-pointer"
-                                            >
-                                                view all ({jobs.length}) &rarr;
-                                            </button>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-[#0D0F14] rounded-md border border-white/[0.08] border-t-white/15 p-5 space-y-2 hover:border-white/20 transition-colors">
+                                            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
+                                                <h4 className="font-semibold text-white text-xs uppercase tracking-wider">Matched Requisitions</h4>
+                                                <button 
+                                                    onClick={() => setActiveTab('jobs')}
+                                                    className="text-xs font-mono text-[#888888] hover:text-white hover:underline underline-offset-4 cursor-pointer"
+                                                >
+                                                    View all ({jobs.length}) &rarr;
+                                                </button>
+                                            </div>
+                                            <p className="text-xs text-[#888888] leading-relaxed pt-1">
+                                                {jobs.length} open roles currently aligned with your verified competence profile.
+                                            </p>
                                         </div>
-                                        <p className="text-xs text-[#737373] leading-relaxed">
-                                            {jobs.length} open roles currently aligned with your verified competence profile.
-                                        </p>
-                                    </div>
 
-                                    <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-5 space-y-2">
-                                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-2">
-                                            <h4 className="font-semibold text-white text-xs uppercase tracking-wider">Engineering Archetype</h4>
-                                            <button 
-                                                onClick={() => navigate('/student/personality-test')}
-                                                className="text-xs font-mono text-[#888888] hover:text-white cursor-pointer"
-                                            >
-                                                profile insights &rarr;
-                                            </button>
+                                        <div className="bg-[#0D0F14] rounded-md border border-white/[0.08] border-t-white/15 p-5 space-y-2 hover:border-white/20 transition-colors">
+                                            <div className="flex items-center justify-between border-b border-white/[0.06] pb-2.5">
+                                                <h4 className="font-semibold text-white text-xs uppercase tracking-wider">Engineering Archetype</h4>
+                                                <button 
+                                                    onClick={() => navigate('/student/personality-test')}
+                                                    className="text-xs font-mono text-[#888888] hover:text-white hover:underline underline-offset-4 cursor-pointer"
+                                                >
+                                                    Profile insights &rarr;
+                                                </button>
+                                            </div>
+                                            <p className="text-xs text-[#888888] leading-relaxed pt-1">
+                                                Algorithmic analysis of systems thinking, code review style, and collaboration heuristics.
+                                            </p>
                                         </div>
-                                        <p className="text-xs text-[#737373] leading-relaxed">
-                                            Algorithmic analysis of systems thinking, code review style, and collaboration heuristics.
-                                        </p>
                                     </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
 
-                        {/* TAB 2: JOB MATCHES */}
-                        {activeTab === 'jobs' && (
-                            <div className="space-y-6">
-                                <MatchedPositionsGrid 
-                                    jobs={jobs}
-                                    myApplications={myApplications}
-                                    filterMode={filterMode}
-                                    setFilterMode={setFilterMode}
-                                    onApply={handleApply}
-                                    applyingTo={applyingTo}
-                                />
-                            </div>
-                        )}
+                            {/* TAB 2: JOB MATCHES */}
+                            {activeTab === 'jobs' && (
+                                <div className="space-y-6">
+                                    <MatchedPositionsGrid 
+                                        jobs={jobs}
+                                        myApplications={myApplications}
+                                        filterMode={filterMode}
+                                        setFilterMode={setFilterMode}
+                                        onApply={handleApply}
+                                        applyingTo={applyingTo}
+                                    />
+                                </div>
+                            )}
 
-                        {/* TAB 3: LEARNING & UPSKILLING */}
-                        {activeTab === 'learning' && (
-                            <div className="space-y-6">
-                                <UpskillTerminalCard 
-                                    onResumeCurriculum={() => navigate('/student/upskill')}
-                                />
-                            </div>
-                        )}
+                            {/* TAB 3: LEARNING & UPSKILLING */}
+                            {activeTab === 'learning' && (
+                                <div className="space-y-6">
+                                    <UpskillTerminalCard 
+                                        onResumeCurriculum={() => navigate('/student/upskill')}
+                                    />
+                                </div>
+                            )}
 
-                    </div>
-                </main>
-
-                {/* Clean Simplified Footer */}
-                <footer className="w-full border-t border-white/[0.06] bg-[#050505] text-xs text-[#555555] font-mono py-4">
-                    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-                        <div>SkillForge Candidate Hub &copy; {new Date().getFullYear()}</div>
-                        <div className="text-[11px] text-[#737373]">
-                            Verification Platform Active
                         </div>
-                    </div>
-                </footer>
+                    </main>
+
+                    {/* Clean Simplified Footer */}
+                    <footer className="w-full border-t border-white/[0.06] bg-[#060709] text-xs text-[#71717A] font-mono py-4 relative z-10">
+                        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+                            <div>SkillForge Candidate Hub &copy; {new Date().getFullYear()}</div>
+                            <div className="text-[11px] text-[#71717A]">
+                                Verification Protocol Active
+                            </div>
+                        </div>
+                    </footer>
+                </div>
             </div>
-        </div>
+        </StudioNoise>
     );
 };
 

@@ -16,12 +16,12 @@ const StudentSidebar = ({ sidebarCollapsed }) => {
 
     return (
         <aside 
-            className={`fixed left-0 top-0 h-full ${sidebarCollapsed ? 'w-16' : 'w-60'} bg-[#0b0b0c] border-r border-white/10 z-50 flex flex-col justify-between transition-all duration-200 hidden md:flex font-mono select-none`}
+            className={`fixed left-0 top-0 h-full ${sidebarCollapsed ? 'w-16' : 'w-60'} bg-[#0A0B0F] border-r border-white/[0.08] z-50 flex flex-col justify-between transition-all duration-200 hidden md:flex font-mono select-none`}
         >
             <div className="flex flex-col">
                 {/* Brand Header */}
                 <div className="h-14 px-4 border-b border-white/[0.06] flex items-center gap-2.5 overflow-hidden">
-                    <div className="w-6 h-6 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center text-[#f5f5f5] text-xs font-mono font-bold shrink-0">
+                    <div className="w-6 h-6 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] text-xs font-mono font-bold shrink-0">
                         SF
                     </div>
                     {!sidebarCollapsed && (
@@ -40,10 +40,10 @@ const StudentSidebar = ({ sidebarCollapsed }) => {
                             <button
                                 key={item.label}
                                 onClick={() => navigate(item.path)}
-                                className={`flex items-center gap-2 px-2.5 py-2 rounded-md text-xs font-mono transition-colors cursor-pointer text-left ${
+                                className={`flex items-center gap-2.5 px-2.5 py-2 rounded-sm text-xs font-mono transition-colors cursor-pointer text-left ${
                                     isActive
-                                        ? 'bg-[#111113] text-white border border-white/20 shadow-sm'
-                                        : 'text-[#737373] hover:text-[#f5f5f5] border border-transparent hover:border-white/10'
+                                        ? 'bg-[#181B22] text-white border border-white/15 font-medium'
+                                        : 'text-[#888888] hover:text-white border border-transparent hover:bg-white/[0.03]'
                                 }`}
                                 title={sidebarCollapsed ? item.label : undefined}
                             >
@@ -60,11 +60,11 @@ const StudentSidebar = ({ sidebarCollapsed }) => {
             {/* Bottom Status Indicator */}
             <div className="p-3 border-t border-white/[0.06]">
                 {!sidebarCollapsed ? (
-                    <div className="p-2 rounded-md bg-[#050505] border border-white/10 text-[11px] text-[#737373] font-mono text-center">
-                        Platform Active
+                    <div className="p-2 rounded-sm bg-[#0D0F14] border border-white/[0.08] text-[11px] text-[#71717A] font-mono text-center">
+                        Protocol Active
                     </div>
                 ) : (
-                    <div className="flex justify-center text-[11px] text-emerald-500" title="Platform Active">
+                    <div className="flex justify-center text-[11px] text-emerald-500" title="Protocol Active">
                         •
                     </div>
                 )}
