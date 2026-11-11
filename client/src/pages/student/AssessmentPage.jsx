@@ -6,15 +6,16 @@ import AssessmentHeader from '../../components/assessment/AssessmentHeader';
 import QuestionWorkspace from '../../components/assessment/QuestionWorkspace';
 import OptionsMatrix from '../../components/assessment/OptionsMatrix';
 import ProctorTelemetryPanel from '../../components/assessment/ProctorTelemetryPanel';
+import StudioNoise from '../../components/ui/animations/StudioNoise';
 import api from '../../api/client';
 
 const DEFAULT_SAMPLE_QUESTIONS = [
     {
         id: 1,
-        section: "SYSTEM_CONCURRENCY_&_INDEXING",
-        weight: "25 PTS",
-        taxonomy: "SYNTHESIS",
-        title: "SCENARIO: Mitigating Connection Starvation in High-Throughput PostgreSQL Connection Pools",
+        section: "System Concurrency & Indexing",
+        weight: "25 Points",
+        taxonomy: "Synthesis",
+        title: "Mitigating Connection Starvation in High-Throughput PostgreSQL Connection Pools",
         description: "Under an incoming load spike of 12,000 req/sec, worker threads are exhausting available database sockets despite PgBouncer deployment. Analyze the connection pool configuration below and identify the architectural flaw causing connection timeouts.",
         code_snippet: `01  DATABASES = {
 02      'default': {
@@ -36,10 +37,10 @@ const DEFAULT_SAMPLE_QUESTIONS = [
     },
     {
         id: 2,
-        section: "DISTRIBUTED_QUEUE_ORCHESTRATION",
-        weight: "25 PTS",
-        taxonomy: "ANALYSIS",
-        title: "SCENARIO: Redis Celery Task Latency Under Heavy Write Operations",
+        section: "Distributed Queue Orchestration",
+        weight: "25 Points",
+        taxonomy: "Analysis",
+        title: "Redis Celery Task Latency Under Heavy Write Operations",
         description: "A Celery task processing streaming sensor telemetry is dropping 14% of payloads during queue spikes. The broker is Redis running in single-node mode. What configuration change guarantees zero lost tasks?",
         code_snippet: `01  CELERY_BROKER_URL = 'redis://localhost:6379/0'
 02  CELERY_TASK_ACKS_LATE = False
@@ -55,10 +56,10 @@ const DEFAULT_SAMPLE_QUESTIONS = [
     },
     {
         id: 3,
-        section: "REACT_CONCURRENT_MODE_OPTIMIZATION",
-        weight: "25 PTS",
-        taxonomy: "EVALUATION",
-        title: "SCENARIO: Eliminating Main Thread Frame Drops in Real-Time Telemetry Feed",
+        section: "React Concurrent Optimization",
+        weight: "25 Points",
+        taxonomy: "Evaluation",
+        title: "Eliminating Main Thread Frame Drops in Real-Time Telemetry Feed",
         description: "A dashboard updating at 60 FPS triggers noticeable UI frame drops when rendering SVG time-series charts alongside user text input. How do you prevent blocking high-priority user keystrokes?",
         code_snippet: `01  function TelemetryDashboard({ streamData }) {
 02      const [filter, setFilter] = useState('');
@@ -95,10 +96,10 @@ const AssessmentPage = () => {
     const [audioSpikes] = useState(0);
     const [headRotation] = useState("1.4°");
     const [auditLogs, setAuditLogs] = useState([
-        { time: "11:02:14", text: "SESSION INITIALIZED (FULLSCREEN)", type: "info" },
-        { time: "11:05:40", text: "FACE LOCK CONFIRMED", type: "info" },
-        { time: "11:12:08", text: "PRIMARY GAZE ACQUIRED", type: "info" },
-        { time: "11:15:30", text: "WINDOW FOCUS VERIFIED", type: "info" }
+        { time: "11:02:14", text: "Session initialized in fullscreen", type: "info" },
+        { time: "11:05:40", text: "Face lock confirmed", type: "info" },
+        { time: "11:12:08", text: "Primary gaze acquired", type: "info" },
+        { time: "11:15:30", text: "Window focus verified", type: "info" }
     ]);
 
     const addAuditLog = (text, type = "info") => {
@@ -278,7 +279,7 @@ const AssessmentPage = () => {
             }
         }
         setExamStarted(true);
-        addAuditLog("OPTICAL FEED SYNCHRONIZED", "info");
+        addAuditLog("Optical feed synchronized", "info");
     };
 
     const handleAnswerSelect = (optionIdx) => {
@@ -321,7 +322,7 @@ const AssessmentPage = () => {
                     setRiskScore(data.risk);
                 }
                 if (data.flagged) {
-                    addAuditLog("PROCTOR ALERT: SESSION FLAGGED", "error");
+                    addAuditLog("Proctor alert: session flagged", "error");
                 }
             }
         } catch (e) {
@@ -337,83 +338,94 @@ const AssessmentPage = () => {
 
     const handleWarning = (msg) => {
         setRiskScore(prev => Math.min(50, prev + 15));
-        if (msg.includes("TAB")) setTabSwitches(prev => prev + 1);
-        addAuditLog(`SECURITY WARNING: ${msg}`, "warn");
+        if (msg.toUpperCase().includes("TAB")) setTabSwitches(prev => prev + 1);
+        addAuditLog(`Security notice: ${msg}`, "warn");
         logEvent("violation_warning");
     };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#050505] font-mono flex flex-col items-center justify-center p-8 text-[#ededed]">
-                <div className="border border-white/10 bg-[#0b0b0c] rounded-md p-8 max-w-md w-full text-center space-y-3">
-                    <div className="text-xs text-[#888888] font-mono">Initializing Assessment Environment</div>
-                    <h2 className="text-sm font-semibold text-white font-mono">
-                        Preparing Practical Assessment
-                    </h2>
-                    <p className="text-xs text-[#737373]">
-                        Compiling problem scenarios and verifying runtime environment...
-                    </p>
+            <StudioNoise opacity={0.07}>
+                <div className="min-h-screen font-mono flex flex-col items-center justify-center p-8 text-[#ededed]">
+                    <div className="border border-white/[0.08] border-t-white/15 bg-[#111318] rounded-md p-8 max-w-md w-full text-center space-y-3 shadow-2xl">
+                        <div className="text-xs text-[#8a8a8e] uppercase tracking-wider font-mono">Initializing Assessment Environment</div>
+                        <h2 className="text-base font-bold font-display text-white">
+                            Preparing Practical Assessment
+                        </h2>
+                        <p className="text-xs text-[#888888] leading-relaxed">
+                            Compiling problem scenarios and verifying runtime environment...
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </StudioNoise>
         );
     }
 
     // Pre-Exam Initialization Staging View
     if (!examStarted) {
         return (
-            <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] flex flex-col items-center justify-center p-4 sm:p-8">
-                <div className="max-w-2xl w-full bg-[#0b0b0c] border border-white/10 rounded-md p-8 sm:p-10 shadow-2xl space-y-6">
-                    <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                        <span className="text-[11px] text-[#737373] uppercase tracking-wider font-mono">
-                            SkillForge Assessment Briefing
-                        </span>
-                        <span className="text-xs text-[#555555] font-mono">
-                            Duration: ~20 mins
-                        </span>
-                    </div>
+            <StudioNoise opacity={0.07}>
+                <div className="min-h-screen font-mono text-[#ededed] flex flex-col items-center justify-center p-4 sm:p-8">
+                    <div className="relative max-w-2xl w-full">
+                        <div
+                            aria-hidden="true"
+                            className="pointer-events-none absolute -inset-6 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]"
+                        />
+                        <div className="relative bg-[#111318] border border-white/[0.08] border-t-white/15 rounded-md p-8 sm:p-10 shadow-2xl space-y-6">
+                            <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
+                                <span className="text-xs text-[#8a8a8e] uppercase tracking-wider font-mono">
+                                    SkillForge Assessment Briefing
+                                </span>
+                                <span className="text-xs text-zinc-300 px-2.5 py-0.5 rounded-sm bg-white/[0.04] border border-white/[0.08] font-mono">
+                                    Duration: ~20 mins
+                                </span>
+                            </div>
 
-                    <div className="space-y-2">
-                        <h1 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
-                            Practical Engineering Evaluation
-                        </h1>
-                        <p className="text-xs text-[#888888] leading-relaxed">
-                            Evaluates real-world architectural reasoning, debugging heuristics, and systems depth under standardized, distraction-free conditions.
-                        </p>
-                    </div>
+                            <div className="space-y-2">
+                                <h1 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
+                                    Practical Engineering Evaluation
+                                </h1>
+                                <p className="text-xs sm:text-sm text-[#888888] leading-relaxed">
+                                    Evaluates real-world architectural reasoning, debugging heuristics, and systems depth under standardized, distraction-free conditions.
+                                </p>
+                            </div>
 
-                    {/* Guidelines Card */}
-                    <div className="rounded-md bg-[#050505] border border-white/10 p-5 space-y-3 text-xs text-[#888888]">
-                        <div className="flex items-start gap-2.5">
-                            <span className="text-white font-mono">01</span>
-                            <span><strong className="text-white font-mono">Camera Integrity:</strong> Keep optical feed active so the enclave can verify test integrity.</span>
+                            {/* Guidelines Card */}
+                            <div className="rounded-sm bg-[#060709] border border-white/[0.08] p-5 space-y-3 text-xs text-[#888888]">
+                                <div className="flex items-start gap-2.5">
+                                    <span className="text-white font-mono font-bold">01</span>
+                                    <span><strong className="text-white font-mono">Camera Integrity:</strong> Keep optical feed active so the enclave can verify test integrity.</span>
+                                </div>
+                                <div className="flex items-start gap-2.5">
+                                    <span className="text-white font-mono font-bold">02</span>
+                                    <span><strong className="text-white font-mono">Window Lock:</strong> Maintain active tab focus throughout the duration of the evaluation session.</span>
+                                </div>
+                                <div className="flex items-start gap-2.5">
+                                    <span className="text-white font-mono font-bold">03</span>
+                                    <span><strong className="text-white font-mono">Instant Verification:</strong> Scoring rubrics and rubric feedback are computed immediately upon completion.</span>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/[0.06]">
+                                <button
+                                    onClick={() => navigate('/student/dashboard')}
+                                    className="px-4 py-2 rounded-sm bg-[#121316] border border-white/10 text-xs font-mono text-[#E4E4E7] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
+                                >
+                                    &larr; Return to Dashboard
+                                </button>
+
+                                <button
+                                    onClick={startTest}
+                                    className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-6 py-2.5 rounded-sm text-xs sm:text-sm font-mono transition-colors cursor-pointer flex items-center gap-2"
+                                >
+                                    <span>Begin Assessment</span>
+                                    <span aria-hidden="true">↗</span>
+                                </button>
+                            </div>
                         </div>
-                        <div className="flex items-start gap-2.5">
-                            <span className="text-white font-mono">02</span>
-                            <span><strong className="text-white font-mono">Window Lock:</strong> Maintain active tab focus throughout the duration of the evaluation session.</span>
-                        </div>
-                        <div className="flex items-start gap-2.5">
-                            <span className="text-white font-mono">03</span>
-                            <span><strong className="text-white font-mono">Instant Verification:</strong> Scoring rubrics and rubric feedback are computed immediately upon completion.</span>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/[0.06]">
-                        <button
-                            onClick={() => navigate('/student/dashboard')}
-                            className="px-4 py-2 rounded-md border border-white/10 text-xs font-mono text-[#888888] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
-                        >
-                            &larr; Return to Dashboard
-                        </button>
-
-                        <button
-                            onClick={startTest}
-                            className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-6 py-2.5 rounded-md text-xs font-mono shadow-sm transition-all cursor-pointer flex items-center gap-2"
-                        >
-                            <span>Begin Assessment ↗</span>
-                        </button>
                     </div>
                 </div>
-            </div>
+            </StudioNoise>
         );
     }
 
@@ -428,71 +440,73 @@ const AssessmentPage = () => {
             onLogEvent={(msg) => addAuditLog(msg, "warn")}
         >
             {({ webcamNode }) => (
-                <div className="bg-[#050505] font-mono text-[#ededed] antialiased min-h-screen flex flex-col">
-                    {/* Minimalist Top Console Bar */}
-                    <AssessmentHeader
-                        examId="SF-2026-09"
-                        currentQuestion={currentQuestion}
-                        totalQuestions={questions.length}
-                        formattedTime={formatTime(timeLeft)}
-                        onAbort={() => {
-                            if (window.confirm("Are you sure you want to exit? Your progress so far will be saved.")) {
-                                navigate('/student/dashboard');
-                            }
-                        }}
-                    />
+                <StudioNoise opacity={0.07}>
+                    <div className="font-mono text-[#ededed] antialiased min-h-screen flex flex-col">
+                        {/* Minimalist Top Console Bar */}
+                        <AssessmentHeader
+                            examId="SF-2026-09"
+                            currentQuestion={currentQuestion}
+                            totalQuestions={questions.length}
+                            formattedTime={formatTime(timeLeft)}
+                            onAbort={() => {
+                                if (window.confirm("Are you sure you want to exit? Your progress so far will be saved.")) {
+                                    navigate('/student/dashboard');
+                                }
+                            }}
+                        />
 
-                    {/* Main Evaluation Split Grid */}
-                    <main className="w-full pt-16 bg-[#050505] min-h-screen flex-1 flex flex-col justify-between">
-                        <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-12 gap-6 bg-[#050505] flex-1">
+                        {/* Main Evaluation Split Grid */}
+                        <main className="w-full pt-16 min-h-screen flex-1 flex flex-col justify-between relative z-10">
+                            <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-12 gap-6 flex-1">
 
-                            {/* Left Column: Question & Answers Canvas (Cols 1-8 / 66%) */}
-                            <div className="col-span-12 lg:col-span-8 flex flex-col gap-6" id="QuestionWorkspace">
-                                <QuestionWorkspace 
-                                    question={q}
-                                    questionIndex={currentQuestion}
-                                />
+                                {/* Left Column: Question & Answers Canvas (Cols 1-8 / 66%) */}
+                                <div className="col-span-12 lg:col-span-8 flex flex-col gap-6" id="QuestionWorkspace">
+                                    <QuestionWorkspace 
+                                        question={q}
+                                        questionIndex={currentQuestion}
+                                    />
 
-                                <OptionsMatrix 
-                                    options={q.options || []}
-                                    selectedOptionIdx={selectedAnswerIdx}
-                                    onSelectOption={handleAnswerSelect}
-                                    onPrevQuestion={handlePrevQuestion}
-                                    onNextQuestion={handleNextQuestion}
-                                    onClearSelection={handleClearSelection}
-                                    isFirstQuestion={currentQuestion === 0}
-                                    isLastQuestion={currentQuestion === questions.length - 1}
-                                />
+                                    <OptionsMatrix 
+                                        options={q.options || []}
+                                        selectedOptionIdx={selectedAnswerIdx}
+                                        onSelectOption={handleAnswerSelect}
+                                        onPrevQuestion={handlePrevQuestion}
+                                        onNextQuestion={handleNextQuestion}
+                                        onClearSelection={handleClearSelection}
+                                        isFirstQuestion={currentQuestion === 0}
+                                        isLastQuestion={currentQuestion === questions.length - 1}
+                                    />
+                                </div>
+
+                                {/* Right Column: Proctor Video & Activity (Cols 9-12 / 33%) */}
+                                <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
+                                    <ProctorTelemetryPanel 
+                                        faceDetected={faceDetected}
+                                        riskScore={riskScore}
+                                        tabSwitches={tabSwitches}
+                                        audioSpikes={audioSpikes}
+                                        headRotation={headRotation}
+                                        auditLogs={auditLogs}
+                                        webcamNode={webcamNode}
+                                    />
+                                </div>
+
                             </div>
 
-                            {/* Right Column: Proctor Video & Activity (Cols 9-12 / 33%) */}
-                            <div className="col-span-12 lg:col-span-4 flex flex-col gap-6">
-                                <ProctorTelemetryPanel 
-                                    faceDetected={faceDetected}
-                                    riskScore={riskScore}
-                                    tabSwitches={tabSwitches}
-                                    audioSpikes={audioSpikes}
-                                    headRotation={headRotation}
-                                    auditLogs={auditLogs}
-                                    webcamNode={webcamNode}
-                                />
+                            {/* Clean System Footer */}
+                            <div className="w-full bg-[#060709] border-t border-white/[0.06] px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between text-xs text-[#71717A] font-mono">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-[#888888]">Session SF-2026-09</span>
+                                    <span className="text-[#444444]">&bull;</span>
+                                    <span>Evaluation Session Active</span>
+                                </div>
+                                <div className="text-[11px] text-[#71717A]">
+                                    Secure Stream Confirmed
+                                </div>
                             </div>
-
-                        </div>
-
-                        {/* Clean System Footer */}
-                        <div className="w-full bg-[#050505] border-t border-white/[0.06] px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between text-xs text-[#555555] font-mono">
-                            <div className="flex items-center gap-2">
-                                <span className="text-[#888888]">Session SF-2026-09</span>
-                                <span className="text-[#444444]">&bull;</span>
-                                <span>Evaluation Session Active</span>
-                            </div>
-                            <div className="text-[11px] text-[#737373]">
-                                Secure Stream Confirmed
-                            </div>
-                        </div>
-                    </main>
-                </div>
+                        </main>
+                    </div>
+                </StudioNoise>
             )}
         </ProctorWrapper>
     );

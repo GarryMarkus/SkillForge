@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
+import { AlertTriangle } from 'lucide-react';
 
 const ProctorWrapper = ({ 
     children, 
@@ -54,9 +55,9 @@ const ProctorWrapper = ({
         setWarnings(prev => {
             const newCount = prev + 1;
             onWarning?.(`${reason} (${newCount}/3)`);
-            onLogEvent?.(`WARNING: ${reason.toUpperCase()} (+15 PTS)`);
+            onLogEvent?.(`Notice: ${reason} (+15 pts)`);
             if (newCount >= 3) {
-                onLogEvent?.(`DISQUALIFICATION: SECURITY_THRESHOLD_BREACHED`);
+                onLogEvent?.(`Disqualified: security threshold exceeded`);
                 onDisqualify?.("Security violation limit reached.");
             }
             return newCount;
@@ -120,12 +121,12 @@ const ProctorWrapper = ({
             if (noFaceCountRef.current >= 4) {
                 setNoFaceWarning(true);
                 if (noFaceCountRef.current === 4) {
-                    triggerWarning("OPTICAL_GAZE_LOST_NO_FACE");
+                    triggerWarning("Optical gaze lost");
                 }
             }
         } else {
             if (noFaceCountRef.current >= 4) {
-                onLogEvent?.("RE-ACQUIRED_PRIMARY_GAZE");
+                onLogEvent?.("Primary gaze re-acquired");
             }
             noFaceCountRef.current = 0;
             setNoFaceWarning(false);
@@ -154,7 +155,7 @@ const ProctorWrapper = ({
             const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
             if (!isFS && isArmed) {
                 setIsFullScreen(false);
-                triggerWarning("FULLSCREEN_KERNEL_LOCK_EXITED");
+                triggerWarning("Fullscreen lock exited");
             } else {
                 setIsFullScreen(true);
             }
@@ -177,13 +178,13 @@ const ProctorWrapper = ({
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (document.hidden && isArmed) {
-                triggerWarning("TAB_SWITCH_ACTIVE_WINDOW_LOST");
+                triggerWarning("Tab focus lost");
             }
         };
 
         const handleBlur = () => {
             if (isArmed && document.activeElement !== document.body) {
-                triggerWarning("WINDOW_BLUR_OR_MINIMIZE");
+                triggerWarning("Window focus lost");
             }
         };
 
@@ -223,20 +224,20 @@ const ProctorWrapper = ({
 
     if (warnings >= 3) {
         return (
-            <div className="fixed inset-0 bg-black/80 text-white flex flex-col items-center justify-center z-[100] font-sans p-6 text-center select-none backdrop-blur-sm">
-                <div className="bg-[#121318] border border-white/[0.08] rounded-2xl p-8 max-w-lg shadow-2xl text-center space-y-4">
-                    <div className="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 mx-auto flex items-center justify-center">
-                        <span className="material-symbols-outlined text-[28px]">warning</span>
+            <div className="fixed inset-0 bg-[#060709]/90 text-white flex flex-col items-center justify-center z-[100] font-mono p-6 text-center select-none backdrop-blur-sm">
+                <div className="bg-[#111318] border border-white/[0.08] border-t-white/15 rounded-md p-8 max-w-lg shadow-2xl text-center space-y-4">
+                    <div className="w-11 h-11 rounded-sm bg-rose-500/10 text-rose-400 border border-rose-500/20 mx-auto flex items-center justify-center">
+                        <AlertTriangle className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
                     </div>
-                    <h1 className="text-xl font-semibold text-white">
+                    <h1 className="text-xl font-bold font-display text-white tracking-tight">
                         Assessment Session Concluded
                     </h1>
-                    <p className="text-sm text-zinc-400 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#888888] leading-relaxed">
                         This session has ended because the maximum allowed security warnings (3 events) were reached. Your progress up to this point has been saved.
                     </p>
                     <button 
                         onClick={() => window.location.href = '/student/dashboard'} 
-                        className="w-full bg-white hover:bg-zinc-200 text-zinc-950 font-semibold text-sm py-3 px-6 rounded-xl transition cursor-pointer"
+                        className="w-full bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold text-xs sm:text-sm py-2.5 px-6 rounded-sm transition-colors cursor-pointer"
                     >
                         Return to Dashboard
                     </button>
@@ -246,30 +247,30 @@ const ProctorWrapper = ({
     }
 
     return (
-        <div className="relative min-h-screen bg-[#050505] text-[#ededed] font-mono select-none">
+        <div className="relative min-h-screen bg-[#060709] text-[#ededed] font-mono select-none">
             {/* Standalone webcam if requested */}
             {showStandaloneWebcam && (
-                <div className="fixed bottom-4 right-4 w-48 h-36 bg-black border border-white/20 rounded-md overflow-hidden z-50 pointer-events-none">
+                <div className="fixed bottom-4 right-4 w-48 h-36 bg-[#060709] border border-white/15 rounded-md overflow-hidden z-50 pointer-events-none">
                     {webcamNode}
                 </div>
             )}
 
             {/* Fullscreen Re-entry blocker */}
             {!isFullScreen && isArmed && (
-                <div className="fixed inset-0 bg-black/80 z-[60] flex flex-col items-center justify-center p-6 text-center font-mono backdrop-blur-sm">
-                    <div className="bg-[#0b0b0c] border border-white/10 rounded-md p-8 max-w-md shadow-2xl text-center space-y-4">
-                        <div className="w-10 h-10 rounded-sm bg-[#111113] text-[#ededed] border border-white/20 mx-auto flex items-center justify-center font-mono text-xs font-bold">
+                <div className="fixed inset-0 bg-[#060709]/90 z-[60] flex flex-col items-center justify-center p-6 text-center font-mono backdrop-blur-sm">
+                    <div className="bg-[#111318] border border-white/[0.08] border-t-white/15 rounded-md p-8 max-w-md shadow-2xl text-center space-y-4">
+                        <div className="w-10 h-10 rounded-sm bg-white/[0.04] text-[#ededed] border border-white/15 mx-auto flex items-center justify-center font-mono text-xs font-bold">
                             FS
                         </div>
-                        <h2 className="text-base font-semibold text-white font-mono uppercase tracking-wider">
+                        <h2 className="text-base font-bold font-display text-white uppercase tracking-wider">
                             Full-Screen Lock Required
                         </h2>
-                        <p className="text-xs text-[#737373] leading-relaxed">
+                        <p className="text-xs text-[#888888] leading-relaxed">
                             To ensure test integrity and prevent accidental window focus loss, this assessment runs under strict full-screen enclosure.
                         </p>
                         <button
                             onClick={enterFullScreen}
-                            className="w-full bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 font-mono text-xs py-2.5 px-5 rounded-md transition cursor-pointer"
+                            className="w-full bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold font-mono text-xs py-2.5 px-5 rounded-sm transition-colors cursor-pointer"
                         >
                             Resume Full Screen
                         </button>

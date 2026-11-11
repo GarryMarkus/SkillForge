@@ -30,16 +30,16 @@ const OptionsMatrix = ({
                             key={idx}
                             type="button"
                             onClick={() => onSelectOption(idx)}
-                            className={`w-full text-left cursor-pointer p-4 rounded-md flex items-start gap-3.5 transition-all font-mono ${
+                            className={`w-full text-left cursor-pointer p-4 rounded-md flex items-start gap-3.5 transition-colors font-mono ${
                                 isSelected
-                                    ? 'border border-white/40 bg-[#121214] text-white shadow-sm'
-                                    : 'border border-white/10 bg-[#0b0b0c] hover:border-white/20 text-[#888888] hover:text-[#ededed]'
+                                    ? 'border border-white/30 border-t-white/40 bg-[#181B22] text-white'
+                                    : 'border border-white/[0.08] border-t-white/15 bg-[#0D0F14] hover:border-white/20 text-[#888888] hover:text-[#ededed]'
                             }`}
                         >
                             <div className={`w-7 h-7 rounded-sm font-mono text-xs font-semibold shrink-0 flex items-center justify-center transition-colors ${
                                 isSelected
-                                    ? 'bg-[#111113] text-white border border-white/30'
-                                    : 'bg-[#050505] text-[#737373] border border-white/10'
+                                    ? 'bg-[#F5F5F5] text-[#050505] border border-[#F5F5F5]'
+                                    : 'bg-[#060709] text-[#888888] border border-white/[0.08]'
                             }`}>
                                 {letter}
                             </div>
@@ -56,7 +56,7 @@ const OptionsMatrix = ({
                 <button
                     onClick={onPrevQuestion}
                     disabled={isFirstQuestion}
-                    className="px-4 py-2 rounded-md border border-white/10 hover:border-white/20 text-[#888888] hover:text-white text-xs font-mono disabled:opacity-30 transition-colors cursor-pointer"
+                    className="px-4 py-2 rounded-sm bg-[#121316] border border-white/10 hover:border-white/20 text-[#E4E4E7] hover:text-white text-xs font-mono disabled:opacity-30 transition-colors cursor-pointer"
                     type="button"
                 >
                     &larr; Previous Question
@@ -66,7 +66,7 @@ const OptionsMatrix = ({
                     {selectedOptionIdx !== null && selectedOptionIdx !== undefined && (
                         <button
                             onClick={onClearSelection}
-                            className="px-3 py-2 text-[#737373] hover:text-white text-xs font-mono transition-colors cursor-pointer"
+                            className="px-3 py-2 text-[#888888] hover:text-white hover:underline underline-offset-4 text-xs font-mono transition-colors cursor-pointer"
                             type="button"
                         >
                             Clear Selection
@@ -74,7 +74,7 @@ const OptionsMatrix = ({
                     )}
                     <button
                         onClick={onNextQuestion}
-                        className="px-5 py-2 rounded-md bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 text-xs font-mono shadow-sm transition-all cursor-pointer flex items-center gap-1.5"
+                        className="px-5 py-2.5 rounded-sm bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold text-xs font-mono transition-colors cursor-pointer flex items-center gap-1.5"
                         type="button"
                     >
                         <span>{isLastQuestion ? 'Submit Assessment ↗' : 'Next Question →'}</span>
