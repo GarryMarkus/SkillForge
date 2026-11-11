@@ -25,7 +25,7 @@ const Input = ({
             <input
                 id={inputId}
                 type={type}
-                className={`w-full px-3.5 py-2 rounded-md bg-[#050505] border border-white/10 text-sm text-[#f5f5f5] placeholder-[#555555] focus:outline-none focus:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors ${
+                className={`w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/10 text-xs sm:text-sm text-[#f5f5f5] placeholder-[#555555] focus:outline-none focus:border-white/30 disabled:opacity-40 disabled:cursor-not-allowed transition-colors ${
                     error ? 'border-white/40' : ''
                 } ${className}`}
                 {...props}

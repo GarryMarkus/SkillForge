@@ -1,11 +1,11 @@
 import React from 'react';
 
 const variants = {
-    default: 'text-[#888888] border-white/10 bg-transparent',
-    primary: 'text-[#ededed] border-white/20 bg-white/[0.04]',
-    success: 'text-[#d4d4d4] border-white/15 bg-white/[0.03]',
-    warning: 'text-[#a3a3a3] border-white/10 bg-transparent',
-    error: 'text-[#a3a3a3] border-white/20 bg-white/[0.02]',
+    default: 'text-zinc-300 border-white/[0.08] bg-white/[0.04]',
+    primary: 'text-[#f5f5f5] border-white/15 bg-white/[0.06]',
+    success: 'text-[#d4d4d4] border-white/15 bg-white/[0.04]',
+    warning: 'text-[#a3a3a3] border-white/10 bg-white/[0.02]',
+    error: 'text-[#d4d4d4] border-white/20 bg-white/[0.04]',
 };
 
 const sizes = {

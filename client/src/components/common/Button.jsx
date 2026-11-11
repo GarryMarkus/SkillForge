@@ -1,18 +1,18 @@
 import React from 'react';
 
 const variants = {
-    primary: 'bg-[#111113] hover:bg-[#1a1a1d] text-[#f5f5f5] border border-white/10 focus:border-white/30',
-    secondary: 'bg-transparent text-[#888888] hover:text-[#f5f5f5] border border-transparent hover:border-white/10',
-    accent: 'bg-white text-black hover:bg-[#ededed] border border-white focus:border-white/40',
-    outline: 'bg-transparent text-[#cccccc] hover:text-white border border-white/10 hover:border-white/20',
-    ghost: 'bg-transparent text-[#888888] hover:text-[#f5f5f5] border border-transparent',
-    danger: 'bg-transparent text-[#888888] hover:text-white border border-white/10 hover:border-white/30',
+    primary: 'bg-[#F5F5F5] text-[#050505] font-semibold hover:bg-white border border-transparent focus:border-white/40',
+    secondary: 'bg-[#121316] text-[#E4E4E7] border border-white/10 hover:border-white/20',
+    accent: 'bg-[#F5F5F5] text-[#050505] font-semibold hover:bg-white border border-transparent focus:border-white/40',
+    outline: 'bg-[#121316] text-[#E4E4E7] hover:text-white border border-white/10 hover:border-white/20',
+    ghost: 'bg-transparent text-[#888888] hover:text-white hover:underline underline-offset-4 border border-transparent',
+    danger: 'bg-[#121316] text-[#888888] hover:text-white border border-white/10 hover:border-white/30',
 };
 
 const sizes = {
-    sm: 'text-xs px-2.5 py-1.5 rounded-sm gap-1.5',
-    md: 'text-sm px-4 py-2 rounded-md gap-2',
-    lg: 'text-base px-5 py-2.5 rounded-md gap-2.5',
+    sm: 'text-xs px-3 py-1.5 rounded-sm gap-1.5',
+    md: 'text-xs sm:text-sm px-5 py-2.5 rounded-sm gap-2',
+    lg: 'text-sm sm:text-base px-6 py-3 rounded-sm gap-2.5',
 };
 
 const Button = ({

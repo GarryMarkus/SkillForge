@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-[#050505] border-t border-white/[0.06] font-mono text-xs text-[#737373] py-10 mt-auto relative z-20 select-none">
+        <footer className="w-full bg-[#060709] border-t border-white/[0.06] font-mono text-xs text-[#737373] py-10 mt-auto relative z-20 select-none">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
                 {/* Left: Platform & Copyright */}
                 <div className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center text-[#f5f5f5] font-mono text-[10px] font-bold">
+                    <span className="w-5 h-5 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] font-mono text-[10px] font-bold">
                         SF
                     </span>
                     <span className="font-display font-bold text-white text-sm">

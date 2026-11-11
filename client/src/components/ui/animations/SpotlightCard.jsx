@@ -11,7 +11,7 @@ const SpotlightCard = ({
     borderColor = 'rgba(255, 255, 255, 0.15)',
     size = 400,
     chamfered = false,
-    bgClassName = 'bg-[#0b0b0c]',
+    bgClassName = 'bg-[#0D0F14]',
     as: Component = 'div',
     ...props
 }) => {
@@ -43,7 +43,7 @@ const SpotlightCard = ({
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className={`group relative overflow-hidden border border-white/10 ${bgClassName} transition-colors duration-150 ${chamfered ? 'clip-chamfer' : 'rounded-md'} ${className}`}
+            className={`group relative overflow-hidden border border-white/[0.08] border-t-white/15 ${bgClassName} transition-colors duration-150 ${chamfered ? 'clip-chamfer' : 'rounded-md'} ${className}`}
             style={{
                 '--mouse-x': '-1000px',
                 '--mouse-y': '-1000px',
