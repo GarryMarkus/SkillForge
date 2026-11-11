@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import client, { extractApiErrorMessage } from '../../api/client';
+import StudioNoise from '../../components/ui/animations/StudioNoise';
 import ClientOnboardingHeader from '../../components/onboarding/ClientOnboardingHeader';
 import CompanySpecForm from '../../components/onboarding/CompanySpecForm';
 
@@ -77,21 +78,23 @@ const ClientOnboarding = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] flex flex-col select-none">
-            <ClientOnboardingHeader clientEmail={user?.email || 'recruiter@enterprise.io'} />
+        <StudioNoise opacity={0.07}>
+            <div className="min-h-screen font-mono text-[#ededed] flex flex-col select-none">
+                <ClientOnboardingHeader clientEmail={user?.email || 'recruiter@enterprise.io'} />
 
-            <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <CompanySpecForm
-                    profile={profile}
-                    onChange={handleChange}
-                    onSubmit={handleSubmit}
-                    isLoading={isLoading}
-                    isUpdate={isUpdate}
-                    error={error}
-                    onBypass={() => navigate('/client/dashboard')}
-                />
-            </main>
-        </div>
+                <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+                    <CompanySpecForm
+                        profile={profile}
+                        onChange={handleChange}
+                        onSubmit={handleSubmit}
+                        isLoading={isLoading}
+                        isUpdate={isUpdate}
+                        error={error}
+                        onBypass={() => navigate('/client/dashboard')}
+                    />
+                </main>
+            </div>
+        </StudioNoise>
     );
 };
 
