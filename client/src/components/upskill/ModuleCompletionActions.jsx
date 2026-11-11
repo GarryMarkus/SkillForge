@@ -40,17 +40,17 @@ const ModuleCompletionActions = ({
 
     return (
         <section
-            className="w-full bg-[#0b0b0c] p-5 sm:p-6 rounded-md border border-white/10 flex flex-wrap items-center justify-between gap-4 font-mono select-none"
+            className="w-full bg-[#111318] p-5 sm:p-6 rounded-md border border-white/[0.08] border-t-white/15 flex flex-wrap items-center justify-between gap-4 font-mono select-none"
             id="ModuleCompletionActions"
         >
             <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2 text-xs">
-                    <span className="text-[#555555]">Status:</span>
-                    <span className="px-2 py-0.5 rounded-sm font-mono text-xs bg-[#050505] text-[#888888] border border-white/10">
+                    <span className="text-[#71717A]">Status:</span>
+                    <span className="px-2 py-0.5 rounded-sm font-mono text-xs bg-white/[0.04] text-zinc-300 border border-white/[0.08]">
                         {isCompleted ? 'Completed' : 'In Progress'}
                     </span>
                 </div>
-                <div className="text-xs text-[#737373]">
+                <div className="text-xs text-[#888888]">
                     Completion unlocks empirical assessment verification for this topic
                 </div>
             </div>
@@ -58,7 +58,7 @@ const ModuleCompletionActions = ({
             <div className="flex items-center gap-2.5 flex-wrap">
                 <button
                     onClick={onGenerateNewClick}
-                    className="bg-[#050505] hover:bg-[#111113] text-[#888888] hover:text-white border border-white/10 text-xs font-mono px-4 py-2 rounded-md transition-colors cursor-pointer"
+                    className="bg-[#121316] text-[#E4E4E7] hover:text-white border border-white/10 hover:border-white/20 text-xs font-mono px-4 py-2 rounded-sm transition-colors cursor-pointer"
                     type="button"
                 >
                     <span>+ New Topic</span>
@@ -67,7 +67,7 @@ const ModuleCompletionActions = ({
                 <button
                     onClick={handleMarkCompleteAndRetest}
                     disabled={submitting}
-                    className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 text-xs font-mono px-5 py-2 rounded-md transition-colors shadow-sm cursor-pointer disabled:opacity-50"
+                    className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold text-xs font-mono px-5 py-2.5 rounded-sm transition-colors cursor-pointer disabled:opacity-50"
                     type="button"
                 >
                     <span>
