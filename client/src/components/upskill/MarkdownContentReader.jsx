@@ -89,6 +89,34 @@ const MarkdownContentReader = ({ content = '' }) => {
                         blockquote: ({ ...props }) => (
                             <blockquote className="my-4 p-3 rounded-sm border-l-2 border-white/25 bg-[#060709] text-xs italic text-[#888888]" {...props} />
                         ),
+                        strong: ({ ...props }) => (
+                            <strong className="font-semibold text-[#f5f5f5]" {...props} />
+                        ),
+                        hr: ({ ...props }) => (
+                            <hr className="my-6 border-white/[0.06]" {...props} />
+                        ),
+                        a: ({ ...props }) => (
+                            <a
+                                className="text-[#f5f5f5] underline decoration-white/30 underline-offset-4 hover:text-white hover:decoration-white/70 transition-colors"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                {...props}
+                            />
+                        ),
+                        table: ({ ...props }) => (
+                            <div className="my-5 overflow-x-auto rounded-sm border border-white/[0.08]">
+                                <table className="w-full text-left border-collapse text-xs font-mono" {...props} />
+                            </div>
+                        ),
+                        thead: ({ ...props }) => (
+                            <thead className="bg-[#111318] text-zinc-300 border-b border-white/[0.06]" {...props} />
+                        ),
+                        th: ({ ...props }) => (
+                            <th className="py-2.5 px-3.5 font-semibold uppercase tracking-wider text-[11px]" {...props} />
+                        ),
+                        td: ({ ...props }) => (
+                            <td className="py-2.5 px-3.5 border-t border-white/[0.04] text-[#8a8a8e]" {...props} />
+                        ),
                     }}
                 >
                     {markdownText}
