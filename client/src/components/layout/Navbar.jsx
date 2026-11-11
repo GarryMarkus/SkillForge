@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import CardNav from './CardNav';
+import BrandLogo from '../common/BrandLogo';
 import { useAuthStore } from '../../store/authStore';
 
 /**
@@ -56,9 +57,7 @@ const Navbar = () => {
 
     const logoNode = (
         <Link to="/" className="flex items-center gap-2.5 group">
-            <span className="w-6 h-6 rounded-sm bg-[#111113] border border-white/20 flex items-center justify-center text-[#f5f5f5] font-mono text-xs font-bold shadow-sm">
-                SF
-            </span>
+            <BrandLogo className="w-6 h-6" />
             <span className="font-display font-bold text-[#f5f5f5] text-base tracking-tight group-hover:text-white transition-colors">
                 SkillForge
             </span>

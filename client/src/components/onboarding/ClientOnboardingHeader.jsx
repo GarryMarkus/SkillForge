@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, ArrowLeft } from '../ui/Icons';
+import BrandLogo from '../common/BrandLogo';
 
 const ClientOnboardingHeader = ({ clientEmail = 'recruiter@enterprise.io' }) => {
     const navigate = useNavigate();
@@ -14,9 +15,7 @@ const ClientOnboardingHeader = ({ clientEmail = 'recruiter@enterprise.io' }) => 
                         onClick={() => navigate('/client/dashboard')}
                         className="flex items-center gap-2.5 cursor-pointer shrink-0"
                     >
-                        <span className="w-7 h-7 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] text-xs font-mono font-bold">
-                            SF
-                        </span>
+                        <BrandLogo className="w-7 h-7" />
                         <span className="text-sm font-display font-bold text-white tracking-tight">
                             SkillForge
                         </span>

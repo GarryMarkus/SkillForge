@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import BrandLogo from '../common/BrandLogo';
 
 const Footer = () => {
     return (
@@ -7,9 +8,7 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
                 {/* Left: Platform & Copyright */}
                 <div className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] font-mono text-[10px] font-bold">
-                        SF
-                    </span>
+                    <BrandLogo className="w-5 h-5" />
                     <span className="font-display font-bold text-white text-sm">
                         SkillForge
                     </span>

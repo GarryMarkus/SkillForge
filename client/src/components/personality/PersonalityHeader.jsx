@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrainCircuit, Maximize2, LogOut } from '../ui/Icons';
+import BrandLogo from '../common/BrandLogo';
 
 const PersonalityHeader = ({
     currentIndex = 0,
@@ -11,9 +12,7 @@ const PersonalityHeader = ({
         <header className="w-full bg-[#060709]/90 backdrop-blur-md border-b border-white/[0.06] select-none font-mono text-[#ededed] relative z-20" id="PersonalityHeader">
             <div className="h-14 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                    <span className="w-7 h-7 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] font-mono text-xs font-bold">
-                        SF
-                    </span>
+                    <BrandLogo className="w-7 h-7" />
                     <span className="text-sm font-display font-bold text-white tracking-tight">
                         SkillForge
                     </span>

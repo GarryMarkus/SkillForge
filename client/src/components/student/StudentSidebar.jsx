@@ -11,6 +11,7 @@ import {
     ScanSearch,
     X,
 } from '../ui/Icons';
+import BrandLogo from '../common/BrandLogo';
 
 const navItems = [
     { label: 'Overview', path: '/student/dashboard', matchPaths: ['/student/dashboard'], icon: LayoutDashboard },
@@ -51,9 +52,7 @@ const StudentSidebar = ({ sidebarCollapsed, mobileOpen = false, onCloseMobile })
                         onClick={() => handleNavigate('/student/dashboard')}
                         className="flex items-center gap-2.5 cursor-pointer text-left min-w-0"
                     >
-                        <div className="w-7 h-7 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] text-xs font-mono font-bold shrink-0">
-                            SF
-                        </div>
+                        <BrandLogo className="w-7 h-7" />
                         {!collapsed && (
                             <span className="font-display font-bold text-sm tracking-tight text-white truncate">
                                 SkillForge

@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Clock, ListChecks, LogOut } from '../ui/Icons';
+import BrandLogo from '../common/BrandLogo';
 
 const AssessmentHeader = ({
     examId = 'SF-2026-09',
@@ -14,9 +15,7 @@ const AssessmentHeader = ({
         <header className="fixed top-0 left-0 right-0 z-50 bg-[#060709]/90 backdrop-blur-md border-b border-white/[0.06] font-mono text-[#ededed] select-none" id="AssessmentHeader">
             <div className="h-14 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] font-mono font-bold text-xs">
-                        SF
-                    </div>
+                    <BrandLogo className="w-7 h-7" />
                     <span className="text-sm font-display font-bold text-white tracking-tight truncate">
                         Skill Evaluation
                     </span>

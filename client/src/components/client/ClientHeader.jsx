@@ -1,5 +1,6 @@
 import React from 'react';
 import { LayoutGrid, Briefcase, Users, Building2, LogOut, TrendingUp, Clock } from '../ui/Icons';
+import BrandLogo from '../common/BrandLogo';
 
 const ClientHeader = ({
     companyName = 'Nexus Technologies',
@@ -22,9 +23,7 @@ const ClientHeader = ({
             {/* Top Enterprise Navigation */}
             <div className="h-14 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-7 h-7 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] font-bold text-xs font-mono shrink-0">
-                        SF
-                    </div>
+                    <BrandLogo className="w-7 h-7" />
                     <span className="text-sm font-display font-bold text-white tracking-tight truncate">
                         SkillForge
                     </span>

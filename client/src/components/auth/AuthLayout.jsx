@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import StudioNoise from '../ui/animations/StudioNoise';
+import BrandLogo from '../common/BrandLogo';
 
 const AuthLayout = ({ children, LeftPanel }) => {
     return (
@@ -11,9 +12,7 @@ const AuthLayout = ({ children, LeftPanel }) => {
                     <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <Link to="/" className="flex items-center gap-2.5 group">
-                                <span className="w-6 h-6 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] text-xs font-mono font-bold">
-                                    SF
-                                </span>
+                                <BrandLogo className="w-6 h-6" />
                                 <span className="font-display font-bold text-sm tracking-tight text-white group-hover:text-[#888888] transition-colors">
                                     SkillForge
                                 </span>

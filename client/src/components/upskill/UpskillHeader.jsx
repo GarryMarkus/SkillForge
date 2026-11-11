@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookOpen, CheckCircle2, Clock, Sparkles } from '../ui/Icons';
+import BrandLogo from '../common/BrandLogo';
 
 const UpskillHeader = ({
     moduleRef = 'Module 1',
@@ -26,9 +27,7 @@ const UpskillHeader = ({
                         onClick={() => navigate('/student/dashboard')}
                         className="flex items-center gap-2.5 cursor-pointer shrink-0"
                     >
-                        <span className="w-7 h-7 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center text-[#f5f5f5] font-mono text-xs font-bold">
-                            SF
-                        </span>
+                        <BrandLogo className="w-7 h-7" />
                         <span className="text-sm font-display font-bold text-white tracking-tight">
                             SkillForge
                         </span>

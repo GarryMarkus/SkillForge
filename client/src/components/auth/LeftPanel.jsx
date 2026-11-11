@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShieldCheck } from '../ui/Icons';
+import BrandLogo from '../common/BrandLogo';
 
 const LeftPanel = () => {
     return (
@@ -7,9 +8,7 @@ const LeftPanel = () => {
             {/* Top Brand */}
             <div>
                 <div className="flex items-center gap-2.5 mb-3">
-                    <span className="w-7 h-7 rounded-sm bg-[#111318] border border-white/15 flex items-center justify-center font-bold text-xs text-[#f5f5f5]">
-                        SF
-                    </span>
+                    <BrandLogo className="w-7 h-7" />
                     <span className="text-lg font-display font-bold tracking-tight text-white">SkillForge</span>
                 </div>
                 <p className="text-[#888888] text-xs leading-relaxed max-w-sm">
