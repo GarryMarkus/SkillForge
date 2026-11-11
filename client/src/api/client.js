@@ -1,5 +1,5 @@
-import api from '../lib/api';
+import api, { extractApiErrorMessage } from '../lib/api';
 import useTaskStatus from '../hooks/useTaskStatus';
 
-export { api, useTaskStatus };
+export { api, useTaskStatus, extractApiErrorMessage };
 export default api;

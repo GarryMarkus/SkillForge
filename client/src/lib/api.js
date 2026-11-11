@@ -6,7 +6,7 @@
  * and recovers gracefully from network disconnects and offline states.
  */
 
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api').replace(/\/+$/, '');
+const BASE_URL = (import.meta?.env?.VITE_API_BASE_URL || 'http://localhost:8000/api').replace(/\/+$/, '');
 
 class NetworkErrorResponse {
     constructor(message = 'Unable to connect to the SkillForge server. Please check your internet connection.') {
@@ -146,6 +146,47 @@ async function request(method, path, options = {}) {
     }
 
     return response;
+}
+
+function flattenErrorValue(value) {
+    if (!value) return [];
+    if (typeof value === 'string') return [value.trim()].filter(Boolean);
+    if (Array.isArray(value)) return value.flatMap(flattenErrorValue);
+    if (typeof value === 'object') {
+        if (typeof value.message === 'string') return [value.message.trim()].filter(Boolean);
+        return Object.entries(value).flatMap(([key, val]) => {
+            const nested = flattenErrorValue(val);
+            if (!nested.length) return [];
+            if (key === 'non_field_errors' || key === 'detail' || key === 'error') {
+                return nested;
+            }
+            const label = key.replace(/_/g, ' ');
+            return nested.map((msg) => `${label}: ${msg}`);
+        });
+    }
+    return [String(value)];
+}
+
+export function extractApiErrorMessage(payload, fallback = 'Request failed. Please try again.') {
+    if (!payload) return fallback;
+    if (typeof payload === 'string') return payload.trim() || fallback;
+
+    if (typeof payload === 'object' && !Array.isArray(payload)) {
+        if (payload.detail !== undefined && payload.detail !== null) {
+            const detailMsgs = flattenErrorValue(payload.detail);
+            if (detailMsgs.length) return detailMsgs.join(' · ');
+        }
+        if (payload.message && typeof payload.message === 'string') {
+            return payload.message.trim() || fallback;
+        }
+        if (payload.error !== undefined && payload.error !== null) {
+            const errMsgs = flattenErrorValue(payload.error);
+            if (errMsgs.length) return errMsgs.join(' · ');
+        }
+    }
+
+    const messages = flattenErrorValue(payload);
+    return messages.length ? messages.join(' · ') : fallback;
 }
 
 export const api = {
