@@ -5,10 +5,10 @@ const RoleCard = ({ role, title, description, features, selectRole, selected }) 
     return (
         <div
             onClick={() => selectRole(role)}
-            className={`p-5 rounded-md border font-mono transition-all cursor-pointer flex flex-col justify-between ${
+            className={`p-5 rounded-md border font-mono transition-colors cursor-pointer flex flex-col justify-between ${
                 selected
-                    ? 'border-white/40 bg-[#121214]'
-                    : 'border-white/10 bg-[#050505] hover:border-white/20'
+                    ? 'border-white/30 border-t-white/40 bg-[#181B22]'
+                    : 'border-white/[0.08] border-t-white/15 bg-[#0D0F14] hover:border-white/20'
             }`}
         >
             <div>

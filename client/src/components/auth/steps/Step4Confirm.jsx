@@ -38,7 +38,7 @@ const Step4Confirm = () => {
                 </p>
             </div>
 
-            <div className="rounded-md border border-white/10 bg-[#050505] p-4 space-y-1">
+            <div className="rounded-sm border border-white/[0.08] border-t-white/15 bg-[#0D0F14] p-4 space-y-1">
                 <SummaryItem
                     label="Account Type"
                     value={role === 'student' ? 'Candidate / Job Seeker' : 'Employer / Recruiter'}
@@ -66,12 +66,12 @@ const Step4Confirm = () => {
                 )}
             </div>
 
-            <label className="flex items-start gap-2.5 p-3 rounded-md border border-white/10 bg-[#050505] cursor-pointer select-none">
+            <label className="flex items-start gap-2.5 p-3 rounded-sm border border-white/[0.08] bg-[#0D0F14] cursor-pointer select-none">
                 <input
                     type="checkbox"
                     checked={agreed}
                     onChange={(e) => setAgreed(e.target.checked)}
-                    className="mt-0.5 w-3.5 h-3.5 rounded-none border border-white/20 bg-[#050505] text-white accent-zinc-200 cursor-pointer"
+                    className="mt-0.5 w-3.5 h-3.5 rounded-none border border-white/20 bg-[#060709] text-white accent-zinc-200 cursor-pointer"
                 />
                 <span className="text-xs text-[#737373] leading-normal font-mono">
                     I accept the <span className="text-[#ededed] underline">Terms of Service</span> and <span className="text-[#ededed] underline">Privacy Policy</span>.

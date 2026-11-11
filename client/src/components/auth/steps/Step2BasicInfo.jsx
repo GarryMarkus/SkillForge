@@ -26,7 +26,7 @@ const Step2BasicInfo = () => {
                         value={formData.fullName}
                         onChange={(e) => updateFormData({ fullName: e.target.value })}
                         placeholder="Alex Vance"
-                        className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#444444] transition-colors"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#555555] transition-colors"
                     />
                 </div>
 
@@ -40,7 +40,7 @@ const Step2BasicInfo = () => {
                         value={formData.email}
                         onChange={(e) => updateFormData({ email: e.target.value })}
                         placeholder="engineer@domain.com"
-                        className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#444444] transition-colors"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#555555] transition-colors"
                     />
                 </div>
 
@@ -56,7 +56,7 @@ const Step2BasicInfo = () => {
                                 value={formData.companyName}
                                 onChange={(e) => updateFormData({ companyName: e.target.value })}
                                 placeholder="Acme Systems"
-                                className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#444444] transition-colors"
+                                className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#555555] transition-colors"
                             />
                         </div>
 
@@ -70,7 +70,7 @@ const Step2BasicInfo = () => {
                                 value={formData.designation}
                                 onChange={(e) => updateFormData({ designation: e.target.value })}
                                 placeholder="Head of Engineering"
-                                className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#444444] transition-colors"
+                                className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#555555] transition-colors"
                             />
                         </div>
                     </div>
@@ -87,7 +87,7 @@ const Step2BasicInfo = () => {
                             value={formData.password}
                             onChange={(e) => updateFormData({ password: e.target.value })}
                             placeholder="At least 8 characters"
-                            className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#444444] transition-colors"
+                            className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#555555] transition-colors"
                         />
                     </div>
 
@@ -101,7 +101,7 @@ const Step2BasicInfo = () => {
                             value={formData.confirmPassword}
                             onChange={(e) => updateFormData({ confirmPassword: e.target.value })}
                             placeholder="Re-enter password"
-                            className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#444444] transition-colors"
+                            className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#555555] transition-colors"
                         />
                     </div>
                 </div>

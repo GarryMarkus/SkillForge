@@ -5,13 +5,13 @@ const SkillPill = ({ label, selected, onClick }) => (
     <button
         type="button"
         onClick={onClick}
-        className={`px-2.5 py-1 rounded-sm text-xs font-mono transition-all cursor-pointer ${
+        className={`px-2.5 py-1 rounded-sm text-xs font-mono transition-colors cursor-pointer ${
             selected
-                ? 'bg-[#111113] text-white border border-white/30 shadow-sm'
-                : 'bg-[#050505] text-[#888888] hover:text-[#f5f5f5] border border-white/10 hover:border-white/20'
+                ? 'bg-[#F5F5F5] text-[#050505] font-semibold border border-[#F5F5F5]'
+                : 'bg-white/[0.04] text-zinc-300 hover:text-white border border-white/[0.08] hover:border-white/20'
         }`}
     >
-        {selected ? `[✓ ${label}]` : `[ ${label} ]`}
+        {label}
     </button>
 );
 
@@ -44,7 +44,7 @@ const Step3Details = () => {
                         Primary Career Goal
                     </label>
                     <select
-                        className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] transition-colors cursor-pointer"
+                        className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] transition-colors cursor-pointer"
                         value={formData.learningGoal || ''}
                         onChange={(e) => updateFormData({ learningGoal: e.target.value })}
                     >
@@ -67,10 +67,10 @@ const Step3Details = () => {
                                 key={level}
                                 type="button"
                                 onClick={() => updateFormData({ experienceLevel: level })}
-                                className={`py-2 px-3 rounded-md text-xs font-mono border transition-all cursor-pointer ${
+                                className={`py-2 px-3 rounded-sm text-xs font-mono border transition-colors cursor-pointer ${
                                     formData.experienceLevel === level
-                                        ? 'bg-[#111113] text-white border-white/30'
-                                        : 'bg-[#050505] text-[#737373] border-white/10 hover:border-white/20 hover:text-[#f5f5f5]'
+                                        ? 'bg-[#181B22] text-white border-white/30 font-medium'
+                                        : 'bg-[#060709] text-[#888888] border-white/[0.08] hover:border-white/20 hover:text-white'
                                 }`}
                             >
                                 {level}
@@ -116,7 +116,7 @@ const Step3Details = () => {
                     Industry Domain
                 </label>
                 <select
-                    className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] transition-colors cursor-pointer"
+                    className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] transition-colors cursor-pointer"
                     value={formData.industry || ''}
                     onChange={(e) => updateFormData({ industry: e.target.value })}
                 >
@@ -139,10 +139,10 @@ const Step3Details = () => {
                             key={size}
                             type="button"
                             onClick={() => updateFormData({ companySize: size })}
-                            className={`py-2 px-3 rounded-md text-xs font-mono border transition-all cursor-pointer ${
+                            className={`py-2 px-3 rounded-sm text-xs font-mono border transition-colors cursor-pointer ${
                                 formData.companySize === size
-                                    ? 'bg-[#111113] text-white border-white/30'
-                                    : 'bg-[#050505] text-[#737373] border-white/10 hover:border-white/20 hover:text-[#f5f5f5]'
+                                    ? 'bg-[#181B22] text-white border-white/30 font-medium'
+                                    : 'bg-[#060709] text-[#888888] border-white/[0.08] hover:border-white/20 hover:text-white'
                             }`}
                         >
                             {size}
@@ -161,7 +161,7 @@ const Step3Details = () => {
                     placeholder="e.g. 15 roles"
                     value={formData.trainCount || ''}
                     onChange={(e) => updateFormData({ trainCount: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-md bg-[#050505] border border-white/10 focus:border-white/30 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#444444] transition-colors"
+                    className="w-full px-3.5 py-2.5 rounded-sm bg-[#060709] border border-white/[0.08] focus:border-white/25 focus:outline-none text-xs text-[#f5f5f5] placeholder-[#555555] transition-colors"
                 />
             </div>
         </div>
