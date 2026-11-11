@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Briefcase, X, ArrowUpRight, AlertCircle } from 'lucide-react';
 import client from '../../api/client';
 
 const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
     const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const [formData, setFormData] = useState({
         title: '',
         category: 'Web Development',
@@ -22,6 +24,7 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        setErrorMessage('');
         try {
             const response = await client.post('/project/jobs/', formData);
             if (response.ok) {
@@ -32,11 +35,11 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                 onClose();
             } else {
                 const err = await response.json().catch(() => ({}));
-                alert(`Error: ${err.error || 'Failed to post new job opening.'}`);
+                setErrorMessage(err.error || 'Failed to publish role. Please check your inputs.');
             }
         } catch (error) {
             console.error('Error posting job:', error);
-            alert('A network error occurred while posting this job. Please try again.');
+            setErrorMessage('Network error while publishing this job. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -53,26 +56,37 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
 
                 <div className="relative bg-[#111318] rounded-md border border-white/[0.08] border-t-white/15 w-full shadow-2xl max-h-[92vh] flex flex-col overflow-hidden text-[#ededed]">
                     {/* Modal Header */}
-                    <div className="px-5 py-4 bg-[#0D0F14] border-b border-white/[0.06] flex items-center justify-between">
-                        <div>
-                            <h2 className="text-xs font-semibold uppercase tracking-wider text-white">
-                                Post New Requisition
-                            </h2>
-                            <p className="text-xs text-[#888888] mt-0.5">
-                                Define role specification to evaluate against candidate telemetry
-                            </p>
+                    <div className="px-5 py-4 bg-[#0D0F14] border-b border-white/[0.06] flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2.5">
+                            <Briefcase className="w-4 h-4 text-zinc-300 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                            <div>
+                                <h2 className="text-xs font-semibold uppercase tracking-wider text-white">
+                                    Post New Role
+                                </h2>
+                                <p className="text-[11px] text-[#888888] mt-0.5">
+                                    Define skills and minimum score for automatic candidate ranking
+                                </p>
+                            </div>
                         </div>
                         <button
+                            type="button"
                             onClick={onClose}
-                            className="text-xs text-[#888888] hover:text-white font-mono cursor-pointer transition-colors"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-sm border border-white/[0.08] text-xs text-[#888888] hover:text-white hover:border-white/20 font-mono cursor-pointer transition-colors"
                             aria-label="Close"
                         >
-                            Close ✕
+                            <X className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                            <span>Close</span>
                         </button>
                     </div>
 
                     {/* Modal Form Body */}
                     <form onSubmit={handleSubmit} className="p-5 overflow-y-auto space-y-4 flex-1 text-xs text-[#888888] font-mono">
+                        {errorMessage && (
+                            <div className="p-3 rounded-sm bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center gap-2">
+                                <AlertCircle className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                                <span>{errorMessage}</span>
+                            </div>
+                        )}
                         <div>
                             <label className="block text-xs font-mono text-[#888888] mb-1.5">
                                 Job Title <span className="text-[#71717A]">*</span>
@@ -203,9 +217,10 @@ const JobPostModal = ({ isOpen, onClose, onJobCreated }) => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-5 py-2.5 rounded-sm text-xs font-mono transition-colors cursor-pointer disabled:opacity-50"
+                                className="inline-flex items-center gap-1.5 bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-5 py-2.5 rounded-sm text-xs font-mono transition-colors cursor-pointer disabled:opacity-50"
                             >
-                                {loading ? 'Publishing...' : 'Publish Requisition ↗'}
+                                <span>{loading ? 'Publishing...' : 'Publish Role'}</span>
+                                <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2} aria-hidden="true" />
                             </button>
                         </div>
                     </form>

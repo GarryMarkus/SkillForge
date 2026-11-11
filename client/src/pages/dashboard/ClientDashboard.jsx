@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { CheckCircle2, X, Briefcase, Users } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
 import StudioNoise from '../../components/ui/animations/StudioNoise';
@@ -85,9 +86,10 @@ const ClientDashboard = () => {
     const [, setLoading] = useState(true);
     const [selectedJob, setSelectedJob] = useState(null);
     const [applicants, setApplicants] = useState([]);
-    const [activeTab, setActiveTab] = useState('REQUISITIONS');
+    const [activeTab, setActiveTab] = useState('OVERVIEW');
     const [inspectingCandidate, setInspectingCandidate] = useState(null);
     const [filterMode, setFilterMode] = useState('COSINE_DESC');
+    const [notice, setNotice] = useState(null);
 
     useEffect(() => {
         if (user && user.onboarding_stage !== undefined && user.onboarding_stage < 2) {
@@ -203,14 +205,20 @@ const ClientDashboard = () => {
                 });
                 if (res.ok) {
                     setApplicants(prev => prev.map(a => a.id === candidate.id ? { ...a, status: 'accepted' } : a));
-                    alert(`Job offer extended to ${candidate.candidate_name}! Application status updated to Accepted.`);
+                    setNotice({
+                        type: 'success',
+                        text: `Offer sent to ${candidate.candidate_name}. Status updated to Accepted.`,
+                    });
                     return;
                 }
             } catch (err) {
                 console.error('Failed to update status', err);
             }
         }
-        alert(`Job offer invitation sent to candidate ${candidate.candidate_name} (${candidate.email}).`);
+        setNotice({
+            type: 'success',
+            text: `Offer invitation sent to ${candidate.candidate_name} (${candidate.email}).`,
+        });
     };
 
     const handleExportCSV = () => {
@@ -260,7 +268,7 @@ const ClientDashboard = () => {
                 />
 
                 {/* Main Console Workspace */}
-                <main className="w-full pt-28 min-h-screen flex-1 flex flex-col justify-between font-mono relative z-10">
+                <main className="w-full pt-[100px] min-h-screen flex-1 flex flex-col justify-between font-mono relative z-10">
                     <div>
                         {/* Requisition Deployment Action Bar */}
                         <RequisitionActionBar
@@ -271,27 +279,93 @@ const ClientDashboard = () => {
 
                         {/* Main Workplane Grid */}
                         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+                            {notice && (
+                                <div className="p-3.5 rounded-sm border bg-emerald-500/10 border-emerald-500/25 text-emerald-300 flex items-center justify-between gap-3 text-xs">
+                                    <div className="flex items-center gap-2">
+                                        <CheckCircle2 className="w-4 h-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                                        <span>{notice.text}</span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setNotice(null)}
+                                        aria-label="Dismiss message"
+                                        className="text-current/70 hover:text-white cursor-pointer"
+                                    >
+                                        <X className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Role Focus Context Bar on Candidates Tab */}
+                            {activeTab === 'CANDIDATES' && (
+                                <div className="rounded-md bg-[#0D0F14] border border-white/[0.08] px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+                                    <div className="flex items-center gap-2 text-zinc-300">
+                                        <Users className="w-4 h-4 text-emerald-400 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                                        <span>
+                                            Showing candidates for:{' '}
+                                            <strong className="text-white">{selectedJob?.title || 'Sample Role'}</strong>
+                                        </span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setActiveTab('REQUISITIONS')}
+                                        className="inline-flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white underline underline-offset-4 cursor-pointer"
+                                    >
+                                        <Briefcase className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                                        <span>Switch Role</span>
+                                    </button>
+                                </div>
+                            )}
+
                             {/* Active Deployed Jobs Table Block */}
-                            <ActiveJobsTableBlock
-                                jobs={jobs}
-                                selectedJob={selectedJob}
-                                onSelectJob={handleSelectJob}
-                                onDeployClick={() => setIsModalOpen(true)}
-                            />
+                            {(activeTab === 'OVERVIEW' || activeTab === 'REQUISITIONS') && (
+                                <ActiveJobsTableBlock
+                                    jobs={jobs}
+                                    selectedJob={selectedJob}
+                                    onSelectJob={handleSelectJob}
+                                    onDeployClick={() => setIsModalOpen(true)}
+                                />
+                            )}
 
                             {/* Two-Column Engineering Split */}
                             <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                                {/* Left Column: Applicant Rankings Grid (8 Cols) */}
-                                <ApplicantRankingsGrid
-                                    selectedJob={selectedJob}
-                                    applicants={displayedApplicants}
-                                    filterMode={filterMode}
-                                    setFilterMode={setFilterMode}
-                                    onInspectCandidate={setInspectingCandidate}
-                                    onIssueOffer={handleIssueOffer}
-                                />
+                                {activeTab !== 'REQUISITIONS' && (
+                                    <ApplicantRankingsGrid
+                                        selectedJob={selectedJob}
+                                        applicants={displayedApplicants}
+                                        filterMode={filterMode}
+                                        setFilterMode={setFilterMode}
+                                        onInspectCandidate={setInspectingCandidate}
+                                        onIssueOffer={handleIssueOffer}
+                                    />
+                                )}
 
-                                {/* Right Column: Technical Blueprint Specification Card (4 Cols) */}
+                                {activeTab === 'REQUISITIONS' && (
+                                    <section className="lg:col-span-8 bg-[#0D0F14] rounded-md border border-white/[0.08] border-t-white/15 p-5 sm:p-6 space-y-4">
+                                        <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                                            <div>
+                                                <h3 className="text-xs font-semibold uppercase tracking-wider text-white">
+                                                    Selected Role Snapshot
+                                                </h3>
+                                                <p className="text-[11px] text-[#888888] mt-0.5">
+                                                    {selectedJob?.title || 'Select a role above to review full details'}
+                                                </p>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => setActiveTab('CANDIDATES')}
+                                                className="px-3 py-1.5 rounded-sm bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold text-xs font-mono cursor-pointer transition-colors"
+                                            >
+                                                View Candidates ({displayedApplicants.length}) &rarr;
+                                            </button>
+                                        </div>
+                                        <p className="text-xs text-[#a1a1aa] leading-relaxed">
+                                            {selectedJob?.description || 'Post an opening or click a role row above to filter top-ranked verified engineers.'}
+                                        </p>
+                                    </section>
+                                )}
+
+                                {/* Right Column: Role Requirements Card */}
                                 <RequisitionBlueprintCard
                                     skillsList={requiredSkillsList}
                                     onRecalibrate={() => setIsModalOpen(true)}
