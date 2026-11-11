@@ -11,15 +11,20 @@ dist-ssr/
 build/
 *.local
 
-# Bundler caches
+# Bundler & linter caches
 .cache/
 .vite/
+.eslintcache
+*.tsbuildinfo
 coverage/
+playwright-report/
+test-results/
+blob-report/
 
 # Environment files
 .env
-.env.local
-.env.*.local
+.env.*
+*.env
 !.env.example
 
 # Logs
@@ -36,6 +41,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 .idea/
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj

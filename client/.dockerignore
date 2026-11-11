@@ -1,0 +1,15 @@
+# Exclude local dependencies, build outputs, and env files from Docker build context
+node_modules/
+dist/
+dist-ssr/
+build/
+.vite/
+.cache/
+.eslintcache
+coverage/
+.env
+.env.*
+*.env
+!.env.example
+*.log
+.git/

@@ -1,0 +1,60 @@
+# ==============================================================================
+# SkillForge Server - Git Ignore
+# ==============================================================================
+
+# Python bytecode & packaging
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment files & secrets
+.env
+.env.*
+*.env
+!.env.example
+
+# Local SQLite database & user uploads
+db.sqlite3
+*.sqlite
+*.sqlite3*
+*.db
+media/
+staticfiles/
+
+# Celery, Redis & logs
+celerybeat-schedule
+celerybeat-schedule.*
+dump.rdb
+*.rdb
+logs/
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Test & QA caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# IDE & OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db

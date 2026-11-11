@@ -66,19 +66,21 @@ SkillForge/
 │   │   │   ├── assessment/     # ProctorWrapper, AssessmentHeader, OptionsMatrix, Telemetry
 │   │   │   ├── auth/           # LoginForm, RegisterWizard, AuthLayout
 │   │   │   ├── client/         # ActiveJobsTable, ApplicantRankings, DossierModal
-│   │   │   ├── common/         # ErrorBoundary.jsx (global runtime exception boundary)
+│   │   │   ├── common/         # ErrorBoundary.jsx, BrandLogo.jsx, core UI primitives
 │   │   │   ├── guards/         # ProtectedRoute and RoleGuard RBAC navigation shields
 │   │   │   ├── layout/         # CardNav (expandable card navigation) & Footer
 │   │   │   ├── modals/         # JobPostModal, CandidateDossierModal
 │   │   │   ├── sections/       # HeroSection (Noise & RotatingText), Footer
-│   │   │   ├── student/        # StudentHeader, MatchedPositionsGrid, ProfileBlock
-│   │   │   ├── ui/             # Core UI components & typography animation primitives
+│   │   │   ├── student/        # StudentHeader, StudentSidebar, MatchedPositionsGrid, ProfileBlock
+│   │   │   ├── ui/             # Custom monochrome SVG Icons & typography animation primitives
 │   │   │   └── upskill/        # MarkdownContentReader, ModuleCompletionActions
 │   │   ├── hooks/              # useTaskStatus.js (resilient Celery polling)
 │   │   ├── lib/                # api.js (JWT refresh, offline recovery) and cn.js
-│   │   ├── pages/              # LandingPage, VerificationPage, ProtocolPage, TalentPage, AuthPage, Dashboards
+│   │   ├── pages/              # LandingPage, JobMatchesPage, AiAnalysisPage, AuthPage, Dashboards
 │   │   └── store/              # Zustand stores: authStore (tokens, role) & themeStore
 │   ├── .env.example            # Frontend environment variable template
+│   ├── .dockerignore           # Excludes node_modules, dist, and .env files from Docker context
+│   ├── .gitignore              # Client ignore rules
 │   ├── Dockerfile              # Multi-stage production container (Node 20 + Nginx)
 │   ├── nginx.conf              # Nginx SPA fallback routing configuration
 │   ├── eslint.config.js        # ESLint 9 configuration with React 19 rules
@@ -92,6 +94,8 @@ SkillForge/
 │   ├── modules/                # Adaptive AI-generated learning modules
 │   ├── skillforge/             # Settings, unified exception handler, permissions, Celery app
 │   ├── .env.example            # Backend environment variable template
+│   ├── .dockerignore           # Excludes venv, db.sqlite3, media, and .env from Docker context
+│   ├── .gitignore              # Server ignore rules
 │   ├── Dockerfile              # Multi-stage production container with Gunicorn WSGI
 │   ├── manage.py               # Django management CLI
 │   └── requirements.txt        # Backend Python dependencies
@@ -205,6 +209,8 @@ DJANGO_DEBUG=True
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
 CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 REDIS_URL=redis://localhost:6379/0
+# Set to True for local dev to run Celery tasks in-process without Redis/worker
+# CELERY_ALWAYS_EAGER=True
 GEMINI_API_KEY=your_gemini_api_key_here
 GITHUB_TOKEN=optional_github_token_here
 ```
@@ -247,11 +253,11 @@ All frontend network calls flow through [`client/src/lib/api.js`](client/src/lib
 
 ### Running Tests
 ```bash
-# Backend Test Suite (26 integration & unit tests)
-python server/manage.py test server/
+# Backend Test Suite (30 integration & unit tests)
+cd server && python manage.py test
 
 # Django Configuration Check
-python server/manage.py check
+python manage.py check
 
 # Frontend Code Quality (ESLint)
 npm run lint --prefix client

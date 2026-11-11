@@ -27,13 +27,23 @@ dist-ssr/
 .vite/
 .parcel-cache/
 .turbo/
+.eslintcache
+*.tsbuildinfo
 coverage/
 *.map
 chunk-*.js
 .metadata.json
 
 # ------------------------------------------------------------------------------
-# Python & Django
+# Test & Browser Runner Artifacts
+# ------------------------------------------------------------------------------
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+
+# ------------------------------------------------------------------------------
+# Python, Django & Celery
 # ------------------------------------------------------------------------------
 __pycache__/
 **/__pycache__/
@@ -41,36 +51,65 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
 env/
 venv/
 .venv/
 ENV/
+**/env/
+**/venv/
+**/.venv/
 env.bak/
 venv.bak/
+*.sqlite
 *.sqlite3
+*.sqlite3*
+*.db
 db.sqlite3
-*.sqlite3-journal
 media/
+**/media/
 server/media/
 staticfiles/
+**/staticfiles/
+celerybeat-schedule
+celerybeat-schedule.*
+dump.rdb
+*.rdb
+*.pid
+*.seed
+*.pid.lock
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.tox/
+.nox/
 .coverage
+.coverage.*
 htmlcov/
+
+# ------------------------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------------------------
+logs/
+**/logs/
+*.log
 
 # ------------------------------------------------------------------------------
 # Environment Variables & Secrets
 # ------------------------------------------------------------------------------
 .env
-.env.local
-.env.*.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+**/.env
+**/.env.*
 *.env
 !.env.example
+!**/.env.example
 mcp_config.json
+*.pem
+*.key
+*.crt
 
 # ------------------------------------------------------------------------------
 # Operating System Artifacts
@@ -105,6 +144,13 @@ $RECYCLE.BIN/
 # Assistant & Scratch Artifacts
 # ------------------------------------------------------------------------------
 .agents/
+.claude/
+.codex/
+.cursor/
 .gemini/
 .antigravity/
+.windsurf/
 scratch/
+tmp/
+temp/
+*.tmp
