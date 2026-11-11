@@ -1,167 +1,197 @@
 # SkillForge Backend (Django REST Framework)
 
-The `server/` workspace houses the RESTful API, asynchronous task processing pipeline, and verification intelligence layer for the SkillForge platform, built with Django, Django REST Framework (DRF), Celery, Redis, and LangChain (Google Gemini).
+The `server/` workspace powers SkillForge's REST API, JWT authentication, AI resume & GitHub verification pipeline, anti-cheat proctoring risk engine, TF-IDF candidate matching, and adaptive upskilling modules.
 
 ---
 
 ## Architecture Overview
 
+```mermaid
+flowchart LR
+    API["Django + DRF API"] -->|ORM Queries| DB[("SQLite / PostgreSQL")]
+    API -->|Optional Async| Celery["Celery + Redis"]
+    API -->|Structured Prompts| Gemini["Gemini AI (LangChain)"]
+    API -->|Repo Metadata| GitHub["GitHub REST API"]
 ```
+
+### Django Apps & Modules
+
+```text
 server/
-├── accounts/          # User authentication, registration, profiles, PDF resume validators, JWT tokens
-│   ├── validators.py  # validate_pdf_resume (5MB threshold, MIME verification, %PDF- magic byte check)
-│   ├── models.py      # CustomUser, StudentProfile, ClientProfile, StudentReport, UUID upload paths
-│   ├── serializers.py # User registration, onboarding, and profile serializers
-│   ├── views.py       # RegisterAPI, LoginAPI, OnboardingAPI, ProfileAPI, ProfileUpdateAPI, LogoutAPI
-│   └── tests.py       # Test suite covering auth and PDF validation (valid, fake, oversized, corrupt)
-├── proctor/           # Proctoring event tracking, session telemetry logs, and risk scoring engine
-│   ├── models.py      # Exam, Question, ExamSession, ProctorEvent
-│   ├── risk.py        # Weighted penalty risk accumulator and flagging logic
-│   ├── views.py       # ExamListView, StartExamView, ExamQuestionView, ProctorEventView, EndExamView
-│   └── tests.py       # Proctoring lifecycle and violation escalation tests
-├── project/           # Client job postings, student applications, and TF-IDF matching
-│   ├── models.py      # JobPost, JobApplication
-│   ├── serializers.py # JobPostSerializer (with applicant_count optimization), JobApplicationSerializer
-│   ├── views.py       # AllJobsAPI, ClientJobsAPI, ApplyJobAPI, MyApplicationsAPI, JobApplicantsAPI
-│   └── tests.py       # Job requisition and annotation integration tests
-├── verification/      # Skill tests, Gemini AI evaluation, GitHub analyzer, PDF parser, Celery tasks
-│   ├── tasks.py       # generate_partial_report_task, generate_skill_test_task (with error recording)
-│   ├── services.py    # Atomic transactions for report generation and test submissions
-│   ├── utils/         # LangChain Gemini wrappers, GitHub REST retry adapter, PyPDF2 parser
-│   ├── views.py       # GenerateSkillTestAPI, SubmitSkillTestAPI, RecommendationAPI, TaskStatusAPI
-│   └── tests.py       # Verification test suite and Celery result queries
-├── modules/           # Personalized upskilling module generation (Gemini LLM)
-│   ├── models.py      # UpskillModule, ModuleProgress
-│   ├── services.py    # Dynamic markdown module generation calibrated to user learning pace
-│   └── views.py       # GenerateUpskillModuleAPI, ListUpskillModulesAPI, GetUpskillModuleAPI, ModuleProgressAPI
-├── skillforge/        # Django settings, URL routing, permissions, exception handler, Celery app
-│   ├── settings.py    # Production SECRET_KEY guard, SIMPLE_JWT rotation, CORS, Celery broker
-│   ├── celery.py      # Celery application initialization and task autodiscovery
-│   ├── permissions.py # Role-based access control (IsStudentUser, IsClientUser)
-│   └── urls.py        # Central API routing table
-├── manage.py          # Django CLI management script
-├── requirements.txt   # Python package dependencies
-└── Dockerfile         # Multi-stage production container with Gunicorn WSGI and non-root user
+├── accounts/              # Custom User model, JWT auth, onboarding, profiles, PDF validator
+│   ├── management/commands/
+│   │   └── seed_demo_data.py  # Idempotent demo users, profiles, jobs & sample application
+│   ├── models.py          # User, StudentProfile, ClientProfile, StudentReport, StudentContentAnalysis
+│   ├── validators.py      # 4-point PDF upload validator (size, ext, MIME, %PDF- header)
+│   └── views.py           # Register, Login, Onboarding, Profile, ProfileUpdate, Logout
+├── verification/          # AI verification, GitHub analyzer, test generator & grader
+│   ├── domain_analyzer.py # Cross-domain resume + GitHub synthesizer & structured breakdown
+│   ├── services.py        # Transactional report generation, grading, and refresh orchestration
+│   ├── tasks.py           # Celery background tasks for reports and dynamic test drafting
+│   ├── utils/             # Gemini LangChain client, GitHub retry adapter, PyPDF2 parser
+│   └── views.py           # GenerateTest, SubmitTest, Personality, Analysis, Refresh, TaskStatus
+├── proctor/               # Exam management, telemetry logging & weighted integrity risk scoring
+│   ├── models.py          # Exam, Question, ExamSession, ProctorEvent
+│   ├── risk.py            # Penalty accumulator & flagging thresholds
+│   └── views.py           # List, Start, Questions, Events, End
+├── project/               # Job requisitions, applications, and TF-IDF + cosine ranking
+│   ├── models.py          # JobPost, JobApplication
+│   └── views.py           # CreateJob, ClientJobs, AllJobs, ApplyJob, Applicants, UpdateStatus
+├── modules/               # Personalized AI upskilling curriculum and completion tracking
+│   ├── models.py          # UpskillModule, ModuleProgress
+│   ├── services.py        # Adaptive markdown generation calibrated to learning pace
+│   └── views.py           # Generate, List, Detail, Progress
+├── skillforge/            # Core project configuration
+│   ├── settings.py        # Security guards, SimpleJWT rotation, CORS, DB, logging, Celery
+│   ├── urls.py            # Central API routing + Swagger UI (/api/docs/)
+│   ├── celery.py          # Celery app and task autodiscovery
+│   └── exceptions.py      # Unified DRF exception formatting
+├── manage.py
+├── requirements.txt
+└── Dockerfile
 ```
-
----
-
-## Security & Resilience Standards
-
-1. **File Upload Hardening**:
-   - Resumes uploaded via [`accounts/validators.py`](accounts/validators.py) undergo strict 4-point validation: 5MB maximum file size, `.pdf` extension check, MIME-type validation (`application/pdf`), and magic byte inspection (`b"%PDF-"`).
-   - File storage paths are sanitized with random UUIDs ([`resume_upload_path`](accounts/models.py)) to prevent directory traversal attacks.
-   - Text extraction in [`verification/utils/pdf_utils.py`](verification/utils/pdf_utils.py) catches `PdfReadError` gracefully and enforces a 100,000-character ceiling.
-
-2. **Production Secrets Enforcement**:
-   - In [`skillforge/settings.py`](skillforge/settings.py), running with `DEBUG=False` raises an immediate `ImproperlyConfigured` exception if `DJANGO_SECRET_KEY` is missing or uses the default insecure development string.
-
-3. **Prompt Injection Defense & Fault-Tolerant AI**:
-   - Candidate resumes, GitHub commits, and topics are quarantined inside explicit XML delimiters (`<candidate_resume_data>`, `<candidate_github_data>`) with system instructions to treat candidate input strictly as passive data.
-   - All Gemini LLM calls enforce explicit 30-second timeouts (`request_timeout=30`) and provide structured fallback generations on outages.
-
-4. **Third-Party API Retries**:
-   - GitHub REST client requests in [`verification/utils/git_utils.py`](verification/utils/git_utils.py) mount an `HTTPAdapter` configured with `Retry(total=3, backoff_factor=0.5)` for automatic exponential backoff on transient HTTP 429/500/502/503/504 responses.
-
-5. **Database Transaction Atomicity & Task Failure State**:
-   - Multi-table operations in [`verification/services.py`](verification/services.py) are wrapped in `with transaction.atomic():` blocks to eliminate partial state corruption.
-   - Celery worker tasks record explicit `FAILURE` status and exception traces in [`StudentReport`](accounts/models.py) if unhandled errors occur.
-
-6. **N+1 Query Optimization**:
-   - Database queries in [`project/views.py`](project/views.py) and [`accounts/views.py`](accounts/views.py) leverage `select_related("client")`, `select_related("user")`, `select_related("job__client")`, and `.annotate(applicant_count=Count("applications"))` to eliminate redundant SQL hits.
 
 ---
 
 ## Prerequisites
 
-- **Python**: 3.10+ (tested on Python 3.11)
-- **Redis**: 7.x (for Celery asynchronous task queue)
-- **Database**: SQLite (default for development) or PostgreSQL
+- **Python**: `3.11+` (`3.10+` supported)
+- **Redis**: `7.x` *(optional during local development if `CELERY_ALWAYS_EAGER=True`)*
+- **Database**: SQLite (`db.sqlite3`, default) or PostgreSQL (`DATABASE_URL`)
+- **Gemini API Key**: Required for live AI analysis, test generation, and upskilling guides
 
 ---
 
-## Local Setup & Execution
+## Local Setup & Running the Backend
 
 ### 1. Create and Activate Virtual Environment
+
 ```bash
-# Windows (PowerShell)
 cd server
+
+# Create virtual environment
 python -m venv venv
+
+# Activate on Windows (PowerShell):
 .\venv\Scripts\Activate.ps1
 
-# Linux / macOS
-cd server
-python3 -m venv venv
+# Activate on macOS / Linux:
 source venv/bin/activate
 ```
 
 ### 2. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 3. Configure Environment Variables
-Copy `.env.example` to `.env`:
+
+Copy [`.env.example`](.env.example) to `.env`:
+
 ```bash
 cp .env.example .env
 ```
-Key configuration parameters:
+
+Minimum recommended `.env` for local development without Redis:
+
 ```env
 DJANGO_SECRET_KEY=django-insecure-replace-with-a-secure-random-key-in-production
 DJANGO_DEBUG=True
 DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
 CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
 REDIS_URL=redis://localhost:6379/0
+CELERY_ALWAYS_EAGER=True
 GEMINI_API_KEY=your_gemini_api_key_here
 GITHUB_TOKEN=optional_github_token_here
 ```
 
-### 4. Run Migrations & Start Server
+> **Tip:** Leaving `CELERY_ALWAYS_EAGER=True` executes background tasks synchronously inside the Django process—ideal for local dev when Redis is not running. To test real background workers, set `CELERY_ALWAYS_EAGER=False`, ensure Redis is running on `6379`, and start Celery below.
+
+### 4. Apply Migrations & Seed Demo Data
+
 ```bash
 python manage.py migrate
+python manage.py seed_demo_data
+```
+
+This creates two demo accounts (safe to re-run):
+- **Student**: `student@example.com` / `Password123!`
+- **Recruiter**: `recruiter@example.com` / `Password123!`
+
+### 5. Start the API Server
+
+```bash
 python manage.py runserver 8000
 ```
-API endpoints are served at `http://localhost:8000/api/`.
 
-### 5. Start Celery Worker (in a separate terminal)
+- **REST API Root**: `http://localhost:8000/api/`
+- **Interactive Swagger Docs**: `http://localhost:8000/api/docs/`
+- **OpenAPI Schema**: `http://localhost:8000/api/schema/`
+
+### 6. Start Celery Worker *(Optional — only when Redis & async workers are enabled)*
+
 ```bash
+# macOS / Linux:
 celery -A skillforge worker -l info
+
+# Windows:
+celery -A skillforge worker -l info --pool=solo
 ```
 
 ---
 
 ## Core API Endpoints
 
-| Category | Endpoint | Method | Permission | Description |
-|---|---|---|---|---|
+| App | Endpoint | Method | Access | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| **Docs** | `/api/docs/` | GET | Public | Interactive Swagger UI API documentation |
 | **Auth** | `/api/accounts/register/` | POST | AllowAny | Register student or client user |
-| **Auth** | `/api/accounts/login/` | POST | AllowAny | Authenticate and obtain JWT token pair |
-| **Auth** | `/api/accounts/token/refresh/` | POST | AllowAny | Refresh expired JWT access token |
-| **Auth** | `/api/accounts/profile/` | GET | IsAuthenticated | Retrieve authenticated user profile |
-| **Auth** | `/api/accounts/onboarding/` | PUT | IsAuthenticated | Submit initial profile and resume upload |
-| **Proctor** | `/api/proctor/exams/` | GET | IsAuthenticated | List available exams |
-| **Proctor** | `/api/proctor/start/` | POST | IsAuthenticated | Initialize active proctoring session |
-| **Proctor** | `/api/proctor/event/` | POST | IsAuthenticated | Log sensor violation & update risk rating |
-| **Proctor** | `/api/proctor/end/` | POST | IsAuthenticated | Conclude session and finalize risk score |
-| **Project** | `/api/project/jobs/` | GET | IsAuthenticated | List open jobs with TF-IDF match scores |
-| **Project** | `/api/project/create/` | POST | IsClientUser | Publish new job opportunity |
-| **Project** | `/api/project/apply/` | POST | IsStudentUser | Submit application to open job |
-| **Project** | `/api/project/my-jobs/` | GET | IsClientUser | List recruiter's published requisitions |
-| **Project** | `/api/project/my-applications/` | GET | IsStudentUser | List student's submitted applications |
-| **Verify** | `/api/verification/generate-test/` | POST | IsStudentUser | Generate personalized AI assessment |
-| **Verify** | `/api/verification/submit-test/` | POST | IsStudentUser | Submit answers and trigger AI grading |
-| **Verify** | `/api/verification/tasks/<id>/status/` | GET | IsAuthenticated | Poll asynchronous Celery task status |
-| **Modules** | `/api/modules/upskill/generate/` | POST | IsStudentUser | Generate adaptive learning module |
-| **Modules** | `/api/modules/upskill/progress/` | POST / GET | IsStudentUser | Record and inspect module completion |
+| **Auth** | `/api/accounts/login/` | POST | AllowAny | Authenticate and issue JWT access/refresh pair |
+| **Auth** | `/api/accounts/token/refresh/` | POST | AllowAny | Rotate and refresh JWT access token |
+| **Auth** | `/api/accounts/onboarding/` | PUT / POST | IsAuthenticated | Save onboarding stage & upload PDF resume |
+| **Auth** | `/api/accounts/profile/` | GET | IsAuthenticated | Retrieve authenticated user profile & telemetry |
+| **Verify** | `/api/verification/analysis/` | GET | IsStudentUser | Retrieve structured domain breakdown & AI audit |
+| **Verify** | `/api/verification/analysis/refresh/` | POST | IsStudentUser | Re-run GitHub & resume analysis |
+| **Verify** | `/api/verification/generate-test/` | POST | IsStudentUser | Generate personalized assessment via Gemini |
+| **Verify** | `/api/verification/submit-test/` | POST | IsStudentUser | Submit answers, grade, and finalize report |
+| **Verify** | `/api/verification/personality/questions/` | GET | IsStudentUser | Fetch 7-question psychometric assessment |
+| **Verify** | `/api/verification/personality/submit/` | POST | IsStudentUser | Submit personality answers & learning pace |
+| **Verify** | `/api/verification/recommendation/` | GET | IsStudentUser | Get composite verification card & star rating |
+| **Verify** | `/api/verification/tasks/<task_id>/status/` | GET | IsAuthenticated | Poll Celery background task progress |
+| **Proctor** | `/api/proctor/list/` | GET | IsAuthenticated | List available exams |
+| **Proctor** | `/api/proctor/start/` | POST | IsAuthenticated | Start proctored exam session |
+| **Proctor** | `/api/proctor/event/` | POST | IsAuthenticated | Log proctoring violation & recompute risk |
+| **Proctor** | `/api/proctor/end/` | POST | IsAuthenticated | Complete exam session & lock risk score |
+| **Project** | `/api/project/jobs/` | GET | IsAuthenticated | List open jobs ranked with TF-IDF match scores |
+| **Project** | `/api/project/create/` | POST | IsClientUser | Publish new job requisition |
+| **Project** | `/api/project/apply/` | POST | IsStudentUser | Apply to an open job |
+| **Project** | `/api/project/my-jobs/` | GET | IsClientUser | List recruiter's posted requisitions |
+| **Project** | `/api/project/my-applications/` | GET | IsStudentUser | List candidate's applications |
+| **Project** | `/api/project/applicants/<job_id>/` | GET | IsClientUser | Inspect ranked applicants for a requisition |
+| **Modules** | `/api/modules/upskill/generate/` | POST | IsStudentUser | Generate adaptive markdown upskill guide |
+| **Modules** | `/api/modules/upskill/modules/` | GET | IsStudentUser | List generated learning modules |
+| **Modules** | `/api/modules/upskill/progress/` | GET / POST | IsStudentUser | Track and record module completion |
 
 ---
 
-## Verification & Test Commands
+## Security & Reliability Highlights
+
+- **Strict PDF Validation**: [`accounts/validators.py`](accounts/validators.py) enforces a 5 MB cap, `.pdf` extension, MIME verification, and `%PDF-` magic byte inspection; filenames are randomized with UUIDs.
+- **Production Secret Guard**: [`skillforge/settings.py`](skillforge/settings.py) raises `ImproperlyConfigured` if `DJANGO_DEBUG=False` with a missing or default `DJANGO_SECRET_KEY`.
+- **Prompt Injection Defense & Retries**: [`verification/utils/langchain_utils.py`](verification/utils/langchain_utils.py) quarantines candidate text in XML tags (`<candidate_resume_data>`, `<candidate_github_data>`) with 30s timeouts and structured fallbacks; [`verification/utils/git_utils.py`](verification/utils/git_utils.py) configures automatic `urllib3` retries with exponential backoff.
+- **Atomic Transactions & Optimized Queries**: State transitions use `transaction.atomic()`, and recruiter/job feeds use `select_related` and `Count("applications")` annotations to avoid N+1 queries.
+
+---
+
+## Verification & Testing
+
+Run Django commands directly inside `server/` with the virtual environment active:
 
 ```bash
-# Validate Django configuration integrity
+# Validate Django setup & URL/model integrity
 python manage.py check
 
-# Run complete backend test suite (26 integration & unit tests)
-python manage.py test server/
+# Run complete backend test suite (31 tests across all apps)
+python manage.py test
 ```

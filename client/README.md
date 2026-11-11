@@ -1,119 +1,137 @@
 # SkillForge Frontend (React 19 + Vite)
 
-The `client/` workspace contains the single-page application (SPA) for SkillForge, built with React 19, Vite 7, Tailwind CSS, Zustand, and Framer Motion. It delivers an intuitive, human-centric user interface designed for both candidates undergoing empirical skill evaluations and enterprise recruiters reviewing verified talent portfolios.
+The `client/` workspace is SkillForge's single-page application (SPA), built with React 19, Vite 7, Tailwind CSS 3, Zustand, and Framer Motion for candidates and recruiters.
 
 ---
 
-## Directory Architecture
+## Architecture Overview
 
+```mermaid
+flowchart LR
+    UI["Pages & UI Views"] -->|Auth & Theme| Store["Zustand Store"]
+    UI -->|Requests| ApiClient["API Client (JWT Refresh + Retry)"]
+    ApiClient -->|HTTP / Bearer JWT| Backend["Django Backend (:8000)"]
 ```
+
+---
+
+## Design & Technical Highlights
+
+- **Dark Studio Monochrome UI**: Unified `#060709` canvas, `#0D0F14` surface panels, crisp `#111318` overlays, monospace typography (`Consolas` / `Courier Prime`), custom hairline monochrome SVG icons ([`src/components/ui/Icons.jsx`](src/components/ui/Icons.jsx)), and consistent favicon/emblem branding ([`src/components/common/BrandLogo.jsx`](src/components/common/BrandLogo.jsx)).
+- **Resilient Centralized API Client**: [`src/lib/api.js`](src/lib/api.js) attaches JWT Bearer tokens, silently rotates expired access tokens via `/api/accounts/token/refresh/`, evicts invalid sessions cleanly, and returns structured `NetworkErrorResponse` objects on offline/connection drops.
+- **Global Error Boundary**: [`src/components/common/ErrorBoundary.jsx`](src/components/common/ErrorBoundary.jsx) catches runtime React errors and displays a clean recovery screen without crashing the workspace.
+- **Proctoring Cleanup & Polling**: [`ProctorWrapper.jsx`](src/components/assessment/ProctorWrapper.jsx) monitors fullscreen exits, tab switches, and webcam presence while explicitly calling `track.stop()` on unmount so hardware cameras turn off immediately; [`useTaskStatus.js`](src/hooks/useTaskStatus.js) handles async task polling.
+
+---
+
+## Application Routes
+
+| Access | Route | View | Description |
+| :--- | :--- | :--- | :--- |
+| **Public** | `/` | `LandingPage` | Platform overview & interactive capability showcase |
+| **Public** | `/verification`, `/protocol`, `/talent`, `/how-it-works` | Public pages | Verification flow, security specs, talent tiers, walkthrough |
+| **Public** | `/auth` | `AuthPage` | Login and 4-step role-aware registration wizard |
+| **Student** | `/student/dashboard` | `StudentDashboard` | Verification readiness, metrics & primary action rail |
+| **Student** | `/student/onboarding` | `StudentOnboarding` | Resume PDF upload, GitHub handle & skills intake |
+| **Student** | `/student/analysis` *(or `/student/ai-analysis`)* | `AiAnalysisPage` | Structured cross-domain Resume & GitHub AI audit |
+| **Student** | `/student/assessment` | `AssessmentPage` | Proctored technical exam with fullscreen & webcam guard |
+| **Student** | `/student/personality-test` | `PersonalityTest` | 7-question learning-style psychometric profiler |
+| **Student** | `/student/upskill` | `UpskillPage` | AI-generated interactive learning guides & progress |
+| **Student** | `/student/jobs` *(or `/student/job-matches`)* | `JobMatchesPage` | Algorithmically matched job feed & applications |
+| **Client** | `/client/dashboard` | `ClientDashboard` | Job requisitions & TF-IDF ranked applicant dossiers |
+| **Client** | `/client/onboarding` | `ClientOnboarding` | Company specification onboarding |
+
+---
+
+## Directory Structure
+
+```text
 client/
-├── public/
-│   ├── favicon.svg             # CAD blueprint vector favicon (viewBox 0 0 32 32)
-│   └── favicon.ico             # Fallback browser icon
+├── public/                        # Static icons & web manifest
+│   ├── apple-touch-icon.png       # Master emblem reused by BrandLogo & touch icons
+│   ├── favicon.svg                # Vector emblem favicon
+│   ├── favicon.ico                # Fallback ICO favicon
+│   ├── favicon-16x16.png
+│   ├── favicon-32x32.png
+│   └── site.webmanifest
+├── scripts/
+│   └── generate-favicons.mjs      # Generates PNG/ICO favicon assets from SVG
 ├── src/
-│   ├── api/
-│   │   └── client.js           # API facade exposing api client & useTaskStatus hook
+│   ├── api/                       # API facade
 │   ├── components/
-│   │   ├── assessment/         # AssessmentHeader, OptionsMatrix, ProctorTelemetryPanel, ProctorWrapper
-│   │   ├── auth/               # LoginForm, RegisterWizard (4-step onboarding), AuthLayout
-│   │   ├── client/             # ActiveJobsTableBlock, ApplicantRankingsGrid, ClientHeader, RequisitionActionBar
-│   │   ├── common/             # ErrorBoundary.jsx (global runtime exception boundary)
-│   │   ├── guards/             # ProtectedRoute and RoleGuard RBAC navigation shields
-│   │   ├── layout/             # Navbar (with multi-tab routing & status), Footer
-│   │   ├── modals/             # JobPostModal, CandidateDossierModal
-│   │   ├── onboarding/         # ResumeUploadZone (drag-and-drop PDF validator), StageProgressIndicator
-│   │   ├── sections/           # HeroSection, CapabilitiesGrid, BlueprintSpecSection, PersonaSplitSection
-│   │   ├── student/            # StudentHeader, StudentSidebar, MatchedPositionsGrid, VerificationProfileBlock
-│   │   ├── ui/                 # Reusable UI primitives (Button, Input, Card, Badge, Loader)
-│   │   │   └── animations/     # Mechanical animation primitives:
-│   │   │       ├── DecryptedText.jsx       # Monospace text scramble/decrypt hook
-│   │   │       ├── CadGridBackground.jsx   # Interactive drafting canvas with pointer proximity
-│   │   │       ├── BorderBeam.jsx          # Border hairline light beam effect
-│   │   │       ├── CounterTicker.jsx       # Monospace mechanical odometer / ticker
-│   │   │       └── MagneticButton.jsx      # Tactile pointer-displacement button wrapper
-│   │   └── upskill/            # MarkdownContentReader, ModuleCompletionActions
-│   ├── hooks/
-│   │   └── useTaskStatus.js    # Resilient Celery task polling hook with exponential backoff & refs
-│   ├── lib/
-│   │   ├── api.js              # Centralized JWT fetch client with silent refresh & offline resilience
-│   │   └── cn.js               # ClassName utility (clsx + tailwind-merge)
-│   ├── pages/
-│   │   ├── client/             # ClientOnboarding.jsx
-│   │   ├── dashboard/          # StudentDashboard.jsx, ClientDashboard.jsx
-│   │   ├── student/            # AssessmentPage.jsx, PersonalityTest.jsx, StudentOnboarding.jsx, UpskillPage.jsx
-│   │   ├── AuthPage.jsx        # Unified login & multi-step registration page
-│   │   ├── HowItWorksPage.jsx  # Dedicated guidance view ("For Job Seekers" / "For Employers")
-│   │   └── LandingPage.jsx     # High-conversion public marketing landing page
-│   ├── store/
-│   │   ├── authStore.js        # Zustand authentication store (session, role, tokens, updateTokens)
-│   │   └── themeStore.js       # Zustand theme preferences
-│   ├── App.jsx                 # React Router routing table with route protection
-│   ├── main.jsx                # Application root with StrictMode & ErrorBoundary wrapper
-│   └── index.css               # Global Tailwind CSS and custom typography styles
-├── .env.example                # Frontend environment variable template
-├── Dockerfile                  # Multi-stage production build container (Node 20 + Nginx)
-├── nginx.conf                  # Nginx SPA fallback routing configuration
-├── eslint.config.js            # ESLint 9 configuration with React 19 rules
-├── package.json                # Frontend package manifest
-└── vite.config.js              # Vite bundler configuration
+│   │   ├── assessment/            # ProctorWrapper, AssessmentHeader, QuestionWorkspace, OptionsMatrix
+│   │   ├── auth/                  # LoginForm, RegisterWizard, 4 onboarding step views
+│   │   ├── client/                # ActiveJobsTableBlock, ApplicantRankingsGrid, CandidateDossierModal
+│   │   ├── common/                # BrandLogo, ErrorBoundary, Button, Input, Card, Badge
+│   │   ├── guards/                # ProtectedRoute & RoleGuard RBAC wrappers
+│   │   ├── layout/                # Navbar, CardNav
+│   │   ├── modals/                # JobPostModal
+│   │   ├── onboarding/            # ResumeUploadZone, ParsedTelemetryPreview, CompanySpecForm
+│   │   ├── personality/           # PersonalityIntroCard, QuestionCard, ResultCard
+│   │   ├── sections/              # Landing sections & hero subcomponents
+│   │   ├── student/               # StructuredEvaluationView, StudentHeader, StudentSidebar, MatchedPositionsGrid
+│   │   ├── ui/                    # Custom SVG Icons.jsx & animation primitives (CadGridBackground, etc.)
+│   │   └── upskill/               # MarkdownContentReader, ModuleCompletionActions, UpskillHeader
+│   ├── hooks/                     # useTaskStatus.js
+│   ├── lib/                       # api.js & cn.js
+│   ├── pages/                     # Public, auth, student, client & dashboard routes
+│   ├── store/                     # Zustand authStore.js & themeStore.js
+│   ├── App.jsx                    # Route table
+│   ├── main.jsx                   # Entry root wrapped with ErrorBoundary
+│   └── index.css                  # Dark monochrome CSS theme & Tailwind directives
+├── .env.example                   # Frontend environment template
+├── Dockerfile                     # Multi-stage Node 20 + Nginx build
+├── nginx.conf                     # Nginx SPA fallback config
+├── eslint.config.js               # ESLint 9 rules for React 19
+└── package.json
 ```
-
----
-
-## Key Features & User Experience Standard
-
-- **Human-Centric, Minimalist Aesthetic**: Designed for clarity, relaxation, and ease of use. Clean off-white and cobalt palette (`#FAFAFA`, `#1D52B8`), generous whitespace, and readable typography without terminal brackets or robotic jargon.
-- **Top-Level Error Boundary**: Catches runtime JavaScript exceptions anywhere in the component tree, providing a reassuring recovery screen ("Reload page" / "Try again" / "Return to Home") and collapsible technical diagnostics in development.
-- **Offline & Network Resilience**: [`src/lib/api.js`](src/lib/api.js) intercepts network drops and offline states, returning structured `NetworkErrorResponse` objects with friendly messages instead of unhandled promise rejections.
-- **Hardware & Stream Cleanup**: [`ProctorWrapper.jsx`](src/components/assessment/ProctorWrapper.jsx) explicitly stops all webcam `MediaStream` hardware tracks (`track.stop()`) and frees canvas memory upon unmount, preventing browser indicator lights from remaining active.
-- **Clean Fullscreen Management**: [`AssessmentPage.jsx`](src/pages/student/AssessmentPage.jsx) cleanly exits fullscreen mode when the test concludes or the candidate navigates away.
-- **Dynamic Task Polling**: [`useTaskStatus`](src/hooks/useTaskStatus.js) handles asynchronous Celery report generation and AI test drafting with automatic retry policies and cancellation on unmount.
 
 ---
 
 ## Prerequisites
 
-- **Node.js**: 20.x or higher
-- **Package Manager**: npm 10.x or higher
+- **Node.js**: `20.x+`
+- **npm**: `10.x+`
+- **Backend API**: Running on `http://localhost:8000` (see [`../server/README.md`](../server/README.md))
 
 ---
 
-## Local Setup & Development
+## Local Setup & Commands
 
-### 1. Install Dependencies
+### 1. Install Dependencies & Configure Env
+
 ```bash
 cd client
 npm install
-```
-
-### 2. Configure Environment
-Copy `.env.example` to `.env`:
-```bash
 cp .env.example .env
 ```
-Default configuration:
+
+Default `.env` value:
+
 ```env
 VITE_API_BASE_URL=http://localhost:8000/api
 ```
 
-### 3. Launch Development Server
+### 2. Run Development Server
+
 ```bash
 npm run dev
 ```
-The application will be live at `http://localhost:5173`.
 
----
+App runs at `http://localhost:5173`. Ensure the Django backend is running on port `8000` so login, onboarding, AI analysis, and job feeds function properly.
 
-## Quality & Production Commands
+### 3. Quality & Production Build Commands
 
 ```bash
-# Run ESLint across all JavaScript/JSX files
+# Run ESLint across source files
 npm run lint
 
-# Compile optimized production bundle to dist/
+# Build optimized production bundle to dist/
 npm run build
 
 # Preview production build locally
 npm run preview
+
+# Regenerate favicon PNG/ICO suite from SVG source
+npm run generate:favicons
 ```

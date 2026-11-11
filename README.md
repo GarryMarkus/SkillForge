@@ -1,288 +1,318 @@
 <h1 align="center">
-  <img 
-    src="./assets/logosvg.svg" 
-    alt="SkillForge Logo" 
-    width="42"
+  <img
+    src="./assets/logosvg.svg"
+    alt="SkillForge Logo"
+    width="40"
     style="vertical-align: middle; margin-right: 10px;"
   />
   SkillForge
 </h1>
 
 <p align="center">
-  <strong>Industry-Standard AI Skill Verification & Empirical Talent Matching Platform</strong>
+  <strong>AI Skill Verification, Proctored Assessment & Empirical Talent Matching Platform</strong>
 </p>
 
 <p align="center">
-  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19.2.0-61DAFB?logo=react&logoColor=white" alt="React" /></a>
-  <a href="https://vitejs.dev"><img src="https://img.shields.io/badge/Vite-7.2.4-646CFF?logo=vite&logoColor=white" alt="Vite" /></a>
-  <a href="https://www.djangoproject.com"><img src="https://img.shields.io/badge/Django-4.2+-092E20?logo=django&logoColor=white" alt="Django" /></a>
-  <a href="https://www.python.org"><img src="https://img.shields.io/badge/Python-3.11+-3776ab?logo=python&logoColor=white" alt="Python" /></a>
-  <a href="https://zustand-demo.pmnd.rs"><img src="https://img.shields.io/badge/Zustand-5.0.10-black" alt="Zustand" /></a>
-  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/TailwindCSS-3.4.17-38B2AC?logo=tailwind-css&logoColor=white" alt="Tailwind" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" /></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" alt="React 19" /></a>
+  <a href="https://vitejs.dev"><img src="https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white" alt="Vite 7" /></a>
+  <a href="https://www.djangoproject.com"><img src="https://img.shields.io/badge/Django-5.2+-092E20?logo=django&logoColor=white" alt="Django 5.2+" /></a>
+  <a href="https://www.python.org"><img src="https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white" alt="Python 3.11+" /></a>
+  <a href="https://zustand-demo.pmnd.rs"><img src="https://img.shields.io/badge/Zustand-5-18181B" alt="Zustand 5" /></a>
+  <a href="https://tailwindcss.com"><img src="https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?logo=tailwind-css&logoColor=white" alt="Tailwind CSS" /></a>
 </p>
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
-- [Overview](#-overview)
-- [Monorepo Directory Structure](#-monorepo-directory-structure)
-- [Quick Start Guide](#-quick-start-guide)
-  - [Backend Setup (`server/`)](#1-backend-setup-server)
-  - [Frontend Setup (`client/`)](#2-frontend-setup-client)
-  - [Docker Deployment (`docker compose`)](#3-docker-deployment-docker-compose)
-- [Environment Configuration](#-environment-configuration)
-- [Architecture & Key Subsystems](#-architecture--key-subsystems)
-  - [Centralized API Client & Network Drop Resilience](#centralized-api-client--network-drop-resilience)
-  - [Global React Error Boundary](#global-react-error-boundary)
-  - [Security & File Upload Hardening](#security--file-upload-hardening)
-  - [Prompt Injection Defense & Fault-Tolerant AI](#prompt-injection-defense--fault-tolerant-ai)
-  - [Database Performance & N+1 Elimination](#database-performance--n1-elimination)
-  - [Proctoring & Resource Management](#proctoring--resource-management)
-- [Continuous Integration & Testing](#-continuous-integration--testing)
-- [Documentation Index](#-documentation-index)
-- [License](#-license)
+- [Overview](#overview)
+- [System Architecture](#system-architecture)
+- [How to Run the Project](#how-to-run-the-project)
+  - [Prerequisites](#prerequisites)
+  - [1. First-Time Setup](#1-first-time-setup)
+  - [Option A: Concurrent Dev Launcher](#option-a-concurrent-dev-launcher)
+  - [Option B: Separate Terminals](#option-b-separate-terminals)
+  - [Option C: Docker Compose](#option-c-docker-compose)
+- [Service URLs and Demo Accounts](#service-urls-and-demo-accounts)
+- [Environment Configuration](#environment-configuration)
+- [Core Platform Features](#core-platform-features)
+- [Testing, Linting and Builds](#testing-linting-and-builds)
+- [Repository Structure](#repository-structure)
+- [Documentation Index](#documentation-index)
 
 ---
 
-## 🌟 Overview
+## Overview
 
-**SkillForge** is an enterprise-grade skill verification and talent discovery platform designed to eliminate resume inflation and credential opacity:
-- 🎓 **Candidates / Students**: Complete practical, proctored AI technical assessments, analyze personality archetypes, receive personalized learning modules, and showcase a verified skill dossier with real percentile rankings.
-- 🏢 **Employers / Recruiters**: Publish engineering requisitions with required skill benchmarks, review pre-vetted applicant portfolios ranked by TF-IDF profile matching, and hire with confidence backed by tamper-evident proctor audits.
+**SkillForge** connects verified engineering candidates with hiring teams through empirical skill evaluation rather than unverified resume claims:
+
+- **Candidates (`/student/*`)**:
+  - Upload a PDF resume and link a GitHub profile during onboarding.
+  - Inspect a **Structured Cross-Domain AI Analysis** mapping real evidence from resume bullets and GitHub repositories across technical domains.
+  - Complete **proctored technical assessments** with hardware webcam checks, fullscreen enforcement, and integrity risk scoring.
+  - Take a **psychometric learning-style test**, generate adaptive **AI upskilling guides**, and apply to ranked **Job Matches**.
+- **Recruiters (`/client/*`)**:
+  - Publish role requisitions with required skills and minimum qualification scores.
+  - Review applicants ranked by **TF-IDF cosine similarity**, composite verification ratings, and proctor trust telemetry.
 
 ---
 
-## 📁 Monorepo Directory Structure
+## System Architecture
 
-```
-SkillForge/
-├── client/                     # Frontend SPA (React 19, Vite 7, Tailwind, Zustand)
-│   ├── public/                 # Static assets, SVG/PNG favicon suite, and site manifest
-│   ├── src/
-│   │   ├── api/                # API client facade and Celery task status hook
-│   │   ├── components/         # Modular UI architecture:
-│   │   │   ├── assessment/     # ProctorWrapper, AssessmentHeader, OptionsMatrix, Telemetry
-│   │   │   ├── auth/           # LoginForm, RegisterWizard, AuthLayout
-│   │   │   ├── client/         # ActiveJobsTable, ApplicantRankings, DossierModal
-│   │   │   ├── common/         # ErrorBoundary.jsx, BrandLogo.jsx, core UI primitives
-│   │   │   ├── guards/         # ProtectedRoute and RoleGuard RBAC navigation shields
-│   │   │   ├── layout/         # CardNav (expandable card navigation) & Footer
-│   │   │   ├── modals/         # JobPostModal, CandidateDossierModal
-│   │   │   ├── sections/       # HeroSection (Noise & RotatingText), Footer
-│   │   │   ├── student/        # StudentHeader, StudentSidebar, MatchedPositionsGrid, ProfileBlock
-│   │   │   ├── ui/             # Custom monochrome SVG Icons & typography animation primitives
-│   │   │   └── upskill/        # MarkdownContentReader, ModuleCompletionActions
-│   │   ├── hooks/              # useTaskStatus.js (resilient Celery polling)
-│   │   ├── lib/                # api.js (JWT refresh, offline recovery) and cn.js
-│   │   ├── pages/              # LandingPage, JobMatchesPage, AiAnalysisPage, AuthPage, Dashboards
-│   │   └── store/              # Zustand stores: authStore (tokens, role) & themeStore
-│   ├── .env.example            # Frontend environment variable template
-│   ├── .dockerignore           # Excludes node_modules, dist, and .env files from Docker context
-│   ├── .gitignore              # Client ignore rules
-│   ├── Dockerfile              # Multi-stage production container (Node 20 + Nginx)
-│   ├── nginx.conf              # Nginx SPA fallback routing configuration
-│   ├── eslint.config.js        # ESLint 9 configuration with React 19 rules
-│   └── package.json            # Node.js dependencies & scripts
-│
-├── server/                     # Backend REST API (Django, DRF, Celery, LangChain, Gemini)
-│   ├── accounts/               # Custom user model, JWT auth, PDF validators, profiles
-│   ├── proctor/                # Event recording, webcam monitors, and risk scoring
-│   ├── project/                # Client job requisitions and TF-IDF applicant matching
-│   ├── verification/           # AI test generation, grading, PDF extraction, Celery tasks
-│   ├── modules/                # Adaptive AI-generated learning modules
-│   ├── skillforge/             # Settings, unified exception handler, permissions, Celery app
-│   ├── .env.example            # Backend environment variable template
-│   ├── .dockerignore           # Excludes venv, db.sqlite3, media, and .env from Docker context
-│   ├── .gitignore              # Server ignore rules
-│   ├── Dockerfile              # Multi-stage production container with Gunicorn WSGI
-│   ├── manage.py               # Django management CLI
-│   └── requirements.txt        # Backend Python dependencies
-│
-├── project_knowledge/          # Architectural memory & audit documentation
-│   ├── 00_SYSTEM_OVERVIEW.md
-│   ├── 01_ARCHITECTURE_AND_DATAFLOW.md
-│   ├── 02_BACKEND_DEEP_DIVE.md
-│   ├── 03_FRONTEND_DEEP_DIVE.md
-│   ├── 04_ENVIRONMENT_AND_DEVOPS.md
-│   └── 05_REFACTORING_AND_ROADMAP.md
-│
-├── .github/workflows/          # GitHub Actions CI pipelines
-│   └── ci.yml
-│
-├── docker-compose.yml          # Full-stack orchestration (Redis, Backend, Worker, Frontend)
-├── assets/                     # Platform logos, branding, and diagram assets
-└── README.md                   # Repository master documentation
+```mermaid
+flowchart LR
+    Client["Frontend SPA (React 19 + Vite :5173)"] -->|REST API + JWT| API["Backend API (Django + DRF :8000)"]
+    API -->|ORM & Media| DB[("SQLite / PostgreSQL")]
+    API -->|Optional Async Jobs| Worker["Celery Worker + Redis"]
+    API -->|LLM & Repo Data| External["Gemini AI & GitHub API"]
 ```
 
+### Component Breakdown
+
+| Layer | Directory / Module | Responsibility |
+| :--- | :--- | :--- |
+| **Frontend SPA** | [`client/`](client/README.md) | React 19 UI, Zustand auth/theme state, route guards, webcam proctoring, JWT client |
+| **Core & Auth** | `server/accounts/` | Custom `User` model, JWT auth & refresh rotation, role onboarding, strict PDF validator |
+| **AI Verification** | `server/verification/` | Cross-domain resume + GitHub analyzer, dynamic test generation, psychometric scoring |
+| **Proctoring Engine** | `server/proctor/` | Exam sessions, telemetry logging (tab switch, fullscreen, camera), weighted risk score |
+| **Job Matching** | `server/project/` | Recruiter job postings, application workflow, TF-IDF + cosine candidate ranking |
+| **Adaptive Upskilling** | `server/modules/` | Personalized Markdown learning modules calibrated to assessment gaps and pace |
+
 ---
 
-## 🚀 Quick Start Guide
+## How to Run the Project
 
 ### Prerequisites
-- **Python**: 3.10+ (Python 3.11 recommended)
-- **Node.js**: 20.x or higher
-- **npm**: 10.x or higher
-- **Redis**: 7.x (or run via Docker)
+
+- **Python**: `3.11+` (`3.10+` supported)
+- **Node.js & npm**: Node `20+` and npm `10+`
+- **Google Gemini API Key**: Required for live AI analysis, test generation, and upskilling guides ([Google AI Studio](https://aistudio.google.com/apikey))
+- **Redis**: `7.x` *(optional for local dev — you can run async tasks synchronously without Redis by setting `CELERY_ALWAYS_EAGER=True`)*
 
 ---
 
-### 1. Backend Setup (`server/`)
+### 1. First-Time Setup
+
+Clone the repository and configure both backend and frontend dependencies once:
 
 ```bash
-# Navigate to the backend directory
+# 1. Configure Environment Files
+# On Windows PowerShell: Copy-Item instead of cp also works
+cp server/.env.example server/.env
+cp client/.env.example client/.env
+```
+
+Edit `server/.env` and set your API key (plus `CELERY_ALWAYS_EAGER=True` if running locally without Redis):
+
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+CELERY_ALWAYS_EAGER=True
+```
+
+Install dependencies and prepare the database:
+
+```bash
+# 2. Backend Setup
 cd server
-
-# Create and activate a Python virtual environment
 python -m venv venv
-# On Windows (PowerShell):
-.\venv\Scripts\Activate.ps1
-# On Linux / macOS:
-source venv/bin/activate
 
-# Install dependencies
+# Activate virtual environment:
+# Windows (PowerShell): .\venv\Scripts\Activate.ps1
+# macOS / Linux:        source venv/bin/activate
+
 pip install -r requirements.txt
-
-# Copy environment file
-cp .env.example .env
-
-# Run migrations and start server
 python manage.py migrate
+python manage.py seed_demo_data
+cd ..
+
+# 3. Frontend Setup
+npm install --prefix client
+```
+
+---
+
+### Option A: Concurrent Dev Launcher
+
+**(Recommended)** With the backend virtual environment (`server/venv`) activated in your terminal, launch both Django (`:8000`) and Vite (`:5173`) from the repository root with unified color-coded logs:
+
+```bash
+# Make sure server/venv is active first so Django finds installed packages
+npm run dev
+# Or equivalently:
+python run_dev.py
+```
+
+Press `Ctrl+C` at any time to cleanly terminate both dev servers.
+
+---
+
+### Option B: Separate Terminals
+
+If you prefer dedicated terminal panes (or want to run a real Redis + Celery worker):
+
+**Terminal 1 — Backend API (`http://localhost:8000`)**
+```bash
+cd server
+# Activate venv: .\venv\Scripts\Activate.ps1 (Windows) or source venv/bin/activate (macOS/Linux)
 python manage.py runserver 8000
 ```
-Backend API will be live at `http://localhost:8000/api/`.
 
-Start the Celery worker in a separate terminal:
+**Terminal 2 — Frontend Dev Server (`http://localhost:5173`)**
 ```bash
-cd server
-celery -A skillforge worker -l info
-```
-
----
-
-### 2. Frontend Setup (`client/`)
-
-```bash
-# Open a new terminal and navigate to the frontend directory
 cd client
-
-# Install dependencies
-npm install
-
-# Copy environment file
-cp .env.example .env
-
-# Launch Vite development server
 npm run dev
 ```
-Frontend will be live at `http://localhost:5173`.
+
+**Terminal 3 — Celery Worker *(only needed when `CELERY_ALWAYS_EAGER=False` with Redis running)***
+```bash
+cd server
+# Activate venv first
+# macOS / Linux:
+celery -A skillforge worker -l info
+# Windows:
+celery -A skillforge worker -l info --pool=solo
+```
 
 ---
 
-### 3. Docker Deployment (`docker compose`)
+### Option C: Docker Compose
 
-Run the complete multi-service environment (Redis, Django backend, Celery worker, and Nginx frontend) with a single command:
+Run Redis, Django backend, Celery worker, and Nginx-served frontend in containers:
 
 ```bash
+# Ensure server/.env exists first
+cp server/.env.example server/.env
+
 docker compose up --build
 ```
-- **Frontend SPA**: `http://localhost:5173`
-- **Backend REST API**: `http://localhost:8000/api/`
-- **Redis Queue**: `localhost:6379`
 
----
+On a fresh database volume, run migrations and seed demo accounts inside the running backend container:
 
-## 🔧 Environment Configuration
-
-Both workspaces strictly consume isolated `.env` files that are ignored by Git:
-
-### Frontend (`client/.env.example`)
-```env
-VITE_API_BASE_URL=http://localhost:8000/api
-```
-
-### Backend (`server/.env.example`)
-```env
-DJANGO_SECRET_KEY=django-insecure-replace-with-a-secure-random-key-in-production
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
-CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
-REDIS_URL=redis://localhost:6379/0
-# Set to True for local dev to run Celery tasks in-process without Redis/worker
-# CELERY_ALWAYS_EAGER=True
-GEMINI_API_KEY=your_gemini_api_key_here
-GITHUB_TOKEN=optional_github_token_here
-```
-
----
-
-## 🛡️ Architecture & Key Subsystems
-
-### Centralized API Client & Network Drop Resilience
-All frontend network calls flow through [`client/src/lib/api.js`](client/src/lib/api.js):
-- Automatically attaches JWT Bearer credentials from `localStorage`.
-- Performs silent access token refresh (`/api/accounts/token/refresh/`) and dispatches token rotation to `useAuthStore`.
-- Intercepts connection drops and offline states, returning structured `NetworkErrorResponse` objects with human-readable messaging instead of unhandled promise exceptions.
-
-### Global React Error Boundary
-[`client/src/components/common/ErrorBoundary.jsx`](client/src/components/common/ErrorBoundary.jsx) wraps the entire root application. When an unhandled runtime error occurs, it catches the exception and renders a calm, user-friendly recovery interface ("Reload page", "Try again", "Return to Home") alongside collapsible diagnostic stack traces in development mode.
-
-### Security & File Upload Hardening
-- Resume uploads undergo strict 4-point validation in [`server/accounts/validators.py`](server/accounts/validators.py): 5MB ceiling, `.pdf` extension check, MIME validation, and `%PDF-` magic byte inspection.
-- Upload filenames are replaced with random UUIDs to eliminate path traversal vulnerabilities.
-- Production safety is guaranteed by an immediate `ImproperlyConfigured` guard in [`settings.py`](server/skillforge/settings.py) if `DEBUG=False` without a valid `DJANGO_SECRET_KEY`.
-
-### Prompt Injection Defense & Fault-Tolerant AI
-- Candidate inputs (resumes, GitHub commit logs) are quarantined in XML tags (`<candidate_resume_data>`, `<candidate_github_data>`) with system prompts instructing the LLM to process candidate text strictly as passive data.
-- LLM calls in [`server/verification/utils/langchain_utils.py`](server/verification/utils/langchain_utils.py) enforce explicit 30s timeouts and structured fallback evaluations on external outages.
-- GitHub REST calls utilize an `HTTPAdapter` configured with `urllib3.util.Retry` for exponential backoff on HTTP 429/500/502/503/504 errors.
-
-### Database Performance & N+1 Elimination
-- Database queries across [`project/views.py`](server/project/views.py) and [`accounts/views.py`](server/accounts/views.py) utilize `select_related` and `Count("applications")` annotations, ensuring zero redundant `COUNT(*)` queries when rendering job feeds or applicant rosters.
-- Multi-table operations are wrapped in `with transaction.atomic():` to prevent partial database writes on failure.
-
-### Proctoring & Resource Management
-- During assessments, [`ProctorWrapper.jsx`](client/src/components/assessment/ProctorWrapper.jsx) monitors tab switching, fullscreen escapes, copy/cut/paste attempts, and face presence.
-- Upon component unmount, all active `MediaStream` webcam tracks are explicitly terminated (`track.stop()`) and canvas memory is released, ensuring the hardware camera light turns off immediately.
-- Fullscreen lock is cleanly exited upon test conclusion in [`AssessmentPage.jsx`](client/src/pages/student/AssessmentPage.jsx).
-
----
-
-## 🧪 Continuous Integration & Testing
-
-### Running Tests
 ```bash
-# Backend Test Suite (30 integration & unit tests)
-cd server && python manage.py test
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py seed_demo_data
+```
 
-# Django Configuration Check
+---
+
+## Service URLs and Demo Accounts
+
+Once running, access the services locally at:
+
+| Service | URL | Notes |
+| :--- | :--- | :--- |
+| **Frontend App** | `http://localhost:5173` | React + Vite web application |
+| **Backend REST API** | `http://localhost:8000/api/` | Base API prefix |
+| **Swagger API Docs** | `http://localhost:8000/api/docs/` | Interactive OpenAPI explorer |
+| **OpenAPI Schema** | `http://localhost:8000/api/schema/` | Raw OpenAPI 3 specification |
+| **Django Admin** | `http://localhost:8000/admin/` | Database administration interface |
+| **Redis Broker** | `localhost:6379` | Used by Celery when enabled |
+
+### Seeded Demo Credentials
+
+Running `python manage.py seed_demo_data` creates two ready-to-use accounts (safe and idempotent to re-run):
+
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Candidate / Student** | `student@example.com` | `Password123!` |
+| **Recruiter / Client** | `recruiter@example.com` | `Password123!` |
+
+---
+
+## Environment Configuration
+
+### Backend (`server/.env`)
+
+Template at [`server/.env.example`](server/.env.example):
+
+| Variable | Default / Example | Purpose |
+| :--- | :--- | :--- |
+| `DJANGO_SECRET_KEY` | `django-insecure-...` | Signing key (**must** be replaced when `DJANGO_DEBUG=False`) |
+| `DJANGO_DEBUG` | `True` | Enables debug mode (`False` enforces HTTPS & secret key guards) |
+| `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Comma-separated allowed hostnames |
+| `CORS_ALLOWED_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | Allowed frontend origins |
+| `GEMINI_API_KEY` | `your_gemini_api_key_here` | Google Gemini API key (`GOOGLE_API_KEY` is also accepted) |
+| `GITHUB_TOKEN` | *(optional)* | Personal access token to increase GitHub REST rate limits |
+| `REDIS_URL` | `redis://localhost:6379/0` | Broker & result backend URL for Celery |
+| `CELERY_ALWAYS_EAGER` | `True` *(for local dev without Redis)* | Runs Celery tasks synchronously in-process when `True` |
+| `DATABASE_URL` | *(defaults to SQLite `server/db.sqlite3`)* | PostgreSQL connection string for production |
+
+### Frontend (`client/.env`)
+
+Template at [`client/.env.example`](client/.env.example):
+
+| Variable | Default | Purpose |
+| :--- | :--- | :--- |
+| `VITE_API_BASE_URL` | `http://localhost:8000/api` | Base URL for backend API requests |
+
+---
+
+## Core Platform Features
+
+- **Structured Cross-Domain AI Analysis**: Extracts resume text (`PyPDF2`) and inspects public GitHub repositories (`requests` with automatic retry/backoff), producing a categorized audit across domains (`Backend`, `Frontend`, `AI & Data`, `Systems & Security`, `DevOps & Tooling`, etc.) via Gemini (`gemini-2.5-flash`) with deterministic fallback.
+- **Anti-Cheat Proctoring Engine**: Monitors fullscreen exits, tab switches, copy/paste events, and webcam presence during assessments, releasing camera `MediaStream` tracks cleanly upon unmount.
+- **Security Hardening**: 4-stage PDF validation (`<= 5 MB`, `.pdf` extension, MIME check, `%PDF-` magic header) with UUID filenames, XML-quarantined prompts against prompt injection, and fail-fast production `SECRET_KEY` enforcement.
+- **Resilient API Client**: Centralized fetch client in [`client/src/lib/api.js`](client/src/lib/api.js) handles silent JWT refresh/rotation and clean network-offline error responses, paired with a global [`ErrorBoundary.jsx`](client/src/components/common/ErrorBoundary.jsx).
+
+---
+
+## Testing, Linting and Builds
+
+Always run Django test discovery **from inside `server/`** (running `python server/manage.py test` from the repository root discovers 0 tests):
+
+```bash
+# Backend checks & test suite (31 unit and integration tests)
+cd server
 python manage.py check
+python manage.py test
+cd ..
 
-# Frontend Code Quality (ESLint)
+# Frontend linting & production bundle
 npm run lint --prefix client
-
-# Frontend Production Build
 npm run build --prefix client
 ```
 
-Automated GitHub Actions CI in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) validates all pull requests against linting, compilation, configuration checks, and production asset bundling.
+Automated checks run via GitHub Actions in [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ---
 
-## 📚 Documentation Index
+## Repository Structure
 
-- [Backend Documentation (`server/README.md`)](server/README.md)
-- [Frontend Documentation (`client/README.md`)](client/README.md)
-- [System Overview (`project_knowledge/00_SYSTEM_OVERVIEW.md`)](project_knowledge/00_SYSTEM_OVERVIEW.md)
-- [Architecture & Dataflow (`project_knowledge/01_ARCHITECTURE_AND_DATAFLOW.md`)](project_knowledge/01_ARCHITECTURE_AND_DATAFLOW.md)
-- [Backend Deep Dive (`project_knowledge/02_BACKEND_DEEP_DIVE.md`)](project_knowledge/02_BACKEND_DEEP_DIVE.md)
-- [Frontend Deep Dive (`project_knowledge/03_FRONTEND_DEEP_DIVE.md`)](project_knowledge/03_FRONTEND_DEEP_DIVE.md)
-- [Environment & DevOps (`project_knowledge/04_ENVIRONMENT_AND_DEVOPS.md`)](project_knowledge/04_ENVIRONMENT_AND_DEVOPS.md)
-- [Refactoring History & Roadmap (`project_knowledge/05_REFACTORING_AND_ROADMAP.md`)](project_knowledge/05_REFACTORING_AND_ROADMAP.md)
+```text
+SkillForge/
+├── client/                     # React 19 + Vite 7 Frontend SPA
+│   ├── public/                 # Favicon suite (SVG, ICO, PNG 16/32, apple-touch-icon, manifest)
+│   └── src/
+│       ├── api/                # API facade
+│       ├── components/         # Modular UI (assessment, auth, client, common, guards, layout, student, ui)
+│       ├── hooks/              # useTaskStatus polling hook
+│       ├── lib/                # JWT fetch wrapper (api.js) & className helper (cn.js)
+│       ├── pages/              # Landing, Auth, Student & Client dashboards, Analysis, Job Matches, Upskill
+│       └── store/              # Zustand stores (authStore, themeStore)
+├── server/                     # Django 5.2+ & DRF Backend API
+│   ├── accounts/               # Users, JWT auth, onboarding, PDF validators, seed_demo_data command
+│   ├── verification/           # AI test gen, grading, GitHub/PDF utils, domain_analyzer, Celery tasks
+│   ├── proctor/                # Assessment exam sessions, event telemetry, risk engine
+│   ├── project/                # Client job posts, applications, TF-IDF matching
+│   ├── modules/                # AI upskilling curriculum generation & progress tracking
+│   ├── skillforge/             # Settings, URLs, Swagger docs, Celery app, permissions
+│   └── manage.py               # Django CLI
+├── assets/                     # Branding SVGs, screenshots, and logos
+├── project_knowledge/          # System architecture & deep-dive technical notes
+├── .github/workflows/ci.yml    # GitHub Actions CI workflow
+├── docker-compose.yml          # Full-stack Docker setup (Redis, Backend, Worker, Frontend)
+├── package.json                # Root monorepo convenience scripts
+└── run_dev.py                  # Concurrent Django + Vite launcher
+```
 
 ---
 
-## 📄 License
+## Documentation Index
 
-This project is licensed under the [MIT License](LICENSE).
+- **Backend Guide**: [`server/README.md`](server/README.md)
+- **Frontend Guide**: [`client/README.md`](client/README.md)
+- **System Overview**: [`project_knowledge/00_SYSTEM_OVERVIEW.md`](project_knowledge/00_SYSTEM_OVERVIEW.md)
+- **Architecture & Dataflow**: [`project_knowledge/01_ARCHITECTURE_AND_DATAFLOW.md`](project_knowledge/01_ARCHITECTURE_AND_DATAFLOW.md)
+- **Backend Deep Dive**: [`project_knowledge/02_BACKEND_DEEP_DIVE.md`](project_knowledge/02_BACKEND_DEEP_DIVE.md)
+- **Frontend Deep Dive**: [`project_knowledge/03_FRONTEND_DEEP_DIVE.md`](project_knowledge/03_FRONTEND_DEEP_DIVE.md)
+- **Environment & DevOps**: [`project_knowledge/04_ENVIRONMENT_AND_DEVOPS.md`](project_knowledge/04_ENVIRONMENT_AND_DEVOPS.md)
