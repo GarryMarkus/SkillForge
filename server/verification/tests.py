@@ -152,3 +152,94 @@ class CeleryTaskQueueTests(TestCase):
         self.assertFalse(is_answer_correct("Car", question))
         self.assertFalse(is_answer_correct(None, question))
 
+
+class AnalysisTransparencyAPITests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            email="analysis_student@example.com",
+            password="Password123!",
+            role="student",
+        )
+        self.client.force_authenticate(user=self.user)
+        self.profile = self.user.student_profile
+        self.profile.full_name = "Priya Nair"
+        self.profile.skills = "Python, Django, React"
+        self.profile.github_url = "https://github.com/priyanair-dev"
+        self.profile.save()
+
+    @patch("verification.services.generate_final_report", return_value="Strong Python & React background.")
+    @patch("verification.services.analyze_github_profile", return_value="Active GitHub repositories in Python and TypeScript.")
+    @patch("verification.services.analyze_resume", return_value="Resume shows production API delivery.")
+    @patch("verification.services.fetch_github_profile")
+    @patch("verification.services.extract_text_from_pdf_fileobj", return_value="Priya Nair Built Django APIs and React dashboards with PostgreSQL.")
+    def test_refresh_and_get_transparent_analysis_preserves_verified_stage(
+        self,
+        mock_pdf_extract,
+        mock_github_fetch,
+        mock_analyze_resume,
+        mock_analyze_github,
+        mock_summary,
+    ):
+        """Test GET /analysis/ and POST /analysis/refresh/ expose GitHub & Resume provenance and keep verified state."""
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from accounts.models import StudentReport, StudentContentAnalysis
+
+        self.profile.resume = SimpleUploadedFile("priya_resume.pdf", b"%PDF-1.4\n%test", content_type="application/pdf")
+        self.profile.save()
+
+        # Pre-existing completed assessment state
+        StudentReport.objects.create(
+            student=self.profile,
+            skill_test_score=88.0,
+            personality_score=24.0,
+            report_summary={
+                "stage": "verified",
+                "final": {"star_rating": 4.7, "strengths": ["Django"], "weaknesses": ["Redis"]},
+            },
+        )
+
+        mock_github_fetch.return_value = {
+            "username": "priyanair-dev",
+            "name": "Priya Nair",
+            "bio": "Backend Engineer",
+            "public_repos": 2,
+            "is_mock": False,
+            "repos": [
+                {
+                    "name": "django-ledger",
+                    "description": "High-throughput accounting API in Python",
+                    "language": "Python",
+                    "stars": 18,
+                    "url": "https://github.com/priyanair-dev/django-ledger",
+                }
+            ],
+        }
+
+        res_refresh = self.client.post("/api/verification/analysis/refresh/", {}, format="json")
+        self.assertEqual(res_refresh.status_code, status.HTTP_200_OK)
+        data = res_refresh.data
+
+        self.assertEqual(data["stage"], "verified")
+        self.assertTrue(data["assessment_completed"])
+        self.assertEqual(data["final_analysis"]["star_rating"], 4.7)
+        self.assertEqual(data["resume_source"]["status"], "analyzed_pdf")
+        self.assertIn("priya_resume.pdf", data["resume_source"]["filename"])
+        self.assertGreater(data["resume_source"]["extracted_chars"], 10)
+        self.assertIn("PostgreSQL", data["resume_source"]["matched_skills"])
+
+        self.assertEqual(data["github_source"]["status"], "analyzed_live")
+        self.assertEqual(data["github_source"]["username"], "priyanair-dev")
+        self.assertEqual(len(data["github_source"]["repos"]), 1)
+        self.assertFalse(data["github_source"]["is_mock"])
+
+        # StudentContentAnalysis synced for both sources
+        self.assertTrue(StudentContentAnalysis.objects.filter(student=self.profile, source_type="resume").exists())
+        self.assertTrue(StudentContentAnalysis.objects.filter(student=self.profile, source_type="github").exists())
+
+        res_get = self.client.get("/api/verification/analysis/")
+        self.assertEqual(res_get.status_code, status.HTTP_200_OK)
+        self.assertEqual(res_get.data["github_source"]["username"], "priyanair-dev")
+        self.assertIn("Production API delivery".lower(), res_get.data["resume_analysis"].lower())
+
+

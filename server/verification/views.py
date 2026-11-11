@@ -12,9 +12,11 @@ logger = logging.getLogger(__name__)
 from .personality_data import PERSONALITY_QUESTIONS
 from .services import (
     generate_skill_test_for_student,
+    generate_partial_report,
     submit_skill_test,
     submit_personality_assessment,
     get_recommendation,
+    get_final_analysis,
 )
 
 
@@ -116,6 +118,30 @@ class RecommendationAPI(APIView):
 
     def get(self, request):
         data = get_recommendation(request.user.id)
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class VerificationAnalysisAPI(APIView):
+    """Retrieve transparent multi-source AI analysis (Resume PDF, GitHub repositories, and Skill Test)."""
+    permission_classes = [IsAuthenticated, IsStudentUser]
+
+    def get(self, request):
+        data = get_final_analysis(request.user.id)
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class RefreshAnalysisAPI(APIView):
+    """Re-run Resume PDF and GitHub repository AI analysis immediately for the authenticated student."""
+    permission_classes = [IsAuthenticated, IsStudentUser]
+
+    def post(self, request):
+        report = generate_partial_report(request.user.id)
+        if not report:
+            return Response(
+                {"error": "Unable to refresh AI analysis for this profile."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        data = get_final_analysis(request.user.id)
         return Response(data, status=status.HTTP_200_OK)
 
 
