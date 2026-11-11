@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import client from '../../api/client';
+import StudioNoise from '../../components/ui/animations/StudioNoise';
 import PersonalityHeader from '../../components/personality/PersonalityHeader';
 import PersonalityIntroCard from '../../components/personality/PersonalityIntroCard';
 import PersonalityQuestionCard from '../../components/personality/PersonalityQuestionCard';
@@ -128,39 +129,45 @@ const PersonalityTest = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] flex items-center justify-center p-4">
-                <div className="rounded-md border border-white/10 bg-[#0b0b0c] p-8 text-center max-w-sm w-full space-y-3 font-mono">
-                    <div className="text-xs text-[#888888] font-mono">Loading Questions</div>
-                    <div className="font-semibold text-xs text-white">
-                        Preparing Psychometric Engine
-                    </div>
-                    <div className="text-[11px] text-[#737373]">
-                        Retrieving question set...
+            <StudioNoise opacity={0.07}>
+                <div className="min-h-screen font-mono text-[#ededed] flex items-center justify-center p-4">
+                    <div className="rounded-md border border-white/[0.08] border-t-white/15 bg-[#111318] p-8 text-center max-w-sm w-full space-y-3 font-mono shadow-2xl">
+                        <div className="text-xs text-[#8a8a8e] uppercase tracking-wider font-mono">Loading Questions</div>
+                        <div className="font-bold font-display text-sm text-white">
+                            Preparing Psychometric Engine
+                        </div>
+                        <div className="text-xs text-[#888888]">
+                            Retrieving question set...
+                        </div>
                     </div>
                 </div>
-            </div>
+            </StudioNoise>
         );
     }
 
     if (result) {
         return (
-            <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] p-4 sm:p-8 flex items-center justify-center">
-                <PersonalityResultCard
-                    result={result}
-                    onProceed={() => navigate('/student/dashboard')}
-                />
-            </div>
+            <StudioNoise opacity={0.07}>
+                <div className="min-h-screen font-mono text-[#ededed] p-4 sm:p-8 flex items-center justify-center">
+                    <PersonalityResultCard
+                        result={result}
+                        onProceed={() => navigate('/student/dashboard')}
+                    />
+                </div>
+            </StudioNoise>
         );
     }
 
     if (!started) {
         return (
-            <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] p-4 sm:p-8 flex items-center justify-center">
-                <PersonalityIntroCard
-                    onStart={handleStart}
-                    onReturn={() => navigate('/student/dashboard')}
-                />
-            </div>
+            <StudioNoise opacity={0.07}>
+                <div className="min-h-screen font-mono text-[#ededed] p-4 sm:p-8 flex items-center justify-center">
+                    <PersonalityIntroCard
+                        onStart={handleStart}
+                        onReturn={() => navigate('/student/dashboard')}
+                    />
+                </div>
+            </StudioNoise>
         );
     }
 
@@ -169,50 +176,52 @@ const PersonalityTest = () => {
     const canSubmit = Object.keys(answers).length > 0;
 
     return (
-        <div className="min-h-screen bg-[#050505] font-mono text-[#ededed] flex flex-col select-none">
-            <PersonalityHeader
-                currentIndex={currentIndex}
-                totalQuestions={questions.length}
-                isFullscreen={isFullscreen}
-                onAbort={handleAbort}
-            />
+        <StudioNoise opacity={0.07}>
+            <div className="min-h-screen font-mono text-[#ededed] flex flex-col select-none">
+                <PersonalityHeader
+                    currentIndex={currentIndex}
+                    totalQuestions={questions.length}
+                    isFullscreen={isFullscreen}
+                    onAbort={handleAbort}
+                />
 
-            <main className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 font-mono">
-                {error && (
-                    <div className="mb-4 rounded-md border border-rose-500/20 bg-rose-500/10 p-3 text-rose-300 text-xs">
-                        {error}
-                    </div>
-                )}
+                <main className="flex-1 w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 font-mono relative z-10">
+                    {error && (
+                        <div className="mb-4 rounded-sm border border-rose-500/20 bg-rose-500/10 p-3 text-rose-300 text-xs">
+                            {error}
+                        </div>
+                    )}
 
-                <div className="flex flex-col lg:flex-row gap-6 items-start">
-                    <div className="flex-1 w-full">
-                        <PersonalityQuestionCard
-                            question={currentQuestion}
-                            questionIndex={currentIndex}
-                            totalQuestions={questions.length}
-                            selectedAnswer={currentQuestion ? answers[String(currentQuestion.id)] : ''}
-                            onSelectOption={handleOptionSelect}
-                            onPrev={handlePrev}
-                            onNext={handleNext}
+                    <div className="flex flex-col lg:flex-row gap-6 items-start">
+                        <div className="flex-1 w-full">
+                            <PersonalityQuestionCard
+                                question={currentQuestion}
+                                questionIndex={currentIndex}
+                                totalQuestions={questions.length}
+                                selectedAnswer={currentQuestion ? answers[String(currentQuestion.id)] : ''}
+                                onSelectOption={handleOptionSelect}
+                                onPrev={handlePrev}
+                                onNext={handleNext}
+                                onSubmit={handleSubmit}
+                                isLastQuestion={isLastQuestion}
+                                canSubmit={canSubmit}
+                                isSubmitting={isSubmitting}
+                            />
+                        </div>
+
+                        <PersonalityTelemetrySidebar
+                            questions={questions}
+                            currentIndex={currentIndex}
+                            answers={answers}
+                            onJump={handleJump}
                             onSubmit={handleSubmit}
-                            isLastQuestion={isLastQuestion}
                             canSubmit={canSubmit}
                             isSubmitting={isSubmitting}
                         />
                     </div>
-
-                    <PersonalityTelemetrySidebar
-                        questions={questions}
-                        currentIndex={currentIndex}
-                        answers={answers}
-                        onJump={handleJump}
-                        onSubmit={handleSubmit}
-                        canSubmit={canSubmit}
-                        isSubmitting={isSubmitting}
-                    />
-                </div>
-            </main>
-        </div>
+                </main>
+            </div>
+        </StudioNoise>
     );
 };
 

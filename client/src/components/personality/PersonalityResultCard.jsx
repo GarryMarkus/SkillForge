@@ -24,43 +24,47 @@ const PersonalityResultCard = ({ result, onProceed }) => {
     const activePace = paceDetails[pace] || paceDetails.average;
 
     return (
-        <div className="w-full max-w-3xl mx-auto space-y-6 font-mono select-none" id="PersonalityResultCard">
+        <div className="relative w-full max-w-3xl mx-auto space-y-6 font-mono select-none" id="PersonalityResultCard">
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-6 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]"
+            />
             {/* Main Result Card */}
-            <div className="bg-[#0b0b0c] rounded-md border border-white/10 p-6 sm:p-9 space-y-5 text-[#ededed]">
+            <div className="relative bg-[#111318] rounded-md border border-white/[0.08] border-t-white/15 p-6 sm:p-9 space-y-5 text-[#ededed] shadow-2xl">
                 <div className="text-center sm:text-left border-b border-white/[0.06] pb-4">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-mono bg-[#050505] text-[#888888] border border-white/10 mb-2">
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-sm text-xs font-mono bg-white/[0.04] text-zinc-300 border border-white/[0.08] mb-3">
                         Calibration Complete
                     </span>
                     <h1 className="text-xl sm:text-2xl font-bold font-display tracking-tight text-white mb-1.5">
                         Engineering Learning Profile
                     </h1>
-                    <p className="text-xs text-[#737373] leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#888888] leading-relaxed">
                         Telemetry computed. Curriculum recommendations and candidate matching parameters have been calibrated.
                     </p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                    <div className="bg-[#050505] rounded-sm border border-white/10 p-4">
-                        <div className="text-[11px] text-[#555555] uppercase tracking-wider">
+                    <div className="bg-[#060709] rounded-sm border border-white/[0.08] p-4">
+                        <div className="text-[11px] text-[#737373] uppercase tracking-wider">
                             Assessment Score
                         </div>
-                        <div className="text-2xl sm:text-3xl text-white font-bold mt-1 font-mono">
-                            {result?.score ?? '--'} <span className="text-xs text-[#555555] font-normal">/ 28</span>
+                        <div className="text-2xl sm:text-3xl text-white font-bold mt-1 font-display">
+                            {result?.score ?? '--'} <span className="text-xs text-[#737373] font-mono font-normal">/ 28</span>
                         </div>
                     </div>
 
-                    <div className="bg-[#050505] rounded-sm border border-white/10 p-4">
-                        <div className="text-[11px] text-[#555555] uppercase tracking-wider">
+                    <div className="bg-[#060709] rounded-sm border border-white/[0.08] p-4">
+                        <div className="text-[11px] text-[#737373] uppercase tracking-wider">
                             Recommended Pace
                         </div>
-                        <div className="text-xl sm:text-2xl text-white font-bold mt-1 uppercase font-mono">
+                        <div className="text-xl sm:text-2xl text-white font-bold mt-1 uppercase font-display">
                             {result?.learning_level || 'Balanced'}
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-[#050505] rounded-sm border border-white/10 p-4 text-xs">
-                    <h3 className="font-semibold text-xs uppercase tracking-wider text-white mb-1">
+                <div className="bg-[#060709] rounded-sm border border-white/[0.08] p-4 text-xs">
+                    <h3 className="font-semibold text-xs uppercase tracking-wider text-white mb-1.5">
                         {activePace.title}
                     </h3>
                     <p className="text-xs text-[#888888] leading-relaxed">
@@ -70,14 +74,14 @@ const PersonalityResultCard = ({ result, onProceed }) => {
 
                 {/* Actions */}
                 <div className="pt-4 border-t border-white/[0.06] flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
-                    <span className="text-[#555555]">
+                    <span className="text-[#71717A]">
                         Indexed in candidate verification profile
                     </span>
 
                     <button
                         type="button"
                         onClick={onProceed}
-                        className="bg-[#111113] hover:bg-[#1a1a1d] text-white border border-white/20 px-6 py-2 rounded-md text-xs font-mono transition-colors shadow-sm cursor-pointer"
+                        className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-6 py-2.5 rounded-sm text-xs font-mono transition-colors cursor-pointer"
                     >
                         Dashboard ↗
                     </button>
