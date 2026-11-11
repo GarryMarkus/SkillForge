@@ -1,4 +1,5 @@
 import React from 'react';
+import { Check, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 
 const PersonalityQuestionCard = ({
     question,
@@ -23,11 +24,11 @@ const PersonalityQuestionCard = ({
                 {/* Header */}
                 <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.06] pb-3 mb-5">
                     <div className="text-xs font-semibold text-[#8a8a8e]">
-                        <span>Question {questionIndex + 1} of {totalQuestions}</span>
+                        <span>Scenario {questionIndex + 1} of {totalQuestions}</span>
                     </div>
 
                     <span className="text-xs text-[#71717A] font-mono">
-                        Single Selection
+                        Select One
                     </span>
                 </div>
 
@@ -37,7 +38,7 @@ const PersonalityQuestionCard = ({
                         {question.question || question.text}
                     </h2>
                     <p className="text-xs text-[#888888] mt-1.5 leading-relaxed">
-                        Select the approach that matches your operational workflow.
+                        Choose the option closest to how you usually work.
                     </p>
                 </div>
 
@@ -73,9 +74,9 @@ const PersonalityQuestionCard = ({
                                     </span>
                                 </div>
 
-                                <div className={`shrink-0 text-xs font-mono ${isSelected ? 'text-white' : 'text-[#444444]'}`}>
-                                    {isSelected ? '✓' : ''}
-                                </div>
+                                {isSelected && (
+                                    <Check className="w-4 h-4 text-emerald-400 shrink-0" strokeWidth={2} aria-hidden="true" />
+                                )}
                             </button>
                         );
                     })}
@@ -88,9 +89,10 @@ const PersonalityQuestionCard = ({
                     type="button"
                     onClick={onPrev}
                     disabled={questionIndex === 0}
-                    className="px-4 py-2 rounded-sm bg-[#121316] border border-white/10 text-xs font-mono text-[#E4E4E7] hover:text-white hover:border-white/20 transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-sm bg-[#121316] border border-white/10 text-xs font-mono text-[#E4E4E7] hover:text-white hover:border-white/20 transition-colors cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
                 >
-                    &larr; Previous
+                    <ChevronLeft className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                    <span>Previous</span>
                 </button>
 
                 <div className="flex items-center gap-3">
@@ -98,18 +100,20 @@ const PersonalityQuestionCard = ({
                         <button
                             type="button"
                             onClick={onNext}
-                            className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-5 py-2 rounded-sm text-xs font-mono transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1.5 bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-5 py-2 rounded-sm text-xs font-mono transition-colors cursor-pointer"
                         >
-                            Next →
+                            <span>Next</span>
+                            <ChevronRight className="w-3.5 h-3.5" strokeWidth={2} aria-hidden="true" />
                         </button>
                     ) : (
                         <button
                             type="button"
                             onClick={onSubmit}
                             disabled={!canSubmit || isSubmitting}
-                            className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-5 py-2 rounded-sm text-xs font-mono transition-colors cursor-pointer disabled:opacity-40"
+                            className="inline-flex items-center gap-1.5 bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-5 py-2 rounded-sm text-xs font-mono transition-colors cursor-pointer disabled:opacity-40"
                         >
-                            {isSubmitting ? 'Submitting...' : 'Submit Calibration ↗'}
+                            <span>{isSubmitting ? 'Saving...' : 'Finish & Save'}</span>
+                            <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2} aria-hidden="true" />
                         </button>
                     )}
                 </div>

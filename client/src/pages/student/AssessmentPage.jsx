@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Camera, Lock, Award, Clock, Layers, ShieldCheck, ArrowLeft, Play } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import ProctorWrapper from '../../components/assessment/ProctorWrapper';
 import AssessmentHeader from '../../components/assessment/AssessmentHeader';
@@ -363,63 +364,105 @@ const AssessmentPage = () => {
 
     // Pre-Exam Initialization Staging View
     if (!examStarted) {
+        const checklist = [
+            {
+                icon: Camera,
+                title: 'Camera Check',
+                desc: 'Keep your camera visible during the session.',
+            },
+            {
+                icon: Lock,
+                title: 'Single Tab Focus',
+                desc: 'Stay on this fullscreen tab until submitted.',
+            },
+            {
+                icon: Award,
+                title: 'Instant Score',
+                desc: 'Verified percentile updates right after submit.',
+            },
+        ];
+
         return (
             <StudioNoise opacity={0.07}>
                 <div className="min-h-screen font-mono text-[#ededed] flex flex-col items-center justify-center p-4 sm:p-8">
-                    <div className="relative max-w-2xl w-full">
+                    <div className="relative max-w-3xl w-full">
                         <div
                             aria-hidden="true"
                             className="pointer-events-none absolute -inset-6 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.03)_0%,transparent_70%)]"
                         />
-                        <div className="relative bg-[#111318] border border-white/[0.08] border-t-white/15 rounded-md p-8 sm:p-10 shadow-2xl space-y-6">
-                            <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                                <span className="text-xs text-[#8a8a8e] uppercase tracking-wider font-mono">
-                                    SkillForge Assessment Briefing
-                                </span>
-                                <span className="text-xs text-zinc-300 px-2.5 py-0.5 rounded-sm bg-white/[0.04] border border-white/[0.08] font-mono">
-                                    Duration: ~20 mins
-                                </span>
-                            </div>
-
-                            <div className="space-y-2">
-                                <h1 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
-                                    Practical Engineering Evaluation
-                                </h1>
-                                <p className="text-xs sm:text-sm text-[#888888] leading-relaxed">
-                                    Evaluates real-world architectural reasoning, debugging heuristics, and systems depth under standardized, distraction-free conditions.
-                                </p>
-                            </div>
-
-                            {/* Guidelines Card */}
-                            <div className="rounded-sm bg-[#060709] border border-white/[0.08] p-5 space-y-3 text-xs text-[#888888]">
-                                <div className="flex items-start gap-2.5">
-                                    <span className="text-white font-mono font-bold">01</span>
-                                    <span><strong className="text-white font-mono">Camera Integrity:</strong> Keep optical feed active so the enclave can verify test integrity.</span>
-                                </div>
-                                <div className="flex items-start gap-2.5">
-                                    <span className="text-white font-mono font-bold">02</span>
-                                    <span><strong className="text-white font-mono">Window Lock:</strong> Maintain active tab focus throughout the duration of the evaluation session.</span>
-                                </div>
-                                <div className="flex items-start gap-2.5">
-                                    <span className="text-white font-mono font-bold">03</span>
-                                    <span><strong className="text-white font-mono">Instant Verification:</strong> Scoring rubrics and rubric feedback are computed immediately upon completion.</span>
+                        <div className="relative bg-[#111318] border border-white/[0.08] border-t-white/15 rounded-md p-6 sm:p-8 shadow-2xl space-y-6">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
+                                <div className="flex items-start gap-3.5">
+                                    <div className="w-10 h-10 rounded-sm bg-[#060709] border border-white/15 flex items-center justify-center shrink-0">
+                                        <ShieldCheck className="w-5 h-5 text-white" strokeWidth={1.75} aria-hidden="true" />
+                                    </div>
+                                    <div>
+                                        <span className="text-[11px] text-[#8a8a8e] uppercase tracking-wider font-mono block mb-1">
+                                            Skill Verification
+                                        </span>
+                                        <h1 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
+                                            Practical Skill Assessment
+                                        </h1>
+                                        <p className="text-xs text-[#888888] mt-1">
+                                            Solve architecture and debugging scenarios to earn a verified score badge.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/[0.06]">
+                            {/* Quick Summary Chips */}
+                            <div className="grid grid-cols-3 gap-2.5 text-xs">
+                                <div className="flex items-center gap-2 p-2.5 rounded-sm bg-[#060709] border border-white/[0.08] text-zinc-200">
+                                    <Layers className="w-3.5 h-3.5 text-[#888888] shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                                    <span>{questions.length || 3} Scenarios</span>
+                                </div>
+                                <div className="flex items-center gap-2 p-2.5 rounded-sm bg-[#060709] border border-white/[0.08] text-zinc-200">
+                                    <Clock className="w-3.5 h-3.5 text-[#888888] shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                                    <span>~20 Minutes</span>
+                                </div>
+                                <div className="flex items-center gap-2 p-2.5 rounded-sm bg-[#060709] border border-white/[0.08] text-zinc-200">
+                                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                                    <span>Proctored</span>
+                                </div>
+                            </div>
+
+                            {/* 3 Icon Rules Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                {checklist.map((item) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <div key={item.title} className="rounded-sm bg-[#060709] border border-white/[0.08] p-4 space-y-2">
+                                            <div className="w-8 h-8 rounded-sm bg-[#111318] border border-white/[0.08] flex items-center justify-center">
+                                                <Icon className="w-4 h-4 text-white" strokeWidth={1.75} aria-hidden="true" />
+                                            </div>
+                                            <h4 className="font-semibold text-xs text-white">
+                                                {item.title}
+                                            </h4>
+                                            <p className="text-[11px] text-[#737373] leading-relaxed">
+                                                {item.desc}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <div className="flex flex-wrap items-center justify-between gap-4 pt-5 border-t border-white/[0.06]">
                                 <button
+                                    type="button"
                                     onClick={() => navigate('/student/dashboard')}
-                                    className="px-4 py-2 rounded-sm bg-[#121316] border border-white/10 text-xs font-mono text-[#E4E4E7] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
+                                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-sm bg-[#121316] border border-white/10 text-xs font-mono text-[#E4E4E7] hover:text-white hover:border-white/20 transition-colors cursor-pointer"
                                 >
-                                    &larr; Return to Dashboard
+                                    <ArrowLeft className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                                    <span>Dashboard</span>
                                 </button>
 
                                 <button
+                                    type="button"
                                     onClick={startTest}
-                                    className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-6 py-2.5 rounded-sm text-xs sm:text-sm font-mono transition-colors cursor-pointer flex items-center gap-2"
+                                    className="bg-[#F5F5F5] hover:bg-white text-[#050505] font-semibold px-6 py-2.5 rounded-sm text-xs sm:text-sm font-mono transition-colors cursor-pointer inline-flex items-center gap-2"
                                 >
+                                    <Play className="w-3.5 h-3.5 fill-current" strokeWidth={1.75} aria-hidden="true" />
                                     <span>Begin Assessment</span>
-                                    <span aria-hidden="true">↗</span>
                                 </button>
                             </div>
                         </div>
