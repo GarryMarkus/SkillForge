@@ -27,17 +27,7 @@ const HeroSection = ({ onStartAssessment, onPostRequisition }) => {
             />
 
             {/* Content Container */}
-            <div className="relative z-10 flex flex-col gap-8">
-                {/* Super-header / Kicker Bar */}
-                <div className="flex items-center justify-between border-b border-white/[0.06] pb-4">
-                    <span className="text-xs text-[#8a8a8e] font-display uppercase tracking-widest">
-                        Empirical Skill Verification Protocol
-                    </span>
-                    <span className="text-xs text-[#555555] font-mono hidden sm:inline-block">
-                        Status: Active
-                    </span>
-                </div>
-
+            <div className="relative z-10 flex flex-col">
                 {/* Two-Column Asymmetric Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                     {/* Left Column (58% / 7 Cols): Headline, Actions, Telemetry Metrics */}

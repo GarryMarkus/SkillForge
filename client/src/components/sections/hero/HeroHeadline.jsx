@@ -5,36 +5,43 @@ import RotatingText from '../../ui/animations/RotatingText';
 /**
  * HeroHeadline
  * Modular typography primitive featuring Courier Prime display titles,
- * React Bits RotatingText with smooth monochrome highlight pill resizing, and Consolas metadata.
+ * subtle hairline-accented RotatingText, and Consolas metadata.
  */
 const HeroHeadline = () => {
     return (
         <LayoutGroup id="hero-headline-layout">
-            <div className="space-y-4">
+            <div>
+                {/* Tightly anchored editorial kicker */}
+                <div className="mb-3">
+                    <span className="text-xs font-mono uppercase tracking-widest text-[#8a8a8e]">
+                        Empirical Skill Verification Protocol
+                    </span>
+                </div>
+
                 {/* Display Title in Courier Prime */}
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight leading-[1.18]">
-                    <span className="block text-[#f5f5f5]">SkillForge</span>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold tracking-tight leading-[1.18] mb-4">
+                    <span className="block text-[#FFFFFF] font-bold">SkillForge</span>
                     <motion.span
                         layout
                         transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-                        className="flex flex-wrap items-center gap-2.5 sm:gap-3 text-[#737373] mt-1.5 sm:mt-2"
+                        className="flex flex-wrap items-center gap-2.5 sm:gap-3 mt-1 sm:mt-1.5"
                     >
                         <motion.span
                             layout
                             transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-                            className="inline-block"
+                            className="inline-block font-normal text-[#737373] border-b border-transparent pb-0.5"
                         >
                             Verifies
                         </motion.span>
                         <RotatingText
-                            texts={['Competence', 'Code Quality', 'Execution', 'System Design']}
-                            mainClassName="px-2.5 sm:px-3 py-0.5 sm:py-1 bg-white text-[#050505] rounded-sm font-display font-bold inline-flex items-center overflow-hidden selection:bg-[#050505] selection:text-white"
+                            texts={['Execution', 'Competence', 'Code Quality', 'System Design']}
+                            mainClassName="text-[#F5F5F5] font-semibold font-display border-b border-white/30 pb-0.5 inline-flex items-center overflow-hidden"
                             staggerDuration={0.025}
                             staggerFrom="first"
                             rotationInterval={2800}
                             transition={{ type: 'spring', damping: 26, stiffness: 240 }}
-                            highlight={true}
-                            highlightColor="#ffffff"
+                            highlight={false}
+                            highlightColor=""
                         />
                     </motion.span>
                 </h1>

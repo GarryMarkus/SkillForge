@@ -37,7 +37,7 @@ const RotatingText = forwardRef((
         auto = true,
         splitBy = 'characters',
         highlight = false,
-        highlightColor = '#ffffff',
+        highlightColor = '',
         onNext,
         mainClassName = '',
         splitLevelClassName = '',
@@ -199,8 +199,8 @@ const RotatingText = forwardRef((
         return () => window.removeEventListener('resize', updateWidth);
     }, [updateWidth]);
 
-    const isHighlightActive = highlight || Boolean(highlightColor);
-    const highlightStyle = isHighlightActive && highlightColor ? { backgroundColor: highlightColor } : undefined;
+    const isHighlightActive = Boolean(highlight && highlightColor);
+    const highlightStyle = isHighlightActive ? { backgroundColor: highlightColor } : undefined;
 
     const widthTransition = {
         type: 'spring',
@@ -216,14 +216,14 @@ const RotatingText = forwardRef((
                 ref={measureRef}
                 aria-hidden="true"
                 className={cn(
-                    'absolute pointer-events-none select-none invisible whitespace-nowrap font-display',
+                    'pointer-events-none select-none invisible whitespace-nowrap font-display',
                     isHighlightActive && 'px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-sm',
                     mainClassName
                 )}
                 style={{
-                    position: 'absolute',
-                    top: -9999,
-                    left: -9999,
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
                     visibility: 'hidden',
                     whiteSpace: 'nowrap',
                 }}
@@ -254,7 +254,7 @@ const RotatingText = forwardRef((
                     <motion.span
                         key={currentTextIndex}
                         className={cn(
-                            'inline-flex items-center whitespace-nowrap relative justify-center w-full',
+                            'inline-flex items-center whitespace-nowrap relative justify-start w-full',
                             splitLevelClassName
                         )}
                         layout
